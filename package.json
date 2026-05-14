@@ -1,0 +1,53 @@
+{
+  "name": "preactpress",
+  "version": "0.1.0",
+  "description": "Vite and Preact powered static site generator",
+  "type": "module",
+  "bin": {
+    "preactpress": "./bin/preactpress.mjs"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "src/client",
+    "template"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/node/index.d.ts",
+      "default": "./dist/node/index.js"
+    },
+    "./config": {
+      "types": "./dist/node/config-helpers.d.ts",
+      "default": "./dist/node/config-helpers.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "pnpm run build",
+    "preactpress": "node ./bin/preactpress.mjs",
+    "demo": "node ./bin/preactpress.mjs dev template"
+  },
+  "dependencies": {
+    "@preact/preset-vite": "^2.10.2",
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.1.0",
+    "minimist": "^1.2.8",
+    "picocolors": "^1.1.1",
+    "preact": "^10.28.2",
+    "preact-render-to-string": "^6.6.3",
+    "shiki": "^3.15.0",
+    "sirv": "^3.0.2",
+    "tinyglobby": "^0.2.15",
+    "vite": "^6.3.5"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/minimist": "^1.2.5",
+    "@types/node": "^22.15.21",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

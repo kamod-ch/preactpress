@@ -1,0 +1,14 @@
+{
+  "name": "preactpress-starter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "preactpress dev",
+    "build": "preactpress build",
+    "preview": "preactpress preview"
+  },
+  "devDependencies": {
+    "preactpress": "file:..",
+    "typescript": "^5.8.3"
+  }
+}

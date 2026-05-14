@@ -1,0 +1,32 @@
+/// <reference types="vite/client" />
+
+declare module 'virtual:preactpress-pages' {
+  export const pages: Record<
+    string,
+    {
+      meta: Record<string, unknown>
+      html: string
+      title?: string
+      description?: string
+    }
+  >
+}
+
+declare module 'virtual:preactpress-site' {
+  export const site: {
+    title: string
+    description: string
+    base: string
+  }
+  export const themeConfig: {
+    nav?: { text: string; link: string }[]
+    sidebar?: { text?: string; items: { text: string; link: string }[] }[]
+  }
+}
+
+declare module 'virtual:preactpress-layout' {
+  import type { FunctionalComponent } from 'preact'
+  import type { LayoutProps } from './types.js'
+  const Layout: FunctionalComponent<LayoutProps>
+  export default Layout
+}
