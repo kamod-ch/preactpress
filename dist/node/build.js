@@ -106,6 +106,10 @@ export async function build(root, opts = {}) {
     await viteBuild(mergeConfig(mergeConfig(shared, site.vite ?? {}), {
         root: site.srcDir,
         base: site.site.base,
+        ssr: {
+            /** Bundle with app Preact so SSR does not load a second `preact` via `preact-render-to-string`. */
+            noExternal: ['preact-render-to-string']
+        },
         build: {
             ssr: true,
             outDir: ssrOut,

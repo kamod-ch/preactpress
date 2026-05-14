@@ -1,0 +1,11 @@
+[
+  {
+    "route": "/"
+  },
+  {
+    "route": "/article-markets"
+  },
+  {
+    "route": "/article-tech"
+  }
+]

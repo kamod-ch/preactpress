@@ -1,0 +1,38 @@
+---
+title: Startseite
+description: 'Kommentierte Marktlage, Filialisten und ein Blick auf Tech & Logistik — alles statisch aus Markdown und MDX.'
+---
+
+import TeaserGrid from './.preactpress/theme/TeaserGrid.tsx'
+
+<TeaserGrid
+  items={[
+    {
+      href: '/article-markets',
+      kicker: 'Märkte',
+      title: 'Handel und Margen im Frühjahr',
+      dek: 'Warum Sortimentsbreite allein kein Wachstum garantiert — und welche Kennzahlen jetzt zählen.',
+      readTime: '6 Min.'
+    },
+    {
+      href: '/article-tech',
+      kicker: 'Tech',
+      title: 'Automatisierung in der letzten Meile',
+      dek: 'Von Routing bis Packstation: was sich für mittelständische Versender lohnt.',
+      readTime: '4 Min.'
+    },
+    {
+      href: '/article-markets',
+      kicker: 'Hintergrund',
+      title: 'Filialnetze neu denken',
+      dek: 'City-Flagships, Outlets und digitale Schaufenster im gleichen Ökosystem.',
+      readTime: '5 Min.'
+    }
+  ]}
+/>
+
+## Kurz kommentiert
+
+Diese Seite ist eine **Demonstration**: Sie zeigt, wie ein Nachrichten- oder Branchenmagazin mit PreactPress als statische Site aussehen kann — inklusive Teaser-Kacheln als MDX-Komponente und eigenem Layout unter `.preactpress/theme/`.
+
+> Das Layout orientiert sich lose an klassischen Fachmedien (Masthead, Sticky-Navigation, Spalte „In dieser Ausgabe“), ohne eine bestehende Marke nachzubilden.

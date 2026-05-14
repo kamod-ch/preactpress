@@ -27,7 +27,8 @@
     "test": "vitest run",
     "prepack": "pnpm run build",
     "preactpress": "node ./bin/preactpress.mjs",
-    "demo": "node ./bin/preactpress.mjs dev template"
+    "demo": "node ./bin/preactpress.mjs dev template",
+    "demo:magazine": "node ./bin/preactpress.mjs dev examples/magazine-starter"
   },
   "dependencies": {
     "@mdx-js/rollup": "^3.1.1",
