@@ -1,0 +1,47 @@
+import { describe, expect, it, vi } from 'vitest'
+
+vi.mock('shiki', () => ({
+  createHighlighter: async () => ({
+    codeToHtml: (code: string) => `<pre class="shiki"><code>${code}</code></pre>`
+  })
+}))
+
+const { renderMarkdown } = await import('../src/node/markdown.js')
+
+describe('renderMarkdown', () => {
+  it('renders frontmatter, headings, and code fences', async () => {
+    const page = await renderMarkdown(`---
+title: Hello
+description: Intro
+---
+
+## Start Here
+
+\`\`\`ts
+const answer = 42
+\`\`\`
+`)
+
+    expect(page.title).toBe('Hello')
+    expect(page.description).toBe('Intro')
+    expect(page.headings).toEqual([{ id: 'start-here', text: 'Start Here', level: 2 }])
+    expect(page.html).toContain('id="start-here"')
+    expect(page.html).toContain('const answer = 42')
+  })
+
+  it('escapes raw HTML by default and allows it when configured', async () => {
+    const safe = await renderMarkdown('<script>alert(1)</script>')
+    expect(safe.html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;')
+
+    const trusted = await renderMarkdown('<section>Trusted</section>', undefined, {
+      html: true
+    })
+    expect(trusted.html).toContain('<section>Trusted</section>')
+  })
+
+  it('marks external links as new-window links', async () => {
+    const page = await renderMarkdown('[Preact](https://preactjs.com)')
+    expect(page.html).toContain('target="_blank"')
+    expect(page.html).toContain('rel="noreferrer"')
+  })
+})

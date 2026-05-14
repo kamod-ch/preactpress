@@ -43,12 +43,13 @@ export function preactPressPlugin(site) {
     async function buildPagesModule() {
         const entries = {};
         for (const [route, file] of routeToFile) {
-            const r = await readMarkdownFile(file);
+            const r = await readMarkdownFile(file, site.markdown);
             entries[route] = {
                 meta: r.meta,
                 html: r.html,
                 title: r.title,
-                description: r.description
+                description: r.description,
+                headings: r.headings
             };
         }
         return `export const pages = ${JSON.stringify(entries)};\n`;

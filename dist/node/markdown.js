@@ -42,11 +42,26 @@ function escapeHtml(s) {
         .replaceAll('>', '&gt;')
         .replaceAll('"', '&quot;');
 }
-export async function renderMarkdown(raw, _filePathForDebug) {
+const DEFAULT_MARKDOWN_CONFIG = {
+    html: false,
+    linkify: true,
+    typographer: true
+};
+export async function renderMarkdown(raw, _filePathForDebug, options = {}) {
     const { data, content } = matter(raw);
     const meta = (data && typeof data === 'object' ? data : {});
+    const config = { ...DEFAULT_MARKDOWN_CONFIG, ...options };
     const hi = await getHighlighter();
-    const md = new MarkdownIt({ html: true, linkify: true, typographer: true });
+    const headings = [];
+    const md = new MarkdownIt({
+        html: config.html,
+        linkify: config.linkify,
+        typographer: config.typographer
+    });
+    const defaultHeadingOpen = md.renderer.rules.heading_open ??
+        ((tokens, idx, rendererOptions, _env, self) => self.renderToken(tokens, idx, rendererOptions));
+    const defaultLinkOpen = md.renderer.rules.link_open ??
+        ((tokens, idx, rendererOptions, _env, self) => self.renderToken(tokens, idx, rendererOptions));
     md.renderer.rules.fence = (tokens, idx) => {
         const token = tokens[idx];
         const info = (token.info || '').trim();
@@ -56,20 +71,63 @@ export async function renderMarkdown(raw, _filePathForDebug) {
         try {
             return hi.codeToHtml(code, {
                 lang,
-                theme: 'github-light'
+                themes: {
+                    light: 'github-light',
+                    dark: 'github-dark'
+                }
             });
         }
         catch {
             return `<pre class="shiki"><code>${escapeHtml(code)}</code></pre>`;
         }
     };
+    md.renderer.rules.heading_open = (tokens, idx, rendererOptions, env, self) => {
+        const token = tokens[idx];
+        const level = Number(token.tag.slice(1));
+        const inline = tokens[idx + 1];
+        const text = inline?.type === 'inline' ? inline.content : '';
+        const id = uniqueSlug(slugify(text), headings);
+        token.attrSet('id', id);
+        if (level >= 2 && level <= 3)
+            headings.push({ id, text, level });
+        return defaultHeadingOpen(tokens, idx, rendererOptions, env, self);
+    };
+    md.renderer.rules.link_open = (tokens, idx, rendererOptions, env, self) => {
+        const token = tokens[idx];
+        const href = token.attrGet('href') ?? '';
+        if (/^https?:\/\//i.test(href)) {
+            token.attrSet('target', '_blank');
+            token.attrSet('rel', 'noreferrer');
+        }
+        return defaultLinkOpen(tokens, idx, rendererOptions, env, self);
+    };
     const html = md.render(content);
     const title = typeof meta.title === 'string' ? meta.title : undefined;
     const description = typeof meta.description === 'string' ? meta.description : undefined;
-    return { meta, html, title, description };
+    return { meta, html, title, description, headings };
 }
-export function readMarkdownFile(absPath) {
+function slugify(text) {
+    const slug = text
+        .toLowerCase()
+        .trim()
+        .replace(/<[^>]+>/g, '')
+        .replace(/&[a-z0-9#]+;/gi, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    return slug || 'section';
+}
+function uniqueSlug(base, existing) {
+    let id = base;
+    let i = 1;
+    const used = new Set(existing.map((h) => h.id));
+    while (used.has(id)) {
+        i += 1;
+        id = `${base}-${i}`;
+    }
+    return id;
+}
+export function readMarkdownFile(absPath, options) {
     const raw = fs.readFileSync(absPath, 'utf8');
-    return renderMarkdown(raw, absPath);
+    return renderMarkdown(raw, absPath, options);
 }
 //# sourceMappingURL=markdown.js.map

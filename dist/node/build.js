@@ -13,7 +13,7 @@ function clientEntry() {
 function ssrEntry() {
     return path.join(PACKAGE_ROOT, 'src/client/entry-ssr.tsx');
 }
-function publicUrl(siteBase, file) {
+export function publicUrl(siteBase, file) {
     const b = siteBase === '/' ? '' : siteBase.replace(/\/$/, '');
     const f = file.startsWith('/') ? file : `/${file}`;
     return `${b}${f}`;
@@ -41,7 +41,7 @@ async function readManifest(outDir) {
     }
     throw new Error('preactpress: could not read Vite client manifest');
 }
-function pickMainEntry(manifest) {
+export function pickMainEntry(manifest) {
     const main = manifest['main'];
     if (main?.file?.endsWith('.js')) {
         return { file: main.file, css: main.css ?? [] };
@@ -53,7 +53,7 @@ function pickMainEntry(manifest) {
     }
     throw new Error('preactpress: no entry chunk in manifest');
 }
-function routeToOutPath(route) {
+export function routeToOutPath(route) {
     if (route === '/')
         return 'index.html';
     const clean = route.replace(/^\//, '');
@@ -131,6 +131,16 @@ export async function build(root) {
         await fs.mkdir(path.dirname(outFile), { recursive: true });
         await fs.writeFile(outFile, html, 'utf8');
     }
+    const notFound = mod.render('/404');
+    await fs.writeFile(path.join(site.outDir, '404.html'), pageHtml({
+        site,
+        body: notFound.body,
+        title: notFound.title,
+        description: notFound.description,
+        route: '/404',
+        mainJs: main.file,
+        mainCss: main.css
+    }), 'utf8');
 }
 async function copyClientAssets(fromDir, toDir) {
     const entries = await fs.readdir(fromDir, { withFileTypes: true });

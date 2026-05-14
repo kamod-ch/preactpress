@@ -3,7 +3,11 @@ export default {
     title: 'PreactPress',
     description: 'Vite + Preact static site'
   },
+  markdown: {
+    html: false
+  },
   themeConfig: {
+    outline: true,
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Markdown', link: '/markdown-examples' }

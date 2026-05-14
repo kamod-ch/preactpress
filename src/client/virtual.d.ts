@@ -8,6 +8,7 @@ declare module 'virtual:preactpress-pages' {
       html: string
       title?: string
       description?: string
+      headings: { id: string; text: string; level: number }[]
     }
   >
 }
@@ -21,6 +22,7 @@ declare module 'virtual:preactpress-site' {
   export const themeConfig: {
     nav?: { text: string; link: string }[]
     sidebar?: { text?: string; items: { text: string; link: string }[] }[]
+    outline?: boolean
   }
 }
 

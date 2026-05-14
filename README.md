@@ -38,8 +38,14 @@ export default defineConfig({
   outDir: 'dist',
   theme: './theme/Layout.tsx',
   themeConfig: {
+    outline: true,
     nav: [{ text: 'Home', link: '/' }],
     sidebar: [{ text: 'Guide', items: [{ text: 'Intro', link: '/' }] }]
+  },
+  markdown: {
+    html: false,
+    linkify: true,
+    typographer: true
   },
   vite: {
     // merged into the internal Vite config
@@ -50,6 +56,8 @@ export default defineConfig({
 The `init` template uses a plain `export default { ... }` object so it works before installing dependencies (Vite bundles the config file and must resolve imports).
 
 Default theme lives in the `preactpress` package (`src/client/theme-default/Layout.tsx`). Point `theme` to a `.tsx` file that **default-exports** a Preact layout; props match `LayoutProps` in the package sources.
+
+Markdown HTML is disabled by default. Enable `markdown.html` only for trusted content.
 
 ## Monorepo
 

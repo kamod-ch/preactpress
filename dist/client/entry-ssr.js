@@ -10,7 +10,8 @@ export function render(routePath) {
         html: '',
         title: 'Not found',
         description: site.description,
-        meta: {}
+        meta: {},
+        headings: []
     };
     const title = page.title && page.title.length > 0
         ? `${page.title} | ${site.title}`

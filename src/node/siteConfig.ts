@@ -15,9 +15,22 @@ export interface SidebarGroup {
   items: SidebarItem[]
 }
 
+export interface OutlineItem {
+  id: string
+  text: string
+  level: number
+}
+
 export interface ThemeConfig {
   nav?: NavItem[]
   sidebar?: SidebarGroup[]
+  outline?: boolean
+}
+
+export interface MarkdownConfig {
+  html?: boolean
+  linkify?: boolean
+  typographer?: boolean
 }
 
 export interface SiteData {
@@ -34,6 +47,7 @@ export interface UserConfig {
   theme?: string
   site?: Partial<SiteData>
   themeConfig?: ThemeConfig
+  markdown?: MarkdownConfig
   vite?: import('vite').UserConfig
 }
 
@@ -46,6 +60,7 @@ export interface SiteConfig {
   theme: string
   site: SiteData
   themeConfig: ThemeConfig
+  markdown: Required<MarkdownConfig>
   vite: import('vite').UserConfig
   logger: Logger
 }

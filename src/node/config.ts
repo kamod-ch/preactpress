@@ -87,6 +87,11 @@ export async function resolveConfig(
     description: user.site?.description ?? '',
     base: normalizeBase(user.site?.base ?? '/')
   }
+  const markdown = {
+    html: user.markdown?.html ?? false,
+    linkify: user.markdown?.linkify ?? true,
+    typographer: user.markdown?.typographer ?? true
+  }
 
   const themePath = user.theme ?? DEFAULT_THEME_LAYOUT
   const theme = resolveThemeLayout(root, configDir, themePath)
@@ -100,6 +105,7 @@ export async function resolveConfig(
     theme,
     site,
     themeConfig: user.themeConfig ?? {},
+    markdown,
     vite: user.vite ?? {},
     logger
   }
@@ -107,7 +113,7 @@ export async function resolveConfig(
   return baseConfig
 }
 
-function normalizeBase(base: string): string {
+export function normalizeBase(base: string): string {
   if (!base.startsWith('/')) base = '/' + base
   if (base !== '/' && base.endsWith('/')) base = base.replace(/\/+$/, '')
   return base

@@ -1,10 +1,11 @@
-import type { SiteData, ThemeConfig } from '../node/siteConfig.js'
+import type { OutlineItem, SiteData, ThemeConfig } from '../node/siteConfig.js'
 
 export interface PageView {
   html: string
   title?: string
   description?: string
   meta: Record<string, unknown>
+  headings: OutlineItem[]
 }
 
 export interface LayoutProps {

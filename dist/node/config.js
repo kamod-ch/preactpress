@@ -67,6 +67,11 @@ export async function resolveConfig(rootArg, command = 'serve', mode = 'developm
         description: user.site?.description ?? '',
         base: normalizeBase(user.site?.base ?? '/')
     };
+    const markdown = {
+        html: user.markdown?.html ?? false,
+        linkify: user.markdown?.linkify ?? true,
+        typographer: user.markdown?.typographer ?? true
+    };
     const themePath = user.theme ?? DEFAULT_THEME_LAYOUT;
     const theme = resolveThemeLayout(root, configDir, themePath);
     const baseConfig = {
@@ -78,12 +83,13 @@ export async function resolveConfig(rootArg, command = 'serve', mode = 'developm
         theme,
         site,
         themeConfig: user.themeConfig ?? {},
+        markdown,
         vite: user.vite ?? {},
         logger
     };
     return baseConfig;
 }
-function normalizeBase(base) {
+export function normalizeBase(base) {
     if (!base.startsWith('/'))
         base = '/' + base;
     if (base !== '/' && base.endsWith('/'))
