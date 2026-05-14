@@ -3,12 +3,13 @@ import fs from 'node:fs/promises'
 import { pathToFileURL } from 'node:url'
 import { build as viteBuild, mergeConfig } from 'vite'
 import preact from '@preact/preset-vite'
-import { resolveConfigForBuild } from './config.js'
-import type { SiteConfig } from './siteConfig.js'
+import { normalizeBase, resolveConfigForBuild } from './config.js'
+import type { HeadTag, SiteConfig } from './siteConfig.js'
 import { PACKAGE_ROOT } from './packageRoot.js'
 import { preactPressMdxPlugin } from './mdx.js'
 import { listMarkdownRoutes, preactPressPlugin } from './plugin.js'
 import { resolveDependency } from './resolveDeps.js'
+import { PREACTPRESS_THEME_BOOT_SCRIPT } from '../shared/theme.js'
 
 const CLIENT_ALIAS = 'preactpress/app'
 
@@ -32,6 +33,10 @@ function escapeHtml(s: string): string {
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
+}
+
+function escapeAttr(s: string): string {
+  return escapeHtml(s)
 }
 
 async function readManifest(
@@ -76,8 +81,9 @@ export function routeToOutPath(route: string): string {
   return path.join(clean, 'index.html')
 }
 
-export async function build(root?: string): Promise<void> {
+export async function build(root?: string, opts: { base?: string } = {}): Promise<void> {
   const site = await resolveConfigForBuild(root)
+  if (opts.base) site.site.base = normalizeBase(opts.base)
   const clientOut = path.join(site.cacheDir, 'pp-client')
   const ssrOut = path.join(site.cacheDir, 'pp-ssr')
 
@@ -161,7 +167,7 @@ export async function build(root?: string): Promise<void> {
 
   for (const route of routes) {
     const { body, title, description } = mod.render(route)
-    const html = pageHtml({
+    const html = await pageHtml({
       site,
       body,
       title,
@@ -178,7 +184,7 @@ export async function build(root?: string): Promise<void> {
   const notFound = mod.render('/404')
   await fs.writeFile(
     path.join(site.outDir, '404.html'),
-    pageHtml({
+    await pageHtml({
       site,
       body: notFound.body,
       title: notFound.title,
@@ -189,6 +195,10 @@ export async function build(root?: string): Promise<void> {
     }),
     'utf8'
   )
+
+  await writeSearchIndex(site, routes)
+  if (site.site.url && site.build.sitemap) await writeSitemap(site, routes)
+  if (site.site.url && site.build.robots) await writeRobots(site)
 }
 
 async function copyClientAssets(fromDir: string, toDir: string): Promise<void> {
@@ -201,7 +211,7 @@ async function copyClientAssets(fromDir: string, toDir: string): Promise<void> {
   }
 }
 
-function pageHtml(opts: {
+async function pageHtml(opts: {
   site: SiteConfig
   body: string
   title: string
@@ -209,7 +219,7 @@ function pageHtml(opts: {
   route: string
   mainJs: string
   mainCss: string[]
-}): string {
+}): Promise<string> {
   const { site, body, title, description, route, mainJs, mainCss } = opts
   const base = site.site.base
   const cssTags = mainCss
@@ -220,14 +230,34 @@ function pageHtml(opts: {
     .join('\n    ')
   const scriptSrc = escapeHtml(publicUrl(base, mainJs))
   const routeJson = JSON.stringify(route)
+  const canonical = absoluteUrl(site, route)
+  const defaultHead: HeadTag[] = [
+    ['meta', { name: 'description', content: description }],
+    ['meta', { property: 'og:title', content: title }],
+    ['meta', { property: 'og:description', content: description }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:url', content: canonical }],
+    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['meta', { name: 'twitter:title', content: title }],
+    ['meta', { name: 'twitter:description', content: description }],
+    ['link', { rel: 'canonical', href: canonical }]
+  ]
+  const transformed = site.transformHead
+    ? await site.transformHead({ route, title, description, site: site.site })
+    : []
+  const headTags = [...defaultHead, ...site.head, ...transformed]
+    .filter((tag) => tag[1] && !Object.values(tag[1]).every((value) => value == null || value === false))
+    .map(renderHeadTag)
+    .join('\n    ')
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${escapeAttr(site.site.lang)}">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="${escapeHtml(description)}">
     <title>${escapeHtml(title)}</title>
+    <script>${PREACTPRESS_THEME_BOOT_SCRIPT}</script>
+    ${headTags}
     ${cssTags}
   </head>
   <body>
@@ -237,4 +267,49 @@ function pageHtml(opts: {
   </body>
 </html>
 `
+}
+
+function renderHeadTag(tag: HeadTag): string {
+  const [name, attrs, content] = tag
+  const renderedAttrs = Object.entries(attrs)
+    .filter(([, value]) => value != null && value !== false)
+    .map(([key, value]) => (value === true ? key : `${key}="${escapeAttr(String(value))}"`))
+    .join(' ')
+  if (name === 'script') {
+    return `<script${renderedAttrs ? ` ${renderedAttrs}` : ''}>${content ?? ''}</script>`
+  }
+  return `<${name}${renderedAttrs ? ` ${renderedAttrs}` : ''}>`
+}
+
+function absoluteUrl(site: SiteConfig, route: string): string {
+  const path = publicUrl(site.site.base, route === '/' ? '/' : `${route}/`)
+  return site.site.url ? `${site.site.url}${path}` : path
+}
+
+async function writeSitemap(site: SiteConfig, routes: string[]): Promise<void> {
+  const urls = routes
+    .map((route) => `  <url><loc>${escapeHtml(absoluteUrl(site, route))}</loc></url>`)
+    .join('\n')
+  await fs.writeFile(
+    path.join(site.outDir, 'sitemap.xml'),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+    'utf8'
+  )
+}
+
+async function writeRobots(site: SiteConfig): Promise<void> {
+  await fs.writeFile(
+    path.join(site.outDir, 'robots.txt'),
+    `User-agent: *\nAllow: /\nSitemap: ${absoluteUrl(site, '/sitemap.xml').replace(/\/$/, '')}\n`,
+    'utf8'
+  )
+}
+
+async function writeSearchIndex(site: SiteConfig, routes: string[]): Promise<void> {
+  const entries = routes.map((route) => ({ route }))
+  await fs.writeFile(
+    path.join(site.outDir, 'preactpress-search.json'),
+    JSON.stringify(entries, null, 2),
+    'utf8'
+  )
 }

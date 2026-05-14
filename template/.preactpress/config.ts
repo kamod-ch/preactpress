@@ -8,6 +8,9 @@ export default {
   },
   themeConfig: {
     outline: true,
+    search: true,
+    lastUpdated: true,
+    footer: 'Built with PreactPress.',
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Markdown', link: '/markdown-examples' },

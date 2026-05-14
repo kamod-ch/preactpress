@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import matter from 'gray-matter';
 import MarkdownIt from 'markdown-it';
 import { createHighlighter } from 'shiki';
+import { fileHrefToRoute, normalizeRoute } from './content.js';
 let highlighter;
 const SHIKI_LANGS = [
     'bash',
@@ -53,6 +54,8 @@ export async function renderMarkdown(raw, _filePathForDebug, options = {}) {
     const config = { ...DEFAULT_MARKDOWN_CONFIG, ...options };
     const hi = await getHighlighter();
     const headings = [];
+    const route = options.route ? normalizeRoute(options.route) : undefined;
+    const knownRoutes = options.routes ? new Set([...options.routes].map(normalizeRoute)) : undefined;
     const md = new MarkdownIt({
         html: config.html,
         linkify: config.linkify,
@@ -61,6 +64,8 @@ export async function renderMarkdown(raw, _filePathForDebug, options = {}) {
     const defaultHeadingOpen = md.renderer.rules.heading_open ??
         ((tokens, idx, rendererOptions, _env, self) => self.renderToken(tokens, idx, rendererOptions));
     const defaultLinkOpen = md.renderer.rules.link_open ??
+        ((tokens, idx, rendererOptions, _env, self) => self.renderToken(tokens, idx, rendererOptions));
+    const defaultHeadingClose = md.renderer.rules.heading_close ??
         ((tokens, idx, rendererOptions, _env, self) => self.renderToken(tokens, idx, rendererOptions));
     md.renderer.rules.fence = (tokens, idx) => {
         const token = tokens[idx];
@@ -88,16 +93,35 @@ export async function renderMarkdown(raw, _filePathForDebug, options = {}) {
         const text = inline?.type === 'inline' ? inline.content : '';
         const id = uniqueSlug(slugify(text), headings);
         token.attrSet('id', id);
+        token.attrJoin('class', 'pp-heading');
         if (level >= 2 && level <= 3)
             headings.push({ id, text, level });
         return defaultHeadingOpen(tokens, idx, rendererOptions, env, self);
     };
+    md.renderer.rules.heading_close = (tokens, idx, rendererOptions, env, self) => {
+        const open = tokens
+            .slice(0, idx)
+            .reverse()
+            .find((token) => token.type === 'heading_open' && token.tag === tokens[idx].tag);
+        const id = open?.attrGet('id');
+        const anchor = id
+            ? `<a class="pp-heading-anchor" href="#${escapeHtml(id)}" aria-label="Link to this section">#</a>`
+            : '';
+        return `${anchor}${defaultHeadingClose(tokens, idx, rendererOptions, env, self)}`;
+    };
     md.renderer.rules.link_open = (tokens, idx, rendererOptions, env, self) => {
         const token = tokens[idx];
         const href = token.attrGet('href') ?? '';
+        if (route) {
+            const targetRoute = fileHrefToRoute(href, route);
+            if (targetRoute && (!knownRoutes || knownRoutes.has(targetRoute))) {
+                const hash = href.includes('#') ? `#${href.split('#').slice(1).join('#')}` : '';
+                token.attrSet('href', `${targetRoute}${hash}`);
+            }
+        }
         if (/^https?:\/\//i.test(href)) {
             token.attrSet('target', '_blank');
-            token.attrSet('rel', 'noreferrer');
+            token.attrSet('rel', 'noopener noreferrer');
         }
         return defaultLinkOpen(tokens, idx, rendererOptions, env, self);
     };

@@ -65,7 +65,9 @@ export async function resolveConfig(rootArg, command = 'serve', mode = 'developm
     const site = {
         title: user.site?.title ?? 'PreactPress',
         description: user.site?.description ?? '',
-        base: normalizeBase(user.site?.base ?? '/')
+        base: normalizeBase(user.site?.base ?? '/'),
+        lang: user.site?.lang ?? 'en',
+        url: user.site?.url ? normalizeSiteUrl(user.site.url) : undefined
     };
     const markdown = {
         html: user.markdown?.html ?? false,
@@ -84,6 +86,12 @@ export async function resolveConfig(rootArg, command = 'serve', mode = 'developm
         site,
         themeConfig: user.themeConfig ?? {},
         markdown,
+        head: user.head ?? [],
+        transformHead: user.transformHead,
+        build: {
+            sitemap: user.build?.sitemap ?? true,
+            robots: user.build?.robots ?? true
+        },
         vite: user.vite ?? {},
         logger
     };
@@ -95,6 +103,9 @@ export function normalizeBase(base) {
     if (base !== '/' && base.endsWith('/'))
         base = base.replace(/\/+$/, '');
     return base;
+}
+function normalizeSiteUrl(url) {
+    return url.replace(/\/+$/, '');
 }
 export function siteConfigToClientJson(config) {
     return JSON.stringify({

@@ -1,4 +1,6 @@
-:root {
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
   --pp-bg: #ffffff;
   --pp-text: #213547;
   --pp-muted: #676f7b;
@@ -15,7 +17,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
+    color-scheme: dark;
     --pp-bg: #1b1b1f;
     --pp-text: rgba(255, 255, 245, 0.86);
     --pp-muted: #9ca3af;
@@ -28,6 +31,21 @@
     --pp-code-text: #e6edf3;
     --pp-focus: #fbbf24;
   }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --pp-bg: #1b1b1f;
+  --pp-text: rgba(255, 255, 245, 0.86);
+  --pp-muted: #9ca3af;
+  --pp-border: #2f2f32;
+  --pp-border-strong: #44464d;
+  --pp-accent: #5eead4;
+  --pp-accent-strong: #99f6e4;
+  --pp-sidebar-bg: #161618;
+  --pp-code-bg: #0f1117;
+  --pp-code-text: #e6edf3;
+  --pp-focus: #fbbf24;
 }
 
 * {
@@ -104,11 +122,66 @@ body::selection {
   white-space: nowrap;
 }
 
+.pp-nav-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
 .pp-nav-links {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 4px;
+}
+
+.pp-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--pp-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--pp-sidebar-bg) 80%, var(--pp-bg));
+  color: var(--pp-muted);
+  cursor: pointer;
+}
+
+.pp-theme-toggle:hover {
+  color: var(--pp-accent);
+  border-color: var(--pp-border-strong);
+}
+
+.pp-theme-toggle-moon,
+.pp-theme-toggle-sun {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .pp-theme-toggle .pp-theme-toggle-moon {
+    display: inline-flex;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .pp-theme-toggle .pp-theme-toggle-sun {
+    display: inline-flex;
+  }
+}
+
+:root[data-theme='light'] .pp-theme-toggle .pp-theme-toggle-moon {
+  display: inline-flex;
+}
+
+:root[data-theme='dark'] .pp-theme-toggle .pp-theme-toggle-sun {
+  display: inline-flex;
 }
 
 .pp-nav-links a {
@@ -150,6 +223,29 @@ body::selection {
   display: none;
   cursor: pointer;
   font-weight: 700;
+}
+
+.pp-search {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.pp-search span {
+  color: var(--pp-muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.pp-search input {
+  width: 100%;
+  border: 1px solid var(--pp-border);
+  border-radius: 8px;
+  background: var(--pp-bg);
+  color: var(--pp-text);
+  padding: 8px 10px;
+  font: inherit;
 }
 
 .pp-sidebar-heading {
@@ -235,6 +331,22 @@ body::selection {
 .pp-doc-content h3 {
   margin-top: 28px;
   font-size: 1.2rem;
+}
+
+.pp-heading {
+  position: relative;
+}
+
+.pp-heading-anchor {
+  color: var(--pp-muted);
+  opacity: 0;
+  padding-left: 8px;
+  text-decoration: none;
+}
+
+.pp-heading:hover .pp-heading-anchor,
+.pp-heading-anchor:focus-visible {
+  opacity: 1;
 }
 
 .pp-doc-content p,
@@ -341,6 +453,19 @@ body::selection {
   text-align: right;
 }
 
+.pp-doc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 24px;
+  color: var(--pp-muted);
+  font-size: 14px;
+}
+
+.pp-doc-meta a {
+  color: var(--pp-accent);
+}
+
 .pp-outline {
   width: 220px;
   flex-shrink: 0;
@@ -379,7 +504,25 @@ body::selection {
   border-left-color: var(--pp-accent);
 }
 
+.pp-outline a.active {
+  color: var(--pp-accent);
+  border-left-color: var(--pp-accent);
+  font-weight: 600;
+}
+
+.pp-footer {
+  border-top: 1px solid var(--pp-border);
+  color: var(--pp-muted);
+  font-size: 14px;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 20px;
+  width: 100%;
+}
+
 .pp-title:focus-visible,
+.pp-theme-toggle:focus-visible,
+.pp-search input:focus-visible,
 .pp-nav-links a:focus-visible,
 .pp-sidebar a:focus-visible,
 .pp-doc-content a:focus-visible,
@@ -399,6 +542,11 @@ body::selection {
     align-items: flex-start;
     flex-direction: column;
     gap: 8px;
+  }
+
+  .pp-nav-right {
+    justify-content: flex-start;
+    width: 100%;
   }
 
   .pp-nav-links {

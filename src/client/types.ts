@@ -6,6 +6,8 @@ interface BasePageView {
   description?: string
   meta: Record<string, unknown>
   headings: OutlineItem[]
+  relativePath?: string
+  lastUpdated?: string
 }
 
 export interface HtmlPageView extends BasePageView {

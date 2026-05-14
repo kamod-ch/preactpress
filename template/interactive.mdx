@@ -10,3 +10,23 @@ import Counter from './components/Counter.tsx'
 MDX pages can import local Preact components and render them inline.
 
 <Counter initial={3} />
+
+## Image
+
+Markdown images work like in `.md` pages:
+
+![Sample photo from Lorem Picsum](https://picsum.photos/id/10/800/450)
+
+## YouTube
+
+Embed with a normal JSX `iframe` (replace the video id with your own):
+
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/aqz-KE-bpKQ"
+  title="YouTube video example"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen
+/>

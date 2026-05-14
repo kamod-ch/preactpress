@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { createServer as createViteServer, mergeConfig } from 'vite';
 import preact from '@preact/preset-vite';
-import { resolveConfig } from './config.js';
+import { normalizeBase, resolveConfig } from './config.js';
 import { PACKAGE_ROOT } from './packageRoot.js';
 import { preactPressMdxPlugin } from './mdx.js';
 import { preactPressPlugin } from './plugin.js';
@@ -13,7 +13,7 @@ export function resolveClientEntry() {
 export async function createServer(rootArg, serverOptions = {}) {
     const site = await resolveConfig(rootArg, 'serve', 'development');
     if (serverOptions.base)
-        site.site.base = serverOptions.base;
+        site.site.base = normalizeBase(serverOptions.base);
     const { base: _baseIgnored, ...server } = serverOptions;
     const internal = {
         root: site.srcDir,

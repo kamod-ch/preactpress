@@ -1,0 +1,6 @@
+1778791313820	
+1778791313822	> preactpress@0.1.0 demo /home/watzak/master/kamod/preactpress
+1778791313822	> node ./bin/preactpress.mjs dev template -- --port 5173
+1778791313823	
+1778791319487	  ➜  Local:   http://localhost:5173/
+1778791319488	  ➜  Network: use --host to expose

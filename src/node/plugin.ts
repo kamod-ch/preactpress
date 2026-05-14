@@ -1,59 +1,23 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import type { Plugin, ViteDevServer } from 'vite'
-import { glob } from 'tinyglobby'
 import type { SiteConfig } from './siteConfig.js'
 import { readMarkdownFile, readMarkdownMetadata } from './markdown.js'
 import { siteConfigToClientJson } from './config.js'
+import { PREACTPRESS_THEME_BOOT_SCRIPT } from '../shared/theme.js'
+import {
+  CONTENT_EXTENSIONS,
+  listMarkdownRoutes,
+  mdFileToRoute,
+  scanContentFiles,
+  type ContentFile,
+  type ContentKind
+} from './content.js'
 
 const VIRTUAL_LAYOUT = '\0virtual:preactpress-layout'
 const VIRTUAL_PAGES = '\0virtual:preactpress-pages'
 const VIRTUAL_SITE = '\0virtual:preactpress-site'
-const CONTENT_GLOBS = ['**/*.md', '**/*.mdx'] as const
-const CONTENT_EXTENSIONS = ['.mdx', '.md'] as const
-
-type ContentKind = 'markdown' | 'mdx'
-
-interface ContentFile {
-  route: string
-  file: string
-  kind: ContentKind
-}
-
-export function mdFileToRoute(srcDir: string, file: string): string {
-  let rel = path.relative(srcDir, file).split(path.sep).join('/')
-  const ext = CONTENT_EXTENSIONS.find((candidate) => rel.endsWith(candidate))
-  if (!ext) return '/'
-  rel = rel.slice(0, -ext.length)
-  if (rel.endsWith('/index')) rel = rel.slice(0, -'/index'.length)
-  if (rel === 'index' || rel === '') return '/'
-  return '/' + rel
-}
-
-export async function listMarkdownRoutes(site: SiteConfig): Promise<string[]> {
-  const files = await scanContentFiles(site)
-  return files.map((f) => f.route).sort()
-}
-
-async function scanContentFiles(site: SiteConfig): Promise<ContentFile[]> {
-  const files = await glob([...CONTENT_GLOBS], {
-    cwd: site.srcDir,
-    absolute: true,
-    ignore: ['**/node_modules/**', '**/.preactpress/**']
-  })
-  const routeToFile = new Map<string, ContentFile>()
-  for (const file of files.sort()) {
-    const route = mdFileToRoute(site.srcDir, file)
-    const kind: ContentKind = file.endsWith('.mdx') ? 'mdx' : 'markdown'
-    const existing = routeToFile.get(route)
-    if (existing) {
-      throw new Error(
-        `preactpress: route collision for ${route}: ${path.relative(site.srcDir, existing.file)} and ${path.relative(site.srcDir, file)}`
-      )
-    }
-    routeToFile.set(route, { route, file, kind })
-  }
-  return [...routeToFile.values()]
-}
+export { listMarkdownRoutes, mdFileToRoute }
 
 export function preactPressPlugin(site: SiteConfig): Plugin {
   const routeToFile = new Map<string, ContentFile>()
@@ -67,6 +31,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
   }
 
   async function buildPagesModule(): Promise<string> {
+    const routes = [...routeToFile.keys()].sort()
     const entries: Record<
       string,
       {
@@ -76,35 +41,46 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         title?: string
         description?: string
         headings: { id: string; text: string; level: number }[]
+        relativePath?: string
+        lastUpdated?: string
       }
     > = {}
     const mdxImports: string[] = []
     const mdxEntries: string[] = []
     let mdxIndex = 0
     for (const [route, file] of routeToFile) {
+      const stats = await fs.stat(file.file)
+      const relativePath = path.relative(site.srcDir, file.file).split(path.sep).join('/')
+      const lastUpdated = stats.mtime.toISOString()
       if (file.kind === 'mdx') {
         const r = readMarkdownMetadata(file.file)
         const componentName = `MdxPage${mdxIndex}`
         mdxIndex += 1
         mdxImports.push(`import ${componentName} from ${JSON.stringify(file.file)};`)
-        mdxEntries.push(`${JSON.stringify(route)}: { kind: "mdx", Component: ${componentName}, meta: ${JSON.stringify(r.meta)}, title: ${JSON.stringify(r.title)}, description: ${JSON.stringify(r.description)}, headings: ${JSON.stringify(r.headings)} }`)
+        mdxEntries.push(`${JSON.stringify(route)}: { kind: "mdx", Component: ${componentName}, meta: ${JSON.stringify(r.meta)}, title: ${JSON.stringify(r.title)}, description: ${JSON.stringify(r.description)}, headings: ${JSON.stringify(r.headings)}, relativePath: ${JSON.stringify(relativePath)}, lastUpdated: ${JSON.stringify(lastUpdated)} }`)
         continue
       }
 
-      const r = await readMarkdownFile(file.file, site.markdown)
+      const r = await readMarkdownFile(file.file, {
+        ...site.markdown,
+        route,
+        routes
+      })
       entries[route] = {
         kind: 'markdown',
         meta: r.meta,
         html: r.html,
         title: r.title,
         description: r.description,
-        headings: r.headings
+        headings: r.headings,
+        relativePath,
+        lastUpdated
       }
     }
     const markdownEntries = Object.entries(entries).map(
       ([route, page]) => `${JSON.stringify(route)}: ${JSON.stringify(page)}`
     )
-    return `${mdxImports.join('\n')}\nexport const pages = {\n${[
+    return `${mdxImports.join('\n')}\nexport const routes = ${JSON.stringify(routes)};\nexport const pages = {\n${[
       ...markdownEntries,
       ...mdxEntries
     ].map((entry) => `  ${entry}`).join(',\n')}\n};\n`
@@ -121,6 +97,11 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
   return {
     name: 'preactpress',
     enforce: 'pre',
+    transformIndexHtml(html) {
+      if (!html.includes('</head>')) return html
+      const tag = `<script>${PREACTPRESS_THEME_BOOT_SCRIPT}</script>`
+      return html.replace('</head>', `    ${tag}\n  </head>`)
+    },
     async buildStart() {
       await scan()
     },

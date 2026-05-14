@@ -26,6 +26,7 @@ const answer = 42
     expect(page.description).toBe('Intro')
     expect(page.headings).toEqual([{ id: 'start-here', text: 'Start Here', level: 2 }])
     expect(page.html).toContain('id="start-here"')
+    expect(page.html).toContain('href="#start-here"')
     expect(page.html).toContain('const answer = 42')
   })
 
@@ -42,7 +43,16 @@ const answer = 42
   it('marks external links as new-window links', async () => {
     const page = await renderMarkdown('[Preact](https://preactjs.com)')
     expect(page.html).toContain('target="_blank"')
-    expect(page.html).toContain('rel="noreferrer"')
+    expect(page.html).toContain('rel="noopener noreferrer"')
+  })
+
+  it('rewrites local markdown links to clean routes when the target exists', async () => {
+    const page = await renderMarkdown('[Intro](./guide/intro.md#setup)', undefined, {
+      route: '/',
+      routes: ['/', '/guide/intro']
+    })
+
+    expect(page.html).toContain('href="/guide/intro#setup"')
   })
 
   it('extracts mdx frontmatter and markdown headings without rendering jsx headings', () => {

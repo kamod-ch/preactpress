@@ -20,6 +20,8 @@ declare module 'virtual:preactpress-pages' {
       title?: string
       description?: string
       headings: { id: string; text: string; level: number }[]
+      relativePath?: string
+      lastUpdated?: string
     }
     | {
       kind: 'mdx'
@@ -30,8 +32,11 @@ declare module 'virtual:preactpress-pages' {
       title?: string
       description?: string
       headings: { id: string; text: string; level: number }[]
+      relativePath?: string
+      lastUpdated?: string
     }
   >
+  export const routes: string[]
 }
 
 declare module 'virtual:preactpress-site' {
@@ -39,11 +44,17 @@ declare module 'virtual:preactpress-site' {
     title: string
     description: string
     base: string
+    lang: string
+    url?: string
   }
   export const themeConfig: {
     nav?: { text: string; link: string }[]
     sidebar?: { text?: string; items: { text: string; link: string }[] }[]
     outline?: boolean
+    search?: boolean
+    footer?: string
+    editLink?: { pattern: string; text?: string }
+    lastUpdated?: boolean
   }
 }
 

@@ -15,6 +15,7 @@ From a site directory (with `.preactpress/config.ts` and Markdown next to `index
 pnpm exec preactpress dev
 pnpm exec preactpress build
 pnpm exec preactpress preview
+pnpm exec preactpress check
 ```
 
 Scaffold a new site in the current folder:
@@ -39,6 +40,13 @@ export default defineConfig({
   theme: './theme/Layout.tsx',
   themeConfig: {
     outline: true,
+    search: true,
+    footer: 'Released under MIT.',
+    lastUpdated: true,
+    editLink: {
+      pattern: 'https://github.com/acme/docs/edit/main/:path',
+      text: 'Edit this page'
+    },
     nav: [{ text: 'Home', link: '/' }],
     sidebar: [{ text: 'Guide', items: [{ text: 'Intro', link: '/' }] }]
   },
@@ -49,6 +57,13 @@ export default defineConfig({
   },
   vite: {
     // merged into the internal Vite config
+  },
+  head: [
+    ['meta', { name: 'theme-color', content: '#0f766e' }]
+  ],
+  build: {
+    sitemap: true,
+    robots: true
   }
 })
 ```
@@ -58,6 +73,9 @@ The `init` template uses a plain `export default { ... }` object so it works bef
 Default theme lives in the `preactpress` package (`src/client/theme-default/Layout.tsx`). Point `theme` to a `.tsx` file that **default-exports** a Preact layout; props match `LayoutProps` in the package sources.
 
 Markdown HTML is disabled by default. Enable `markdown.html` only for trusted content.
+Set `site.url` to emit absolute canonical/OpenGraph URLs, `sitemap.xml`, and `robots.txt`.
+
+`preactpress check` validates config loading, route collisions, the required root page, nav/sidebar links, and local Markdown links to `.md`, `.mdx`, and `.html` pages.
 
 ## MDX
 

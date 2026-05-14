@@ -1,13 +1,14 @@
 import http from 'node:http'
 import process from 'node:process'
 import sirv from 'sirv'
-import { resolveConfigForBuild } from './config.js'
+import { normalizeBase, resolveConfigForBuild } from './config.js'
 
 export async function preview(
   root?: string,
-  opts: { port?: number; host?: string | boolean } = {}
+  opts: { port?: number; host?: string | boolean; base?: string } = {}
 ): Promise<void> {
   const site = await resolveConfigForBuild(root)
+  if (opts.base) site.site.base = normalizeBase(opts.base)
   const serve = sirv(site.outDir, { etag: true, gzip: true, brotli: true })
   const basePath = site.site.base === '/' ? '' : site.site.base.replace(/\/$/, '')
 

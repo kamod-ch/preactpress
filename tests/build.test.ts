@@ -8,6 +8,10 @@ describe('build helpers', () => {
     expect(publicUrl('/docs/', '/assets/app.js')).toBe('/docs/assets/app.js')
   })
 
+  it('creates canonical URLs with the configured base', () => {
+    expect(publicUrl('/docs', '/guide/')).toBe('/docs/guide/')
+  })
+
   it('maps routes to static HTML paths', () => {
     expect(routeToOutPath('/')).toBe('index.html')
     expect(routeToOutPath('/guide')).toBe('guide/index.html')

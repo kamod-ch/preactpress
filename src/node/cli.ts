@@ -33,6 +33,7 @@ function printUsage(): void {
       '  dev       Start Vite dev server',
       '  build     Production build (SSR + static)',
       '  preview   Serve the production build',
+      '  check     Validate config, routes, nav/sidebar, and local links',
       '  init      Scaffold .preactpress + starter files in [root] or cwd',
       '',
       c.dim('In this repo (package root, no site):'),
@@ -40,6 +41,9 @@ function printUsage(): void {
       '',
       c.dim('Options:'),
       '  --port <n>   Port for dev / preview',
+      '  --host       Host for dev / preview',
+      '  --open       Open browser for dev',
+      '  --base <p>   Override configured site.base',
       '  -h, --help   Show this help',
       ''
     ].join('\n')
@@ -48,7 +52,7 @@ function printUsage(): void {
 
 function resolveRootArg(cmd: string, rootArg: string | undefined): string | undefined {
   if (rootArg || !isPackageRoot(process.cwd())) return rootArg
-  if (cmd === 'dev' || cmd === 'build' || cmd === 'preview' || cmd === 'serve') {
+  if (cmd === 'dev' || cmd === 'build' || cmd === 'preview' || cmd === 'serve' || cmd === 'check') {
     const templateRoot = path.join(PACKAGE_ROOT, 'template')
     console.log(
       c.yellow(
@@ -105,29 +109,50 @@ async function main(): Promise<void> {
 
   if (cmd === 'build') {
     const { build } = await import('./build.js')
-    await build(root)
+    await build(root, { base: argv.base ? String(argv.base) : undefined })
     console.log(c.green('Build finished.'))
     return
   }
 
   if (cmd === 'preview' || cmd === 'serve') {
     const { preview } = await import('./serve.js')
-    await preview(root, { port: argv.port ? Number(argv.port) : undefined })
+    await preview(root, {
+      port: argv.port ? Number(argv.port) : undefined,
+      host: parseHostFlag(argv.host),
+      base: argv.base ? String(argv.base) : undefined
+    })
+    return
+  }
+
+  if (cmd === 'check') {
+    const { check, printCheckResult } = await import('./check.js')
+    const result = await check(root)
+    printCheckResult(result)
+    if (result.issues.some((issue) => issue.level === 'error')) process.exitCode = 1
     return
   }
 
   if (cmd === 'dev') {
     const { createServer } = await import('./server.js')
     const server = await createServer(root, {
-      port: argv.port ? Number(argv.port) : undefined
+      port: argv.port ? Number(argv.port) : undefined,
+      host: parseHostFlag(argv.host),
+      open: Boolean(argv.open),
+      base: argv.base ? String(argv.base) : undefined
     })
     await server.listen()
     server.printUrls()
     return
   }
 
-  logError(`Unknown command "${cmd}". Try dev, build, preview, or init.`)
+  logError(`Unknown command "${cmd}". Try dev, build, preview, check, or init.`)
   process.exitCode = 1
+}
+
+function parseHostFlag(value: unknown): string | boolean | undefined {
+  if (value === undefined) return undefined
+  if (value === true) return true
+  return String(value)
 }
 
 main().catch((err) => {

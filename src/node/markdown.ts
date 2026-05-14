@@ -3,6 +3,7 @@ import matter from 'gray-matter'
 import MarkdownIt from 'markdown-it'
 import { createHighlighter, type Highlighter } from 'shiki'
 import type { MarkdownConfig, OutlineItem } from './siteConfig.js'
+import { fileHrefToRoute, normalizeRoute } from './content.js'
 
 let highlighter: Highlighter | undefined
 
@@ -73,13 +74,15 @@ const DEFAULT_MARKDOWN_CONFIG: Required<MarkdownConfig> = {
 export async function renderMarkdown(
   raw: string,
   _filePathForDebug?: string,
-  options: MarkdownConfig = {}
+  options: MarkdownConfig & { route?: string; routes?: Iterable<string> } = {}
 ): Promise<RenderedMarkdown> {
   const { data, content } = matter(raw)
   const meta = normalizeMatterData(data)
   const config = { ...DEFAULT_MARKDOWN_CONFIG, ...options }
   const hi = await getHighlighter()
   const headings: OutlineItem[] = []
+  const route = options.route ? normalizeRoute(options.route) : undefined
+  const knownRoutes = options.routes ? new Set([...options.routes].map(normalizeRoute)) : undefined
 
   const md = new MarkdownIt({
     html: config.html,
@@ -93,6 +96,10 @@ export async function renderMarkdown(
       self.renderToken(tokens, idx, rendererOptions))
   const defaultLinkOpen =
     md.renderer.rules.link_open ??
+    ((tokens, idx, rendererOptions, _env, self) =>
+      self.renderToken(tokens, idx, rendererOptions))
+  const defaultHeadingClose =
+    md.renderer.rules.heading_close ??
     ((tokens, idx, rendererOptions, _env, self) =>
       self.renderToken(tokens, idx, rendererOptions))
 
@@ -122,16 +129,36 @@ export async function renderMarkdown(
     const text = inline?.type === 'inline' ? inline.content : ''
     const id = uniqueSlug(slugify(text), headings)
     token.attrSet('id', id)
+    token.attrJoin('class', 'pp-heading')
     if (level >= 2 && level <= 3) headings.push({ id, text, level })
     return defaultHeadingOpen(tokens, idx, rendererOptions, env, self)
+  }
+
+  md.renderer.rules.heading_close = (tokens, idx, rendererOptions, env, self) => {
+    const open = tokens
+      .slice(0, idx)
+      .reverse()
+      .find((token) => token.type === 'heading_open' && token.tag === tokens[idx].tag)
+    const id = open?.attrGet('id')
+    const anchor = id
+      ? `<a class="pp-heading-anchor" href="#${escapeHtml(id)}" aria-label="Link to this section">#</a>`
+      : ''
+    return `${anchor}${defaultHeadingClose(tokens, idx, rendererOptions, env, self)}`
   }
 
   md.renderer.rules.link_open = (tokens, idx, rendererOptions, env, self) => {
     const token = tokens[idx]
     const href = token.attrGet('href') ?? ''
+    if (route) {
+      const targetRoute = fileHrefToRoute(href, route)
+      if (targetRoute && (!knownRoutes || knownRoutes.has(targetRoute))) {
+        const hash = href.includes('#') ? `#${href.split('#').slice(1).join('#')}` : ''
+        token.attrSet('href', `${targetRoute}${hash}`)
+      }
+    }
     if (/^https?:\/\//i.test(href)) {
       token.attrSet('target', '_blank')
-      token.attrSet('rel', 'noreferrer')
+      token.attrSet('rel', 'noopener noreferrer')
     }
     return defaultLinkOpen(tokens, idx, rendererOptions, env, self)
   }
@@ -229,7 +256,7 @@ function uniqueSlug(base: string, existing: OutlineItem[]): string {
 
 export function readMarkdownFile(
   absPath: string,
-  options?: MarkdownConfig
+  options?: MarkdownConfig & { route?: string; routes?: Iterable<string> }
 ): Promise<RenderedMarkdown> {
   const raw = fs.readFileSync(absPath, 'utf8')
   return renderMarkdown(raw, absPath, options)

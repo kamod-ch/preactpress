@@ -4,6 +4,7 @@ export { defineConfig } from './config-helpers.js';
 export { createServer } from './server.js';
 export { preview } from './serve.js';
 export { init } from './init.js';
+export { check } from './check.js';
 export { preactPressPlugin, mdFileToRoute, listMarkdownRoutes } from './plugin.js';
-export type { SiteConfig, UserConfig, ThemeConfig, SiteData } from './siteConfig.js';
+export type { BuildConfig, HeadTag, SiteConfig, UserConfig, ThemeConfig, SiteData } from './siteConfig.js';
 //# sourceMappingURL=index.d.ts.map

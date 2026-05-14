@@ -24,12 +24,15 @@ describe('build smoke', () => {
       const notFound = await fs.readFile(path.join(root, 'dist', '404.html'), 'utf8')
 
       expect(index).toContain('<div id="app">')
+      expect(index).toContain('<html lang="en">')
+      expect(index).toContain('property="og:title"')
       expect(index).toContain('type="module"')
       expect(index).toContain('rel="stylesheet"')
       expect(markdown).toContain('Markdown examples')
       expect(interactive).toContain('Interactive MDX')
-      expect(interactive).toContain('Count: 3')
+      expect(interactive).toContain('<span>3</span>')
       expect(notFound).toContain('404')
+      await expect(fs.access(path.join(root, 'dist', 'preactpress-search.json'))).resolves.toBeUndefined()
     } finally {
       await fs.rm(root, { recursive: true, force: true })
     }

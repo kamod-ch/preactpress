@@ -1,5 +1,7 @@
 import type { ComponentChildren, FunctionalComponent, JSX } from 'preact'
+import { useEffect, useMemo, useState } from 'preact/hooks'
 import type { LayoutProps } from '../types.js'
+import ThemeToggle from './ThemeToggle.js'
 import './styles.css'
 
 function withBase(base: string, link: string): string {
@@ -52,8 +54,11 @@ function createMdxHeadingComponents() {
       used.set(base, count + 1)
       const id = count === 0 ? base : `${base}-${count + 1}`
       return (
-        <Tag id={id} {...props}>
+        <Tag {...props} id={id} class={`pp-heading ${props.class ?? ''}`.trim()}>
           {children}
+          <a class="pp-heading-anchor" href={`#${id}`} aria-label="Link to this section">
+            #
+          </a>
         </Tag>
       )
     }
@@ -71,7 +76,19 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   page
 }) => {
   const title = page?.title ? `${page.title} | ${site.title}` : site.title
+  const [query, setQuery] = useState('')
+  const [activeHeading, setActiveHeading] = useState<string | undefined>()
   const sidebarItems = (themeConfig.sidebar ?? []).flatMap((group) => group.items)
+  const normalizedQuery = query.trim().toLowerCase()
+  const visibleSidebar = useMemo(() => {
+    if (!normalizedQuery) return themeConfig.sidebar ?? []
+    return (themeConfig.sidebar ?? [])
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((item) => item.text.toLowerCase().includes(normalizedQuery))
+      }))
+      .filter((group) => group.items.length > 0)
+  }, [normalizedQuery, themeConfig.sidebar])
   const activeIndex = sidebarItems.findIndex((item) => isActive(routePath, item.link))
   const previous = activeIndex > 0 ? sidebarItems[activeIndex - 1] : undefined
   const next =
@@ -81,6 +98,38 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   const showOutline = themeConfig.outline !== false && Boolean(page?.headings.length)
   const MdxComponent = page?.kind === 'mdx' ? page.Component : undefined
   const mdxComponents = createMdxHeadingComponents()
+  const editHref =
+    themeConfig.editLink && page?.relativePath
+      ? themeConfig.editLink.pattern.replace(/:path/g, page.relativePath)
+      : undefined
+  const lastUpdated = page?.lastUpdated
+    ? new Date(page.lastUpdated).toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    })
+    : undefined
+
+  useEffect(() => {
+    setQuery('')
+  }, [routePath])
+
+  useEffect(() => {
+    if (!page?.headings.length) {
+      setActiveHeading(undefined)
+      return
+    }
+    const update = () => {
+      const visible = page.headings
+        .map((heading) => document.getElementById(heading.id))
+        .filter((el): el is HTMLElement => Boolean(el))
+        .filter((el) => el.getBoundingClientRect().top <= 96)
+      setActiveHeading(visible.at(-1)?.id ?? page.headings[0]?.id)
+    }
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+  }, [page?.headings])
 
   return (
     <div class="pp-layout">
@@ -92,28 +141,42 @@ const Layout: FunctionalComponent<LayoutProps> = ({
           <a class="pp-title" href={withBase(site.base, '/')}>
             {site.title}
           </a>
-          <nav class="pp-nav-links">
-            {(themeConfig.nav ?? []).map((item) => {
-              const active = isActive(routePath, item.link)
-              return (
-                <a
-                  key={item.link}
-                  class={active ? 'active' : ''}
-                  href={withBase(site.base, item.link)}
-                  aria-current={active ? 'page' : undefined}
-                >
-                  {item.text}
-                </a>
-              )
-            })}
-          </nav>
+          <div class="pp-nav-right">
+            <nav class="pp-nav-links">
+              {(themeConfig.nav ?? []).map((item) => {
+                const active = isActive(routePath, item.link)
+                return (
+                  <a
+                    key={item.link}
+                    class={active ? 'active' : ''}
+                    href={withBase(site.base, item.link)}
+                    aria-current={active ? 'page' : undefined}
+                  >
+                    {item.text}
+                  </a>
+                )
+              })}
+            </nav>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
       <div class="pp-body">
         <aside class="pp-sidebar" aria-label="Site navigation">
           <details class="pp-sidebar-panel" open>
             <summary>Navigation</summary>
-            {(themeConfig.sidebar ?? []).map((group, gi) => (
+            {themeConfig.search ? (
+              <label class="pp-search">
+                <span>Search</span>
+                <input
+                  type="search"
+                  value={query}
+                  placeholder="Filter pages"
+                  onInput={(event) => setQuery((event.currentTarget as HTMLInputElement).value)}
+                />
+              </label>
+            ) : null}
+            {visibleSidebar.map((group, gi) => (
               <div key={gi} class="pp-sidebar-group">
                 {group.text ? (
                   <div class="pp-sidebar-heading">{group.text}</div>
@@ -172,6 +235,16 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 ) : null}
               </nav>
             ) : null}
+            {themeConfig.lastUpdated || editHref ? (
+              <footer class="pp-doc-meta">
+                {themeConfig.lastUpdated && lastUpdated ? (
+                  <span>Last updated {lastUpdated}</span>
+                ) : null}
+                {editHref ? (
+                  <a href={editHref}>{themeConfig.editLink?.text ?? 'Edit this page'}</a>
+                ) : null}
+              </footer>
+            ) : null}
           </article>
         </main>
         {showOutline ? (
@@ -181,7 +254,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               {page?.headings.map((heading) => (
                 <a
                   key={heading.id}
-                  class={`level-${heading.level}`}
+                  class={`level-${heading.level}${activeHeading === heading.id ? ' active' : ''}`}
                   href={`#${heading.id}`}
                 >
                   {heading.text}
@@ -191,6 +264,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
           </aside>
         ) : null}
       </div>
+      {themeConfig.footer ? (
+        <footer class="pp-footer">{themeConfig.footer}</footer>
+      ) : null}
     </div>
   )
 }

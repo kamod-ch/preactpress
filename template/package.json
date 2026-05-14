@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "preactpress dev",
+    "check": "preactpress check",
     "build": "preactpress build",
     "preview": "preactpress preview"
   },
