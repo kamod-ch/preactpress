@@ -10,6 +10,8 @@
   --pp-code-bg: #f6f8fa;
   --pp-code-text: #24292f;
   --pp-focus: #f59e0b;
+  /* Sticky header offset: aligns sidebars / outline with the sticky top nav */
+  --pp-sticky-top: 72px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -134,15 +136,14 @@ body::selection {
 .pp-sidebar {
   width: 260px;
   flex-shrink: 0;
+  align-self: flex-start;
+  position: sticky;
+  top: var(--pp-sticky-top);
+  max-height: calc(100vh - var(--pp-sticky-top));
+  overflow-y: auto;
   border-right: 1px solid var(--pp-border);
   padding: 20px 16px;
   background: var(--pp-sidebar-bg);
-  min-height: calc(100vh - 49px);
-}
-
-.pp-sidebar-panel {
-  position: sticky;
-  top: 70px;
 }
 
 .pp-sidebar-panel > summary {
@@ -219,7 +220,7 @@ body::selection {
 }
 
 .pp-doc-content :where(h1, h2, h3) {
-  scroll-margin-top: 72px;
+  scroll-margin-top: var(--pp-sticky-top);
   line-height: 1.25;
   letter-spacing: 0;
 }
@@ -343,12 +344,12 @@ body::selection {
 .pp-outline {
   width: 220px;
   flex-shrink: 0;
-  padding: 28px 20px 64px 0;
-}
-
-.pp-outline > * {
+  align-self: flex-start;
   position: sticky;
-  top: 76px;
+  top: var(--pp-sticky-top);
+  max-height: calc(100vh - var(--pp-sticky-top));
+  overflow-y: auto;
+  padding: 28px 20px 64px 0;
 }
 
 .pp-outline-heading {
@@ -410,7 +411,11 @@ body::selection {
 
   .pp-sidebar {
     width: 100%;
-    min-height: auto;
+    align-self: stretch;
+    position: static;
+    top: auto;
+    max-height: none;
+    overflow: visible;
     border-right: none;
     border-bottom: 1px solid var(--pp-border);
     padding: 12px 20px;
