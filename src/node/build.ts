@@ -6,7 +6,9 @@ import preact from '@preact/preset-vite'
 import { resolveConfigForBuild } from './config.js'
 import type { SiteConfig } from './siteConfig.js'
 import { PACKAGE_ROOT } from './packageRoot.js'
+import { preactPressMdxPlugin } from './mdx.js'
 import { listMarkdownRoutes, preactPressPlugin } from './plugin.js'
+import { resolveDependency } from './resolveDeps.js'
 
 const CLIENT_ALIAS = 'preactpress/app'
 
@@ -88,11 +90,16 @@ export async function build(root?: string): Promise<void> {
     root: site.srcDir,
     base: site.site.base,
     customLogger: site.logger,
-    plugins: [preact(), preactPressPlugin(site)],
+    plugins: [preactPressMdxPlugin(), preact(), preactPressPlugin(site)],
     resolve: {
-      alias: {
-        [CLIENT_ALIAS]: clientEntry()
-      }
+      alias: [
+        { find: CLIENT_ALIAS, replacement: clientEntry() },
+        { find: /^preact\/jsx-dev-runtime$/, replacement: resolveDependency('preact/jsx-dev-runtime') },
+        { find: /^preact\/jsx-runtime$/, replacement: resolveDependency('preact/jsx-runtime') },
+        { find: /^preact\/devtools$/, replacement: resolveDependency('preact/devtools') },
+        { find: /^preact\/hooks$/, replacement: resolveDependency('preact/hooks') },
+        { find: /^preact$/, replacement: resolveDependency('preact') }
+      ]
     }
   }
 
@@ -149,7 +156,7 @@ export async function build(root?: string): Promise<void> {
 
   const routes = await listMarkdownRoutes(site)
   if (!routes.includes('/')) {
-    throw new Error('preactpress: add an index.md at the site root')
+    throw new Error('preactpress: add an index.md or index.mdx at the site root')
   }
 
   for (const route of routes) {

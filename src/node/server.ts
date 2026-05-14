@@ -3,7 +3,9 @@ import { createServer as createViteServer, mergeConfig, type ServerOptions } fro
 import preact from '@preact/preset-vite'
 import { resolveConfig } from './config.js'
 import { PACKAGE_ROOT } from './packageRoot.js'
+import { preactPressMdxPlugin } from './mdx.js'
 import { preactPressPlugin } from './plugin.js'
+import { resolveDependency } from './resolveDeps.js'
 
 const CLIENT_ALIAS = 'preactpress/app'
 
@@ -26,11 +28,16 @@ export async function createServer(
     cacheDir: site.cacheDir,
     customLogger: site.logger,
     appType: 'spa' as const,
-    plugins: [preact(), preactPressPlugin(site)],
+    plugins: [preactPressMdxPlugin(), preact(), preactPressPlugin(site)],
     resolve: {
-      alias: {
-        [CLIENT_ALIAS]: resolveClientEntry()
-      }
+      alias: [
+        { find: CLIENT_ALIAS, replacement: resolveClientEntry() },
+        { find: /^preact\/jsx-dev-runtime$/, replacement: resolveDependency('preact/jsx-dev-runtime') },
+        { find: /^preact\/jsx-runtime$/, replacement: resolveDependency('preact/jsx-runtime') },
+        { find: /^preact\/devtools$/, replacement: resolveDependency('preact/devtools') },
+        { find: /^preact\/hooks$/, replacement: resolveDependency('preact/hooks') },
+        { find: /^preact$/, replacement: resolveDependency('preact') }
+      ]
     },
     server: {
       host: true,

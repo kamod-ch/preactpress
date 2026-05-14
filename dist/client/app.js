@@ -64,6 +64,7 @@ export function App({ routePath }) {
     const page = useMemo(() => {
         return (pages[currentRoute] ??
             pages['/404'] ?? {
+            kind: 'markdown',
             html: '<p>Page not found.</p>',
             title: '404',
             description: undefined,

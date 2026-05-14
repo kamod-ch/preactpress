@@ -17,12 +17,18 @@ describe('build smoke', () => {
         path.join(root, 'dist', 'markdown-examples', 'index.html'),
         'utf8'
       )
+      const interactive = await fs.readFile(
+        path.join(root, 'dist', 'interactive', 'index.html'),
+        'utf8'
+      )
       const notFound = await fs.readFile(path.join(root, 'dist', '404.html'), 'utf8')
 
       expect(index).toContain('<div id="app">')
       expect(index).toContain('type="module"')
       expect(index).toContain('rel="stylesheet"')
       expect(markdown).toContain('Markdown examples')
+      expect(interactive).toContain('Interactive MDX')
+      expect(interactive).toContain('Count: 3')
       expect(notFound).toContain('404')
     } finally {
       await fs.rm(root, { recursive: true, force: true })

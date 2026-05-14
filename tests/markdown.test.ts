@@ -6,7 +6,7 @@ vi.mock('shiki', () => ({
   })
 }))
 
-const { renderMarkdown } = await import('../src/node/markdown.js')
+const { extractMarkdownMetadata, renderMarkdown } = await import('../src/node/markdown.js')
 
 describe('renderMarkdown', () => {
   it('renders frontmatter, headings, and code fences', async () => {
@@ -43,5 +43,34 @@ const answer = 42
     const page = await renderMarkdown('[Preact](https://preactjs.com)')
     expect(page.html).toContain('target="_blank"')
     expect(page.html).toContain('rel="noreferrer"')
+  })
+
+  it('extracts mdx frontmatter and markdown headings without rendering jsx headings', () => {
+    const page = extractMarkdownMetadata(`---
+title: Counter demo
+description: Interactive MDX page
+---
+
+import Counter from './Counter.tsx'
+
+## Demo
+
+<Counter initial={3} />
+
+<h2>JSX heading</h2>
+
+### Details
+`)
+
+    expect(page.title).toBe('Counter demo')
+    expect(page.description).toBe('Interactive MDX page')
+    expect(page.meta).toEqual({
+      title: 'Counter demo',
+      description: 'Interactive MDX page'
+    })
+    expect(page.headings).toEqual([
+      { id: 'demo', text: 'Demo', level: 2 },
+      { id: 'details', text: 'Details', level: 3 }
+    ])
   })
 })

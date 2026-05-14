@@ -9,7 +9,7 @@ This site is generated with **PreactPress**, a tiny Vite and Preact static site 
 
 ## Start editing
 
-Edit `index.md` for this page, add more pages as `*.md` files, and configure navigation in `.preactpress/config.ts`.
+Edit `index.md` for this page, add more pages as `*.md` files, use `*.mdx` for pages with Preact components, and configure navigation in `.preactpress/config.ts`.
 
 ```ts
 export default {
@@ -27,6 +27,7 @@ export default {
 | Static HTML build | Yes |
 | Client navigation | Yes |
 | Markdown frontmatter | Yes |
+| MDX with Preact components | Yes |
 | Code highlighting | Yes |
 
 > The default theme is intentionally small, so you can replace it with your own Preact layout when your site grows.

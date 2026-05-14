@@ -1,4 +1,4 @@
-import type { FunctionalComponent } from 'preact'
+import type { ComponentChildren, FunctionalComponent, JSX } from 'preact'
 import type { LayoutProps } from '../types.js'
 import './styles.css'
 
@@ -21,6 +21,49 @@ function isActive(routePath: string, link: string): boolean {
   return route === target || (target !== '/' && route.startsWith(`${target}/`))
 }
 
+function childText(children: ComponentChildren): string {
+  if (children == null || typeof children === 'boolean') return ''
+  if (typeof children === 'string' || typeof children === 'number') return String(children)
+  if (Array.isArray(children)) return children.map(childText).join('')
+  if (typeof children === 'object' && 'props' in children) {
+    return childText(children.props.children as ComponentChildren)
+  }
+  return ''
+}
+
+function slugify(text: string): string {
+  const slug = text
+    .toLowerCase()
+    .trim()
+    .replace(/<[^>]+>/g, '')
+    .replace(/&[a-z0-9#]+;/gi, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  return slug || 'section'
+}
+
+function createMdxHeadingComponents() {
+  const used = new Map<string, number>()
+  const heading =
+    (Tag: 'h2' | 'h3') =>
+    ({ children, ...props }: JSX.HTMLAttributes<HTMLHeadingElement>) => {
+      const base = slugify(childText(children))
+      const count = used.get(base) ?? 0
+      used.set(base, count + 1)
+      const id = count === 0 ? base : `${base}-${count + 1}`
+      return (
+        <Tag id={id} {...props}>
+          {children}
+        </Tag>
+      )
+    }
+
+  return {
+    h2: heading('h2'),
+    h3: heading('h3')
+  }
+}
+
 const Layout: FunctionalComponent<LayoutProps> = ({
   site,
   themeConfig,
@@ -36,6 +79,8 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       ? sidebarItems[activeIndex + 1]
       : undefined
   const showOutline = themeConfig.outline !== false && Boolean(page?.headings.length)
+  const MdxComponent = page?.kind === 'mdx' ? page.Component : undefined
+  const mdxComponents = createMdxHeadingComponents()
 
   return (
     <div class="pp-layout">
@@ -99,10 +144,16 @@ const Layout: FunctionalComponent<LayoutProps> = ({
             {page?.description ? (
               <p class="pp-doc-lead">{page.description}</p>
             ) : null}
-            <div
-              class="pp-doc-content"
-              dangerouslySetInnerHTML={{ __html: page?.html ?? '' }}
-            />
+            {MdxComponent ? (
+              <div class="pp-doc-content">
+                <MdxComponent components={mdxComponents} />
+              </div>
+            ) : (
+              <div
+                class="pp-doc-content"
+                dangerouslySetInnerHTML={{ __html: page?.kind === 'markdown' ? page.html : '' }}
+              />
+            )}
             {previous || next ? (
               <nav class="pp-pager" aria-label="Page navigation">
                 {previous ? (

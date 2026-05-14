@@ -12,6 +12,7 @@ export function render(routePath: string): {
   const page =
     pages[routePath] ??
     pages['/404'] ?? {
+      kind: 'markdown',
       html: '',
       title: 'Not found',
       description: site.description,

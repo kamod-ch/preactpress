@@ -1,6 +1,6 @@
 # PreactPress
 
-Static site generator using **Vite** and **Preact** (no Vue). Project layout is inspired by VitePress: Markdown pages, a `.preactpress` config directory, `dev` / `build` / `preview` commands, and an overridable theme `Layout`.
+Static site generator using **Vite** and **Preact** (no Vue). Project layout is inspired by VitePress: Markdown and MDX pages, a `.preactpress` config directory, `dev` / `build` / `preview` commands, and an overridable theme `Layout`.
 
 ## Requirements
 
@@ -58,6 +58,25 @@ The `init` template uses a plain `export default { ... }` object so it works bef
 Default theme lives in the `preactpress` package (`src/client/theme-default/Layout.tsx`). Point `theme` to a `.tsx` file that **default-exports** a Preact layout; props match `LayoutProps` in the package sources.
 
 Markdown HTML is disabled by default. Enable `markdown.html` only for trusted content.
+
+## MDX
+
+Use `.md` for regular Markdown pages and `.mdx` when a page needs Preact components. MDX pages can import components directly:
+
+```mdx
+---
+title: Counter demo
+description: Interactive MDX page
+---
+
+import Counter from './components/Counter.tsx'
+
+## Demo
+
+<Counter initial={3} />
+```
+
+PreactPress reads MDX frontmatter for page metadata and extracts Markdown `##` / `###` headings for the outline.
 
 ## Monorepo
 

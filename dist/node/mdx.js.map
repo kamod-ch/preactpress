@@ -1,0 +1,1 @@
+{"version":3,"file":"mdx.js","sourceRoot":"","sources":["../../src/node/mdx.ts"],"names":[],"mappings":"AAAA,OAAO,GAAG,MAAM,gBAAgB,CAAA;AAChC,OAAO,iBAAiB,MAAM,oBAAoB,CAAA;AAGlD,MAAM,UAAU,oBAAoB;IAClC,OAAO,GAAG,CAAC;QACT,eAAe,EAAE,QAAQ;QACzB,aAAa,EAAE,CAAC,iBAAiB,CAAC;KACnC,CAAW,CAAA;AACd,CAAC"}

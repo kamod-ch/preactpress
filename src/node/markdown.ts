@@ -57,6 +57,13 @@ export interface RenderedMarkdown {
   headings: OutlineItem[]
 }
 
+export interface MarkdownMetadata {
+  meta: Record<string, unknown>
+  title?: string
+  description?: string
+  headings: OutlineItem[]
+}
+
 const DEFAULT_MARKDOWN_CONFIG: Required<MarkdownConfig> = {
   html: false,
   linkify: true,
@@ -69,7 +76,7 @@ export async function renderMarkdown(
   options: MarkdownConfig = {}
 ): Promise<RenderedMarkdown> {
   const { data, content } = matter(raw)
-  const meta = (data && typeof data === 'object' ? data : {}) as Record<string, unknown>
+  const meta = normalizeMatterData(data)
   const config = { ...DEFAULT_MARKDOWN_CONFIG, ...options }
   const hi = await getHighlighter()
   const headings: OutlineItem[] = []
@@ -136,6 +143,66 @@ export async function renderMarkdown(
     typeof meta.description === 'string' ? meta.description : undefined
 
   return { meta, html, title, description, headings }
+}
+
+export function readMarkdownMetadata(absPath: string): MarkdownMetadata {
+  const raw = fs.readFileSync(absPath, 'utf8')
+  return extractMarkdownMetadata(raw)
+}
+
+export function extractMarkdownMetadata(raw: string): MarkdownMetadata {
+  const { data, content } = matter(raw)
+  const meta = normalizeMatterData(data)
+  const headings = extractHeadings(content)
+  const title =
+    typeof meta.title === 'string' ? meta.title : undefined
+  const description =
+    typeof meta.description === 'string' ? meta.description : undefined
+
+  return { meta, title, description, headings }
+}
+
+function normalizeMatterData(data: unknown): Record<string, unknown> {
+  return (data && typeof data === 'object' ? data : {}) as Record<string, unknown>
+}
+
+function extractHeadings(content: string): OutlineItem[] {
+  const headings: OutlineItem[] = []
+  const lines = content.split(/\r?\n/)
+  let inFence = false
+  let fenceMarker = ''
+
+  for (const line of lines) {
+    const fence = line.match(/^ {0,3}(`{3,}|~{3,})/)
+    if (fence) {
+      const marker = fence[1][0]
+      if (!inFence) {
+        inFence = true
+        fenceMarker = marker
+      } else if (marker === fenceMarker) {
+        inFence = false
+        fenceMarker = ''
+      }
+      continue
+    }
+    if (inFence) continue
+
+    const heading = line.match(/^ {0,3}(#{2,3})\s+(.+?)\s*#*\s*$/)
+    if (!heading) continue
+
+    const level = heading[1].length
+    const text = heading[2]
+      .replace(/<[^>]+>/g, '')
+      .replace(/\{[^}]*\}/g, '')
+      .replace(/[`*_~[\]]/g, '')
+      .trim()
+    if (!text) continue
+
+    const id = uniqueSlug(slugify(text), headings)
+    headings.push({ id, text, level })
+  }
+
+  return headings
 }
 
 function slugify(text: string): string {
