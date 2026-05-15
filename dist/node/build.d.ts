@@ -1,4 +1,4 @@
-export declare function publicUrl(siteBase: string, file: string): string;
+export { publicUrl } from './html.js';
 export declare function pickMainEntry(manifest: Record<string, {
     file?: string;
     css?: string[];

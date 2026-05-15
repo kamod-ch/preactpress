@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "preact/jsx-runtime";
 import { useEffect, useMemo, useState } from 'preact/hooks';
+import Logo from './Logo.js';
 import ThemeToggle from './ThemeToggle.js';
 import './styles.css';
 function withBase(base, link) {
@@ -108,7 +109,7 @@ const Layout = ({ site, themeConfig, routePath, page }) => {
         window.addEventListener('scroll', update, { passive: true });
         return () => window.removeEventListener('scroll', update);
     }, [page?.headings]);
-    return (_jsxs("div", { class: "pp-layout", children: [_jsx("a", { class: "pp-skip-link", href: "#content", children: "Skip to content" }), _jsx("header", { class: "pp-nav", children: _jsxs("div", { class: "pp-nav-inner", children: [_jsx("a", { class: "pp-title", href: withBase(site.base, '/'), children: site.title }), _jsxs("div", { class: "pp-nav-right", children: [_jsx("nav", { class: "pp-nav-links", children: (themeConfig.nav ?? []).map((item) => {
+    return (_jsxs("div", { class: "pp-layout", children: [_jsx("a", { class: "pp-skip-link", href: "#content", children: "Skip to content" }), _jsx("header", { class: "pp-nav", children: _jsxs("div", { class: "pp-nav-inner", children: [_jsx("a", { class: "pp-title", href: withBase(site.base, '/'), "aria-label": site.title, children: _jsx(Logo, { class: "pp-logo", label: site.title }) }), _jsxs("div", { class: "pp-nav-right", children: [_jsx("nav", { class: "pp-nav-links", children: (themeConfig.nav ?? []).map((item) => {
                                         const active = isActive(routePath, item.link);
                                         return (_jsx("a", { class: active ? 'active' : '', href: withBase(site.base, item.link), "aria-current": active ? 'page' : undefined, children: item.text }, item.link));
                                     }) }), _jsx(ThemeToggle, {})] })] }) }), _jsxs("div", { class: "pp-body", children: [_jsx("aside", { class: "pp-sidebar", "aria-label": "Site navigation", children: _jsxs("details", { class: "pp-sidebar-panel", open: true, children: [_jsx("summary", { children: "Navigation" }), themeConfig.search ? (_jsxs("label", { class: "pp-search", children: [_jsx("span", { children: "Search" }), _jsx("input", { type: "search", value: query, placeholder: "Filter pages", onInput: (event) => setQuery(event.currentTarget.value) })] })) : null, visibleSidebar.map((group, gi) => (_jsxs("div", { class: "pp-sidebar-group", children: [group.text ? (_jsx("div", { class: "pp-sidebar-heading", children: group.text })) : null, _jsx("ul", { children: group.items.map((it) => {

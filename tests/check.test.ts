@@ -14,6 +14,7 @@ async function makeSite(config: string): Promise<string> {
 describe('check', () => {
   it('reports missing nav/sidebar and markdown links', async () => {
     const root = await makeSite(`export default {
+      site: { description: 'Test site' },
       themeConfig: {
         nav: [{ text: 'Missing', link: '/missing' }],
         sidebar: [{ items: [{ text: 'Home', link: '/' }] }]

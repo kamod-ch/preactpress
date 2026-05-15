@@ -3,6 +3,8 @@ import path from 'node:path';
 import c from 'picocolors';
 import { resolveConfig } from './config.js';
 import { fileHrefToRoute, normalizeRoute, scanContentFiles } from './content.js';
+import { readMarkdownMetadata } from './markdown.js';
+import { listTagIndexRoutes } from './tagIndex.js';
 const MARKDOWN_LINK_RE = /!?\[[^\]]*]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 const HTML_HREF_RE = /\bhref=["']([^"']+)["']/g;
 export async function check(root) {
@@ -10,6 +12,9 @@ export async function check(root) {
     const files = await scanContentFiles(site);
     const routes = files.map((file) => file.route).sort();
     const routeSet = new Set(routes);
+    const tagRoutes = await listTagIndexRoutes(site, routeSet);
+    for (const tr of tagRoutes)
+        routeSet.add(tr);
     const issues = [];
     if (!routeSet.has('/')) {
         issues.push({
@@ -18,6 +23,7 @@ export async function check(root) {
         });
     }
     checkConfiguredLinks(site, routeSet, issues);
+    checkSeoDescriptions(site, files, issues);
     for (const file of files) {
         const raw = await fs.readFile(file.file, 'utf8');
         for (const href of extractLinks(raw)) {
@@ -32,7 +38,8 @@ export async function check(root) {
             }
         }
     }
-    return { issues, routes };
+    const allRoutes = [...routes, ...tagRoutes].sort();
+    return { issues, routes: allRoutes };
 }
 export function printCheckResult(result) {
     console.log(c.bold(`PreactPress check: ${result.routes.length} route(s)`));
@@ -45,6 +52,20 @@ export function printCheckResult(result) {
     for (const issue of result.issues) {
         const label = issue.level === 'error' ? c.red('error') : c.yellow('warning');
         console.log(`${label}: ${issue.message}`);
+    }
+}
+function checkSeoDescriptions(site, files, issues) {
+    if (site.site.description.trim())
+        return;
+    const missing = files.filter((file) => {
+        const meta = readMarkdownMetadata(file.file);
+        return typeof meta.description !== 'string' || !meta.description.trim();
+    });
+    if (missing.length > 0) {
+        issues.push({
+            level: 'warning',
+            message: `site.description is empty and ${missing.length} page(s) lack frontmatter description (SEO meta may be missing)`
+        });
     }
 }
 function checkConfiguredLinks(site, routes, issues) {

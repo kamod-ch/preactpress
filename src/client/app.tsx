@@ -3,18 +3,11 @@ import Layout from 'virtual:preactpress-layout'
 import { pages } from 'virtual:preactpress-pages'
 import { site, themeConfig } from 'virtual:preactpress-site'
 import type { PageView } from './types.js'
+import { usePageHead } from './usePageHead.js'
+import { normalizeRoute, routeFromPathname } from '../shared/route.js'
 
 function routeFromLocation(): string {
-  const base = site.base === '/' ? '' : site.base.replace(/\/$/, '')
-  let p = window.location.pathname
-  if (base && p.startsWith(base)) p = p.slice(base.length) || '/'
-  return normalizeRoute(p)
-}
-
-function normalizeRoute(route: string): string {
-  const clean = route.split(/[?#]/, 1)[0] || '/'
-  const prefixed = clean.startsWith('/') ? clean : `/${clean}`
-  return prefixed.replace(/\/$/, '') || '/'
+  return routeFromPathname(window.location.pathname, site.base)
 }
 
 function routeFromHref(href: string): string | undefined {
@@ -77,6 +70,26 @@ export function App({ routePath }: { routePath: string }) {
       }
     )
   }, [currentRoute])
+
+  usePageHead({
+    site,
+    route: currentRoute,
+    page:
+      page?.kind === 'markdown'
+        ? {
+            title: page.title,
+            description: page.description,
+            kind: 'markdown',
+            html: page.html
+          }
+        : page
+          ? {
+              title: page.title,
+              description: page.description,
+              kind: 'mdx'
+            }
+          : undefined
+  })
 
   return (
     <Layout

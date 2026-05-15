@@ -3,11 +3,19 @@ import path from 'node:path';
 import { readMarkdownFile, readMarkdownMetadata } from './markdown.js';
 import { siteConfigToClientJson } from './config.js';
 import { PREACTPRESS_THEME_BOOT_SCRIPT } from '../shared/theme.js';
-import { CONTENT_EXTENSIONS, listMarkdownRoutes, mdFileToRoute, scanContentFiles } from './content.js';
+import { createFaviconMiddleware, faviconHtmlTags } from './favicon.js';
+import { createDevSsrMiddleware } from './devSsr.js';
+import { CONTENT_EXTENSIONS, listMarkdownRoutes as listFileMarkdownRoutes, mdFileToRoute, scanContentFiles } from './content.js';
+import { collectTagSlugMap, renderTagIndexHtml, tagIndexPageRoute, listTagIndexRoutes } from './tagIndex.js';
 const VIRTUAL_LAYOUT = '\0virtual:preactpress-layout';
 const VIRTUAL_PAGES = '\0virtual:preactpress-pages';
 const VIRTUAL_SITE = '\0virtual:preactpress-site';
-export { listMarkdownRoutes, mdFileToRoute };
+export { mdFileToRoute };
+export async function listMarkdownRoutes(site) {
+    const files = await listFileMarkdownRoutes(site);
+    const tagRoutes = await listTagIndexRoutes(site, new Set(files));
+    return [...files, ...tagRoutes].sort();
+}
 export function preactPressPlugin(site) {
     const routeToFile = new Map();
     let pagesModule = '';
@@ -18,7 +26,16 @@ export function preactPressPlugin(site) {
         }
     }
     async function buildPagesModule() {
-        const routes = [...routeToFile.keys()].sort();
+        const filesList = [...routeToFile.values()];
+        const tagMap = collectTagSlugMap(filesList);
+        const fileRouteSet = new Set(routeToFile.keys());
+        const syntheticTagRoutes = [];
+        for (const slug of tagMap.keys()) {
+            const tr = tagIndexPageRoute(slug);
+            if (!fileRouteSet.has(tr))
+                syntheticTagRoutes.push(tr);
+        }
+        const routes = [...fileRouteSet, ...syntheticTagRoutes].sort();
         const entries = {};
         const mdxImports = [];
         const mdxEntries = [];
@@ -51,6 +68,21 @@ export function preactPressPlugin(site) {
                 lastUpdated
             };
         }
+        for (const [slug, data] of tagMap) {
+            const tr = tagIndexPageRoute(slug);
+            if (fileRouteSet.has(tr))
+                continue;
+            entries[tr] = {
+                kind: 'markdown',
+                meta: { tagIndex: true, tag: data.label, tagSlug: slug },
+                html: renderTagIndexHtml(slug, data.label, data.items),
+                title: `Tag: ${data.label}`,
+                description: `Pages tagged “${data.label}”`,
+                headings: [],
+                relativePath: undefined,
+                lastUpdated: undefined
+            };
+        }
         const markdownEntries = Object.entries(entries).map(([route, page]) => `${JSON.stringify(route)}: ${JSON.stringify(page)}`);
         return `${mdxImports.join('\n')}\nexport const routes = ${JSON.stringify(routes)};\nexport const pages = {\n${[
             ...markdownEntries,
@@ -71,13 +103,21 @@ export function preactPressPlugin(site) {
         transformIndexHtml(html) {
             if (!html.includes('</head>'))
                 return html;
-            const tag = `<script>${PREACTPRESS_THEME_BOOT_SCRIPT}</script>`;
-            return html.replace('</head>', `    ${tag}\n  </head>`);
+            const tags = [
+                faviconHtmlTags(site.site.base),
+                `<script>${PREACTPRESS_THEME_BOOT_SCRIPT}</script>`
+            ];
+            const inject = html.includes('rel="icon"') || html.includes("rel='icon'")
+                ? tags.slice(1)
+                : tags;
+            return html.replace('</head>', `    ${inject.join('\n    ')}\n  </head>`);
         },
         async buildStart() {
             await scan();
         },
         configureServer(server) {
+            server.middlewares.use(createDevSsrMiddleware(site, server));
+            server.middlewares.use(createFaviconMiddleware(site.site.base));
             server.watcher.add(site.srcDir);
             server.watcher.on('all', async (_evt, file) => {
                 if (typeof file === 'string' && CONTENT_EXTENSIONS.some((ext) => file.endsWith(ext))) {

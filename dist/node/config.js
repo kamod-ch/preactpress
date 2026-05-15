@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import { createLogger, loadConfigFromFile, normalizePath } from 'vite';
 import { resolveConfigDir, resolveConfigPath } from './paths.js';
 import { DEFAULT_THEME_LAYOUT, PACKAGE_ROOT } from './packageRoot.js';
+import { defaultFaviconHead, hasFaviconHead } from './favicon.js';
 function fileExists(p) {
     try {
         fs.accessSync(p);
@@ -86,7 +87,10 @@ export async function resolveConfig(rootArg, command = 'serve', mode = 'developm
         site,
         themeConfig: user.themeConfig ?? {},
         markdown,
-        head: user.head ?? [],
+        head: [
+            ...(hasFaviconHead(user.head ?? []) ? [] : defaultFaviconHead(site.base)),
+            ...(user.head ?? [])
+        ],
         transformHead: user.transformHead,
         build: {
             sitemap: user.build?.sitemap ?? true,

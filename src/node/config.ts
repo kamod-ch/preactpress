@@ -5,6 +5,7 @@ import { createLogger, loadConfigFromFile, normalizePath, type ConfigEnv } from 
 import type { SiteConfig, UserConfig } from './siteConfig.js'
 import { resolveConfigDir, resolveConfigPath } from './paths.js'
 import { DEFAULT_THEME_LAYOUT, PACKAGE_ROOT } from './packageRoot.js'
+import { defaultFaviconHead, hasFaviconHead } from './favicon.js'
 
 function fileExists(p: string): boolean {
   try {
@@ -108,7 +109,10 @@ export async function resolveConfig(
     site,
     themeConfig: user.themeConfig ?? {},
     markdown,
-    head: user.head ?? [],
+    head: [
+      ...(hasFaviconHead(user.head ?? []) ? [] : defaultFaviconHead(site.base)),
+      ...(user.head ?? [])
+    ],
     transformHead: user.transformHead,
     build: {
       sitemap: user.build?.sitemap ?? true,

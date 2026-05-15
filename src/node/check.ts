@@ -3,6 +3,8 @@ import path from 'node:path'
 import c from 'picocolors'
 import { resolveConfig } from './config.js'
 import { fileHrefToRoute, normalizeRoute, scanContentFiles } from './content.js'
+import { readMarkdownMetadata } from './markdown.js'
+import { listTagIndexRoutes } from './tagIndex.js'
 import type { SiteConfig } from './siteConfig.js'
 
 export interface CheckIssue {
@@ -23,6 +25,8 @@ export async function check(root?: string): Promise<CheckResult> {
   const files = await scanContentFiles(site)
   const routes = files.map((file) => file.route).sort()
   const routeSet = new Set(routes)
+  const tagRoutes = await listTagIndexRoutes(site, routeSet)
+  for (const tr of tagRoutes) routeSet.add(tr)
   const issues: CheckIssue[] = []
 
   if (!routeSet.has('/')) {
@@ -33,6 +37,7 @@ export async function check(root?: string): Promise<CheckResult> {
   }
 
   checkConfiguredLinks(site, routeSet, issues)
+  checkSeoDescriptions(site, files, issues)
 
   for (const file of files) {
     const raw = await fs.readFile(file.file, 'utf8')
@@ -48,7 +53,8 @@ export async function check(root?: string): Promise<CheckResult> {
     }
   }
 
-  return { issues, routes }
+  const allRoutes = [...routes, ...tagRoutes].sort()
+  return { issues, routes: allRoutes }
 }
 
 export function printCheckResult(result: CheckResult): void {
@@ -63,6 +69,24 @@ export function printCheckResult(result: CheckResult): void {
   for (const issue of result.issues) {
     const label = issue.level === 'error' ? c.red('error') : c.yellow('warning')
     console.log(`${label}: ${issue.message}`)
+  }
+}
+
+function checkSeoDescriptions(
+  site: SiteConfig,
+  files: Awaited<ReturnType<typeof scanContentFiles>>,
+  issues: CheckIssue[]
+): void {
+  if (site.site.description.trim()) return
+  const missing = files.filter((file) => {
+    const meta = readMarkdownMetadata(file.file)
+    return typeof meta.description !== 'string' || !meta.description.trim()
+  })
+  if (missing.length > 0) {
+    issues.push({
+      level: 'warning',
+      message: `site.description is empty and ${missing.length} page(s) lack frontmatter description (SEO meta may be missing)`
+    })
   }
 }
 

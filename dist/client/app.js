@@ -3,17 +3,10 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 import Layout from 'virtual:preactpress-layout';
 import { pages } from 'virtual:preactpress-pages';
 import { site, themeConfig } from 'virtual:preactpress-site';
+import { usePageHead } from './usePageHead.js';
+import { normalizeRoute, routeFromPathname } from '../shared/route.js';
 function routeFromLocation() {
-    const base = site.base === '/' ? '' : site.base.replace(/\/$/, '');
-    let p = window.location.pathname;
-    if (base && p.startsWith(base))
-        p = p.slice(base.length) || '/';
-    return normalizeRoute(p);
-}
-function normalizeRoute(route) {
-    const clean = route.split(/[?#]/, 1)[0] || '/';
-    const prefixed = clean.startsWith('/') ? clean : `/${clean}`;
-    return prefixed.replace(/\/$/, '') || '/';
+    return routeFromPathname(window.location.pathname, site.base);
 }
 function routeFromHref(href) {
     const url = new URL(href, window.location.href);
@@ -72,6 +65,24 @@ export function App({ routePath }) {
             headings: []
         });
     }, [currentRoute]);
+    usePageHead({
+        site,
+        route: currentRoute,
+        page: page?.kind === 'markdown'
+            ? {
+                title: page.title,
+                description: page.description,
+                kind: 'markdown',
+                html: page.html
+            }
+            : page
+                ? {
+                    title: page.title,
+                    description: page.description,
+                    kind: 'mdx'
+                }
+                : undefined
+    });
     return (_jsx(Layout, { site: site, themeConfig: themeConfig, routePath: currentRoute, page: page }));
 }
 //# sourceMappingURL=app.js.map

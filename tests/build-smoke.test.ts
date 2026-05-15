@@ -22,16 +22,27 @@ describe('build smoke', () => {
         'utf8'
       )
       const notFound = await fs.readFile(path.join(root, 'dist', '404.html'), 'utf8')
+      const tagIndex = await fs.readFile(
+        path.join(root, 'dist', 'tags', 'markdown', 'index.html'),
+        'utf8'
+      )
 
       expect(index).toContain('<div id="app">')
       expect(index).toContain('<html lang="en">')
       expect(index).toContain('property="og:title"')
+      expect(index).toContain('name="description"')
+      expect(index).toMatch(/<meta name="description" content="[^"]+"/)
       expect(index).toContain('type="module"')
       expect(index).toContain('rel="stylesheet"')
+      expect(index).toContain('href="/favicon.svg"')
+      await expect(fs.access(path.join(root, 'dist', 'favicon.svg'))).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'dist', 'favicon.png'))).resolves.toBeUndefined()
       expect(markdown).toContain('Markdown examples')
       expect(interactive).toContain('Interactive MDX')
       expect(interactive).toContain('<span>3</span>')
       expect(notFound).toContain('404')
+      expect(tagIndex).toContain('Pages tagged: markdown')
+      expect(tagIndex).toContain('Markdown examples')
       await expect(fs.access(path.join(root, 'dist', 'preactpress-search.json'))).resolves.toBeUndefined()
     } finally {
       await fs.rm(root, { recursive: true, force: true })

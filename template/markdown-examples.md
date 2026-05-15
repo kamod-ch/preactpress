@@ -1,6 +1,8 @@
 ---
 title: Markdown examples
 description: Common authoring snippets
+tags:
+  - markdown
 ---
 
 ## Code

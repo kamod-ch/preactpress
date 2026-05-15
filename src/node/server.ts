@@ -5,7 +5,7 @@ import { normalizeBase, resolveConfig } from './config.js'
 import { PACKAGE_ROOT } from './packageRoot.js'
 import { preactPressMdxPlugin } from './mdx.js'
 import { preactPressPlugin } from './plugin.js'
-import { resolveDependency } from './resolveDeps.js'
+import { resolvePreactEsm } from './resolveDeps.js'
 
 const CLIENT_ALIAS = 'preactpress/app'
 
@@ -32,11 +32,15 @@ export async function createServer(
     resolve: {
       alias: [
         { find: CLIENT_ALIAS, replacement: resolveClientEntry() },
-        { find: /^preact\/jsx-dev-runtime$/, replacement: resolveDependency('preact/jsx-dev-runtime') },
-        { find: /^preact\/jsx-runtime$/, replacement: resolveDependency('preact/jsx-runtime') },
-        { find: /^preact\/devtools$/, replacement: resolveDependency('preact/devtools') },
-        { find: /^preact\/hooks$/, replacement: resolveDependency('preact/hooks') },
-        { find: /^preact$/, replacement: resolveDependency('preact') }
+        { find: /^preact\/jsx-dev-runtime$/, replacement: resolvePreactEsm('preact/jsx-dev-runtime') },
+        { find: /^preact\/jsx-runtime$/, replacement: resolvePreactEsm('preact/jsx-runtime') },
+        { find: /^preact\/devtools$/, replacement: resolvePreactEsm('preact/devtools') },
+        { find: /^preact\/hooks$/, replacement: resolvePreactEsm('preact/hooks') },
+        { find: /^preact$/, replacement: resolvePreactEsm('preact') },
+        {
+          find: /^preact-render-to-string$/,
+          replacement: resolvePreactEsm('preact-render-to-string')
+        }
       ]
     },
     server: {
@@ -45,6 +49,9 @@ export async function createServer(
         allow: [site.root, PACKAGE_ROOT]
       },
       ...server
+    },
+    ssr: {
+      noExternal: ['preact', 'preact-render-to-string']
     }
   }
 

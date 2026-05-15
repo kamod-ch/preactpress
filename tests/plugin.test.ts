@@ -46,4 +46,25 @@ describe('mdFileToRoute', () => {
       await fs.rm(root, { recursive: true, force: true })
     }
   })
+
+  it('adds /tags/<slug> routes for frontmatter tags', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-tag-routes-'))
+    try {
+      await fs.writeFile(path.join(root, 'index.md'), '---\ntitle: Home\n---\n', 'utf8')
+      await fs.writeFile(
+        path.join(root, 'post.md'),
+        '---\ntitle: Post\ntags: [news, draft]\n---\n',
+        'utf8'
+      )
+
+      await expect(listMarkdownRoutes({ srcDir: root } as SiteConfig)).resolves.toEqual([
+        '/',
+        '/post',
+        '/tags/draft',
+        '/tags/news'
+      ])
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
 })

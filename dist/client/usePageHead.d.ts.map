@@ -1,0 +1,1 @@
+{"version":3,"file":"usePageHead.d.ts","sourceRoot":"","sources":["../../src/client/usePageHead.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,uBAAuB,CAAA;AACrD,OAAO,EAAmB,KAAK,aAAa,EAAE,MAAM,uBAAuB,CAAA;AA+B3E,wBAAgB,WAAW,CAAC,IAAI,EAAE;IAChC,IAAI,EAAE,QAAQ,CAAA;IACd,KAAK,EAAE,MAAM,CAAA;IACb,IAAI,EAAE,aAAa,GAAG,SAAS,CAAA;CAChC,GAAG,IAAI,CAwCP"}

@@ -1,1 +1,1 @@
-{"version":3,"file":"resolveDeps.d.ts","sourceRoot":"","sources":["../../src/node/resolveDeps.ts"],"names":[],"mappings":"AAKA,wBAAgB,iBAAiB,CAAC,EAAE,EAAE,MAAM,GAAG,MAAM,CAEpD;AAED,wBAAgB,iBAAiB,CAAC,EAAE,EAAE,MAAM,GAAG,MAAM,CAEpD"}
+{"version":3,"file":"resolveDeps.d.ts","sourceRoot":"","sources":["../../src/node/resolveDeps.ts"],"names":[],"mappings":"AAKA,wBAAgB,iBAAiB,CAAC,EAAE,EAAE,MAAM,GAAG,MAAM,CAEpD;AAED,wBAAgB,iBAAiB,CAAC,EAAE,EAAE,MAAM,GAAG,MAAM,CAEpD;AAED,oFAAoF;AACpF,wBAAgB,gBAAgB,CAAC,EAAE,EAAE,MAAM,GAAG,MAAM,CAanD"}

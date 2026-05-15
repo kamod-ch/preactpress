@@ -4,12 +4,15 @@ import { pathToFileURL } from 'node:url'
 import { build as viteBuild, mergeConfig } from 'vite'
 import preact from '@preact/preset-vite'
 import { normalizeBase, resolveConfigForBuild } from './config.js'
-import type { HeadTag, SiteConfig } from './siteConfig.js'
+import type { SiteConfig } from './siteConfig.js'
+import { absoluteUrl, escapeHtml, pageHtml, publicUrl } from './html.js'
 import { PACKAGE_ROOT } from './packageRoot.js'
 import { preactPressMdxPlugin } from './mdx.js'
 import { listMarkdownRoutes, preactPressPlugin } from './plugin.js'
-import { resolveDependency } from './resolveDeps.js'
-import { PREACTPRESS_THEME_BOOT_SCRIPT } from '../shared/theme.js'
+import { resolvePreactEsm } from './resolveDeps.js'
+import { copyFavicons } from './favicon.js'
+
+export { publicUrl } from './html.js'
 
 const CLIENT_ALIAS = 'preactpress/app'
 
@@ -19,24 +22,6 @@ function clientEntry(): string {
 
 function ssrEntry(): string {
   return path.join(PACKAGE_ROOT, 'src/client/entry-ssr.tsx')
-}
-
-export function publicUrl(siteBase: string, file: string): string {
-  const b = siteBase === '/' ? '' : siteBase.replace(/\/$/, '')
-  const f = file.startsWith('/') ? file : `/${file}`
-  return `${b}${f}`
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-}
-
-function escapeAttr(s: string): string {
-  return escapeHtml(s)
 }
 
 async function readManifest(
@@ -100,11 +85,11 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
     resolve: {
       alias: [
         { find: CLIENT_ALIAS, replacement: clientEntry() },
-        { find: /^preact\/jsx-dev-runtime$/, replacement: resolveDependency('preact/jsx-dev-runtime') },
-        { find: /^preact\/jsx-runtime$/, replacement: resolveDependency('preact/jsx-runtime') },
-        { find: /^preact\/devtools$/, replacement: resolveDependency('preact/devtools') },
-        { find: /^preact\/hooks$/, replacement: resolveDependency('preact/hooks') },
-        { find: /^preact$/, replacement: resolveDependency('preact') }
+        { find: /^preact\/jsx-dev-runtime$/, replacement: resolvePreactEsm('preact/jsx-dev-runtime') },
+        { find: /^preact\/jsx-runtime$/, replacement: resolvePreactEsm('preact/jsx-runtime') },
+        { find: /^preact\/devtools$/, replacement: resolvePreactEsm('preact/devtools') },
+        { find: /^preact\/hooks$/, replacement: resolvePreactEsm('preact/hooks') },
+        { find: /^preact$/, replacement: resolvePreactEsm('preact') }
       ]
     }
   }
@@ -163,6 +148,7 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
   }
 
   await copyClientAssets(clientOut, site.outDir)
+  await copyFavicons(site.outDir)
 
   const routes = await listMarkdownRoutes(site)
   if (!routes.includes('/')) {
@@ -213,81 +199,6 @@ async function copyClientAssets(fromDir: string, toDir: string): Promise<void> {
     const dest = path.join(toDir, ent.name)
     await fs.cp(src, dest, { recursive: true })
   }
-}
-
-async function pageHtml(opts: {
-  site: SiteConfig
-  body: string
-  title: string
-  description: string
-  route: string
-  mainJs: string
-  mainCss: string[]
-}): Promise<string> {
-  const { site, body, title, description, route, mainJs, mainCss } = opts
-  const base = site.site.base
-  const cssTags = mainCss
-    .map((c) => {
-      const href = publicUrl(base, `${c}`)
-      return `<link rel="stylesheet" crossorigin href="${escapeHtml(href)}">`
-    })
-    .join('\n    ')
-  const scriptSrc = escapeHtml(publicUrl(base, mainJs))
-  const routeJson = JSON.stringify(route)
-  const canonical = absoluteUrl(site, route)
-  const defaultHead: HeadTag[] = [
-    ['meta', { name: 'description', content: description }],
-    ['meta', { property: 'og:title', content: title }],
-    ['meta', { property: 'og:description', content: description }],
-    ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:url', content: canonical }],
-    ['meta', { name: 'twitter:card', content: 'summary' }],
-    ['meta', { name: 'twitter:title', content: title }],
-    ['meta', { name: 'twitter:description', content: description }],
-    ['link', { rel: 'canonical', href: canonical }]
-  ]
-  const transformed = site.transformHead
-    ? await site.transformHead({ route, title, description, site: site.site })
-    : []
-  const headTags = [...defaultHead, ...site.head, ...transformed]
-    .filter((tag) => tag[1] && !Object.values(tag[1]).every((value) => value == null || value === false))
-    .map(renderHeadTag)
-    .join('\n    ')
-
-  return `<!DOCTYPE html>
-<html lang="${escapeAttr(site.site.lang)}">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${escapeHtml(title)}</title>
-    <script>${PREACTPRESS_THEME_BOOT_SCRIPT}</script>
-    ${headTags}
-    ${cssTags}
-  </head>
-  <body>
-    <script>window.__PREACTPRESS_ROUTE__=${routeJson}</script>
-    <div id="app">${body}</div>
-    <script type="module" crossorigin src="${scriptSrc}"></script>
-  </body>
-</html>
-`
-}
-
-function renderHeadTag(tag: HeadTag): string {
-  const [name, attrs, content] = tag
-  const renderedAttrs = Object.entries(attrs)
-    .filter(([, value]) => value != null && value !== false)
-    .map(([key, value]) => (value === true ? key : `${key}="${escapeAttr(String(value))}"`))
-    .join(' ')
-  if (name === 'script') {
-    return `<script${renderedAttrs ? ` ${renderedAttrs}` : ''}>${content ?? ''}</script>`
-  }
-  return `<${name}${renderedAttrs ? ` ${renderedAttrs}` : ''}>`
-}
-
-function absoluteUrl(site: SiteConfig, route: string): string {
-  const path = publicUrl(site.site.base, route === '/' ? '/' : `${route}/`)
-  return site.site.url ? `${site.site.url}${path}` : path
 }
 
 async function writeSitemap(site: SiteConfig, routes: string[]): Promise<void> {

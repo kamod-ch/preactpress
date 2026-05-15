@@ -1,6 +1,7 @@
 import type { ComponentChildren, FunctionalComponent, JSX } from 'preact'
 import { useEffect, useMemo, useState } from 'preact/hooks'
 import type { LayoutProps } from '../types.js'
+import Logo from './Logo.js'
 import ThemeToggle from './ThemeToggle.js'
 import './styles.css'
 
@@ -138,8 +139,8 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       </a>
       <header class="pp-nav">
         <div class="pp-nav-inner">
-          <a class="pp-title" href={withBase(site.base, '/')}>
-            {site.title}
+          <a class="pp-title" href={withBase(site.base, '/')} aria-label={site.title}>
+            <Logo class="pp-logo" label={site.title} />
           </a>
           <div class="pp-nav-right">
             <nav class="pp-nav-links">
