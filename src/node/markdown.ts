@@ -3,7 +3,10 @@ import matter from 'gray-matter'
 import MarkdownIt from 'markdown-it'
 import { createHighlighter, type Highlighter } from 'shiki'
 import type { MarkdownConfig, OutlineItem } from './siteConfig.js'
-import { fileHrefToRoute, normalizeRoute } from './content.js'
+import { fileHrefToRoute } from './content.js'
+import { normalizeRoute } from '../shared/route.js'
+import { escapeHtml } from '../shared/escapeHtml.js'
+import { slugifySegment, uniqueSlug } from '../shared/slug.js'
 
 let highlighter: Highlighter | undefined
 
@@ -35,19 +38,11 @@ const SHIKI_LANG_MAP: Record<string, string> = {
 export async function getHighlighter(): Promise<Highlighter> {
   if (!highlighter) {
     highlighter = await createHighlighter({
-      themes: ['github-light'],
+      themes: ['github-light', 'github-dark'],
       langs: [...SHIKI_LANGS]
     })
   }
   return highlighter
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
 }
 
 export interface RenderedMarkdown {
@@ -71,18 +66,27 @@ const DEFAULT_MARKDOWN_CONFIG: Required<MarkdownConfig> = {
   typographer: true
 }
 
-export async function renderMarkdown(
-  raw: string,
-  _filePathForDebug?: string,
-  options: MarkdownConfig & { route?: string; routes?: Iterable<string> } = {}
-): Promise<RenderedMarkdown> {
-  const { data, content } = matter(raw)
-  const meta = normalizeMatterData(data)
-  const config = { ...DEFAULT_MARKDOWN_CONFIG, ...options }
-  const hi = await getHighlighter()
-  const headings: OutlineItem[] = []
-  const route = options.route ? normalizeRoute(options.route) : undefined
-  const knownRoutes = options.routes ? new Set([...options.routes].map(normalizeRoute)) : undefined
+interface MarkdownRenderEnv {
+  highlighter: Highlighter
+  headings: OutlineItem[]
+  route?: string
+  knownRoutes?: Set<string>
+}
+
+const markdownRenderers = new Map<string, MarkdownIt>()
+
+function rendererCacheKey(config: Required<MarkdownConfig>): string {
+  return JSON.stringify({
+    html: config.html,
+    linkify: config.linkify,
+    typographer: config.typographer
+  })
+}
+
+function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownIt {
+  const key = rendererCacheKey(config)
+  const cached = markdownRenderers.get(key)
+  if (cached) return cached
 
   const md = new MarkdownIt({
     html: config.html,
@@ -103,14 +107,15 @@ export async function renderMarkdown(
     ((tokens, idx, rendererOptions, _env, self) =>
       self.renderToken(tokens, idx, rendererOptions))
 
-  md.renderer.rules.fence = (tokens, idx): string => {
+  md.renderer.rules.fence = (tokens, idx, _rendererOptions, env): string => {
+    const renderEnv = env as MarkdownRenderEnv
     const token = tokens[idx]
     const info = (token.info || '').trim()
     const langRaw = (info.split(/\s+/)[0] || 'plaintext').toLowerCase()
     const lang = SHIKI_LANG_MAP[langRaw] ?? langRaw
     const code = token.content.replace(/\n$/, '')
     try {
-      return hi.codeToHtml(code, {
+      return renderEnv.highlighter.codeToHtml(code, {
         lang,
         themes: {
           light: 'github-light',
@@ -123,14 +128,15 @@ export async function renderMarkdown(
   }
 
   md.renderer.rules.heading_open = (tokens, idx, rendererOptions, env, self) => {
+    const renderEnv = env as MarkdownRenderEnv
     const token = tokens[idx]
     const level = Number(token.tag.slice(1))
     const inline = tokens[idx + 1]
     const text = inline?.type === 'inline' ? inline.content : ''
-    const id = uniqueSlug(slugify(text), headings)
+    const id = uniqueSlug(slugifySegment(text), renderEnv.headings)
     token.attrSet('id', id)
     token.attrJoin('class', 'pp-heading')
-    if (level >= 2 && level <= 3) headings.push({ id, text, level })
+    if (level >= 2 && level <= 3) renderEnv.headings.push({ id, text, level })
     return defaultHeadingOpen(tokens, idx, rendererOptions, env, self)
   }
 
@@ -147,11 +153,12 @@ export async function renderMarkdown(
   }
 
   md.renderer.rules.link_open = (tokens, idx, rendererOptions, env, self) => {
+    const renderEnv = env as MarkdownRenderEnv
     const token = tokens[idx]
     const href = token.attrGet('href') ?? ''
-    if (route) {
-      const targetRoute = fileHrefToRoute(href, route)
-      if (targetRoute && (!knownRoutes || knownRoutes.has(targetRoute))) {
+    if (renderEnv.route) {
+      const targetRoute = fileHrefToRoute(href, renderEnv.route)
+      if (targetRoute && (!renderEnv.knownRoutes || renderEnv.knownRoutes.has(targetRoute))) {
         const hash = href.includes('#') ? `#${href.split('#').slice(1).join('#')}` : ''
         token.attrSet('href', `${targetRoute}${hash}`)
       }
@@ -163,7 +170,25 @@ export async function renderMarkdown(
     return defaultLinkOpen(tokens, idx, rendererOptions, env, self)
   }
 
-  const html = md.render(content)
+  markdownRenderers.set(key, md)
+  return md
+}
+
+export async function renderMarkdown(
+  raw: string,
+  _filePathForDebug?: string,
+  options: MarkdownConfig & { route?: string; routes?: Iterable<string> } = {}
+): Promise<RenderedMarkdown> {
+  const { data, content } = matter(raw)
+  const meta = normalizeMatterData(data)
+  const config = { ...DEFAULT_MARKDOWN_CONFIG, ...options }
+  const hi = await getHighlighter()
+  const headings: OutlineItem[] = []
+  const route = options.route ? normalizeRoute(options.route) : undefined
+  const knownRoutes = options.routes ? new Set([...options.routes].map(normalizeRoute)) : undefined
+
+  const md = getMarkdownRenderer(config)
+  const html = md.render(content, { highlighter: hi, headings, route, knownRoutes })
   const title =
     typeof meta.title === 'string' ? meta.title : undefined
   const description =
@@ -225,33 +250,11 @@ function extractHeadings(content: string): OutlineItem[] {
       .trim()
     if (!text) continue
 
-    const id = uniqueSlug(slugify(text), headings)
+    const id = uniqueSlug(slugifySegment(text), headings)
     headings.push({ id, text, level })
   }
 
   return headings
-}
-
-function slugify(text: string): string {
-  const slug = text
-    .toLowerCase()
-    .trim()
-    .replace(/<[^>]+>/g, '')
-    .replace(/&[a-z0-9#]+;/gi, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-  return slug || 'section'
-}
-
-function uniqueSlug(base: string, existing: OutlineItem[]): string {
-  let id = base
-  let i = 1
-  const used = new Set(existing.map((h) => h.id))
-  while (used.has(id)) {
-    i += 1
-    id = `${base}-${i}`
-  }
-  return id
 }
 
 export function readMarkdownFile(

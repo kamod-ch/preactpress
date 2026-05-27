@@ -1,6 +1,9 @@
 ---
 title: Handel und Margen im Frühjahr
 description: 'Zwischen Volumen und Warenwert: wie Händlerinnen und Händler ihre KPI-Sets überdenken.'
+tags:
+  - Handel
+  - Margen
 ---
 
 ## Einordnung

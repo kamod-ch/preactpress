@@ -1,4 +1,5 @@
 export const PREACTPRESS_THEME_STORAGE_KEY = 'preactpress-theme' as const
+export const PREACTPRESS_THEME_SCRIPT = 'preactpress-theme.js' as const
 
 export type PreactpressStoredTheme = 'light' | 'dark'
 

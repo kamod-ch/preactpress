@@ -7,5 +7,23 @@
   },
   {
     "route": "/article-tech"
+  },
+  {
+    "route": "/tags/handel"
+  },
+  {
+    "route": "/tags/logistik"
+  },
+  {
+    "route": "/tags/magazin"
+  },
+  {
+    "route": "/tags/margen"
+  },
+  {
+    "route": "/tags/startseite"
+  },
+  {
+    "route": "/tags/tech"
   }
 ]

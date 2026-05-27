@@ -2,10 +2,12 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import c from 'picocolors'
 import { resolveConfig } from './config.js'
-import { fileHrefToRoute, normalizeRoute, scanContentFiles } from './content.js'
+import { fileHrefToRoute, scanContentFiles } from './content.js'
 import { readMarkdownMetadata } from './markdown.js'
 import { listTagIndexRoutes } from './tagIndex.js'
 import type { SiteConfig } from './siteConfig.js'
+import { normalizeRoute } from '../shared/route.js'
+import { isDraftPage } from '../shared/pageMeta.js'
 
 export interface CheckIssue {
   level: 'error' | 'warning'
@@ -23,7 +25,9 @@ const HTML_HREF_RE = /\bhref=["']([^"']+)["']/g
 export async function check(root?: string): Promise<CheckResult> {
   const site = await resolveConfig(root, 'serve', 'development')
   const files = await scanContentFiles(site)
-  const routes = files.map((file) => file.route).sort()
+  const draftFiles = files.filter((file) => isDraftPage(readMarkdownMetadata(file.file).meta))
+  const publishedFiles = files.filter((file) => !draftFiles.includes(file))
+  const routes = publishedFiles.map((file) => file.route).sort()
   const routeSet = new Set(routes)
   const tagRoutes = await listTagIndexRoutes(site, routeSet)
   for (const tr of tagRoutes) routeSet.add(tr)
@@ -37,9 +41,15 @@ export async function check(root?: string): Promise<CheckResult> {
   }
 
   checkConfiguredLinks(site, routeSet, issues)
-  checkSeoDescriptions(site, files, issues)
+  checkSeoDescriptions(site, publishedFiles, issues)
+  for (const file of draftFiles) {
+    issues.push({
+      level: 'warning',
+      message: `${path.relative(site.srcDir, file.file)} is marked draft and will be excluded from build output`
+    })
+  }
 
-  for (const file of files) {
+  for (const file of publishedFiles) {
     const raw = await fs.readFile(file.file, 'utf8')
     for (const href of extractLinks(raw)) {
       const target = fileHrefToRoute(href, file.route)

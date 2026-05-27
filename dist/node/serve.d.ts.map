@@ -1,1 +1,0 @@
-{"version":3,"file":"serve.d.ts","sourceRoot":"","sources":["../../src/node/serve.ts"],"names":[],"mappings":"AAKA,wBAAsB,OAAO,CAC3B,IAAI,CAAC,EAAE,MAAM,EACb,IAAI,GAAE;IAAE,IAAI,CAAC,EAAE,MAAM,CAAC;IAAC,IAAI,CAAC,EAAE,MAAM,GAAG,OAAO,CAAC;IAAC,IAAI,CAAC,EAAE,MAAM,CAAA;CAAO,GACnE,OAAO,CAAC,IAAI,CAAC,CAqCf"}

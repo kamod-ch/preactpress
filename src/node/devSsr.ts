@@ -7,6 +7,7 @@ import { collectDevStylesheetHrefs } from './devCss.js'
 import { injectDevPageDocument } from './html.js'
 import { PACKAGE_ROOT } from './packageRoot.js'
 import type { SiteConfig } from './siteConfig.js'
+import type { PageView } from '../client/types.js'
 
 function ssrEntry(): string {
   return path.join(PACKAGE_ROOT, 'src/client/entry-ssr.tsx')
@@ -56,6 +57,27 @@ export function createDevSsrMiddleware(
   ) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') return next()
     const rawUrl = req.url ?? '/'
+    if (isDevPageDataRequest(rawUrl, site.site.base)) {
+      try {
+        const route = new URL(rawUrl, 'http://preactpress.local').searchParams.get('route') ?? '/'
+        const mod = (await server.ssrLoadModule(ssrId)) as {
+          resolveRoutePage: (routePath: string) => PageView
+        }
+        const page = mod.resolveRoutePage(route)
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json; charset=utf-8')
+        if (req.method === 'HEAD') {
+          res.end()
+          return
+        }
+        res.end(JSON.stringify(page.kind === 'markdown' ? page : { ...page, Component: undefined }))
+        return
+      } catch (err) {
+        site.logger.warn(`preactpress page data failed for ${rawUrl}: ${err instanceof Error ? err.message : err}`)
+        next()
+        return
+      }
+    }
     if (!isDocumentRequest(rawUrl)) return next()
 
     try {
@@ -67,15 +89,27 @@ export function createDevSsrMiddleware(
         site.site.base
       )
       const mod = (await server.ssrLoadModule(ssrId)) as {
-        render: (routePath: string) => { body: string; title: string; description: string }
+        render: (routePath: string) => {
+          body: string
+          title: string
+          description: string
+          tags: string[]
+          image?: string
+          pageType: 'website' | 'article'
+          page: PageView
+        }
       }
-      const { body, title, description } = mod.render(route)
+      const { body, title, description, tags, image, pageType, page } = mod.render(route)
       const transformed = await server.transformIndexHtml(rawUrl, cache.indexTemplate)
       const html = await injectDevPageDocument(transformed, {
         site,
         body,
         title,
         description,
+        tags,
+        image,
+        pageType,
+        pageData: page,
         route,
         devStylesheets: await devStylesheets()
       })
@@ -91,4 +125,10 @@ export function createDevSsrMiddleware(
       next()
     }
   }
+}
+
+function isDevPageDataRequest(rawUrl: string, base: string): boolean {
+  const pathname = rawUrl.split('?')[0]?.split('#')[0] ?? ''
+  const basePath = base === '/' ? '' : base.replace(/\/$/, '')
+  return pathname === `${basePath}/__preactpress/page.json`
 }

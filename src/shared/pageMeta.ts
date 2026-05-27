@@ -3,6 +3,9 @@ export const META_DESCRIPTION_MAX = 155
 export interface PageMetaInput {
   title?: string
   description?: string
+  tags?: string[]
+  image?: string
+  pageType?: 'website' | 'article'
   kind?: 'markdown' | 'mdx'
   html?: string
 }
@@ -30,6 +33,20 @@ export function resolvePageMeta(
   page: PageMetaInput | undefined,
   site: SiteMetaInput
 ): { title: string; description: string } {
+  const { title, description } = resolvePageHeadMeta(page, site)
+  return { title, description }
+}
+
+export function resolvePageHeadMeta(
+  page: PageMetaInput | undefined,
+  site: SiteMetaInput
+): {
+  title: string
+  description: string
+  tags: string[]
+  image?: string
+  pageType: 'website' | 'article'
+} {
   const title =
     page?.title && page.title.length > 0 ? `${page.title} | ${site.title}` : site.title
 
@@ -40,5 +57,22 @@ export function resolvePageMeta(
     description = excerptFromHtml(page.html)
   }
 
-  return { title, description }
+  const tags = page?.tags?.filter((tag) => tag.trim()).map((tag) => tag.trim()) ?? []
+  const image = page?.image?.trim() || undefined
+  const pageType = page?.pageType === 'article' ? 'article' : 'website'
+
+  return { title, description, tags, image, pageType }
+}
+
+export function pageImageFromMeta(meta: Record<string, unknown>): string | undefined {
+  const value = meta.ogImage ?? meta.image
+  return typeof value === 'string' && value.trim() ? value.trim() : undefined
+}
+
+export function pageTypeFromMeta(meta: Record<string, unknown>): 'website' | 'article' {
+  return meta.type === 'article' ? 'article' : 'website'
+}
+
+export function isDraftPage(meta: Record<string, unknown>): boolean {
+  return meta.draft === true
 }

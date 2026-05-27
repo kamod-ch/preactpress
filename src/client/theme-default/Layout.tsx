@@ -1,6 +1,9 @@
 import type { ComponentChildren, FunctionalComponent, JSX } from 'preact'
 import { useEffect, useMemo, useState } from 'preact/hooks'
 import type { LayoutProps } from '../types.js'
+import { slugifyTagSegment, tagIndexPageRoute } from '../../shared/tags.js'
+import { slugifySegment } from '../../shared/slug.js'
+import { useSiteSearch } from '../useSiteSearch.js'
 import Logo from './Logo.js'
 import ThemeToggle from './ThemeToggle.js'
 import './styles.css'
@@ -35,14 +38,7 @@ function childText(children: ComponentChildren): string {
 }
 
 function slugify(text: string): string {
-  const slug = text
-    .toLowerCase()
-    .trim()
-    .replace(/<[^>]+>/g, '')
-    .replace(/&[a-z0-9#]+;/gi, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-  return slug || 'section'
+  return slugifySegment(text)
 }
 
 function createMdxHeadingComponents() {
@@ -81,15 +77,16 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   const [activeHeading, setActiveHeading] = useState<string | undefined>()
   const sidebarItems = (themeConfig.sidebar ?? []).flatMap((group) => group.items)
   const normalizedQuery = query.trim().toLowerCase()
+  const searchResults = useSiteSearch(site.base, query)
   const visibleSidebar = useMemo(() => {
-    if (!normalizedQuery) return themeConfig.sidebar ?? []
+    if (!normalizedQuery || searchResults.length > 0) return themeConfig.sidebar ?? []
     return (themeConfig.sidebar ?? [])
       .map((group) => ({
         ...group,
         items: group.items.filter((item) => item.text.toLowerCase().includes(normalizedQuery))
       }))
       .filter((group) => group.items.length > 0)
-  }, [normalizedQuery, themeConfig.sidebar])
+  }, [normalizedQuery, searchResults.length, themeConfig.sidebar])
   const activeIndex = sidebarItems.findIndex((item) => isActive(routePath, item.link))
   const previous = activeIndex > 0 ? sidebarItems[activeIndex - 1] : undefined
   const next =
@@ -97,8 +94,11 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       ? sidebarItems[activeIndex + 1]
       : undefined
   const showOutline = themeConfig.outline !== false && Boolean(page?.headings.length)
+  const pageTags = page?.tags ?? []
+  const showTags =
+    themeConfig.tags !== false && pageTags.length > 0 && !Boolean(page?.meta.tagIndex)
   const MdxComponent = page?.kind === 'mdx' ? page.Component : undefined
-  const mdxComponents = createMdxHeadingComponents()
+  const mdxComponents = useMemo(createMdxHeadingComponents, [routePath, MdxComponent])
   const editHref =
     themeConfig.editLink && page?.relativePath
       ? themeConfig.editLink.pattern.replace(/:path/g, page.relativePath)
@@ -177,6 +177,18 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 />
               </label>
             ) : null}
+            {themeConfig.search && normalizedQuery && searchResults.length > 0 ? (
+              <div class="pp-search-results" role="listbox" aria-label="Search results">
+                {searchResults.map((result) => (
+                  <a key={result.route} role="option" href={withBase(site.base, result.route)}>
+                    <span>{result.title ?? result.route}</span>
+                    {result.description || result.excerpt ? (
+                      <small>{result.description ?? result.excerpt}</small>
+                    ) : null}
+                  </a>
+                ))}
+              </div>
+            ) : null}
             {visibleSidebar.map((group, gi) => (
               <div key={gi} class="pp-sidebar-group">
                 {group.text ? (
@@ -202,11 +214,25 @@ const Layout: FunctionalComponent<LayoutProps> = ({
             ))}
           </details>
         </aside>
-        <main id="content" class="pp-main">
+        <main id="content" class="pp-main" tabIndex={-1} aria-live="polite">
           <article class="pp-doc">
             <h1 class="pp-doc-title">{page?.title ?? title}</h1>
             {page?.description ? (
               <p class="pp-doc-lead">{page.description}</p>
+            ) : null}
+            {showTags ? (
+              <ul class="pp-doc-tags" aria-label="Tags">
+                {pageTags.map((tag) => (
+                  <li key={tag}>
+                    <a
+                      class="pp-tag-chip"
+                      href={withBase(site.base, tagIndexPageRoute(slugifyTagSegment(tag)))}
+                    >
+                      {tag}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             ) : null}
             {MdxComponent ? (
               <div class="pp-doc-content">

@@ -4,12 +4,11 @@ import type { Plugin, ViteDevServer } from 'vite'
 import type { SiteConfig } from './siteConfig.js'
 import { readMarkdownFile, readMarkdownMetadata } from './markdown.js'
 import { siteConfigToClientJson } from './config.js'
-import { PREACTPRESS_THEME_BOOT_SCRIPT } from '../shared/theme.js'
+import { PREACTPRESS_THEME_BOOT_SCRIPT, PREACTPRESS_THEME_SCRIPT } from '../shared/theme.js'
 import { createFaviconMiddleware, faviconHtmlTags } from './favicon.js'
 import { createDevSsrMiddleware } from './devSsr.js'
 import {
   CONTENT_EXTENSIONS,
-  listMarkdownRoutes as listFileMarkdownRoutes,
   mdFileToRoute,
   scanContentFiles,
   type ContentFile,
@@ -21,6 +20,8 @@ import {
   tagIndexPageRoute,
   listTagIndexRoutes
 } from './tagIndex.js'
+import { resolvePageTags } from '../shared/tags.js'
+import { isDraftPage, pageImageFromMeta, pageTypeFromMeta } from '../shared/pageMeta.js'
 
 const VIRTUAL_LAYOUT = '\0virtual:preactpress-layout'
 const VIRTUAL_PAGES = '\0virtual:preactpress-pages'
@@ -28,23 +29,28 @@ const VIRTUAL_SITE = '\0virtual:preactpress-site'
 export { mdFileToRoute }
 
 export async function listMarkdownRoutes(site: SiteConfig): Promise<string[]> {
-  const files = await listFileMarkdownRoutes(site)
+  const files = (await scanContentFiles(site))
+    .filter((file) => !isDraftPage(readMarkdownMetadata(file.file).meta))
+    .map((file) => file.route)
+    .sort()
   const tagRoutes = await listTagIndexRoutes(site, new Set(files))
   return [...files, ...tagRoutes].sort()
 }
 
 export function preactPressPlugin(site: SiteConfig): Plugin {
   const routeToFile = new Map<string, ContentFile>()
-  let pagesModule = ''
+  let ssrPagesModule = ''
+  let clientPagesModule = ''
 
   async function scan(): Promise<void> {
     routeToFile.clear()
     for (const file of await scanContentFiles(site)) {
+      if (isDraftPage(readMarkdownMetadata(file.file).meta)) continue
       routeToFile.set(file.route, file)
     }
   }
 
-  async function buildPagesModule(): Promise<string> {
+  async function buildPagesModule(ssr: boolean): Promise<string> {
     const filesList = [...routeToFile.values()]
     const tagMap = collectTagSlugMap(filesList)
     const fileRouteSet = new Set(routeToFile.keys())
@@ -62,6 +68,9 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         html: string
         title?: string
         description?: string
+        tags?: string[]
+        image?: string
+        pageType?: 'website' | 'article'
         headings: { id: string; text: string; level: number }[]
         relativePath?: string
         lastUpdated?: string
@@ -69,6 +78,8 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
     > = {}
     const mdxImports: string[] = []
     const mdxEntries: string[] = []
+    const mdxLoaders: string[] = []
+    const metaEntries: string[] = []
     let mdxIndex = 0
     for (const [route, file] of routeToFile) {
       const stats = await fs.stat(file.file)
@@ -76,10 +87,18 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       const lastUpdated = stats.mtime.toISOString()
       if (file.kind === 'mdx') {
         const r = readMarkdownMetadata(file.file)
+        const tags = resolvePageTags(r.meta)
+        const image = pageImageFromMeta(r.meta)
+        const pageType = pageTypeFromMeta(r.meta)
+        const meta = { kind: 'mdx', meta: r.meta, title: r.title, description: r.description, tags, image, pageType, headings: r.headings, relativePath, lastUpdated }
+        metaEntries.push(`${JSON.stringify(route)}: ${JSON.stringify(meta)}`)
+        mdxLoaders.push(`${JSON.stringify(route)}: () => import(${JSON.stringify(file.file)})`)
         const componentName = `MdxPage${mdxIndex}`
         mdxIndex += 1
-        mdxImports.push(`import ${componentName} from ${JSON.stringify(file.file)};`)
-        mdxEntries.push(`${JSON.stringify(route)}: { kind: "mdx", Component: ${componentName}, meta: ${JSON.stringify(r.meta)}, title: ${JSON.stringify(r.title)}, description: ${JSON.stringify(r.description)}, headings: ${JSON.stringify(r.headings)}, relativePath: ${JSON.stringify(relativePath)}, lastUpdated: ${JSON.stringify(lastUpdated)} }`)
+        if (ssr) {
+          mdxImports.push(`import ${componentName} from ${JSON.stringify(file.file)};`)
+          mdxEntries.push(`${JSON.stringify(route)}: { kind: "mdx", Component: ${componentName}, meta: ${JSON.stringify(r.meta)}, title: ${JSON.stringify(r.title)}, description: ${JSON.stringify(r.description)}, tags: ${JSON.stringify(tags)}, image: ${JSON.stringify(image)}, pageType: ${JSON.stringify(pageType)}, headings: ${JSON.stringify(r.headings)}, relativePath: ${JSON.stringify(relativePath)}, lastUpdated: ${JSON.stringify(lastUpdated)} }`)
+        }
         continue
       }
 
@@ -94,10 +113,17 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         html: r.html,
         title: r.title,
         description: r.description,
+        tags: resolvePageTags(r.meta),
+        image: pageImageFromMeta(r.meta),
+        pageType: pageTypeFromMeta(r.meta),
         headings: r.headings,
         relativePath,
         lastUpdated
       }
+      metaEntries.push(`${JSON.stringify(route)}: ${JSON.stringify({
+        ...entries[route],
+        html: undefined
+      })}`)
     }
     for (const [slug, data] of tagMap) {
       const tr = tagIndexPageRoute(slug)
@@ -108,22 +134,41 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         html: renderTagIndexHtml(slug, data.label, data.items),
         title: `Tag: ${data.label}`,
         description: `Pages tagged “${data.label}”`,
+        tags: [data.label],
+        image: undefined,
+        pageType: 'website',
         headings: [],
         relativePath: undefined,
         lastUpdated: undefined
       }
+      metaEntries.push(`${JSON.stringify(tr)}: ${JSON.stringify({
+        kind: 'markdown',
+        meta: entries[tr].meta,
+        title: entries[tr].title,
+        description: entries[tr].description,
+        tags: entries[tr].tags,
+        image: entries[tr].image,
+        pageType: entries[tr].pageType,
+        headings: entries[tr].headings,
+        relativePath: entries[tr].relativePath,
+        lastUpdated: entries[tr].lastUpdated
+      })}`)
     }
     const markdownEntries = Object.entries(entries).map(
       ([route, page]) => `${JSON.stringify(route)}: ${JSON.stringify(page)}`
     )
-    return `${mdxImports.join('\n')}\nexport const routes = ${JSON.stringify(routes)};\nexport const pages = {\n${[
-      ...markdownEntries,
-      ...mdxEntries
-    ].map((entry) => `  ${entry}`).join(',\n')}\n};\n`
+    if (ssr) {
+      return `${mdxImports.join('\n')}\nexport const routes = ${JSON.stringify(routes)};\nexport const pagesMeta = {};\nexport const mdxLoaders = {};\nexport const pages = {\n${[
+        ...markdownEntries,
+        ...mdxEntries
+      ].map((entry) => `  ${entry}`).join(',\n')}\n};\n`
+    }
+    return `export const routes = ${JSON.stringify(routes)};\nexport const pagesMeta = {\n${metaEntries.map((entry) => `  ${entry}`).join(',\n')}\n};\nexport const mdxLoaders = {\n${mdxLoaders.map((entry) => `  ${entry}`).join(',\n')}\n};\nexport const pages = pagesMeta;\n`
   }
 
   function invalidateVirtuals(server: ViteDevServer) {
-    pagesModule = ''
+    ssrPagesModule = ''
+    clientPagesModule = ''
     for (const id of [VIRTUAL_PAGES, VIRTUAL_SITE]) {
       const m = server.moduleGraph.getModuleById(id)
       if (m) server.moduleGraph.invalidateModule(m)
@@ -137,7 +182,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       if (!html.includes('</head>')) return html
       const tags = [
         faviconHtmlTags(site.site.base),
-        `<script>${PREACTPRESS_THEME_BOOT_SCRIPT}</script>`
+        `<script src="${site.site.base === '/' ? '' : site.site.base}/${PREACTPRESS_THEME_SCRIPT}"></script>`
       ]
       const inject =
         html.includes('rel="icon"') || html.includes("rel='icon'")
@@ -151,6 +196,14 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
     configureServer(server) {
       server.middlewares.use(createDevSsrMiddleware(site, server))
       server.middlewares.use(createFaviconMiddleware(site.site.base))
+      server.middlewares.use((req, res, next) => {
+        const pathname = req.url?.split('?')[0] ?? ''
+        const base = site.site.base === '/' ? '' : site.site.base
+        if (pathname !== `${base}/${PREACTPRESS_THEME_SCRIPT}`) return next()
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8')
+        res.end(PREACTPRESS_THEME_BOOT_SCRIPT)
+      })
       server.watcher.add(site.srcDir)
       server.watcher.on('all', async (_evt, file) => {
         if (typeof file === 'string' && CONTENT_EXTENSIONS.some((ext) => file.endsWith(ext))) {
@@ -165,7 +218,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       if (id === 'virtual:preactpress-site') return VIRTUAL_SITE
       return undefined
     },
-    async load(id) {
+    async load(id, options) {
       if (id === VIRTUAL_LAYOUT) {
         return `export { default } from ${JSON.stringify(site.theme)};\n`
       }
@@ -177,8 +230,12 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         return `export const site = ${JSON.stringify(data.site)};\nexport const themeConfig = ${JSON.stringify(data.themeConfig)};\n`
       }
       if (id === VIRTUAL_PAGES) {
-        if (!pagesModule) pagesModule = await buildPagesModule()
-        return pagesModule
+        if (options?.ssr) {
+          if (!ssrPagesModule) ssrPagesModule = await buildPagesModule(true)
+          return ssrPagesModule
+        }
+        if (!clientPagesModule) clientPagesModule = await buildPagesModule(false)
+        return clientPagesModule
       }
       return undefined
     }

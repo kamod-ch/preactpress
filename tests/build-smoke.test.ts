@@ -40,10 +40,29 @@ describe('build smoke', () => {
       expect(markdown).toContain('Markdown examples')
       expect(interactive).toContain('Interactive MDX')
       expect(interactive).toContain('<span>3</span>')
+      expect(markdown).not.toContain('name="keywords"')
+      expect(markdown).toContain('property="article:tag" content="markdown"')
+      expect(markdown).toContain('type="application/ld+json"')
+      expect(markdown).toContain('src="/preactpress-theme.js"')
+      expect(markdown).toContain('class="pp-doc-tags"')
+      expect(markdown).toContain('href="/tags/markdown"')
       expect(notFound).toContain('404')
       expect(tagIndex).toContain('Pages tagged: markdown')
       expect(tagIndex).toContain('Markdown examples')
       await expect(fs.access(path.join(root, 'dist', 'preactpress-search.json'))).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'dist', 'preactpress-content', 'markdown-examples.json'))).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'dist', 'preactpress-theme.js'))).resolves.toBeUndefined()
+      const search = JSON.parse(
+        await fs.readFile(path.join(root, 'dist', 'preactpress-search.json'), 'utf8')
+      ) as Array<{ route: string; title?: string; excerpt?: string }>
+      expect(search.find((entry) => entry.route === '/markdown-examples')).toMatchObject({
+        title: 'Markdown examples'
+      })
+      const assets = await fs.readdir(path.join(root, 'dist', 'assets'))
+      const mainJs = assets.find((file) => file.startsWith('main-') && file.endsWith('.js'))
+      expect(mainJs).toBeTruthy()
+      const mainBundle = await fs.readFile(path.join(root, 'dist', 'assets', mainJs!), 'utf8')
+      expect(mainBundle).not.toContain('Use blockquotes for callouts')
     } finally {
       await fs.rm(root, { recursive: true, force: true })
     }

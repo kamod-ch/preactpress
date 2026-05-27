@@ -1,5 +1,7 @@
 import { hydrate } from 'preact'
 import { App } from './app.js'
+import type { PageView } from './types.js'
+import { loadPage, seedPage } from './loadPage.js'
 
 function currentRoute(): string {
   const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || ''
@@ -11,8 +13,15 @@ function currentRoute(): string {
 
 const el = document.getElementById('app')
 if (el) {
-  const initial =
-    (window as unknown as { __PREACTPRESS_ROUTE__?: string })
-      .__PREACTPRESS_ROUTE__ ?? currentRoute()
-  hydrate(<App routePath={initial} />, el)
+  void (async () => {
+    const initial =
+      el.getAttribute('data-preactpress-route') ??
+      currentRoute()
+    const dataEl = document.getElementById('__PREACTPRESS_PAGE_DATA__')
+    const initialPage = dataEl?.textContent
+      ? JSON.parse(dataEl.textContent) as PageView
+      : await loadPage(initial, import.meta.env.BASE_URL || '/')
+    seedPage(initial, initialPage)
+    hydrate(<App routePath={initial} initialPage={initialPage} />, el)
+  })()
 }

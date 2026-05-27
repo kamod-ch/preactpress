@@ -11,6 +11,20 @@ import { preactPressMdxPlugin } from './mdx.js'
 import { listMarkdownRoutes, preactPressPlugin } from './plugin.js'
 import { resolvePreactEsm } from './resolveDeps.js'
 import { copyFavicons } from './favicon.js'
+import { getHighlighter } from './markdown.js'
+import { contentChunkPath } from '../shared/contentChunk.js'
+import { excerptFromHtml } from '../shared/pageMeta.js'
+import { PREACTPRESS_THEME_BOOT_SCRIPT, PREACTPRESS_THEME_SCRIPT } from '../shared/theme.js'
+import type { PageView } from '../client/types.js'
+import {
+  fileExists,
+  hashContent,
+  readBuildCache,
+  removeStaleRouteOutputs,
+  writeBuildCache,
+  type BuildCache
+} from './buildCache.js'
+import { writeAtomFeed } from './feed.js'
 
 export { publicUrl } from './html.js'
 
@@ -66,16 +80,34 @@ export function routeToOutPath(route: string): string {
   return path.join(clean, 'index.html')
 }
 
+export async function mapConcurrent<T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T, index: number) => Promise<R>
+): Promise<R[]> {
+  const out: R[] = new Array(items.length)
+  let next = 0
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (next < items.length) {
+      const index = next
+      next += 1
+      out[index] = await fn(items[index], index)
+    }
+  })
+  await Promise.all(workers)
+  return out
+}
+
 export async function build(root?: string, opts: { base?: string } = {}): Promise<void> {
   const site = await resolveConfigForBuild(root)
   if (opts.base) site.site.base = normalizeBase(opts.base)
   const clientOut = path.join(site.cacheDir, 'pp-client')
   const ssrOut = path.join(site.cacheDir, 'pp-ssr')
 
-  await fs.rm(site.outDir, { recursive: true, force: true })
   await fs.mkdir(site.outDir, { recursive: true })
   await fs.mkdir(clientOut, { recursive: true })
   await fs.mkdir(ssrOut, { recursive: true })
+  await getHighlighter()
 
   const shared = {
     root: site.srcDir,
@@ -144,51 +176,94 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
 
   const ssrAbs = path.join(ssrOut, 'entry-ssr.js')
   const mod = (await import(pathToFileURL(ssrAbs).href)) as {
-    render: (route: string) => { body: string; title: string; description: string }
+    render: (route: string) => {
+      body: string
+      title: string
+      description: string
+      tags: string[]
+      image?: string
+      pageType: 'website' | 'article'
+      page: PageView
+    }
   }
 
   await copyClientAssets(clientOut, site.outDir)
   await copyFavicons(site.outDir)
+  await writeRuntimeScripts(site.outDir)
 
   const routes = await listMarkdownRoutes(site)
   if (!routes.includes('/')) {
     throw new Error('preactpress: add an index.md or index.mdx at the site root')
   }
 
-  for (const route of routes) {
-    const { body, title, description } = mod.render(route)
+  const previousCache = await readBuildCache(site.cacheDir)
+  const nextCache: BuildCache = { routes: {} }
+  const renderedPages = await mapConcurrent(routes, 12, async (route) => {
+    const result = mod.render(route)
     const html = await pageHtml({
       site,
-      body,
-      title,
-      description,
+      body: result.body,
+      title: result.title,
+      description: result.description,
+      tags: result.tags,
+      image: result.image,
+      pageType: result.pageType,
+      pageData: result.page,
       route,
       mainJs: main.file,
       mainCss: main.css
     })
     const outFile = path.join(site.outDir, routeToOutPath(route))
-    await fs.mkdir(path.dirname(outFile), { recursive: true })
-    await fs.writeFile(outFile, html, 'utf8')
-  }
+    const contentPath = result.page.kind === 'markdown' ? contentChunkPath(route) : undefined
+    await writeRouteArtifacts({
+      site,
+      route,
+      html,
+      page: result.page,
+      htmlPath: routeToOutPath(route),
+      contentPath,
+      previousCache,
+      nextCache
+    })
+    return { route, page: result.page }
+  })
 
   const notFound = mod.render('/404')
-  await fs.writeFile(
-    path.join(site.outDir, '404.html'),
-    await pageHtml({
+  await writeRouteArtifacts({
+    site,
+    route: '/404',
+    html: await pageHtml({
       site,
       body: notFound.body,
       title: notFound.title,
       description: notFound.description,
+      tags: notFound.tags,
+      image: notFound.image,
+      pageType: notFound.pageType,
+      pageData: notFound.page,
       route: '/404',
       mainJs: main.file,
       mainCss: main.css
     }),
-    'utf8'
-  )
+    page: notFound.page,
+    htmlPath: '404.html',
+    contentPath: notFound.page.kind === 'markdown' ? contentChunkPath('/404') : undefined,
+    previousCache,
+    nextCache
+  })
 
-  await writeSearchIndex(site, routes)
-  if (site.site.url && site.build.sitemap) await writeSitemap(site, routes)
+  await removeStaleRouteOutputs(site.outDir, previousCache, new Set([...routes, '/404']))
+  await writeBuildCache(site.cacheDir, nextCache)
+  await writeSearchIndex(site, renderedPages)
+  if (site.site.url && site.build.sitemap) await writeSitemap(site, renderedPages)
   if (site.site.url && site.build.robots) await writeRobots(site)
+  if (site.site.url && site.build.feed) {
+    await writeAtomFeed(
+      site,
+      renderedPages,
+      typeof site.build.feed === 'object' ? site.build.feed.limit : undefined
+    )
+  }
 }
 
 async function copyClientAssets(fromDir: string, toDir: string): Promise<void> {
@@ -201,9 +276,70 @@ async function copyClientAssets(fromDir: string, toDir: string): Promise<void> {
   }
 }
 
-async function writeSitemap(site: SiteConfig, routes: string[]): Promise<void> {
-  const urls = routes
-    .map((route) => `  <url><loc>${escapeHtml(absoluteUrl(site, route))}</loc></url>`)
+async function writeRuntimeScripts(outDir: string): Promise<void> {
+  await fs.writeFile(path.join(outDir, PREACTPRESS_THEME_SCRIPT), PREACTPRESS_THEME_BOOT_SCRIPT, 'utf8')
+}
+
+async function writeRouteArtifacts(opts: {
+  site: SiteConfig
+  route: string
+  html: string
+  page: PageView
+  htmlPath: string
+  contentPath?: string
+  previousCache: BuildCache
+  nextCache: BuildCache
+}): Promise<void> {
+  const hash = hashContent({
+    route: opts.route,
+    html: opts.html,
+    page: serializablePage(opts.page),
+    contentPath: opts.contentPath
+  })
+  const previous = opts.previousCache.routes[opts.route]
+  const htmlFile = path.join(opts.site.outDir, opts.htmlPath)
+  const contentFile = opts.contentPath ? path.join(opts.site.outDir, opts.contentPath) : undefined
+  const htmlExists = await fileExists(htmlFile)
+  const contentExists = contentFile ? await fileExists(contentFile) : true
+  const unchanged =
+    previous?.contentHash === hash &&
+    htmlExists &&
+    contentExists
+
+  if (!unchanged) {
+    await fs.mkdir(path.dirname(htmlFile), { recursive: true })
+    await fs.writeFile(htmlFile, opts.html, 'utf8')
+    if (contentFile && opts.page.kind === 'markdown') {
+      await fs.mkdir(path.dirname(contentFile), { recursive: true })
+      await fs.writeFile(contentFile, JSON.stringify(opts.page, null, 2), 'utf8')
+    }
+  }
+
+  opts.nextCache.routes[opts.route] = {
+    contentHash: hash,
+    htmlPath: opts.htmlPath,
+    contentPath: opts.contentPath,
+    mtime: new Date().toISOString()
+  }
+}
+
+function serializablePage(page: PageView): unknown {
+  if (page.kind === 'markdown') return page
+  const { Component: _Component, ...rest } = page
+  return rest
+}
+
+async function writeSitemap(
+  site: SiteConfig,
+  pages: Array<{ route: string; page: PageView }>
+): Promise<void> {
+  const urls = pages
+    .map(({ route, page }) => {
+      const lastmod = page.lastUpdated
+        ? `<lastmod>${escapeHtml(page.lastUpdated.slice(0, 10))}</lastmod>`
+        : ''
+      return `  <url><loc>${escapeHtml(absoluteUrl(site, route))}</loc>${lastmod}</url>`
+    })
     .join('\n')
   await fs.writeFile(
     path.join(site.outDir, 'sitemap.xml'),
@@ -220,8 +356,17 @@ async function writeRobots(site: SiteConfig): Promise<void> {
   )
 }
 
-async function writeSearchIndex(site: SiteConfig, routes: string[]): Promise<void> {
-  const entries = routes.map((route) => ({ route }))
+async function writeSearchIndex(
+  site: SiteConfig,
+  pages: Array<{ route: string; page: PageView }>
+): Promise<void> {
+  const entries = pages.map(({ route, page }) => ({
+    route,
+    title: page.title,
+    description: page.description,
+    excerpt: page.kind === 'markdown' ? excerptFromHtml(page.html) : page.description,
+    tags: page.tags ?? []
+  }))
   await fs.writeFile(
     path.join(site.outDir, 'preactpress-search.json'),
     JSON.stringify(entries, null, 2),

@@ -1,1 +1,0 @@
-{"version":3,"file":"Logo.d.ts","sourceRoot":"","sources":["../../../src/client/theme-default/Logo.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,mBAAmB,EAAE,GAAG,EAAE,MAAM,QAAQ,CAAA;AAKtD,MAAM,WAAW,SAAU,SAAQ,GAAG,CAAC,aAAa,CAAC,aAAa,CAAC;IACjE,mDAAmD;IACnD,KAAK,CAAC,EAAE,MAAM,CAAA;CACf;AAED,QAAA,MAAM,IAAI,EAAE,mBAAmB,CAAC,SAAS,CAWxC,CAAA;AAED,eAAe,IAAI,CAAA"}

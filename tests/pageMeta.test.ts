@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { excerptFromHtml, resolvePageMeta } from '../src/shared/pageMeta.js'
+import { excerptFromHtml, resolvePageHeadMeta, resolvePageMeta } from '../src/shared/pageMeta.js'
 
 describe('resolvePageMeta', () => {
   const site = { title: 'Site', description: 'Site summary' }
@@ -32,6 +32,31 @@ describe('resolvePageMeta', () => {
     expect(description.length).toBeGreaterThan(0)
     expect(description.length).toBeLessThanOrEqual(156)
     expect(description.endsWith('…')).toBe(true)
+  })
+})
+
+describe('resolvePageHeadMeta', () => {
+  const site = { title: 'Site', description: 'Site summary' }
+
+  it('includes page tags for head meta generation', () => {
+    expect(
+      resolvePageHeadMeta(
+        {
+          title: 'Page',
+          description: 'Page lead',
+          tags: ['react', 'docs'],
+          kind: 'markdown',
+          html: '<p>x</p>'
+        },
+        site
+      )
+    ).toEqual({
+      title: 'Page | Site',
+      description: 'Page lead',
+      tags: ['react', 'docs'],
+      image: undefined,
+      pageType: 'website'
+    })
   })
 })
 

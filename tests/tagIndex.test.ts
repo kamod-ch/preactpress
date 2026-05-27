@@ -10,11 +10,19 @@ import {
 } from '../src/node/tagIndex.js'
 import { scanContentFiles } from '../src/node/content.js'
 import type { SiteConfig } from '../src/node/siteConfig.js'
+import { resolvePageTags } from '../src/shared/tags.js'
 
 describe('tagIndex', () => {
   it('slugifies tags for URL segments', () => {
     expect(slugifyTagSegment('React Hooks')).toBe('react-hooks')
     expect(slugifyTagSegment('  news  ')).toBe('news')
+  })
+
+  it('resolves and deduplicates page tags by slug', () => {
+    expect(resolvePageTags({ tags: ['React Hooks', 'react hooks'], tag: 'News' })).toEqual([
+      'React Hooks',
+      'News'
+    ])
   })
 
   it('renders tag index HTML', () => {

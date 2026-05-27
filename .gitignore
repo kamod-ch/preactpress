@@ -2,3 +2,5 @@ node_modules/
 .preactpress/
 template/dist/
 *.tgz
+
+/dist

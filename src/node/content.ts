@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { glob } from 'tinyglobby'
 import type { SiteConfig } from './siteConfig.js'
+import { normalizeRoute } from '../shared/route.js'
 
 export const CONTENT_GLOBS = ['**/*.md', '**/*.mdx'] as const
 export const CONTENT_EXTENSIONS = ['.mdx', '.md'] as const
@@ -47,12 +48,6 @@ export async function scanContentFiles(site: Pick<SiteConfig, 'srcDir'>): Promis
 export async function listMarkdownRoutes(site: Pick<SiteConfig, 'srcDir'>): Promise<string[]> {
   const files = await scanContentFiles(site)
   return files.map((f) => f.route).sort()
-}
-
-export function normalizeRoute(route: string): string {
-  const clean = route.split(/[?#]/, 1)[0] || '/'
-  const prefixed = clean.startsWith('/') ? clean : `/${clean}`
-  return prefixed.replace(/\/$/, '') || '/'
 }
 
 export function fileHrefToRoute(href: string, fromRoute: string): string | undefined {

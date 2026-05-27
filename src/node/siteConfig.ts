@@ -26,6 +26,7 @@ export interface ThemeConfig {
   sidebar?: SidebarGroup[]
   outline?: boolean
   search?: boolean
+  tags?: boolean
   footer?: string
   editLink?: {
     pattern: string
@@ -56,6 +57,7 @@ export type HeadTag =
 export interface BuildConfig {
   sitemap?: boolean
   robots?: boolean
+  feed?: boolean | { limit?: number }
 }
 
 export interface UserConfig {
@@ -72,6 +74,7 @@ export interface UserConfig {
     route: string
     title: string
     description: string
+    tags: string[]
     site: SiteData
   }) => HeadTag[] | Promise<HeadTag[]>
   build?: BuildConfig

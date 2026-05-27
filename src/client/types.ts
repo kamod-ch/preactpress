@@ -4,6 +4,9 @@ import type { OutlineItem, SiteData, ThemeConfig } from '../node/siteConfig.js'
 interface BasePageView {
   title?: string
   description?: string
+  tags?: string[]
+  image?: string
+  pageType?: 'website' | 'article'
   meta: Record<string, unknown>
   headings: OutlineItem[]
   relativePath?: string

@@ -1,20 +1,12 @@
 import type { HeadTag, SiteConfig } from './siteConfig.js'
-import { PREACTPRESS_THEME_BOOT_SCRIPT } from '../shared/theme.js'
+import { parse as parseHtml } from 'node-html-parser'
+import { PREACTPRESS_THEME_SCRIPT } from '../shared/theme.js'
 import { canonicalUrl, publicUrl } from '../shared/url.js'
+import { escapeAttr, escapeHtml } from '../shared/escapeHtml.js'
+import type { PageView } from '../client/types.js'
 
 export { publicUrl } from '../shared/url.js'
-
-export function escapeHtml(s: string): string {
-  return s
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-}
-
-export function escapeAttr(s: string): string {
-  return escapeHtml(s)
-}
+export { escapeAttr, escapeHtml } from '../shared/escapeHtml.js'
 
 export function absoluteUrl(site: SiteConfig, route: string): string {
   return canonicalUrl({ url: site.site.url, base: site.site.base, route })
@@ -37,19 +29,29 @@ export function buildDefaultHeadTags(opts: {
   route: string
   title: string
   description: string
+  tags?: string[]
+  image?: string
+  pageType?: 'website' | 'article'
+  pageData?: PageView
 }): HeadTag[] {
-  const { site, route, title, description } = opts
+  const { site, route, title, description, tags = [], image, pageType = 'website', pageData } = opts
   const canonical = absoluteUrl(site, route)
+  const imageUrl = resolveHeadImage(site, image)
+  const jsonLd = buildJsonLd({ site, route, title, description, image: imageUrl, pageType, pageData })
   return [
     ['meta', { name: 'description', content: description }],
+    ...tags.map((tag): HeadTag => ['meta', { property: 'article:tag', content: tag }]),
     ['meta', { property: 'og:title', content: title }],
     ['meta', { property: 'og:description', content: description }],
-    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:type', content: pageType }],
     ['meta', { property: 'og:url', content: canonical }],
-    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['meta', { property: 'og:image', content: imageUrl }],
+    ['meta', { name: 'twitter:card', content: imageUrl ? 'summary_large_image' : 'summary' }],
     ['meta', { name: 'twitter:title', content: title }],
     ['meta', { name: 'twitter:description', content: description }],
-    ['link', { rel: 'canonical', href: canonical }]
+    ['meta', { name: 'twitter:image', content: imageUrl }],
+    ['link', { rel: 'canonical', href: canonical }],
+    ['script', { type: 'application/ld+json' }, jsonLd]
   ]
 }
 
@@ -64,16 +66,31 @@ export async function collectHeadTags(opts: {
   route: string
   title: string
   description: string
+  tags?: string[]
+  image?: string
+  pageType?: 'website' | 'article'
+  pageData?: PageView
 }): Promise<string> {
-  const { site, route, title, description } = opts
-  const defaultHead = buildDefaultHeadTags({ site, route, title, description })
+  const { site, route, title, description, tags = [], image, pageType, pageData } = opts
+  const defaultHead = buildDefaultHeadTags({
+    site,
+    route,
+    title,
+    description,
+    tags,
+    image,
+    pageType,
+    pageData
+  })
   const transformed = site.transformHead
-    ? await site.transformHead({ route, title, description, site: site.site })
+    ? await site.transformHead({ route, title, description, tags, site: site.site })
     : []
   return [...defaultHead, ...site.head, ...transformed]
     .filter(
       (tag) =>
-        tag[1] && !Object.values(tag[1]).every((value) => value == null || value === false)
+        tag[1] &&
+        !Object.values(tag[1]).every((value) => value == null || value === false) &&
+        !(tag[0] === 'meta' && Object.prototype.hasOwnProperty.call(tag[1], 'content') && tag[1].content == null)
     )
     .map(renderHeadTag)
     .join('\n    ')
@@ -84,16 +101,21 @@ export async function pageHtml(opts: {
   body: string
   title: string
   description: string
+  tags?: string[]
+  image?: string
+  pageType?: 'website' | 'article'
+  pageData?: PageView
   route: string
   mainJs: string
   mainCss: string[]
 }): Promise<string> {
-  const { site, body, title, description, route, mainJs, mainCss } = opts
+  const { site, body, title, description, tags = [], image, pageType, pageData, route, mainJs, mainCss } = opts
   const base = site.site.base
   const cssTags = renderProductionStylesheetLinks(mainCss, base)
   const scriptSrc = escapeHtml(publicUrl(base, mainJs))
-  const routeJson = JSON.stringify(route)
-  const headTags = await collectHeadTags({ site, route, title, description })
+  const themeScriptSrc = escapeHtml(publicUrl(base, PREACTPRESS_THEME_SCRIPT))
+  const headTags = await collectHeadTags({ site, route, title, description, tags, image, pageType, pageData })
+  const pageDataTemplate = renderPageDataTemplate(pageData)
 
   return `<!DOCTYPE html>
 <html lang="${escapeAttr(site.site.lang)}">
@@ -101,12 +123,12 @@ export async function pageHtml(opts: {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${escapeHtml(title)}</title>
-    <script>${PREACTPRESS_THEME_BOOT_SCRIPT}</script>
+    <script src="${themeScriptSrc}"></script>
     ${headTags}
     ${cssTags}
   </head>
   <body>
-    <script>window.__PREACTPRESS_ROUTE__=${routeJson}</script>
+    ${pageDataTemplate}
     <div id="app">${body}</div>
     <script type="module" crossorigin src="${scriptSrc}"></script>
   </body>
@@ -123,6 +145,41 @@ function renderProductionStylesheetLinks(mainCss: string[], base: string): strin
     .join('\n    ')
 }
 
+function resolveHeadImage(site: SiteConfig, image: string | undefined): string | undefined {
+  if (!image) return undefined
+  if (/^(?:[a-z]+:)?\/\//i.test(image)) return image
+  return site.site.url
+    ? `${site.site.url}${publicUrl(site.site.base, image)}`
+    : publicUrl(site.site.base, image)
+}
+
+function buildJsonLd(opts: {
+  site: SiteConfig
+  route: string
+  title: string
+  description: string
+  image?: string
+  pageType: 'website' | 'article'
+  pageData?: PageView
+}): string {
+  const data: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': opts.pageType === 'article' ? 'Article' : 'WebPage',
+    headline: opts.title,
+    name: opts.title,
+    description: opts.description,
+    url: absoluteUrl(opts.site, opts.route)
+  }
+  if (opts.image) data.image = opts.image
+  if (opts.pageData?.lastUpdated) data.dateModified = opts.pageData.lastUpdated
+  return JSON.stringify(data).replaceAll('<', '\\u003c')
+}
+
+function renderPageDataTemplate(page: PageView | undefined): string {
+  if (!page || page.kind !== 'markdown') return ''
+  return `<template id="__PREACTPRESS_PAGE_DATA__">${escapeHtml(JSON.stringify(page).replaceAll('<', '\\u003c'))}</template>`
+}
+
 /** Patch a Vite-transformed dev index.html with per-route SEO and SSR body. */
 export async function injectDevPageDocument(
   html: string,
@@ -131,57 +188,59 @@ export async function injectDevPageDocument(
     body: string
     title: string
     description: string
+    tags?: string[]
+    image?: string
+    pageType?: 'website' | 'article'
+    pageData?: PageView
     route: string
     /** Dev-only stylesheet URLs from the Vite client module graph (avoids FOUC). */
     devStylesheets?: string[]
   }
 ): Promise<string> {
-  const { site, body, title, description, route, devStylesheets } = opts
-  const headTags = await collectHeadTags({ site, route: opts.route, title, description })
+  const { site, body, title, description, tags = [], image, pageType, pageData, route, devStylesheets } = opts
+  const headTags = await collectHeadTags({
+    site,
+    route: opts.route,
+    title,
+    description,
+    tags,
+    image,
+    pageType,
+    pageData
+  })
   const devCssTags =
     devStylesheets?.length && !devStylesheets.every((href) => html.includes(href))
       ? renderStylesheetLinks(
           devStylesheets.filter((href) => !html.includes(href))
         )
       : ''
-  const routeJson = JSON.stringify(route)
   const lang = escapeAttr(site.site.lang)
 
-  let out = html
-  if (/<html\b/i.test(out)) {
-    out = out.replace(/<html\b([^>]*)>/i, (_match, attrs: string) => {
-      const withoutLang = attrs.replace(/\s+lang=(['"])[^'"]*\1/i, '')
-      return `<html lang="${lang}"${withoutLang}>`
-    })
-  }
-
-  if (/<title>[\s\S]*?<\/title>/i.test(out)) {
-    out = out.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)}</title>`)
-  } else {
-    out = out.replace(/<\/head>/i, `    <title>${escapeHtml(title)}</title>\n  </head>`)
-  }
-
-  out = out.replace(
-    /<meta\s+name=["']description["'][^>]*>/i,
-    ''
-  )
   const headInject = [headTags, devCssTags].filter(Boolean).join('\n    ')
-  out = out.replace(/<\/head>/i, `    ${headInject}\n  </head>`)
+  const doc = parseHtml(html, { comment: true })
+  const htmlEl = doc.querySelector('html')
+  if (htmlEl) htmlEl.setAttribute('lang', lang)
 
-  const routeScript = `<script>window.__PREACTPRESS_ROUTE__=${routeJson}</script>`
-  if (out.includes('__PREACTPRESS_ROUTE__')) {
-    out = out.replace(
-      /<script>window\.__PREACTPRESS_ROUTE__=[^<]*<\/script>/,
-      routeScript
-    )
-  } else {
-    out = out.replace(/<body\b[^>]*>/i, (match) => `${match}\n    ${routeScript}`)
+  const head = doc.querySelector('head')
+  if (head) {
+    const titleEl = head.querySelector('title')
+    if (titleEl) titleEl.set_content(escapeHtml(title))
+    else head.insertAdjacentHTML('beforeend', `    <title>${escapeHtml(title)}</title>\n`)
+    head.querySelectorAll('meta[name="description"]').forEach((el) => el.remove())
+    if (headInject) head.insertAdjacentHTML('beforeend', `    ${headInject}\n`)
   }
 
-  out = out.replace(
-    /<div\s+id=["']app["'][^>]*>[\s\S]*?<\/div>/i,
-    `<div id="app">${body}</div>`
-  )
+  const bodyEl = doc.querySelector('body')
+  if (bodyEl) {
+    bodyEl.querySelector('#__PREACTPRESS_PAGE_DATA__')?.remove()
+    const template = renderPageDataTemplate(pageData)
+    if (template) bodyEl.insertAdjacentHTML('afterbegin', `    ${template}\n`)
+  }
 
-  return out
+  const app = doc.querySelector('#app')
+  if (app) {
+    app.set_content(body)
+  }
+
+  return doc.toString()
 }

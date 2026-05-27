@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { pickMainEntry, publicUrl, routeToOutPath } from '../src/node/build.js'
+import { mapConcurrent, pickMainEntry, publicUrl, routeToOutPath } from '../src/node/build.js'
 
 describe('build helpers', () => {
   it('creates base-aware public URLs', () => {
@@ -29,5 +29,20 @@ describe('build helpers', () => {
         other: { file: 'assets/other.js', isEntry: true }
       })
     ).toEqual({ file: 'assets/other.js', css: [] })
+  })
+
+  it('maps work with a concurrency limit while preserving order', async () => {
+    let active = 0
+    let maxActive = 0
+    const out = await mapConcurrent([1, 2, 3, 4], 2, async (n) => {
+      active += 1
+      maxActive = Math.max(maxActive, active)
+      await Promise.resolve()
+      active -= 1
+      return n * 2
+    })
+
+    expect(out).toEqual([2, 4, 6, 8])
+    expect(maxActive).toBeLessThanOrEqual(2)
   })
 })

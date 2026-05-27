@@ -76,8 +76,12 @@ The `init` template uses a plain `export default { ... }` object so it works bef
 
 Default theme lives in the `preactpress` package (`src/client/theme-default/Layout.tsx`). Point `theme` to a `.tsx` file that **default-exports** a Preact layout; props match `LayoutProps` in the package sources.
 
+Theme authors can import public client and shared helpers from `preactpress/client` and `preactpress/shared`, including `LayoutProps`, `PageView`, `usePageHead`, `normalizeRoute`, and tag/slug helpers.
+
 Markdown HTML is disabled by default. Enable `markdown.html` only for trusted content.
 Set `site.url` to emit absolute canonical/OpenGraph URLs, `sitemap.xml`, and `robots.txt`.
+
+Frontmatter supports `title`, `description`, `tags`, `image` / `ogImage`, `type: article`, and `draft: true`. Draft pages are excluded from generated routes, tag indexes, search, feeds, and sitemap output; `preactpress check` reports them as warnings so they are not missed before publishing. Page images are emitted as `og:image` and `twitter:image` when present.
 
 `preactpress dev` serves per-route HTML with meta tags and SSR content in `#app` (same SEO shape as production). Theme stylesheets from the client module graph are injected as `<link rel="stylesheet">` in the document head so the first paint matches production (no flash of unstyled content while the JS bundle loads). Set `site.description` and optional per-page `description` frontmatter for summaries; `preactpress check` warns when both are missing.
 
@@ -88,6 +92,10 @@ Set `site.url` to emit absolute canonical/OpenGraph URLs, `sitemap.xml`, and `ro
 Normal page URLs still follow your content file paths (for example `news/2025/intro.md` becomes `/news/2025/intro`). For a **main** and **secondary** segment in the path, use nested folders under `srcDir`.
 
 Optional frontmatter fields **`tags`** (array of strings) and **`tag`** (single string) do not change a page’s own URL, but each distinct tag gets an auto-generated index at **`/tags/<slug>`**, where `<slug>` is a lowercase, hyphenated form of the tag. The index lists every Markdown or MDX page that lists that tag. If a real page already exists at the same route (for example `tags/react.md` → `/tags/react`), that file takes precedence and no synthetic tag index is emitted for that slug.
+
+The default theme shows page tags as linked chips below the page lead. Disable that UI with `themeConfig.tags: false` if your custom navigation already covers tag discovery.
+
+Pages with tags emit one `<meta property="article:tag">` per tag in both dev SSR and production builds. These tags are mainly for structured previews and downstream consumers; `title`, `description`, and social image metadata remain the most important SEO fields.
 
 Tag index routes are included in static output, `preactpress-search.json`, and `sitemap.xml` (when configured) alongside file-based routes.
 
@@ -178,10 +186,25 @@ CLI options for preview: `--port`, `--host`, `--base`.
 | `index.html`, `*/index.html` | One HTML file per route (e.g. `/about` → `about/index.html`) |
 | Hashed JS/CSS | Client bundle from Vite |
 | `404.html` | Not-found page |
-| `preactpress-search.json` | Route list for theme search |
+| `preactpress-search.json` | Route, title, description, excerpt, and tag data for theme search |
+| `preactpress-content/*.json` | Lazy-loaded Markdown page payloads used during client-side navigation |
 | `sitemap.xml`, `robots.txt` | Emitted when `site.url` is set and `build.sitemap` / `build.robots` are enabled |
 
-Intermediate build artifacts go to `cacheDir` (default `node_modules/.preactpress`); deploy **`outDir` only**.
+Intermediate build artifacts go to `cacheDir` (default `node_modules/.preactpress`); deploy **`outDir` only**. Repeated builds keep a small `build-manifest.json` cache so unchanged route artifacts can be left untouched.
+
+The client bundle contains route metadata and MDX loader functions, while Markdown HTML is written to `preactpress-content/*.json` and fetched only when a user navigates to that page. This keeps large Markdown sites from shipping every page body in the initial JavaScript bundle.
+
+The default theme search loads `preactpress-search.json` and searches title, description, excerpt, route, and tags. Existing sidebar filtering remains as a fallback when the search index has no matching results.
+
+If `build.feed` is enabled and `site.url` is set, `preactpress build` also emits `feed.xml`:
+
+```ts
+build: {
+  feed: { limit: 20 }
+}
+```
+
+PreactPress avoids executable inline boot scripts in generated HTML. The theme bootstrap runs from `preactpress-theme.js`, and per-route hydration data is embedded in a non-executable `<template>` so stricter Content Security Policies do not require `script-src 'unsafe-inline'` for core runtime behavior.
 
 ### Subpath hosting (e.g. GitHub Pages)
 
@@ -217,9 +240,8 @@ In a monorepo, run these steps from the site package directory (or pass the site
 To release the **CLI/tool** itself (not a content site), from the `preactpress` package directory:
 
 ```bash
-pnpm install
-pnpm run build   # compiles TypeScript to dist/
-pnpm publish     # runs prepack → build automatically
+pnpm install          # runs prepare → build (compiles TypeScript to dist/)
+pnpm publish          # runs prepack → build automatically before pack
 ```
 
 Requirements: Node 20+, npm account, and the `files` field in `package.json` (includes `dist`, `bin`, `template`, etc.).
@@ -239,7 +261,7 @@ From the **package root** (`preactpress/`, where this README lives), two differe
 | `pnpm run build` | Compiles the **CLI** TypeScript sources to `dist/` (`tsc`). Does **not** build a content site. |
 | `pnpm exec preactpress build [root]` | Runs the **static site generator** for a site (default: current directory). Writes HTML + assets to `outDir` (e.g. `template/dist/`). |
 
-After changing CLI or client code, run `pnpm run build` before `pnpm run demo` or `node ./bin/preactpress.mjs …` so `dist/` is up to date.
+After changing CLI or client code, run `pnpm run build` before `pnpm run demo` or `node ./bin/preactpress.mjs …` so `dist/` is up to date. On `pnpm install`, the `prepare` script builds `dist/` automatically — you only need a manual build after editing sources.
 
 ### Bundled demos (package root)
 
@@ -256,8 +278,7 @@ Typical workflows:
 
 ```bash
 # Hack on the CLI / default theme (dev, hot reload)
-pnpm install
-pnpm run build          # compile CLI → dist/
+pnpm install            # prepare builds dist/ automatically
 pnpm run demo           # http://localhost:5173 (template site)
 
 # Smoke-test production output for the template

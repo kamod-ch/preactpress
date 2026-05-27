@@ -67,4 +67,20 @@ describe('mdFileToRoute', () => {
       await fs.rm(root, { recursive: true, force: true })
     }
   })
+
+  it('excludes draft pages from generated routes and tag indexes', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-draft-routes-'))
+    try {
+      await fs.writeFile(path.join(root, 'index.md'), '# Home\n', 'utf8')
+      await fs.writeFile(
+        path.join(root, 'draft.md'),
+        '---\ndraft: true\ntags: [hidden]\n---\n# Draft\n',
+        'utf8'
+      )
+
+      await expect(listMarkdownRoutes({ srcDir: root } as SiteConfig)).resolves.toEqual(['/'])
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
 })

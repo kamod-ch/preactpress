@@ -19,6 +19,9 @@ declare module 'virtual:preactpress-pages' {
       html: string
       title?: string
       description?: string
+      tags?: string[]
+      image?: string
+      pageType?: 'website' | 'article'
       headings: { id: string; text: string; level: number }[]
       relativePath?: string
       lastUpdated?: string
@@ -31,10 +34,36 @@ declare module 'virtual:preactpress-pages' {
       meta: Record<string, unknown>
       title?: string
       description?: string
+      tags?: string[]
+      image?: string
+      pageType?: 'website' | 'article'
       headings: { id: string; text: string; level: number }[]
       relativePath?: string
       lastUpdated?: string
     }
+  >
+  export const pagesMeta: Record<
+    string,
+    {
+      kind: 'markdown' | 'mdx'
+      meta: Record<string, unknown>
+      title?: string
+      description?: string
+      tags?: string[]
+      image?: string
+      pageType?: 'website' | 'article'
+      headings: { id: string; text: string; level: number }[]
+      relativePath?: string
+      lastUpdated?: string
+    }
+  >
+  export const mdxLoaders: Record<
+    string,
+    () => Promise<{
+      default: ComponentType<{
+        components?: Record<string, ComponentType<Record<string, unknown>>>
+      }>
+    }>
   >
   export const routes: string[]
 }
@@ -52,6 +81,7 @@ declare module 'virtual:preactpress-site' {
     sidebar?: { text?: string; items: { text: string; link: string }[] }[]
     outline?: boolean
     search?: boolean
+    tags?: boolean
     footer?: string
     editLink?: { pattern: string; text?: string }
     lastUpdated?: boolean

@@ -22,10 +22,19 @@
     "./config": {
       "types": "./dist/node/config-helpers.d.ts",
       "default": "./dist/node/config-helpers.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js"
+    },
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "default": "./dist/shared/index.js"
     }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepare": "pnpm run build",
     "test": "vitest run",
     "prepack": "pnpm run build",
     "preactpress": "node ./bin/preactpress.mjs",
@@ -40,6 +49,7 @@
     "gray-matter": "^4.0.3",
     "markdown-it": "^14.1.0",
     "minimist": "^1.2.8",
+    "node-html-parser": "^7.1.0",
     "picocolors": "^1.1.1",
     "preact": "^10.28.2",
     "preact-render-to-string": "^6.6.3",

@@ -116,7 +116,8 @@ export async function resolveConfig(
     transformHead: user.transformHead,
     build: {
       sitemap: user.build?.sitemap ?? true,
-      robots: user.build?.robots ?? true
+      robots: user.build?.robots ?? true,
+      feed: user.build?.feed ?? false
     },
     vite: user.vite ?? {},
     logger

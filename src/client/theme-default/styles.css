@@ -254,6 +254,24 @@ body::selection {
   font: inherit;
 }
 
+.pp-search-results {
+  display: grid;
+  gap: 4px;
+  margin: -8px 0 16px;
+}
+
+.pp-search-results a {
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+}
+
+.pp-search-results small {
+  color: var(--pp-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .pp-sidebar-heading {
   font-size: 12px;
   font-weight: 700;
@@ -315,6 +333,32 @@ body::selection {
   margin: 0 0 24px;
   color: var(--pp-muted);
   font-size: 1.05rem;
+}
+
+.pp-doc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -8px 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--pp-border);
+  border-radius: 999px;
+  color: var(--pp-muted);
+  font-size: 13px;
+  line-height: 1;
+  padding: 7px 10px;
+  text-decoration: none;
+}
+
+.pp-tag-chip:hover {
+  border-color: var(--pp-accent);
+  color: var(--pp-accent);
 }
 
 .pp-doc-content {
@@ -425,6 +469,34 @@ body::selection {
   text-align: left;
 }
 
+.pp-tag-index-count {
+  color: var(--pp-muted);
+}
+
+.pp-tag-index-list {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-tag-index-list li + li {
+  margin-top: 10px;
+}
+
+.pp-tag-index-list a {
+  display: block;
+  border: 1px solid var(--pp-border);
+  border-radius: 8px;
+  color: var(--pp-text);
+  padding: 12px 14px;
+  text-decoration: none;
+}
+
+.pp-tag-index-list a:hover {
+  border-color: var(--pp-accent);
+  color: var(--pp-accent);
+}
+
 .pp-pager {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -532,6 +604,8 @@ body::selection {
 .pp-nav-links a:focus-visible,
 .pp-sidebar a:focus-visible,
 .pp-doc-content a:focus-visible,
+.pp-tag-chip:focus-visible,
+.pp-tag-index-list a:focus-visible,
 .pp-pager-link:focus-visible,
 .pp-outline a:focus-visible,
 .pp-sidebar-panel > summary:focus-visible {

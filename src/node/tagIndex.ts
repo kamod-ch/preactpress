@@ -1,42 +1,11 @@
-import { normalizeRoute, scanContentFiles, type ContentFile } from './content.js'
+import { scanContentFiles, type ContentFile } from './content.js'
 import { readMarkdownMetadata } from './markdown.js'
 import type { SiteConfig } from './siteConfig.js'
+import { resolvePageTags, slugifyTagSegment, tagIndexPageRoute } from '../shared/tags.js'
+import { isDraftPage } from '../shared/pageMeta.js'
+import { escapeHtml } from '../shared/escapeHtml.js'
 
-function escapeHtml(s: string): string {
-  return s
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-}
-
-/** URL path segment for a tag (lowercase, hyphenated ASCII). */
-export function slugifyTagSegment(tag: string): string {
-  const slug = tag
-    .toLowerCase()
-    .trim()
-    .replace(/<[^>]+>/g, '')
-    .replace(/&[a-z0-9#]+;/gi, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-  return slug
-}
-
-function parseTagsField(value: unknown): string[] {
-  if (value == null) return []
-  if (typeof value === 'string') return value.trim() ? [value.trim()] : []
-  if (!Array.isArray(value)) return []
-  const out: string[] = []
-  for (const v of value) {
-    if (typeof v === 'string' && v.trim()) out.push(v.trim())
-    else if (typeof v === 'number' || typeof v === 'boolean') out.push(String(v))
-  }
-  return out
-}
-
-export function tagIndexPageRoute(slug: string): string {
-  return normalizeRoute(`/tags/${slug}`)
-}
+export { slugifyTagSegment, tagIndexPageRoute }
 
 export type TagIndexBucket = {
   label: string
@@ -55,8 +24,8 @@ export function collectTagSlugMap(files: ContentFile[]): Map<string, TagIndexBuc
 
   for (const file of files) {
     const { meta, title } = readMarkdownMetadata(file.file)
-    const tagStrings = [...parseTagsField(meta.tags), ...parseTagsField(meta.tag)]
-    for (const raw of tagStrings) {
+    if (isDraftPage(meta)) continue
+    for (const raw of resolvePageTags(meta)) {
       const slug = slugifyTagSegment(raw)
       if (!slug) continue
       let slot = bySlug.get(slug)
@@ -100,7 +69,9 @@ export async function listTagIndexRoutes(
   site: Pick<SiteConfig, 'srcDir'>,
   fileRouteSet: ReadonlySet<string>
 ): Promise<string[]> {
-  const files = await scanContentFiles(site)
+  const files = (await scanContentFiles(site)).filter(
+    (file) => !isDraftPage(readMarkdownMetadata(file.file).meta)
+  )
   const map = collectTagSlugMap(files)
   const routes: string[] = []
   for (const slug of map.keys()) {
