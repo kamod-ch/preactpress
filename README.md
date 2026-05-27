@@ -4,35 +4,167 @@
 
 # PreactPress
 
-Static site generator using **Vite** and **Preact** (no Vue). Project layout is inspired by VitePress: Markdown and MDX pages, a `.preactpress` config directory, `dev` / `build` / `preview` commands, and an overridable theme `Layout`.
+**PreactPress** is a static site generator: you write pages in **Markdown** (or **MDX** with Preact components), configure navigation and theme, and get static HTML for Netlify, Vercel, GitHub Pages, and similar hosts — **no Node server in production**.
 
-## Requirements
+Built with **Vite** and **Preact**. Project layout is inspired by [VitePress](https://vitepress.dev/), but without Vue.
 
-- Node 20+
-- pnpm (recommended)
+## Table of contents
 
-## Commands
+- [Who is it for?](#who-is-it-for)
+- [Quick start](#quick-start)
+- [Project structure](#project-structure)
+- [Your first 5 minutes](#your-first-5-minutes)
+- [Commands](#commands)
+- [Key concepts](#key-concepts)
+- [Configuration](#configuration)
+- [Page frontmatter](#page-frontmatter)
+- [MDX](#mdx)
+- [Tags and URLs](#tags-and-urls)
+- [Custom theme](#custom-theme)
+- [Deploying your site](#deploying-your-site)
+- [Advanced](#advanced)
+- [Contributing](#contributing)
+- [License](#license)
 
-From a site directory (with `.preactpress/config.ts` and Markdown next to `index.html`):
+## Who is it for?
+
+PreactPress fits documentation sites, blogs, portfolios, and marketing pages where content lives in Markdown files and you want fast dev tooling with optional interactive Preact components.
+
+| If you know… | PreactPress is… |
+| --- | --- |
+| [VitePress](https://vitepress.dev/) | Similar workflow, but with **Preact** instead of Vue |
+| Next.js / Nuxt | **Static export only** — no server runtime in production |
+| Jekyll / Hugo | Markdown-first, but powered by **Vite** and **MDX** |
+
+## Quick start
+
+**Requirements:** Node 20+, [pnpm](https://pnpm.io/) recommended (npm/yarn also work).
 
 ```bash
-pnpm exec preactpress dev
-pnpm exec preactpress build
-pnpm exec preactpress preview
-pnpm exec preactpress check
-```
-
-Scaffold a new site in the current folder:
-
-```bash
+mkdir my-site && cd my-site
+pnpm add -D preactpress
 pnpm exec preactpress init
 pnpm install
 pnpm exec preactpress dev
 ```
 
+Open **http://localhost:5173** — you should see the starter site with sidebar, search, and an MDX demo page.
+
+Try the bundled demo from the package repo:
+
+```bash
+git clone <repo-url>
+cd preactpress
+pnpm install
+pnpm run demo    # dev server for ./template
+```
+
+## Project structure
+
+After `preactpress init`, your site looks like this:
+
+```text
+my-site/
+├── index.html              # Vite entry (rarely edited)
+├── index.md                # Home page → /
+├── markdown-examples.md    # → /markdown-examples
+├── interactive.mdx         # → /interactive (Preact components)
+├── components/
+│   └── Counter.tsx         # Used by interactive.mdx
+└── .preactpress/
+    └── config.ts           # Site title, nav, sidebar, build options
+```
+
+**Every `.md` or `.mdx` file under `srcDir` (default: project root) becomes a URL automatically.**  
+Example: `news/2025/intro.md` → `/news/2025/intro`.
+
+## Your first 5 minutes
+
+### 1. Change the site title
+
+Edit `.preactpress/config.ts`:
+
+```ts
+export default {
+  site: {
+    title: 'My Docs',
+    description: 'Short summary for search and social previews'
+  }
+}
+```
+
+### 2. Add a page
+
+Create `about.md`:
+
+```md
+---
+title: About
+description: About this site
+---
+
+# About us
+
+Your content here.
+```
+
+PreactPress serves it at `/about`.
+
+### 3. Add it to the navigation
+
+In `.preactpress/config.ts`:
+
+```ts
+export default {
+  site: { title: 'My Docs' },
+  themeConfig: {
+    nav: [
+      { text: 'Home', link: '/' },
+      { text: 'About', link: '/about' }
+    ],
+    sidebar: [
+      {
+        text: 'Guide',
+        items: [
+          { text: 'Home', link: '/' },
+          { text: 'About', link: '/about' }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Save — the dev server hot-reloads your changes.
+
+## Commands
+
+From a site directory (with `.preactpress/config.ts` and Markdown next to `index.html`):
+
+| Command | Purpose |
+| --- | --- |
+| `pnpm exec preactpress dev` | Dev server with SSR and hot reload |
+| `pnpm exec preactpress build` | Static production build → `dist/` |
+| `pnpm exec preactpress preview` | Local preview of the build (not for production hosting) |
+| `pnpm exec preactpress check` | Validate config, links, and routes before release |
+| `pnpm exec preactpress init` | Scaffold a new site in the current folder |
+
+The `init` template also ships npm scripts: `pnpm run dev`, `check`, `build`, `preview`.
+
+## Key concepts
+
+| Term | Meaning |
+| --- | --- |
+| `srcDir` | Directory containing Markdown/MDX pages (default: `.`) |
+| `outDir` | Build output to deploy (default: `dist/`) |
+| `theme` | Preact layout component (header, sidebar, page shell) |
+| `themeConfig` | Nav, sidebar, search, footer — no theme code required |
+| `site.base` | Public URL prefix (e.g. `/repo/` for GitHub Pages project sites) |
+| `site.url` | Canonical site URL for SEO, sitemap, and Open Graph |
+
 ## Configuration
 
-`preactpress/config` exports `defineConfig` (optional sugar). After `pnpm add -D preactpress`, you can use:
+The starter uses a plain config object so it works before dependencies are installed. After `pnpm add -D preactpress`, you can optionally use `defineConfig`:
 
 ```ts
 import { defineConfig } from 'preactpress/config'
@@ -41,7 +173,6 @@ export default defineConfig({
   site: { title: 'My docs', description: '…', base: '/' },
   srcDir: '.',
   outDir: 'dist',
-  theme: './theme/Layout.tsx',
   themeConfig: {
     outline: true,
     search: true,
@@ -72,36 +203,30 @@ export default defineConfig({
 })
 ```
 
-The `init` template uses a plain `export default { ... }` object so it works before installing dependencies (Vite bundles the config file and must resolve imports).
+Common options:
 
-Default theme lives in the `preactpress` package (`src/client/theme-default/Layout.tsx`). Point `theme` to a `.tsx` file that **default-exports** a Preact layout; props match `LayoutProps` in the package sources.
+- **`markdown.html`** — disabled by default; enable only for trusted content.
+- **`site.url`** — set before production to emit canonical/Open Graph URLs, `sitemap.xml`, and `robots.txt`.
+- **`preactpress check`** — validates config loading, route collisions, the root page, nav/sidebar links, local Markdown links, and tag routes. Warns about missing descriptions and draft pages.
 
-Theme authors can import public client and shared helpers from `preactpress/client` and `preactpress/shared`, including `LayoutProps`, `PageView`, `usePageHead`, `normalizeRoute`, and tag/slug helpers.
+In development, each route is served as HTML with meta tags and SSR content in `#app` (same SEO shape as production). Theme CSS is injected in the document head so the first paint matches production.
 
-Markdown HTML is disabled by default. Enable `markdown.html` only for trusted content.
-Set `site.url` to emit absolute canonical/OpenGraph URLs, `sitemap.xml`, and `robots.txt`.
+## Page frontmatter
 
-Frontmatter supports `title`, `description`, `tags`, `image` / `ogImage`, `type: article`, and `draft: true`. Draft pages are excluded from generated routes, tag indexes, search, feeds, and sitemap output; `preactpress check` reports them as warnings so they are not missed before publishing. Page images are emitted as `og:image` and `twitter:image` when present.
+Optional YAML at the top of each `.md` / `.mdx` file:
 
-`preactpress dev` serves per-route HTML with meta tags and SSR content in `#app` (same SEO shape as production). Theme stylesheets from the client module graph are injected as `<link rel="stylesheet">` in the document head so the first paint matches production (no flash of unstyled content while the JS bundle loads). Set `site.description` and optional per-page `description` frontmatter for summaries; `preactpress check` warns when both are missing.
-
-`preactpress check` validates config loading, route collisions, the required root page, nav/sidebar links, local Markdown links to `.md`, `.mdx`, and `.html` pages, and routes generated from frontmatter tags.
-
-## Tags and URLs
-
-Normal page URLs still follow your content file paths (for example `news/2025/intro.md` becomes `/news/2025/intro`). For a **main** and **secondary** segment in the path, use nested folders under `srcDir`.
-
-Optional frontmatter fields **`tags`** (array of strings) and **`tag`** (single string) do not change a page’s own URL, but each distinct tag gets an auto-generated index at **`/tags/<slug>`**, where `<slug>` is a lowercase, hyphenated form of the tag. The index lists every Markdown or MDX page that lists that tag. If a real page already exists at the same route (for example `tags/react.md` → `/tags/react`), that file takes precedence and no synthetic tag index is emitted for that slug.
-
-The default theme shows page tags as linked chips below the page lead. Disable that UI with `themeConfig.tags: false` if your custom navigation already covers tag discovery.
-
-Pages with tags emit one `<meta property="article:tag">` per tag in both dev SSR and production builds. These tags are mainly for structured previews and downstream consumers; `title`, `description`, and social image metadata remain the most important SEO fields.
-
-Tag index routes are included in static output, `preactpress-search.json`, and `sitemap.xml` (when configured) alongside file-based routes.
+| Field | Purpose |
+| --- | --- |
+| `title` | Page title (nav, `<title>`, search) |
+| `description` | Summary for SEO and search |
+| `tags` / `tag` | Tag indexes at `/tags/<slug>` (see below) |
+| `image` / `ogImage` | Social preview image |
+| `type: article` | Article metadata |
+| `draft: true` | Excluded from routes, search, feeds, and sitemap; `check` warns |
 
 ## MDX
 
-Use `.md` for regular Markdown pages and `.mdx` when a page needs Preact components. MDX pages can import components directly:
+Use `.md` for regular Markdown. Use `.mdx` when a page needs Preact components:
 
 ```mdx
 ---
@@ -116,38 +241,46 @@ import Counter from './components/Counter.tsx'
 <Counter initial={3} />
 ```
 
-PreactPress reads MDX frontmatter for page metadata and extracts Markdown `##` / `###` headings for the outline.
+PreactPress reads MDX frontmatter for page metadata and extracts `##` / `###` headings for the on-page outline.
 
-## Production
+## Tags and URLs
 
-PreactPress is a **static site generator**. Production means running `preactpress build` and deploying the output folder (default `dist/`). There is no Node server required in production.
+Page URLs follow file paths under `srcDir`. Tags in frontmatter do **not** change a page's own URL.
 
-### Deploying a site
+Each distinct tag gets an auto-generated index at **`/tags/<slug>`** (lowercase, hyphenated). The index lists every page with that tag. If a real page already exists at the same route (e.g. `tags/react.md` → `/tags/react`), that file wins.
 
-From your site directory (with `.preactpress/config.ts`):
+The default theme shows tags as linked chips below the page lead. Disable with `themeConfig.tags: false`.
+
+Tag indexes are included in static output, `preactpress-search.json`, and `sitemap.xml` (when configured).
+
+## Custom theme
+
+The default theme ships inside the `preactpress` package. Point `theme` to a `.tsx` file that **default-exports** a Preact layout:
+
+```ts
+export default {
+  theme: './theme/Layout.tsx'
+}
+```
+
+Props match `LayoutProps` in the package. Theme authors can import helpers from `preactpress/client` and `preactpress/shared`, including `LayoutProps`, `PageView`, `usePageHead`, `normalizeRoute`, and tag/slug utilities.
+
+See **`examples/magazine-starter/`** for a custom layout (masthead, sticky nav, teaser grid). Run `pnpm run demo:magazine` from the package root.
+
+## Deploying your site
+
+PreactPress is a **static site generator**. Production means `preactpress build` and uploading **`outDir`** (default `dist/`). No Node server required.
 
 ```bash
 pnpm install
 pnpm exec preactpress check    # recommended before release
 pnpm exec preactpress build
-pnpm exec preactpress preview  # optional: local smoke test only
+pnpm exec preactpress preview  # optional local smoke test
 ```
 
-Or use the npm scripts from the `init` template:
-
-```bash
-pnpm run check
-pnpm run build
-pnpm run preview
-```
-
-Upload **only the contents of `outDir`** (default `dist/`) to any static host, for example Netlify, Vercel, Cloudflare Pages, GitHub Pages, S3 + CDN, or nginx/Caddy as a static file server.
-
-`preactpress preview` starts a small local static server (`sirv`) for testing the build. It is not intended as a long-running production server.
+Upload **only `dist/`** to Netlify, Vercel, Cloudflare Pages, GitHub Pages, S3 + CDN, or any static file server.
 
 ### Production configuration
-
-Set these in `.preactpress/config.ts` before a production build:
 
 ```ts
 export default {
@@ -155,7 +288,7 @@ export default {
     title: 'My site',
     description: '…',
     url: 'https://example.com', // canonical, Open Graph, sitemap, robots
-    base: '/'                   // see “Subpath hosting” below
+    base: '/'                   // see subpath hosting below
   },
   outDir: 'dist',
   build: {
@@ -165,50 +298,28 @@ export default {
 }
 ```
 
-- **`site.url`** — required for absolute canonical and Open Graph URLs, plus `sitemap.xml` and `robots.txt` (when `build.sitemap` / `build.robots` are enabled).
-- **`site.base`** — public path prefix (Vite `base`). Use `/` for apex domains; use a subpath for project sites on GitHub Pages (see below).
-- **`outDir`** — build output directory to deploy (default `dist`).
-
-Override `site.base` for a single build without editing config:
+Override `site.base` for one build without editing config:
 
 ```bash
 pnpm exec preactpress build --base /my-repo/
 ```
 
-CLI options for preview: `--port`, `--host`, `--base`.
-
 ### Build output
 
-`preactpress build` runs SSR for every route and writes static HTML plus client assets:
-
 | Output | Description |
-|--------|-------------|
-| `index.html`, `*/index.html` | One HTML file per route (e.g. `/about` → `about/index.html`) |
+| --- | --- |
+| `index.html`, `*/index.html` | One HTML file per route |
 | Hashed JS/CSS | Client bundle from Vite |
 | `404.html` | Not-found page |
-| `preactpress-search.json` | Route, title, description, excerpt, and tag data for theme search |
-| `preactpress-content/*.json` | Lazy-loaded Markdown page payloads used during client-side navigation |
-| `sitemap.xml`, `robots.txt` | Emitted when `site.url` is set and `build.sitemap` / `build.robots` are enabled |
+| `preactpress-search.json` | Search index for the default theme |
+| `preactpress-content/*.json` | Lazy-loaded Markdown payloads for client navigation |
+| `sitemap.xml`, `robots.txt` | When `site.url` is set and build flags are enabled |
 
-Intermediate build artifacts go to `cacheDir` (default `node_modules/.preactpress`); deploy **`outDir` only**. Repeated builds keep a small `build-manifest.json` cache so unchanged route artifacts can be left untouched.
+Deploy **`outDir` only** — not `cacheDir` (default `node_modules/.preactpress`).
 
-The client bundle contains route metadata and MDX loader functions, while Markdown HTML is written to `preactpress-content/*.json` and fetched only when a user navigates to that page. This keeps large Markdown sites from shipping every page body in the initial JavaScript bundle.
+### Subpath hosting (GitHub Pages)
 
-The default theme search loads `preactpress-search.json` and searches title, description, excerpt, route, and tags. Existing sidebar filtering remains as a fallback when the search index has no matching results.
-
-If `build.feed` is enabled and `site.url` is set, `preactpress build` also emits `feed.xml`:
-
-```ts
-build: {
-  feed: { limit: 20 }
-}
-```
-
-PreactPress avoids executable inline boot scripts in generated HTML. The theme bootstrap runs from `preactpress-theme.js`, and per-route hydration data is embedded in a non-executable `<template>` so stricter Content Security Policies do not require `script-src 'unsafe-inline'` for core runtime behavior.
-
-### Subpath hosting (e.g. GitHub Pages)
-
-For a project site at `https://user.github.io/repo/`:
+For `https://user.github.io/repo/`:
 
 ```ts
 site: {
@@ -217,7 +328,7 @@ site: {
 }
 ```
 
-Build and deploy `dist/` as the site root on the host (Pages serves from the repo’s configured branch/folder).
+Build and deploy `dist/` as the site root on the host.
 
 ### CI example
 
@@ -230,83 +341,32 @@ Build and deploy `dist/` as the site root on the host (Pages serves from the rep
 - run: pnpm install
 - run: pnpm exec preactpress check
 - run: pnpm exec preactpress build
-# Upload or deploy the dist/ directory (adjust path if outDir differs)
+# Upload or deploy dist/
 ```
 
-In a monorepo, run these steps from the site package directory (or pass the site root: `preactpress build ./path/to/site`).
+In a monorepo, run from the site package directory or pass a path: `preactpress build ./path/to/site`.
 
-### Publishing the `preactpress` package (npm)
+## Advanced
 
-To release the **CLI/tool** itself (not a content site), from the `preactpress` package directory:
+**RSS feed** — when `site.url` is set:
 
-```bash
-pnpm install          # runs prepare → build (compiles TypeScript to dist/)
-pnpm publish          # runs prepack → build automatically before pack
+```ts
+build: {
+  feed: { limit: 20 }
+}
 ```
 
-Requirements: Node 20+, npm account, and the `files` field in `package.json` (includes `dist`, `bin`, `template`, etc.).
+Emits `feed.xml` alongside the static build.
 
-## Monorepo
+**Content Security Policy** — PreactPress avoids executable inline boot scripts. Theme bootstrap runs from `preactpress-theme.js`; hydration data lives in a non-executable `<template>` so stricter CSPs do not need `script-src 'unsafe-inline'` for core runtime behavior.
 
-This repo lists `preactpress` in `pnpm-workspace.yaml`. Add `preactpress` as a devDependency (`workspace:*`) to consume the CLI from another package.
+**Incremental builds** — repeated builds cache route artifacts in `build-manifest.json` under `cacheDir`.
 
-**Magazine starter** (`examples/magazine-starter/`): alternate layout (masthead, sticky nav, teaser grid in MDX, sidebar rail). From that directory run `pnpm install` and `pnpm exec preactpress dev`. The custom theme lives under `.preactpress/theme/` (see `theme/Layout.tsx` and `magazine.css`).
+**Markdown bundle strategy** — MDX loaders stay in the client bundle; Markdown HTML is fetched from `preactpress-content/*.json` on navigation, keeping large sites from shipping every page body upfront.
 
-### Working on the `preactpress` package
+## Contributing
 
-From the **package root** (`preactpress/`, where this README lives), two different “build” concepts apply:
-
-| Command | What it builds |
-|---------|----------------|
-| `pnpm run build` | Compiles the **CLI** TypeScript sources to `dist/` (`tsc`). Does **not** build a content site. |
-| `pnpm exec preactpress build [root]` | Runs the **static site generator** for a site (default: current directory). Writes HTML + assets to `outDir` (e.g. `template/dist/`). |
-
-After changing CLI or client code, run `pnpm run build` before `pnpm run demo` or `node ./bin/preactpress.mjs …` so `dist/` is up to date. On `pnpm install`, the `prepare` script builds `dist/` automatically — you only need a manual build after editing sources.
-
-### Bundled demos (package root)
-
-These scripts target the bundled starter sites without passing a path each time:
-
-| Script | What it does |
-|--------|----------------|
-| `pnpm run demo` | **Dev** server for `./template` — Vite + SSR, HMR |
-| `pnpm run demo:preview` | **Production** build + static preview for `./template` |
-| `pnpm run demo:magazine` | **Dev** server for `examples/magazine-starter` |
-| `pnpm run demo:magazine:preview` | **Production** build + preview for the magazine example |
-
-Typical workflows:
-
-```bash
-# Hack on the CLI / default theme (dev, hot reload)
-pnpm install            # prepare builds dist/ automatically
-pnpm run demo           # http://localhost:5173 (template site)
-
-# Smoke-test production output for the template
-pnpm run demo:preview   # preactpress build template && preactpress preview template
-
-# Magazine example (custom theme under .preactpress/theme/)
-pnpm run demo:magazine
-pnpm run demo:magazine:preview
-```
-
-Equivalent explicit CLI invocations:
-
-```bash
-node ./bin/preactpress.mjs dev template
-node ./bin/preactpress.mjs build template && node ./bin/preactpress.mjs preview template
-```
-
-### Dev vs production styling
-
-In **development**, PreactPress SSR still renders the full layout into `#app`, but theme CSS normally lives in the client bundle (`import './styles.css'` in your `Layout.tsx`). Without extra handling, the browser would paint unstyled HTML until the module script runs.
-
-PreactPress avoids that by collecting stylesheet URLs from the Vite client module graph (`preactpress/app` → layout → CSS) and injecting `<link rel="stylesheet">` tags into each dev HTML response (see `src/node/devCss.ts`).
-
-In **production**, `preactpress build` extracts CSS into hashed files and `pageHtml` emits the same `<link rel="stylesheet">` tags in the static HTML head — the same shape as dev SSR for SEO and first paint.
-
-A small inline script in the head restores `data-theme` from `localStorage` before paint when the user chose light/dark explicitly (`preactpress-theme`).
-
-From this directory alone: `pnpm install`, `pnpm run build`, then `./bin/preactpress.mjs --help` (or `pnpm exec preactpress` when linked from a workspace).
+To work on the PreactPress CLI, run demos, or publish the npm package, see **[CONTRIBUTING.md](./CONTRIBUTING.md)**.
 
 ## License
 

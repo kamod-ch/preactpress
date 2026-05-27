@@ -22,6 +22,17 @@ function routeFromHref(href: string): string | undefined {
   return normalizeRoute(path)
 }
 
+function anchorFromEvent(event: MouseEvent): HTMLAnchorElement | null {
+  const target = event.target
+  const element =
+    target instanceof Element
+      ? target
+      : target instanceof Text
+        ? target.parentElement
+        : null
+  return element?.closest('a[href]') ?? null
+}
+
 function loadingPage(route: string): PageView {
   const meta = pagesMeta[route]
   return {
@@ -82,8 +93,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
       ) {
         return
       }
-      const target = event.target as Element | null
-      const link = target?.closest('a[href]') as HTMLAnchorElement | null
+      const link = anchorFromEvent(event)
       if (!link || link.target || link.hasAttribute('download')) return
       const route = routeFromHref(link.href)
       if (!route) return
@@ -98,8 +108,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
       window.scrollTo({ top: 0 })
     }
     const onMouseEnter = (event: MouseEvent) => {
-      const target = event.target as Element | null
-      const link = target?.closest('a[href]') as HTMLAnchorElement | null
+      const link = anchorFromEvent(event)
       if (!link) return
       const route = routeFromHref(link.href)
       if (route) prefetchPage(route, site.base)
