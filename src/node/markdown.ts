@@ -71,6 +71,7 @@ interface MarkdownRenderEnv {
   headings: OutlineItem[]
   route?: string
   knownRoutes?: Set<string>
+  localePrefix?: string
 }
 
 const markdownRenderers = new Map<string, MarkdownIt>()
@@ -157,7 +158,16 @@ function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownIt {
     const token = tokens[idx]
     const href = token.attrGet('href') ?? ''
     if (renderEnv.route) {
-      const targetRoute = fileHrefToRoute(href, renderEnv.route)
+      let targetRoute = fileHrefToRoute(href, renderEnv.route)
+      if (
+        targetRoute &&
+        renderEnv.localePrefix &&
+        href.startsWith('/') &&
+        !targetRoute.startsWith(`${renderEnv.localePrefix}/`)
+      ) {
+        const localized = normalizeRoute(`${renderEnv.localePrefix}${targetRoute}`)
+        if (renderEnv.knownRoutes?.has(localized)) targetRoute = localized
+      }
       if (targetRoute && (!renderEnv.knownRoutes || renderEnv.knownRoutes.has(targetRoute))) {
         const hash = href.includes('#') ? `#${href.split('#').slice(1).join('#')}` : ''
         token.attrSet('href', `${targetRoute}${hash}`)
@@ -177,7 +187,7 @@ function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownIt {
 export async function renderMarkdown(
   raw: string,
   _filePathForDebug?: string,
-  options: MarkdownConfig & { route?: string; routes?: Iterable<string> } = {}
+  options: MarkdownConfig & { route?: string; routes?: Iterable<string>; localePrefix?: string } = {}
 ): Promise<RenderedMarkdown> {
   const { data, content } = matter(raw)
   const meta = normalizeMatterData(data)
@@ -188,7 +198,7 @@ export async function renderMarkdown(
   const knownRoutes = options.routes ? new Set([...options.routes].map(normalizeRoute)) : undefined
 
   const md = getMarkdownRenderer(config)
-  const html = md.render(content, { highlighter: hi, headings, route, knownRoutes })
+  const html = md.render(content, { highlighter: hi, headings, route, knownRoutes, localePrefix: options.localePrefix })
   const title =
     typeof meta.title === 'string' ? meta.title : undefined
   const description =
@@ -259,7 +269,7 @@ function extractHeadings(content: string): OutlineItem[] {
 
 export function readMarkdownFile(
   absPath: string,
-  options?: MarkdownConfig & { route?: string; routes?: Iterable<string> }
+  options?: MarkdownConfig & { route?: string; routes?: Iterable<string>; localePrefix?: string }
 ): Promise<RenderedMarkdown> {
   const raw = fs.readFileSync(absPath, 'utf8')
   return renderMarkdown(raw, absPath, options)

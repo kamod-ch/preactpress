@@ -86,6 +86,7 @@ declare module 'virtual:preactpress-site' {
     editLink?: { pattern: string; text?: string }
     lastUpdated?: boolean
   }
+  export const i18n: import('../node/siteConfig.js').ResolvedI18n | undefined
 }
 
 declare module 'virtual:preactpress-layout' {

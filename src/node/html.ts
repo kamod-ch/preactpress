@@ -4,6 +4,11 @@ import { PREACTPRESS_THEME_SCRIPT } from '../shared/theme.js'
 import { canonicalUrl, publicUrl } from '../shared/url.js'
 import { escapeAttr, escapeHtml } from '../shared/escapeHtml.js'
 import type { PageView } from '../client/types.js'
+import {
+  localizedRouteForLocale,
+  localeFromRoute,
+  siteForRoute
+} from '../shared/locale.js'
 
 export { publicUrl } from '../shared/url.js'
 export { escapeAttr, escapeHtml } from '../shared/escapeHtml.js'
@@ -51,8 +56,31 @@ export function buildDefaultHeadTags(opts: {
     ['meta', { name: 'twitter:description', content: description }],
     ['meta', { name: 'twitter:image', content: imageUrl }],
     ['link', { rel: 'canonical', href: canonical }],
+    ...buildAlternateHeadTags(site, route),
     ['script', { type: 'application/ld+json' }, jsonLd]
   ]
+}
+
+function buildAlternateHeadTags(site: SiteConfig, route: string): HeadTag[] {
+  if (!site.site.url || !site.i18n) return []
+  const availableRoutes = site.routes ? new Set(site.routes) : undefined
+  const tags = site.i18n.locales
+    .map((locale): HeadTag | undefined => {
+      const target = localizedRouteForLocale(route, locale, site.i18n, availableRoutes)
+      if (availableRoutes && !availableRoutes.has(target)) return undefined
+      return ['link', { rel: 'alternate', hreflang: locale.lang, href: absoluteUrl(site, target) }]
+    })
+    .filter((tag): tag is HeadTag => Boolean(tag))
+  const currentLocale = localeFromRoute(route, site.i18n)
+  const defaultLocale =
+    site.i18n.locales.find((locale) => locale.key === site.i18n?.defaultLocaleKey) ?? currentLocale
+  if (defaultLocale) {
+    const target = localizedRouteForLocale(route, defaultLocale, site.i18n, availableRoutes)
+    if (!availableRoutes || availableRoutes.has(target)) {
+      tags.push(['link', { rel: 'alternate', hreflang: 'x-default', href: absoluteUrl(site, target) }])
+    }
+  }
+  return tags
 }
 
 export function renderStylesheetLinks(hrefs: string[]): string {
@@ -72,6 +100,7 @@ export async function collectHeadTags(opts: {
   pageData?: PageView
 }): Promise<string> {
   const { site, route, title, description, tags = [], image, pageType, pageData } = opts
+  const activeSite = siteForRoute(site.site, route, site.i18n)
   const defaultHead = buildDefaultHeadTags({
     site,
     route,
@@ -83,7 +112,7 @@ export async function collectHeadTags(opts: {
     pageData
   })
   const transformed = site.transformHead
-    ? await site.transformHead({ route, title, description, tags, site: site.site })
+    ? await site.transformHead({ route, title, description, tags, site: activeSite })
     : []
   return [...defaultHead, ...site.head, ...transformed]
     .filter(
@@ -117,8 +146,10 @@ export async function pageHtml(opts: {
   const headTags = await collectHeadTags({ site, route, title, description, tags, image, pageType, pageData })
   const pageDataTemplate = renderPageDataTemplate(pageData)
 
+  const activeSite = siteForRoute(site.site, route, site.i18n)
+
   return `<!DOCTYPE html>
-<html lang="${escapeAttr(site.site.lang)}">
+<html lang="${escapeAttr(activeSite.lang)}">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -214,7 +245,8 @@ export async function injectDevPageDocument(
           devStylesheets.filter((href) => !html.includes(href))
         )
       : ''
-  const lang = escapeAttr(site.site.lang)
+  const activeSite = siteForRoute(site.site, route, site.i18n)
+  const lang = escapeAttr(activeSite.lang)
 
   const headInject = [headTags, devCssTags].filter(Boolean).join('\n    ')
   const doc = parseHtml(html, { comment: true })

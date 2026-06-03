@@ -1,7 +1,8 @@
 import { useEffect } from 'preact/hooks'
-import type { SiteData } from '../node/siteConfig.js'
+import type { ResolvedI18n, SiteData } from '../node/siteConfig.js'
 import { resolvePageHeadMeta, type PageMetaInput } from '../shared/pageMeta.js'
 import { canonicalUrl, publicUrl } from '../shared/url.js'
+import { localizedRouteForLocale, siteForRoute } from '../shared/locale.js'
 
 function upsertMeta(
   selector: 'name' | 'property',
@@ -51,6 +52,27 @@ function removeCanonical(): void {
     .forEach((el) => el.remove())
 }
 
+function replaceAlternates(opts: {
+  site: SiteData
+  i18n: ResolvedI18n | undefined
+  route: string
+  routes?: ReadonlySet<string>
+}): void {
+  document.head
+    .querySelectorAll('link[rel="alternate"][hreflang]')
+    .forEach((el) => el.remove())
+  if (!opts.site.url || !opts.i18n) return
+  for (const locale of opts.i18n.locales) {
+    const route = localizedRouteForLocale(opts.route, locale, opts.i18n, opts.routes)
+    if (opts.routes && !opts.routes.has(route)) continue
+    const el = document.createElement('link')
+    el.rel = 'alternate'
+    el.hreflang = locale.lang
+    el.href = canonicalUrl({ url: opts.site.url, base: opts.site.base, route })
+    document.head.appendChild(el)
+  }
+}
+
 function resolveMetaImage(site: SiteData, image: string | undefined): string | undefined {
   if (!image) return undefined
   if (/^(?:[a-z]+:)?\/\//i.test(image)) return image
@@ -61,10 +83,13 @@ function resolveMetaImage(site: SiteData, image: string | undefined): string | u
 
 export function usePageHead(opts: {
   site: SiteData
+  i18n?: ResolvedI18n
+  routes?: ReadonlySet<string>
   route: string
   page: PageMetaInput | undefined
 }): void {
-  const { site, route, page } = opts
+  const { site, i18n, routes, route, page } = opts
+  const activeSite = siteForRoute(site, route, i18n)
   const pageTitle = page?.title
   const pageDescription = page?.description
   const pageTags = page?.tags
@@ -95,7 +120,7 @@ export function usePageHead(opts: {
               kind: pageKind
             }
           : undefined,
-      site
+      activeSite
     )
 
     document.title = head.title
@@ -111,7 +136,7 @@ export function usePageHead(opts: {
     removeMeta('property', 'article:tag')
     for (const tag of head.tags) appendMeta('property', 'article:tag', tag)
 
-    const image = resolveMetaImage(site, head.image)
+    const image = resolveMetaImage(activeSite, head.image)
     if (image) {
       upsertMeta('property', 'og:image', image)
       upsertMeta('name', 'twitter:image', image)
@@ -120,7 +145,7 @@ export function usePageHead(opts: {
       removeMeta('name', 'twitter:image')
     }
 
-    const canonical = canonicalUrl({ url: site.url, base: site.base, route })
+    const canonical = canonicalUrl({ url: activeSite.url, base: activeSite.base, route })
     if (canonical) {
       upsertMeta('property', 'og:url', canonical)
       upsertCanonical(canonical)
@@ -129,8 +154,10 @@ export function usePageHead(opts: {
       removeCanonical()
     }
 
-    if (document.documentElement.lang !== site.lang) {
-      document.documentElement.lang = site.lang
+    replaceAlternates({ site: activeSite, i18n, route, routes })
+
+    if (document.documentElement.lang !== activeSite.lang) {
+      document.documentElement.lang = activeSite.lang
     }
-  }, [site, route, pageTitle, pageDescription, pageTags, pageImage, pageType, pageKind, pageHtml])
+  }, [activeSite, i18n, route, routes, pageTitle, pageDescription, pageTags, pageImage, pageType, pageKind, pageHtml])
 }

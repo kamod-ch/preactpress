@@ -100,7 +100,8 @@ export function createDevSsrMiddleware(
         }
       }
       const { body, title, description, tags, image, pageType, page } = mod.render(route)
-      const transformed = await server.transformIndexHtml(rawUrl, cache.indexTemplate)
+      const indexUrl = site.site.base === '/' ? '/' : `${site.site.base}/`
+      const transformed = await server.transformIndexHtml(indexUrl, cache.indexTemplate)
       const html = await injectDevPageDocument(transformed, {
         site,
         body,

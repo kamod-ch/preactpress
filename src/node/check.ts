@@ -33,10 +33,17 @@ export async function check(root?: string): Promise<CheckResult> {
   for (const tr of tagRoutes) routeSet.add(tr)
   const issues: CheckIssue[] = []
 
-  if (!routeSet.has('/')) {
+  const requiredRoots = site.i18n
+    ? site.i18n.locales.map((locale) => locale.prefix || '/')
+    : ['/']
+  for (const rootRoute of requiredRoots) {
+    if (routeSet.has(rootRoute)) continue
     issues.push({
       level: 'error',
-      message: 'missing root page: add index.md or index.mdx'
+      message:
+        rootRoute === '/'
+          ? 'missing root page: add index.md or index.mdx'
+          : `missing locale root page: add ${rootRoute.replace(/^\//, '')}/index.md or ${rootRoute.replace(/^\//, '')}/index.mdx`
     })
   }
 
@@ -111,6 +118,16 @@ function checkConfiguredLinks(
   for (const group of site.themeConfig.sidebar ?? []) {
     for (const item of group.items) {
       checkRouteLink(`sidebar item "${item.text}"`, item.link, routes, issues)
+    }
+  }
+  for (const locale of site.i18n?.locales ?? []) {
+    for (const item of locale.themeConfig.nav ?? []) {
+      checkRouteLink(`${locale.key} nav item "${item.text}"`, item.link, routes, issues)
+    }
+    for (const group of locale.themeConfig.sidebar ?? []) {
+      for (const item of group.items) {
+        checkRouteLink(`${locale.key} sidebar item "${item.text}"`, item.link, routes, issues)
+      }
     }
   }
 }

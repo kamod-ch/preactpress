@@ -25,6 +25,7 @@ import {
   type BuildCache
 } from './buildCache.js'
 import { writeAtomFeed } from './feed.js'
+import { localeFromRoute, localizedRouteForLocale } from '../shared/locale.js'
 
 export { publicUrl } from './html.js'
 
@@ -192,7 +193,12 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
   await writeRuntimeScripts(site.outDir)
 
   const routes = await listMarkdownRoutes(site)
-  if (!routes.includes('/')) {
+  site.routes = routes
+  const requiredRoots = site.i18n
+    ? site.i18n.locales.map((locale) => locale.prefix || '/')
+    : ['/']
+  const missingRoot = requiredRoots.find((route) => !routes.includes(route))
+  if (missingRoot) {
     throw new Error('preactpress: add an index.md or index.mdx at the site root')
   }
 
@@ -333,17 +339,31 @@ async function writeSitemap(
   site: SiteConfig,
   pages: Array<{ route: string; page: PageView }>
 ): Promise<void> {
+  const routeSet = new Set(pages.map((page) => page.route))
   const urls = pages
     .map(({ route, page }) => {
       const lastmod = page.lastUpdated
         ? `<lastmod>${escapeHtml(page.lastUpdated.slice(0, 10))}</lastmod>`
         : ''
-      return `  <url><loc>${escapeHtml(absoluteUrl(site, route))}</loc>${lastmod}</url>`
+      const alternates = site.i18n
+        ? site.i18n.locales
+          .map((locale) => localizedRouteForLocale(route, locale, site.i18n, routeSet))
+          .filter((target) => routeSet.has(target))
+          .map((target) => {
+            const locale = localeFromRoute(target, site.i18n)
+            return locale
+              ? `<xhtml:link rel="alternate" hreflang="${escapeHtml(locale.lang)}" href="${escapeHtml(absoluteUrl(site, target))}" />`
+              : ''
+          })
+          .filter(Boolean)
+          .join('')
+        : ''
+      return `  <url><loc>${escapeHtml(absoluteUrl(site, route))}</loc>${lastmod}${alternates}</url>`
     })
     .join('\n')
   await fs.writeFile(
     path.join(site.outDir, 'sitemap.xml'),
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`,
     'utf8'
   )
 }
@@ -362,6 +382,7 @@ async function writeSearchIndex(
 ): Promise<void> {
   const entries = pages.map(({ route, page }) => ({
     route,
+    locale: localeFromRoute(route, site.i18n)?.key,
     title: page.title,
     description: page.description,
     excerpt: page.kind === 'markdown' ? excerptFromHtml(page.html) : page.description,

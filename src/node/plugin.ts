@@ -15,13 +15,13 @@ import {
   type ContentKind
 } from './content.js'
 import {
-  collectTagSlugMap,
+  collectTagIndexPages,
   renderTagIndexHtml,
-  tagIndexPageRoute,
   listTagIndexRoutes
 } from './tagIndex.js'
 import { resolvePageTags } from '../shared/tags.js'
 import { isDraftPage, pageImageFromMeta, pageTypeFromMeta } from '../shared/pageMeta.js'
+import { localeFromRoute } from '../shared/locale.js'
 
 const VIRTUAL_LAYOUT = '\0virtual:preactpress-layout'
 const VIRTUAL_PAGES = '\0virtual:preactpress-pages'
@@ -52,13 +52,11 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
 
   async function buildPagesModule(ssr: boolean): Promise<string> {
     const filesList = [...routeToFile.values()]
-    const tagMap = collectTagSlugMap(filesList)
+    const tagPages = collectTagIndexPages(filesList, site)
     const fileRouteSet = new Set(routeToFile.keys())
-    const syntheticTagRoutes: string[] = []
-    for (const slug of tagMap.keys()) {
-      const tr = tagIndexPageRoute(slug)
-      if (!fileRouteSet.has(tr)) syntheticTagRoutes.push(tr)
-    }
+    const syntheticTagRoutes = tagPages
+      .map((tagPage) => tagPage.route)
+      .filter((route) => !fileRouteSet.has(route))
     const routes = [...fileRouteSet, ...syntheticTagRoutes].sort()
     const entries: Record<
       string,
@@ -105,7 +103,8 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       const r = await readMarkdownFile(file.file, {
         ...site.markdown,
         route,
-        routes
+        routes,
+        localePrefix: localeFromRoute(route, site.i18n)?.prefix
       })
       entries[route] = {
         kind: 'markdown',
@@ -125,16 +124,16 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         html: undefined
       })}`)
     }
-    for (const [slug, data] of tagMap) {
-      const tr = tagIndexPageRoute(slug)
+    for (const tagPage of tagPages) {
+      const tr = tagPage.route
       if (fileRouteSet.has(tr)) continue
       entries[tr] = {
         kind: 'markdown',
-        meta: { tagIndex: true, tag: data.label, tagSlug: slug },
-        html: renderTagIndexHtml(slug, data.label, data.items),
-        title: `Tag: ${data.label}`,
-        description: `Pages tagged “${data.label}”`,
-        tags: [data.label],
+        meta: { tagIndex: true, tag: tagPage.label, tagSlug: tagPage.slug },
+        html: renderTagIndexHtml(tagPage.slug, tagPage.label, tagPage.items),
+        title: `Tag: ${tagPage.label}`,
+        description: `Pages tagged “${tagPage.label}”`,
+        tags: [tagPage.label],
         image: undefined,
         pageType: 'website',
         headings: [],
@@ -226,8 +225,9 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         const data = JSON.parse(siteConfigToClientJson(site)) as {
           site: SiteConfig['site']
           themeConfig: SiteConfig['themeConfig']
+          i18n: SiteConfig['i18n']
         }
-        return `export const site = ${JSON.stringify(data.site)};\nexport const themeConfig = ${JSON.stringify(data.themeConfig)};\n`
+        return `export const site = ${JSON.stringify(data.site)};\nexport const themeConfig = ${JSON.stringify(data.themeConfig)};\nexport const i18n = ${JSON.stringify(data.i18n)};\n`
       }
       if (id === VIRTUAL_PAGES) {
         if (options?.ssr) {

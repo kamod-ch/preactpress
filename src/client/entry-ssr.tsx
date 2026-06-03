@@ -1,9 +1,10 @@
 import { renderToString } from 'preact-render-to-string'
 import { App } from './app.js'
 import { pages } from 'virtual:preactpress-pages'
-import { site } from 'virtual:preactpress-site'
+import { i18n, site } from 'virtual:preactpress-site'
 import { resolvePageHeadMeta } from '../shared/pageMeta.js'
 import type { PageView } from './types.js'
+import { siteForRoute } from '../shared/locale.js'
 
 export interface RenderResult {
   body: string
@@ -16,13 +17,14 @@ export interface RenderResult {
 }
 
 export function resolveRoutePage(routePath: string): PageView {
+  const activeSite = siteForRoute(site, routePath, i18n)
   return (
     pages[routePath] ??
     pages['/404'] ?? {
       kind: 'markdown' as const,
       html: '',
       title: 'Not found',
-      description: site.description,
+      description: activeSite.description,
       meta: {},
       headings: []
     }
@@ -32,6 +34,7 @@ export function resolveRoutePage(routePath: string): PageView {
 export function render(routePath: string): RenderResult {
   const page = resolveRoutePage(routePath)
   const body = renderToString(<App routePath={routePath} initialPage={page} />)
+  const activeSite = siteForRoute(site, routePath, i18n)
   const head = resolvePageHeadMeta(
     page.kind === 'markdown'
       ? {
@@ -51,7 +54,7 @@ export function render(routePath: string): RenderResult {
           pageType: page.pageType,
           kind: 'mdx'
         },
-    site
+    activeSite
   )
   return {
     body,

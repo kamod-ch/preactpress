@@ -1,6 +1,6 @@
 # Contributing to PreactPress
 
-This guide is for people working on the **PreactPress CLI and package**, not for authors building content sites. If you only want to create a site, start with [README.md](./README.md).
+This guide is for people working on the **PreactPress CLI and package**, not for authors building content sites. If you only want to create a site, start with [README.md](./README.md). For planned features and priorities, see [ROADMAP.md](./ROADMAP.md).
 
 ## Monorepo
 

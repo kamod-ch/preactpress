@@ -12,6 +12,7 @@ Built with **Vite** and **Preact**. Project layout is inspired by [VitePress](ht
 
 - [Who is it for?](#who-is-it-for)
 - [Quick start](#quick-start)
+- [Project website](#project-website)
 - [Project structure](#project-structure)
 - [Your first 5 minutes](#your-first-5-minutes)
 - [Commands](#commands)
@@ -20,6 +21,7 @@ Built with **Vite** and **Preact**. Project layout is inspired by [VitePress](ht
 - [Page frontmatter](#page-frontmatter)
 - [MDX](#mdx)
 - [Tags and URLs](#tags-and-urls)
+- [Internationalization](#internationalization)
 - [Custom theme](#custom-theme)
 - [Deploying your site](#deploying-your-site)
 - [Advanced](#advanced)
@@ -42,15 +44,16 @@ PreactPress fits documentation sites, blogs, portfolios, and marketing pages whe
 
 ```bash
 mkdir my-site && cd my-site
-pnpm add -D preactpress
-pnpm exec preactpress init
+pnpm dlx preactpress init    # or: npx preactpress init
 pnpm install
-pnpm exec preactpress dev
+pnpm run dev
 ```
 
-Open **http://localhost:5173** — you should see the starter site with sidebar, search, and an MDX demo page.
+`init` scaffolds the site and writes `preactpress` as a devDependency in `package.json` — no separate `pnpm add` needed.
 
-Try the bundled demo from the package repo:
+Open **http://localhost:5173** — you should see the starter site with sidebar, search, a **Your first 5 minutes** guide (mirroring this README), and an MDX demo page. A small **`README.md`** in the scaffold lists project-specific commands and edit paths.
+
+Try the bundled demo from the package repo (the same `template/` site, dogfooding PreactPress):
 
 ```bash
 git clone <repo-url>
@@ -59,14 +62,29 @@ pnpm install
 pnpm run demo    # dev server for ./template
 ```
 
+## Project website
+
+This repository also includes a dogfooding project site in `website/`. It uses a custom PreactPress theme for a marketing landing page at `/` and the English guide pages under `/guide`.
+
+```bash
+pnpm run demo:website
+pnpm run build:website
+```
+
+Use `template/` for the `preactpress init` starter and `website/` for the official project landing and docs.
+
 ## Project structure
 
 After `preactpress init`, your site looks like this:
 
 ```text
 my-site/
+├── README.md               # Commands and edit paths for this project
 ├── index.html              # Vite entry (rarely edited)
 ├── index.md                # Home page → /
+├── about.md                # → /about (from the 5-minute tutorial)
+├── guide/
+│   └── first-five-minutes.md   # → /guide/first-five-minutes
 ├── markdown-examples.md    # → /markdown-examples
 ├── interactive.mdx         # → /interactive (Preact components)
 ├── components/
@@ -253,6 +271,52 @@ The default theme shows tags as linked chips below the page lead. Disable with `
 
 Tag indexes are included in static output, `preactpress-search.json`, and `sitemap.xml` (when configured).
 
+## Internationalization
+
+PreactPress supports VitePress-style locale folders. Keep the default language at the root, and add translated content under a locale folder:
+
+```text
+docs/
+├── index.md              # English → /
+├── guide/intro.md        # English → /guide/intro
+└── de/
+    ├── index.md          # German → /de
+    └── guide/intro.md    # German → /de/guide/intro
+```
+
+Configure labels, language codes, and locale-specific navigation in `.preactpress/config.ts`:
+
+```ts
+export default {
+  site: {
+    title: 'PreactPress',
+    description: 'Vite + Preact static site generator'
+  },
+  locales: {
+    root: {
+      label: 'English',
+      lang: 'en',
+      themeConfig: {
+        nav: [{ text: 'Guide', link: '/guide/intro' }]
+      }
+    },
+    de: {
+      label: 'Deutsch',
+      lang: 'de',
+      link: '/de/',
+      description: 'Vite + Preact Static-Site-Generator',
+      themeConfig: {
+        nav: [{ text: 'Anleitung', link: '/de/guide/intro' }]
+      }
+    }
+  }
+}
+```
+
+The default theme shows a language switcher when multiple locales are configured. Static output uses the matching `<html lang>`, locale-scoped search results, locale-scoped tag pages such as `/de/tags/markdown`, and `hreflang` alternates when `site.url` is set.
+
+PreactPress does not redirect `/` based on `Accept-Language`; configure redirects at your host if you want automatic language selection.
+
 ## Custom theme
 
 The default theme ships inside the `preactpress` package. Point `theme` to a `.tsx` file that **default-exports** a Preact layout:
@@ -366,7 +430,7 @@ Emits `feed.xml` alongside the static build.
 
 ## Contributing
 
-To work on the PreactPress CLI, run demos, or publish the npm package, see **[CONTRIBUTING.md](./CONTRIBUTING.md)**.
+To work on the PreactPress CLI, run demos, or publish the npm package, see **[CONTRIBUTING.md](./CONTRIBUTING.md)**. Planned features are tracked in **[ROADMAP.md](./ROADMAP.md)**.
 
 ## License
 

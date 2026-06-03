@@ -3,6 +3,7 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import { describe, expect, it } from 'vitest'
 import {
+  collectTagIndexPages,
   collectTagSlugMap,
   renderTagIndexHtml,
   slugifyTagSegment,
@@ -11,6 +12,7 @@ import {
 import { scanContentFiles } from '../src/node/content.js'
 import type { SiteConfig } from '../src/node/siteConfig.js'
 import { resolvePageTags } from '../src/shared/tags.js'
+import { resolveLocales } from '../src/shared/locale.js'
 
 describe('tagIndex', () => {
   it('slugifies tags for URL segments', () => {
@@ -56,6 +58,43 @@ describe('tagIndex', () => {
       expect(map.get('alpha')?.items.map((i) => i.route)).toEqual(['/a'])
       expect(map.get('beta')?.items.map((i) => i.route)).toEqual(['/b'])
       expect(map.get('shared')?.items.map((i) => i.route).sort()).toEqual(['/a', '/b'])
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
+
+  it('groups tag indexes per locale', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-locale-tags-'))
+    try {
+      await fs.mkdir(path.join(root, 'de'), { recursive: true })
+      await fs.writeFile(
+        path.join(root, 'index.md'),
+        '---\ntags: [shared]\ntitle: Home\n---\n',
+        'utf8'
+      )
+      await fs.writeFile(
+        path.join(root, 'de', 'index.md'),
+        '---\ntags: [shared]\ntitle: Start\n---\n',
+        'utf8'
+      )
+      const i18n = resolveLocales(
+        {
+          root: { label: 'English', lang: 'en' },
+          de: { label: 'Deutsch', lang: 'de' }
+        },
+        { title: 'Docs', description: '', base: '/', lang: 'en' },
+        {}
+      )
+      const files = await scanContentFiles({ srcDir: root } as SiteConfig)
+      const pages = collectTagIndexPages(files, { i18n })
+
+      expect(pages.map((page) => page.route)).toEqual(['/de/tags/shared', '/tags/shared'])
+      expect(pages.find((page) => page.route === '/tags/shared')?.items).toEqual([
+        { route: '/', title: 'Home' }
+      ])
+      expect(pages.find((page) => page.route === '/de/tags/shared')?.items).toEqual([
+        { route: '/de', title: 'Start' }
+      ])
     } finally {
       await fs.rm(root, { recursive: true, force: true })
     }

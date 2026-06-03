@@ -6,6 +6,7 @@ import type { SiteConfig, UserConfig } from './siteConfig.js'
 import { resolveConfigDir, resolveConfigPath } from './paths.js'
 import { DEFAULT_THEME_LAYOUT, PACKAGE_ROOT } from './packageRoot.js'
 import { defaultFaviconHead, hasFaviconHead } from './favicon.js'
+import { resolveLocales } from '../shared/locale.js'
 
 function fileExists(p: string): boolean {
   try {
@@ -108,6 +109,7 @@ export async function resolveConfig(
     theme,
     site,
     themeConfig: user.themeConfig ?? {},
+    i18n: resolveLocales(user.locales, site, user.themeConfig ?? {}),
     markdown,
     head: [
       ...(hasFaviconHead(user.head ?? []) ? [] : defaultFaviconHead(site.base)),
@@ -139,7 +141,8 @@ function normalizeSiteUrl(url: string): string {
 export function siteConfigToClientJson(config: SiteConfig): string {
   return JSON.stringify({
     site: config.site,
-    themeConfig: config.themeConfig
+    themeConfig: config.themeConfig,
+    i18n: config.i18n
   })
 }
 

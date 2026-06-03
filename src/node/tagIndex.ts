@@ -4,12 +4,18 @@ import type { SiteConfig } from './siteConfig.js'
 import { resolvePageTags, slugifyTagSegment, tagIndexPageRoute } from '../shared/tags.js'
 import { isDraftPage } from '../shared/pageMeta.js'
 import { escapeHtml } from '../shared/escapeHtml.js'
+import { localeFromRoute } from '../shared/locale.js'
 
 export { slugifyTagSegment, tagIndexPageRoute }
 
 export type TagIndexBucket = {
   label: string
   items: { route: string; title?: string }[]
+}
+
+export type TagIndexPage = TagIndexBucket & {
+  route: string
+  slug: string
 }
 
 /**
@@ -45,6 +51,48 @@ export function collectTagSlugMap(files: ContentFile[]): Map<string, TagIndexBuc
   return out
 }
 
+export function collectTagIndexPages(
+  files: ContentFile[],
+  site: Pick<SiteConfig, 'i18n'>
+): TagIndexPage[] {
+  const byKey = new Map<
+    string,
+    {
+      slug: string
+      label: string
+      prefix: string
+      byRoute: Map<string, { route: string; title?: string }>
+    }
+  >()
+
+  for (const file of files) {
+    const { meta, title } = readMarkdownMetadata(file.file)
+    if (isDraftPage(meta)) continue
+    const locale = localeFromRoute(file.route, site.i18n)
+    const prefix = locale?.prefix ?? ''
+    for (const raw of resolvePageTags(meta)) {
+      const slug = slugifyTagSegment(raw)
+      if (!slug) continue
+      const key = `${locale?.key ?? 'root'}:${slug}`
+      let slot = byKey.get(key)
+      if (!slot) {
+        slot = { slug, label: raw.trim(), prefix, byRoute: new Map() }
+        byKey.set(key, slot)
+      }
+      slot.byRoute.set(file.route, { route: file.route, title })
+    }
+  }
+
+  return [...byKey.values()]
+    .map(({ slug, label, prefix, byRoute }) => ({
+      route: tagIndexPageRoute(slug, prefix),
+      slug,
+      label,
+      items: [...byRoute.values()].sort((a, b) => a.route.localeCompare(b.route))
+    }))
+    .sort((a, b) => a.route.localeCompare(b.route))
+}
+
 export function renderTagIndexHtml(
   slug: string,
   label: string,
@@ -66,18 +114,14 @@ export function renderTagIndexHtml(
 }
 
 export async function listTagIndexRoutes(
-  site: Pick<SiteConfig, 'srcDir'>,
+  site: Pick<SiteConfig, 'srcDir' | 'i18n'>,
   fileRouteSet: ReadonlySet<string>
 ): Promise<string[]> {
   const files = (await scanContentFiles(site)).filter(
     (file) => !isDraftPage(readMarkdownMetadata(file.file).meta)
   )
-  const map = collectTagSlugMap(files)
-  const routes: string[] = []
-  for (const slug of map.keys()) {
-    const route = tagIndexPageRoute(slug)
-    if (fileRouteSet.has(route)) continue
-    routes.push(route)
-  }
-  return routes.sort()
+  return collectTagIndexPages(files, site)
+    .map((page) => page.route)
+    .filter((route) => !fileRouteSet.has(route))
+    .sort()
 }

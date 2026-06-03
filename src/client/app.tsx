@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'preact/hooks'
 import Layout from 'virtual:preactpress-layout'
-import { pagesMeta } from 'virtual:preactpress-pages'
-import { site, themeConfig } from 'virtual:preactpress-site'
+import { pagesMeta, routes } from 'virtual:preactpress-pages'
+import { i18n, site, themeConfig } from 'virtual:preactpress-site'
 import type { PageView } from './types.js'
+import type { ResolvedLocale } from '../node/siteConfig.js'
 import { usePageHead } from './usePageHead.js'
 import { normalizeRoute, routeFromPathname } from '../shared/route.js'
 import { loadPage, prefetchPage, seedPage } from './loadPage.js'
+import {
+  localeFromRoute,
+  localizedRouteForLocale,
+  siteForRoute,
+  themeConfigForRoute
+} from '../shared/locale.js'
 
 function routeFromLocation(): string {
   return routeFromPathname(window.location.pathname, site.base)
@@ -51,6 +58,10 @@ function loadingPage(route: string): PageView {
 export function App({ routePath, initialPage }: { routePath: string; initialPage?: PageView }) {
   const [currentRoute, setCurrentRoute] = useState(() => normalizeRoute(routePath))
   const [page, setPage] = useState<PageView>(() => initialPage ?? loadingPage(routePath))
+  const availableRoutes = new Set(routes)
+  const activeLocale = localeFromRoute(currentRoute, i18n)
+  const activeSite = siteForRoute(site, currentRoute, i18n)
+  const activeThemeConfig = themeConfigForRoute(themeConfig, currentRoute, i18n)
 
   useEffect(() => {
     if (initialPage) seedPage(normalizeRoute(routePath), initialPage)
@@ -69,7 +80,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
             kind: 'markdown',
             html: '<p>Page not found.</p>',
             title: '404',
-            description: site.description,
+            description: activeSite.description,
             meta: {},
             headings: []
           })
@@ -78,7 +89,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
     return () => {
       cancelled = true
     }
-  }, [currentRoute])
+  }, [activeSite.description, currentRoute])
 
   useEffect(() => {
     const onPopState = () => setCurrentRoute(routeFromLocation())
@@ -131,6 +142,8 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
 
   usePageHead({
     site,
+    i18n,
+    routes: availableRoutes,
     route: currentRoute,
     page:
       page?.kind === 'markdown'
@@ -138,6 +151,8 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
             title: page.title,
             description: page.description,
             tags: page.tags,
+            image: page.image,
+            pageType: page.pageType,
             kind: 'markdown',
             html: page.html
           }
@@ -146,6 +161,8 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
               title: page.title,
               description: page.description,
               tags: page.tags,
+              image: page.image,
+              pageType: page.pageType,
               kind: 'mdx'
             }
           : undefined
@@ -153,10 +170,14 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
 
   return (
     <Layout
-      site={site}
-      themeConfig={themeConfig}
+      site={activeSite}
+      themeConfig={activeThemeConfig}
       routePath={currentRoute}
       page={page}
+      locale={activeLocale}
+      locales={i18n?.locales}
+      localizeRoute={(locale: ResolvedLocale) =>
+        localizedRouteForLocale(currentRoute, locale, i18n, availableRoutes)}
     />
   )
 }

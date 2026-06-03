@@ -103,8 +103,17 @@ async function main(): Promise<void> {
   if (cmd === 'init') {
     const dir = root ? path.resolve(root) : process.cwd()
     const { init } = await import('./init.js')
-    await init(dir)
-    console.log(c.green(`Scaffolded PreactPress site in ${dir}`))
+    const result = await init(dir)
+    console.log(c.green(`Scaffolded PreactPress site in ${result.root}`))
+    console.log('')
+    console.log(c.dim('Next steps:'))
+    const rel = path.relative(process.cwd(), result.root)
+    if (rel && rel !== '.') {
+      const cdTarget = rel.startsWith('..') ? result.root : rel
+      console.log(`  cd ${cdTarget}`)
+    }
+    console.log('  pnpm install    # or npm install')
+    console.log('  pnpm run dev      # http://localhost:5173')
     return
   }
 

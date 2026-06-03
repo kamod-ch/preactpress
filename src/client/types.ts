@@ -1,5 +1,5 @@
 import type { ComponentType } from 'preact'
-import type { OutlineItem, SiteData, ThemeConfig } from '../node/siteConfig.js'
+import type { OutlineItem, ResolvedLocale, SiteData, ThemeConfig } from '../node/siteConfig.js'
 
 interface BasePageView {
   title?: string
@@ -30,4 +30,7 @@ export interface LayoutProps {
   themeConfig: ThemeConfig
   routePath: string
   page?: PageView
+  locale?: ResolvedLocale
+  locales?: ResolvedLocale[]
+  localizeRoute?: (locale: ResolvedLocale) => string
 }

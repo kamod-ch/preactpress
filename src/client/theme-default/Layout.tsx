@@ -27,6 +27,34 @@ function isActive(routePath: string, link: string): boolean {
   return route === target || (target !== '/' && route.startsWith(`${target}/`))
 }
 
+function labelsForLang(lang: string) {
+  return lang.toLowerCase().startsWith('de')
+    ? {
+        skip: 'Zum Inhalt springen',
+        navigation: 'Navigation',
+        search: 'Suche',
+        filterPages: 'Seiten filtern',
+        searchResults: 'Suchergebnisse',
+        previous: 'Zurück',
+        next: 'Weiter',
+        lastUpdated: 'Zuletzt aktualisiert',
+        onThisPage: 'Auf dieser Seite',
+        language: 'Sprache'
+      }
+    : {
+        skip: 'Skip to content',
+        navigation: 'Navigation',
+        search: 'Search',
+        filterPages: 'Filter pages',
+        searchResults: 'Search results',
+        previous: 'Previous',
+        next: 'Next',
+        lastUpdated: 'Last updated',
+        onThisPage: 'On this page',
+        language: 'Language'
+      }
+}
+
 function childText(children: ComponentChildren): string {
   if (children == null || typeof children === 'boolean') return ''
   if (typeof children === 'string' || typeof children === 'number') return String(children)
@@ -70,14 +98,18 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   site,
   themeConfig,
   routePath,
-  page
+  page,
+  locale,
+  locales = [],
+  localizeRoute
 }) => {
   const title = page?.title ? `${page.title} | ${site.title}` : site.title
+  const labels = labelsForLang(site.lang)
   const [query, setQuery] = useState('')
   const [activeHeading, setActiveHeading] = useState<string | undefined>()
   const sidebarItems = (themeConfig.sidebar ?? []).flatMap((group) => group.items)
   const normalizedQuery = query.trim().toLowerCase()
-  const searchResults = useSiteSearch(site.base, query)
+  const searchResults = useSiteSearch(site.base, query, locale?.key)
   const visibleSidebar = useMemo(() => {
     if (!normalizedQuery || searchResults.length > 0) return themeConfig.sidebar ?? []
     return (themeConfig.sidebar ?? [])
@@ -104,7 +136,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       ? themeConfig.editLink.pattern.replace(/:path/g, page.relativePath)
       : undefined
   const lastUpdated = page?.lastUpdated
-    ? new Date(page.lastUpdated).toLocaleDateString(undefined, {
+    ? new Date(page.lastUpdated).toLocaleDateString(site.lang, {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -135,7 +167,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   return (
     <div class="pp-layout">
       <a class="pp-skip-link" href="#content">
-        Skip to content
+        {labels.skip}
       </a>
       <header class="pp-nav">
         <div class="pp-nav-inner">
@@ -158,27 +190,47 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 )
               })}
             </nav>
+            {locales.length > 1 && localizeRoute ? (
+              <details class="pp-locale-switcher">
+                <summary>{locale?.label ?? labels.language}</summary>
+                <div class="pp-locale-menu">
+                  {locales.map((item) => {
+                    const active = item.key === locale?.key
+                    return (
+                      <a
+                        key={item.key}
+                        href={withBase(site.base, localizeRoute(item))}
+                        aria-current={active ? 'page' : undefined}
+                        class={active ? 'active' : ''}
+                      >
+                        {item.label}
+                      </a>
+                    )
+                  })}
+                </div>
+              </details>
+            ) : null}
             <ThemeToggle />
           </div>
         </div>
       </header>
       <div class="pp-body">
-        <aside class="pp-sidebar" aria-label="Site navigation">
+        <aside class="pp-sidebar" aria-label={labels.navigation}>
           <details class="pp-sidebar-panel" open>
-            <summary>Navigation</summary>
+            <summary>{labels.navigation}</summary>
             {themeConfig.search ? (
               <label class="pp-search">
-                <span>Search</span>
+                <span>{labels.search}</span>
                 <input
                   type="search"
                   value={query}
-                  placeholder="Filter pages"
+                  placeholder={labels.filterPages}
                   onInput={(event) => setQuery((event.currentTarget as HTMLInputElement).value)}
                 />
               </label>
             ) : null}
             {themeConfig.search && normalizedQuery && searchResults.length > 0 ? (
-              <div class="pp-search-results" role="listbox" aria-label="Search results">
+              <div class="pp-search-results" role="listbox" aria-label={labels.searchResults}>
                 {searchResults.map((result) => (
                   <a key={result.route} role="option" href={withBase(site.base, result.route)}>
                     <span>{result.title ?? result.route}</span>
@@ -226,7 +278,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                   <li key={tag}>
                     <a
                       class="pp-tag-chip"
-                      href={withBase(site.base, tagIndexPageRoute(slugifyTagSegment(tag)))}
+                      href={withBase(site.base, tagIndexPageRoute(slugifyTagSegment(tag), locale?.prefix))}
                     >
                       {tag}
                     </a>
@@ -248,7 +300,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               <nav class="pp-pager" aria-label="Page navigation">
                 {previous ? (
                   <a class="pp-pager-link previous" href={withBase(site.base, previous.link)}>
-                    <span>Previous</span>
+                    <span>{labels.previous}</span>
                     {previous.text}
                   </a>
                 ) : (
@@ -256,7 +308,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 )}
                 {next ? (
                   <a class="pp-pager-link next" href={withBase(site.base, next.link)}>
-                    <span>Next</span>
+                    <span>{labels.next}</span>
                     {next.text}
                   </a>
                 ) : null}
@@ -265,7 +317,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
             {themeConfig.lastUpdated || editHref ? (
               <footer class="pp-doc-meta">
                 {themeConfig.lastUpdated && lastUpdated ? (
-                  <span>Last updated {lastUpdated}</span>
+                  <span>{labels.lastUpdated} {lastUpdated}</span>
                 ) : null}
                 {editHref ? (
                   <a href={editHref}>{themeConfig.editLink?.text ?? 'Edit this page'}</a>
@@ -275,8 +327,8 @@ const Layout: FunctionalComponent<LayoutProps> = ({
           </article>
         </main>
         {showOutline ? (
-          <aside class="pp-outline" aria-label="On this page">
-            <div class="pp-outline-heading">On this page</div>
+          <aside class="pp-outline" aria-label={labels.onThisPage}>
+            <div class="pp-outline-heading">{labels.onThisPage}</div>
             <nav>
               {page?.headings.map((heading) => (
                 <a

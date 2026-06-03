@@ -204,6 +204,57 @@ body::selection {
   background: color-mix(in srgb, var(--pp-accent) 10%, transparent);
 }
 
+.pp-locale-switcher {
+  position: relative;
+}
+
+.pp-locale-switcher summary {
+  list-style: none;
+  cursor: pointer;
+  color: var(--pp-muted);
+  font-weight: 600;
+  border: 1px solid var(--pp-border);
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+
+.pp-locale-switcher summary::-webkit-details-marker {
+  display: none;
+}
+
+.pp-locale-switcher[open] summary,
+.pp-locale-switcher summary:hover {
+  color: var(--pp-accent);
+  border-color: var(--pp-border-strong);
+}
+
+.pp-locale-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 20;
+  min-width: 140px;
+  border: 1px solid var(--pp-border);
+  border-radius: 10px;
+  background: var(--pp-bg);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+  padding: 6px;
+}
+
+.pp-locale-menu a {
+  display: block;
+  color: var(--pp-muted);
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.pp-locale-menu a:hover,
+.pp-locale-menu a.active {
+  color: var(--pp-accent);
+  background: color-mix(in srgb, var(--pp-accent) 10%, transparent);
+}
+
 .pp-body {
   display: flex;
   flex: 1;

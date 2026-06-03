@@ -26,6 +26,15 @@ describe('build smoke', () => {
         path.join(root, 'dist', 'tags', 'markdown', 'index.html'),
         'utf8'
       )
+      const deIndex = await fs.readFile(path.join(root, 'dist', 'de', 'index.html'), 'utf8')
+      const deMarkdown = await fs.readFile(
+        path.join(root, 'dist', 'de', 'markdown-examples', 'index.html'),
+        'utf8'
+      )
+      const deTagIndex = await fs.readFile(
+        path.join(root, 'dist', 'de', 'tags', 'markdown', 'index.html'),
+        'utf8'
+      )
 
       expect(index).toContain('<div id="app">')
       expect(index).toContain('<html lang="en">')
@@ -46,17 +55,29 @@ describe('build smoke', () => {
       expect(markdown).toContain('src="/preactpress-theme.js"')
       expect(markdown).toContain('class="pp-doc-tags"')
       expect(markdown).toContain('href="/tags/markdown"')
+      expect(deIndex).toContain('<html lang="de">')
+      expect(deIndex).toContain('Willkommen')
+      expect(deIndex).toContain('Deutsch')
+      expect(deMarkdown).toContain('Markdown-Beispiele')
+      expect(deMarkdown).toContain('href="/de/tags/markdown"')
       expect(notFound).toContain('404')
       expect(tagIndex).toContain('Pages tagged: markdown')
       expect(tagIndex).toContain('Markdown examples')
+      expect(deTagIndex).toContain('Pages tagged: markdown')
+      expect(deTagIndex).toContain('Markdown-Beispiele')
       await expect(fs.access(path.join(root, 'dist', 'preactpress-search.json'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'dist', 'preactpress-content', 'markdown-examples.json'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'dist', 'preactpress-theme.js'))).resolves.toBeUndefined()
       const search = JSON.parse(
         await fs.readFile(path.join(root, 'dist', 'preactpress-search.json'), 'utf8')
-      ) as Array<{ route: string; title?: string; excerpt?: string }>
+      ) as Array<{ route: string; locale?: string; title?: string; excerpt?: string }>
       expect(search.find((entry) => entry.route === '/markdown-examples')).toMatchObject({
+        locale: 'root',
         title: 'Markdown examples'
+      })
+      expect(search.find((entry) => entry.route === '/de/markdown-examples')).toMatchObject({
+        locale: 'de',
+        title: 'Markdown-Beispiele'
       })
       const assets = await fs.readdir(path.join(root, 'dist', 'assets'))
       const mainJs = assets.find((file) => file.startsWith('main-') && file.endsWith('.js'))

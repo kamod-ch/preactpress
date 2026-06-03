@@ -39,4 +39,36 @@ describe('config', () => {
       typographer: true
     })
   })
+
+  it('resolves locale-specific site and theme config', async () => {
+    const root = await makeSite(`export default {
+      site: { title: 'Docs', description: 'English docs' },
+      themeConfig: { search: true, nav: [{ text: 'Home', link: '/' }] },
+      locales: {
+        root: { label: 'English', lang: 'en' },
+        de: {
+          label: 'Deutsch',
+          lang: 'de',
+          title: 'Doku',
+          description: 'Deutsche Doku',
+          themeConfig: { nav: [{ text: 'Start', link: '/de' }] }
+        }
+      }
+    }`)
+
+    const config = await resolveConfig(root)
+    expect(config.i18n?.locales.map((locale) => [locale.key, locale.prefix, locale.link])).toEqual([
+      ['root', '', '/'],
+      ['de', '/de', '/de/']
+    ])
+    expect(config.i18n?.locales[1].site).toMatchObject({
+      title: 'Doku',
+      description: 'Deutsche Doku',
+      lang: 'de'
+    })
+    expect(config.i18n?.locales[1].themeConfig).toMatchObject({
+      search: true,
+      nav: [{ text: 'Start', link: '/de' }]
+    })
+  })
 })

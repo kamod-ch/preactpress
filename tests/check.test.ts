@@ -33,4 +33,25 @@ describe('check', () => {
       await fs.rm(root, { recursive: true, force: true })
     }
   })
+
+  it('validates locale roots and locale-specific nav links', async () => {
+    const root = await makeSite(`export default {
+      site: { description: 'Test site' },
+      locales: {
+        root: { label: 'English', lang: 'en', themeConfig: { nav: [{ text: 'Home', link: '/' }] } },
+        de: { label: 'Deutsch', lang: 'de', themeConfig: { nav: [{ text: 'Fehlt', link: '/de/missing' }] } }
+      }
+    }`)
+    try {
+      await fs.writeFile(path.join(root, 'index.md'), '# Home\n', 'utf8')
+      const result = await check(root)
+
+      expect(result.issues.map((issue) => issue.message)).toEqual([
+        'missing locale root page: add de/index.md or de/index.mdx',
+        'de nav item "Fehlt" points to missing route /de/missing (/de/missing)'
+      ])
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
 })

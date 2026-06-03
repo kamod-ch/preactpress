@@ -30,6 +30,7 @@ export function resolvePageTags(meta: Record<string, unknown>): string[] {
   return out
 }
 
-export function tagIndexPageRoute(slug: string): string {
-  return normalizeRoute(`/tags/${slug}`)
+export function tagIndexPageRoute(slug: string, prefix = ''): string {
+  const cleanPrefix = prefix ? normalizeRoute(prefix) : ''
+  return normalizeRoute(`${cleanPrefix}/tags/${slug}`)
 }
