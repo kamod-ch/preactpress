@@ -1,11 +1,12 @@
 ---
 title: Your first 5 minutes
 description: Change the site title, add a page, and update navigation
+layout: doc
 ---
 
 # Your first 5 minutes
 
-This hands-on tutorial follows the setup overview in [Getting Started](/guide/getting-started). Follow the steps below in **your** project — this site is the result.
+This hands-on tutorial walks through the smallest useful PreactPress workflow. Follow the steps below in **your** project — this starter already includes the finished result.
 
 ## 1. Change the site title
 
@@ -79,4 +80,4 @@ Save — the dev server hot-reloads your changes.
 | `pnpm run build` | Static production build → `dist/` |
 | `pnpm run preview` | Local preview of the build |
 
-Before deploying, set `site.url` in config for canonical URLs, Open Graph tags, and `sitemap.xml`. Continue with [Routing](/guide/routing) to understand file-based routes, then [Deploy](/guide/deploy) for production build steps.
+Before deploying, set `site.url` in config for canonical URLs, Open Graph tags, and `sitemap.xml`. Read the package README for routing, MDX, deployment, and custom theme details.

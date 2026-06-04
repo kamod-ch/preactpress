@@ -1,6 +1,7 @@
 ---
 title: About
 description: About this site
+layout: page
 ---
 
 # About us

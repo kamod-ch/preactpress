@@ -6,9 +6,22 @@ import { PACKAGE_ROOT } from './packageRoot.js'
 export interface InitResult {
   root: string
   preactpressVersion: string
+  template: InitTemplateName
+}
+
+export const INIT_TEMPLATES = ['default', 'docs', 'magazine'] as const
+export type InitTemplateName = (typeof INIT_TEMPLATES)[number]
+
+export interface InitOptions {
+  template?: string
 }
 
 const SKIP_TEMPLATE_ENTRIES = new Set(['dist', 'node_modules', 'pnpm-lock.yaml'])
+const TEMPLATE_DIRS: Record<InitTemplateName, string> = {
+  default: 'template',
+  docs: path.join('templates', 'docs'),
+  magazine: path.join('templates', 'magazine')
+}
 
 function shouldCopyTemplateEntry(rel: string): boolean {
   if (!rel) return true
@@ -36,9 +49,18 @@ async function patchStarterPackageJson(targetRoot: string, preactpressVersion: s
   await fs.writeFile(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`)
 }
 
-export async function init(targetRoot: string): Promise<InitResult> {
+function resolveTemplateName(template: string | undefined): InitTemplateName {
+  const name = template ?? 'default'
+  if (INIT_TEMPLATES.includes(name as InitTemplateName)) return name as InitTemplateName
+  throw new Error(
+    `unknown init template "${name}". Available templates: ${INIT_TEMPLATES.join(', ')}`
+  )
+}
+
+export async function init(targetRoot: string, options: InitOptions = {}): Promise<InitResult> {
+  const template = resolveTemplateName(options.template)
   const here = path.dirname(fileURLToPath(import.meta.url))
-  const templateDir = path.resolve(here, '../../template')
+  const templateDir = path.resolve(here, '../..', TEMPLATE_DIRS[template])
   const resolvedRoot = path.resolve(targetRoot)
 
   await fs.cp(templateDir, resolvedRoot, {
@@ -52,5 +74,5 @@ export async function init(targetRoot: string): Promise<InitResult> {
   const preactpressVersion = await readPreactpressVersion()
   await patchStarterPackageJson(resolvedRoot, preactpressVersion)
 
-  return { root: resolvedRoot, preactpressVersion }
+  return { root: resolvedRoot, preactpressVersion, template }
 }

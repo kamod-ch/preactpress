@@ -6,7 +6,7 @@ import { init } from '../src/node/init.js'
 import { PACKAGE_ROOT } from '../src/node/packageRoot.js'
 
 describe('init', () => {
-  it('scaffolds the starter without build artifacts or workspace deps', async () => {
+  it('scaffolds the minimal starter without build artifacts or workspace deps', async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-init-'))
     try {
       const result = await init(root)
@@ -15,6 +15,8 @@ describe('init', () => {
       await expect(fs.access(path.join(root, 'README.md'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'guide', 'first-five-minutes.md'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'about.md'))).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'de'))).rejects.toThrow()
+      await expect(fs.access(path.join(root, 'interactive.mdx'))).rejects.toThrow()
       await expect(fs.access(path.join(root, '.preactpress', 'config.ts'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'dist'))).rejects.toThrow()
       await expect(fs.access(path.join(root, 'node_modules'))).rejects.toThrow()
@@ -30,6 +32,32 @@ describe('init', () => {
       expect(pkg.devDependencies.preactpress).toBe(`^${toolPkg.version}`)
       expect(result.preactpressVersion).toBe(toolPkg.version)
       expect(result.root).toBe(root)
+      expect(result.template).toBe('default')
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
+
+  it('scaffolds the docs template on request', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-init-docs-'))
+    try {
+      const result = await init(root, { template: 'docs' })
+
+      await expect(fs.access(path.join(root, 'de', 'index.md'))).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'interactive.mdx'))).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'markdown-examples.md'))).resolves.toBeUndefined()
+
+      const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8')) as {
+        devDependencies: { preactpress: string }
+      }
+      const toolPkg = JSON.parse(
+        await fs.readFile(path.join(PACKAGE_ROOT, 'package.json'), 'utf8')
+      ) as { version: string }
+
+      expect(pkg.devDependencies.preactpress).toBe(`^${toolPkg.version}`)
+      expect(result.preactpressVersion).toBe(toolPkg.version)
+      expect(result.root).toBe(root)
+      expect(result.template).toBe('docs')
     } finally {
       await fs.rm(root, { recursive: true, force: true })
     }

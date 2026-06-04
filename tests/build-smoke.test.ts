@@ -6,10 +6,51 @@ import { build } from '../src/node/build.js'
 import { init } from '../src/node/init.js'
 
 describe('build smoke', () => {
-  it('builds the starter site with assets and 404 output', async () => {
+  it('builds the minimal starter site with assets and 404 output', async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-build-'))
     try {
       await init(root)
+      await build(root)
+
+      const index = await fs.readFile(path.join(root, 'dist', 'index.html'), 'utf8')
+      const about = await fs.readFile(path.join(root, 'dist', 'about', 'index.html'), 'utf8')
+      const guide = await fs.readFile(
+        path.join(root, 'dist', 'guide', 'first-five-minutes', 'index.html'),
+        'utf8'
+      )
+      const notFound = await fs.readFile(path.join(root, 'dist', '404.html'), 'utf8')
+
+      expect(index).toContain('<div id="app">')
+      expect(index).toContain('<html lang="en">')
+      expect(index).toContain('property="og:title"')
+      expect(index).toContain('name="description"')
+      expect(index).toContain('type="module"')
+      expect(index).toContain('rel="stylesheet"')
+      expect(index).toContain('href="/favicon.svg"')
+      expect(index).toContain('class="pp-home-hero"')
+      expect(index).toContain('class="pp-home-features"')
+      expect(index).not.toContain('class="pp-sidebar"')
+      expect(about).toContain('About us')
+      expect(about).toContain('class="pp-doc-content-plain"')
+      expect(about).not.toContain('class="pp-sidebar"')
+      expect(guide).toContain('Your first 5 minutes')
+      expect(guide).toContain('class="pp-sidebar"')
+      expect(notFound).toContain('404')
+      await expect(fs.access(path.join(root, 'dist', 'favicon.svg'))).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'dist', 'favicon.png'))).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'dist', 'preactpress-theme.js'))).resolves.toBeUndefined()
+      const assets = await fs.readdir(path.join(root, 'dist', 'assets'))
+      const mainJs = assets.find((file) => file.startsWith('main-') && file.endsWith('.js'))
+      expect(mainJs).toBeTruthy()
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
+
+  it('builds the docs template with tags and locales', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-build-docs-'))
+    try {
+      await init(root, { template: 'docs' })
       await build(root)
 
       const index = await fs.readFile(path.join(root, 'dist', 'index.html'), 'utf8')

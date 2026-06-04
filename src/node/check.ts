@@ -7,7 +7,8 @@ import { readMarkdownMetadata } from './markdown.js'
 import { listTagIndexRoutes } from './tagIndex.js'
 import type { SiteConfig } from './siteConfig.js'
 import { normalizeRoute } from '../shared/route.js'
-import { isDraftPage } from '../shared/pageMeta.js'
+import { PAGE_LAYOUTS, isDraftPage, isPageLayout, pageLayoutFromMeta } from '../shared/pageMeta.js'
+import { parseFeatures, parseHero } from '../shared/pageChrome.js'
 
 export interface CheckIssue {
   level: 'error' | 'warning'
@@ -49,6 +50,8 @@ export async function check(root?: string): Promise<CheckResult> {
 
   checkConfiguredLinks(site, routeSet, issues)
   checkSeoDescriptions(site, publishedFiles, issues)
+  checkPageLayouts(site, publishedFiles, issues)
+  checkPageChrome(site, publishedFiles, routeSet, issues)
   for (const file of draftFiles) {
     issues.push({
       level: 'warning',
@@ -72,6 +75,51 @@ export async function check(root?: string): Promise<CheckResult> {
 
   const allRoutes = [...routes, ...tagRoutes].sort()
   return { issues, routes: allRoutes }
+}
+
+function checkPageLayouts(
+  site: SiteConfig,
+  files: Awaited<ReturnType<typeof scanContentFiles>>,
+  issues: CheckIssue[]
+): void {
+  for (const file of files) {
+    const meta = readMarkdownMetadata(file.file).meta
+    if (meta.layout === undefined || isPageLayout(meta.layout)) continue
+    issues.push({
+      level: 'warning',
+      message: `${path.relative(site.srcDir, file.file)} uses unknown layout "${String(meta.layout)}" (expected ${PAGE_LAYOUTS.join(', ')})`
+    })
+  }
+}
+
+function checkPageChrome(
+  site: SiteConfig,
+  files: Awaited<ReturnType<typeof scanContentFiles>>,
+  routes: Set<string>,
+  issues: CheckIssue[]
+): void {
+  for (const file of files) {
+    const meta = readMarkdownMetadata(file.file).meta
+    const rel = path.relative(site.srcDir, file.file)
+    const layout = pageLayoutFromMeta(meta)
+    if (layout !== 'home' && (meta.hero !== undefined || meta.features !== undefined)) {
+      issues.push({
+        level: 'warning',
+        message: `${rel} defines home-only frontmatter (hero/features) on layout "${layout}"`
+      })
+    }
+
+    const hero = parseHero(meta.hero)
+    for (const action of hero?.actions ?? []) {
+      checkRouteLink(`${rel} hero action "${action.text}"`, action.link, routes, issues)
+    }
+
+    for (const feature of parseFeatures(meta.features)) {
+      if (feature.link) {
+        checkRouteLink(`${rel} feature "${feature.title}"`, feature.link, routes, issues)
+      }
+    }
+  }
 }
 
 export function printCheckResult(result: CheckResult): void {

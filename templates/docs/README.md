@@ -1,6 +1,6 @@
 # PreactPress starter site
 
-This folder was scaffolded with `preactpress init`. It is the minimal starter: a home page, an about page, and one short guide.
+This folder was scaffolded with `preactpress init`. It doubles as the bundled docs demo (`pnpm run demo` from the package repo).
 
 ## Commands
 
@@ -16,22 +16,14 @@ This folder was scaffolded with `preactpress init`. It is the minimal starter: a
 | Path | Purpose |
 | --- | --- |
 | `*.md`, `*.mdx` | Page content — file path becomes the URL |
+| `de/*.md`, `de/*.mdx` | German pages for the bundled i18n demo |
 | `.preactpress/config.ts` | Site title, nav, sidebar, build options |
+| `components/` | Preact components for MDX pages |
 | `index.html` | Vite entry (rarely edited) |
-
-## Layout examples
-
-The default starter shows all built-in default-theme layouts:
-
-| File | Layout |
-| --- | --- |
-| `index.md` | `layout: home` |
-| `about.md` | `layout: page` |
-| `guide/first-five-minutes.md` | `layout: doc` |
 
 Start with [Your first 5 minutes](/guide/first-five-minutes) in the local site, or read the full PreactPress README in the npm package / repository.
 
-For a larger documentation starter, run `preactpress init --template docs`. For a custom magazine-style theme, run `preactpress init --template magazine`.
+This starter includes English pages at the root and German pages under `/de/`. Remove the `de/` folder and `locales` config if you want a single-language site.
 
 ## Deploy
 

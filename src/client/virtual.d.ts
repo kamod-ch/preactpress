@@ -80,7 +80,7 @@ declare module 'virtual:preactpress-site' {
     logo?: string
     nav?: { text: string; link: string }[]
     sidebar?: { text?: string; items: { text: string; link: string }[] }[]
-    outline?: boolean
+    outline?: boolean | import('../shared/pageChrome.js').PageOutlineConfig
     search?: boolean
     tags?: boolean
     footer?: string

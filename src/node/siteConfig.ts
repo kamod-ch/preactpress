@@ -1,4 +1,5 @@
 import type { Logger } from 'vite'
+import type { PageOutlineConfig } from '../shared/pageChrome.js'
 
 export interface NavItem {
   text: string
@@ -26,7 +27,7 @@ export interface ThemeConfig {
   logo?: string
   nav?: NavItem[]
   sidebar?: SidebarGroup[]
-  outline?: boolean
+  outline?: boolean | PageOutlineConfig
   search?: boolean
   tags?: boolean
   footer?: string

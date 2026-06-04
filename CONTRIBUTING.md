@@ -21,14 +21,12 @@ From this directory: `pnpm install`, `pnpm run build`, then `./bin/preactpress.m
 
 ## Bundled demos
 
-These scripts target starter sites without passing a path each time:
+These scripts target the bundled minimal starter without passing a path each time:
 
 | Script | What it does |
 | --- | --- |
 | `pnpm run demo` | **Dev** server for `./template` — Vite + SSR, HMR |
 | `pnpm run demo:preview` | **Production** build + static preview for `./template` |
-| `pnpm run demo:magazine` | **Dev** server for `examples/magazine-starter` |
-| `pnpm run demo:magazine:preview` | **Production** build + preview for the magazine example |
 
 Typical workflows:
 
@@ -39,10 +37,6 @@ pnpm run demo           # http://localhost:5173 (template site)
 
 # Smoke-test production output for the template
 pnpm run demo:preview   # preactpress build template && preactpress preview template
-
-# Magazine example (custom theme under .preactpress/theme/)
-pnpm run demo:magazine
-pnpm run demo:magazine:preview
 ```
 
 Equivalent explicit CLI invocations:
@@ -52,9 +46,13 @@ node ./bin/preactpress.mjs dev template
 node ./bin/preactpress.mjs build template && node ./bin/preactpress.mjs preview template
 ```
 
-## Magazine starter example
+## Optional starter templates
 
-**Magazine starter** (`examples/magazine-starter/`): alternate layout (masthead, sticky nav, teaser grid in MDX, sidebar rail). From that directory run `pnpm install` and `pnpm exec preactpress dev`. The custom theme lives under `.preactpress/theme/` (see `theme/Layout.tsx` and `magazine.css`).
+`preactpress init --template docs` and `preactpress init --template magazine` are packaged from `templates/docs` and `templates/magazine`. Keep those templates runnable after scaffolding and free of `node_modules`, `dist`, and workspace lockfiles.
+
+## Example sites
+
+The project website and larger magazine example live in the separate `../preactpress-examples` project. Use that project for site-specific deploys, screenshots, and example-site CI. Use this package repo for the CLI, default theme, and bundled init templates.
 
 ## Dev vs production styling
 
@@ -75,7 +73,7 @@ pnpm install          # runs prepare → build (compiles TypeScript to dist/)
 pnpm publish          # runs prepack → build automatically before pack
 ```
 
-Requirements: Node 20+, npm account, and the `files` field in `package.json` (includes `dist`, `bin`, `template`, etc.).
+Requirements: Node 20+, npm account, and the `files` field in `package.json` (includes `dist`, `bin`, `template`, `templates`, etc.).
 
 ## Tests
 

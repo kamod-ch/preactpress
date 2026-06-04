@@ -12,7 +12,7 @@ Built with **Vite** and **Preact**. Project layout is inspired by [VitePress](ht
 
 - [Who is it for?](#who-is-it-for)
 - [Quick start](#quick-start)
-- [Project website](#project-website)
+- [Starter templates](#starter-templates)
 - [Project structure](#project-structure)
 - [Your first 5 minutes](#your-first-5-minutes)
 - [Commands](#commands)
@@ -51,7 +51,7 @@ pnpm run dev
 
 `init` scaffolds the site and writes `preactpress` as a devDependency in `package.json` — no separate `pnpm add` needed.
 
-Open **http://localhost:5173** — you should see the starter site with sidebar, search, a **Your first 5 minutes** guide (mirroring this README), and an MDX demo page. A small **`README.md`** in the scaffold lists project-specific commands and edit paths.
+Open **http://localhost:5173** — you should see a minimal starter site with a home page, an about page, search, and a **Your first 5 minutes** guide. A small **`README.md`** in the scaffold lists project-specific commands and edit paths.
 
 Try the bundled demo from the package repo (the same `template/` site, dogfooding PreactPress):
 
@@ -62,16 +62,22 @@ pnpm install
 pnpm run demo    # dev server for ./template
 ```
 
-## Project website
+## Starter templates
 
-This repository also includes a dogfooding project site in `website/`. It uses a custom PreactPress theme for a marketing landing page at `/` and the English guide pages under `/guide`.
+`preactpress init` defaults to the smallest useful site. Use an optional template when you want a fuller starting point:
 
 ```bash
-pnpm run demo:website
-pnpm run build:website
+pnpm dlx preactpress init my-docs --template docs
+pnpm dlx preactpress init my-magazine --template magazine
 ```
 
-Use `template/` for the `preactpress init` starter and `website/` for the official project landing and docs.
+| Template | Purpose |
+| --- | --- |
+| `default` | Minimal single-language site for blogs, portfolios, and small docs |
+| `docs` | Larger documentation starter with MDX and an i18n demo |
+| `magazine` | Custom-theme starter with a masthead, sticky nav, and MDX teaser grid |
+
+The official website and larger examples live in the separate [`preactpress-examples`](../preactpress-examples) project.
 
 ## Project structure
 
@@ -85,10 +91,6 @@ my-site/
 ├── about.md                # → /about (from the 5-minute tutorial)
 ├── guide/
 │   └── first-five-minutes.md   # → /guide/first-five-minutes
-├── markdown-examples.md    # → /markdown-examples
-├── interactive.mdx         # → /interactive (Preact components)
-├── components/
-│   └── Counter.tsx         # Used by interactive.mdx
 └── .preactpress/
     └── config.ts           # Site title, nav, sidebar, build options
 ```
@@ -166,6 +168,7 @@ From a site directory (with `.preactpress/config.ts` and Markdown next to `index
 | `pnpm exec preactpress preview` | Local preview of the build (not for production hosting) |
 | `pnpm exec preactpress check` | Validate config, links, and routes before release |
 | `pnpm exec preactpress init` | Scaffold a new site in the current folder |
+| `pnpm exec preactpress init --template docs` | Scaffold the larger docs starter |
 
 The `init` template also ships npm scripts: `pnpm run dev`, `check`, `build`, `preview`.
 
@@ -241,7 +244,42 @@ Optional YAML at the top of each `.md` / `.mdx` file:
 | `tags` / `tag` | Tag indexes at `/tags/<slug>` (see below) |
 | `image` / `ogImage` | Social preview image |
 | `type: article` | Article metadata |
+| `layout: doc` | Default theme shell with sidebar, outline, and previous/next links |
+| `layout: home` | Wide default-theme shell for landing pages; supports `hero` and `features` |
+| `layout: page` | Default-theme content page without sidebar, outline, pager, or prose styles |
+| `hero` | Home-page hero (`name`, `text`, `tagline`, `image`, `actions`) |
+| `features` | Home-page feature cards (`icon`, `title`, `details`, optional `link`) |
+| `navbar: false` | Hide the top navigation for this page |
+| `sidebar: false` / `sidebar: true` | Override the default sidebar visibility for this page |
+| `aside: false` / `aside: left` | Hide the page outline or move it to the left |
+| `outline` | Override outline levels: `false`, a number, `[min, max]`, or `deep` |
+| `footer: false` | Hide the configured site footer for this page |
+| `editLink: false` | Hide the configured edit link for this page |
+| `lastUpdated: false` | Hide the last-updated timestamp for this page |
+| `pageClass` | Add an extra class to the page `<article>` |
+| `isHome: true` | Treat a custom page as home-like in the default theme |
+| `markdownStyles: false` | Disable default prose styles for `layout: home` content |
 | `draft: true` | Excluded from routes, search, feeds, and sitemap; `check` warns |
+
+Example home page:
+
+```md
+---
+layout: home
+hero:
+  name: PreactPress
+  text: Vite and Preact powered static sites
+  tagline: Write Markdown and MDX, then ship static HTML.
+  actions:
+    - theme: brand
+      text: Get started
+      link: /guide/first-five-minutes
+features:
+  - icon: V
+    title: Fast by default
+    details: Built on Vite with static HTML output.
+---
+```
 
 ## MDX
 
@@ -330,7 +368,7 @@ export default {
 
 Props match `LayoutProps` in the package. Theme authors can import helpers from `preactpress/client` and `preactpress/shared`, including `LayoutProps`, `PageView`, `usePageHead`, `normalizeRoute`, and tag/slug utilities.
 
-See **`examples/magazine-starter/`** for a custom layout (masthead, sticky nav, teaser grid). Run `pnpm run demo:magazine` from the package root.
+See the separate [`preactpress-examples`](../preactpress-examples) project for custom layouts, including a magazine-style starter with a masthead, sticky nav, and teaser grid.
 
 ## Deploying your site
 

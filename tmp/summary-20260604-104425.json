@@ -1,0 +1,4 @@
+{
+  "summary": "Implemented VitePress-style layout frontmatter parity in PreactPress: shared page chrome resolver, hero/features support, per-page chrome toggles, outline filtering, plain page content, validation warnings, docs, starter updates, and tests. Build, full test suite, and diagnostics passed.",
+  "current_status": "All plan todos are complete. PreactPress now supports doc/home/page with VitePress-like home hero/features and page-level layout controls."
+}

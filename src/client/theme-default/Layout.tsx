@@ -3,7 +3,10 @@ import { useEffect, useMemo, useState } from 'preact/hooks'
 import type { LayoutProps } from '../types.js'
 import { slugifyTagSegment, tagIndexPageRoute } from '../../shared/tags.js'
 import { slugifySegment } from '../../shared/slug.js'
+import { filterHeadingsForOutline, resolvePageChrome } from '../../shared/pageChrome.js'
 import { useSiteSearch } from '../useSiteSearch.js'
+import Features from './Features.js'
+import Hero from './Hero.js'
 import Logo from './Logo.js'
 import ThemeToggle from './ThemeToggle.js'
 import './styles.css'
@@ -25,6 +28,10 @@ function isActive(routePath: string, link: string): boolean {
   const route = normalizeLink(routePath)
   const target = normalizeLink(link)
   return route === target || (target !== '/' && route.startsWith(`${target}/`))
+}
+
+function classNames(...values: Array<string | undefined | false>): string {
+  return values.filter(Boolean).join(' ')
 }
 
 function labelsForLang(lang: string) {
@@ -125,14 +132,21 @@ const Layout: FunctionalComponent<LayoutProps> = ({
     activeIndex >= 0 && activeIndex < sidebarItems.length - 1
       ? sidebarItems[activeIndex + 1]
       : undefined
-  const showOutline = themeConfig.outline !== false && Boolean(page?.headings.length)
+  const chrome = resolvePageChrome(page?.meta, themeConfig)
+  const outlineKey =
+    chrome.outlineLevels === false ? 'false' : `${chrome.outlineLevels[0]}:${chrome.outlineLevels[1]}`
+  const outlineHeadings = useMemo(
+    () => filterHeadingsForOutline(page?.headings ?? [], chrome.outlineLevels),
+    [page?.headings, outlineKey]
+  )
+  const showOutline = chrome.showAside && outlineHeadings.length > 0
   const pageTags = page?.tags ?? []
   const showTags =
     themeConfig.tags !== false && pageTags.length > 0 && !Boolean(page?.meta.tagIndex)
   const MdxComponent = page?.kind === 'mdx' ? page.Component : undefined
   const mdxComponents = useMemo(createMdxHeadingComponents, [routePath, MdxComponent])
   const editHref =
-    themeConfig.editLink && page?.relativePath
+    chrome.showEditLink && themeConfig.editLink && page?.relativePath
       ? themeConfig.editLink.pattern.replace(/:path/g, page.relativePath)
       : undefined
   const lastUpdated = page?.lastUpdated
@@ -142,34 +156,57 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       day: 'numeric'
     })
     : undefined
+  const showPageHeader = !(chrome.isHome && chrome.hero)
+  const articleClass = classNames('pp-doc', `pp-doc-${chrome.layout}`, chrome.pageClass)
+  const contentClass = chrome.markdownStyles ? 'pp-doc-content' : 'pp-doc-content-plain'
+  const outline = showOutline ? (
+    <aside
+      class={classNames('pp-outline', chrome.aside === 'left' && 'pp-outline-left')}
+      aria-label={labels.onThisPage}
+    >
+      <div class="pp-outline-heading">{labels.onThisPage}</div>
+      <nav>
+        {outlineHeadings.map((heading) => (
+          <a
+            key={heading.id}
+            class={`level-${heading.level}${activeHeading === heading.id ? ' active' : ''}`}
+            href={`#${heading.id}`}
+          >
+            {heading.text}
+          </a>
+        ))}
+      </nav>
+    </aside>
+  ) : null
 
   useEffect(() => {
     setQuery('')
   }, [routePath])
 
   useEffect(() => {
-    if (!page?.headings.length) {
+    if (!showOutline || !outlineHeadings.length) {
       setActiveHeading(undefined)
       return
     }
     const update = () => {
-      const visible = page.headings
+      const visible = outlineHeadings
         .map((heading) => document.getElementById(heading.id))
         .filter((el): el is HTMLElement => Boolean(el))
         .filter((el) => el.getBoundingClientRect().top <= 96)
-      setActiveHeading(visible.at(-1)?.id ?? page.headings[0]?.id)
+      setActiveHeading(visible.at(-1)?.id ?? outlineHeadings[0]?.id)
     }
     update()
     window.addEventListener('scroll', update, { passive: true })
     return () => window.removeEventListener('scroll', update)
-  }, [page?.headings])
+  }, [outlineHeadings, showOutline])
 
   return (
-    <div class="pp-layout">
+    <div class={classNames('pp-layout', !chrome.showNavbar && 'pp-layout-no-nav')}>
       <a class="pp-skip-link" href="#content">
         {labels.skip}
       </a>
-      <header class="pp-nav">
+      {chrome.showNavbar ? (
+        <header class="pp-nav">
         <div class="pp-nav-inner">
           <a class="pp-title" href={withBase(site.base, '/')} aria-label={site.title}>
             <Logo
@@ -218,64 +255,73 @@ const Layout: FunctionalComponent<LayoutProps> = ({
             <ThemeToggle />
           </div>
         </div>
-      </header>
-      <div class="pp-body">
-        <aside class="pp-sidebar" aria-label={labels.navigation}>
-          <details class="pp-sidebar-panel" open>
-            <summary>{labels.navigation}</summary>
-            {themeConfig.search ? (
-              <label class="pp-search">
-                <span>{labels.search}</span>
-                <input
-                  type="search"
-                  value={query}
-                  placeholder={labels.filterPages}
-                  onInput={(event) => setQuery((event.currentTarget as HTMLInputElement).value)}
-                />
-              </label>
-            ) : null}
-            {themeConfig.search && normalizedQuery && searchResults.length > 0 ? (
-              <div class="pp-search-results" role="listbox" aria-label={labels.searchResults}>
-                {searchResults.map((result) => (
-                  <a key={result.route} role="option" href={withBase(site.base, result.route)}>
-                    <span>{result.title ?? result.route}</span>
-                    {result.description || result.excerpt ? (
-                      <small>{result.description ?? result.excerpt}</small>
-                    ) : null}
-                  </a>
-                ))}
-              </div>
-            ) : null}
-            {visibleSidebar.map((group, gi) => (
-              <div key={gi} class="pp-sidebar-group">
-                {group.text ? (
-                  <div class="pp-sidebar-heading">{group.text}</div>
-                ) : null}
-                <ul>
-                  {group.items.map((it) => {
-                    const active = isActive(routePath, it.link)
-                    return (
-                      <li key={it.link}>
-                        <a
-                          class={active ? 'active' : ''}
-                          href={withBase(site.base, it.link)}
-                          aria-current={active ? 'page' : undefined}
-                        >
-                          {it.text}
-                        </a>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            ))}
-          </details>
-        </aside>
+        </header>
+      ) : null}
+      <div class={`pp-body pp-body-${chrome.layout}`}>
+        {chrome.showSidebar ? (
+          <aside class="pp-sidebar" aria-label={labels.navigation}>
+            <details class="pp-sidebar-panel" open>
+              <summary>{labels.navigation}</summary>
+              {themeConfig.search ? (
+                <label class="pp-search">
+                  <span>{labels.search}</span>
+                  <input
+                    type="search"
+                    value={query}
+                    placeholder={labels.filterPages}
+                    onInput={(event) => setQuery((event.currentTarget as HTMLInputElement).value)}
+                  />
+                </label>
+              ) : null}
+              {themeConfig.search && normalizedQuery && searchResults.length > 0 ? (
+                <div class="pp-search-results" role="listbox" aria-label={labels.searchResults}>
+                  {searchResults.map((result) => (
+                    <a key={result.route} role="option" href={withBase(site.base, result.route)}>
+                      <span>{result.title ?? result.route}</span>
+                      {result.description || result.excerpt ? (
+                        <small>{result.description ?? result.excerpt}</small>
+                      ) : null}
+                    </a>
+                  ))}
+                </div>
+              ) : null}
+              {visibleSidebar.map((group, gi) => (
+                <div key={gi} class="pp-sidebar-group">
+                  {group.text ? (
+                    <div class="pp-sidebar-heading">{group.text}</div>
+                  ) : null}
+                  <ul>
+                    {group.items.map((it) => {
+                      const active = isActive(routePath, it.link)
+                      return (
+                        <li key={it.link}>
+                          <a
+                            class={active ? 'active' : ''}
+                            href={withBase(site.base, it.link)}
+                            aria-current={active ? 'page' : undefined}
+                          >
+                            {it.text}
+                          </a>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </details>
+          </aside>
+        ) : null}
+        {chrome.aside === 'left' ? outline : null}
         <main id="content" class="pp-main" tabIndex={-1} aria-live="polite">
-          <article class="pp-doc">
-            <h1 class="pp-doc-title">{page?.title ?? title}</h1>
-            {page?.description ? (
-              <p class="pp-doc-lead">{page.description}</p>
+          <article class={articleClass}>
+            {chrome.hero ? <Hero hero={chrome.hero} base={site.base} /> : null}
+            {showPageHeader ? (
+              <>
+                <h1 class="pp-doc-title">{page?.title ?? title}</h1>
+                {page?.description ? (
+                  <p class="pp-doc-lead">{page.description}</p>
+                ) : null}
+              </>
             ) : null}
             {showTags ? (
               <ul class="pp-doc-tags" aria-label="Tags">
@@ -291,17 +337,20 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 ))}
               </ul>
             ) : null}
+            {chrome.features.length > 0 ? (
+              <Features features={chrome.features} base={site.base} />
+            ) : null}
             {MdxComponent ? (
-              <div class="pp-doc-content">
+              <div class={contentClass}>
                 <MdxComponent components={mdxComponents} />
               </div>
             ) : (
               <div
-                class="pp-doc-content"
+                class={contentClass}
                 dangerouslySetInnerHTML={{ __html: page?.kind === 'markdown' ? page.html : '' }}
               />
             )}
-            {previous || next ? (
+            {chrome.showPager && (previous || next) ? (
               <nav class="pp-pager" aria-label="Page navigation">
                 {previous ? (
                   <a class="pp-pager-link previous" href={withBase(site.base, previous.link)}>
@@ -319,9 +368,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 ) : null}
               </nav>
             ) : null}
-            {themeConfig.lastUpdated || editHref ? (
+            {(chrome.showLastUpdated && lastUpdated) || editHref ? (
               <footer class="pp-doc-meta">
-                {themeConfig.lastUpdated && lastUpdated ? (
+                {chrome.showLastUpdated && lastUpdated ? (
                   <span>{labels.lastUpdated} {lastUpdated}</span>
                 ) : null}
                 {editHref ? (
@@ -331,24 +380,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
             ) : null}
           </article>
         </main>
-        {showOutline ? (
-          <aside class="pp-outline" aria-label={labels.onThisPage}>
-            <div class="pp-outline-heading">{labels.onThisPage}</div>
-            <nav>
-              {page?.headings.map((heading) => (
-                <a
-                  key={heading.id}
-                  class={`level-${heading.level}${activeHeading === heading.id ? ' active' : ''}`}
-                  href={`#${heading.id}`}
-                >
-                  {heading.text}
-                </a>
-              ))}
-            </nav>
-          </aside>
-        ) : null}
+        {chrome.aside !== 'left' ? outline : null}
       </div>
-      {themeConfig.footer ? (
+      {chrome.showFooter && themeConfig.footer ? (
         <footer class="pp-footer">{themeConfig.footer}</footer>
       ) : null}
     </div>

@@ -1,4 +1,8 @@
+import type { Feature, Hero, PageAside, PageOutlineConfig } from './pageChrome.js'
+
 export const META_DESCRIPTION_MAX = 155
+export const PAGE_LAYOUTS = ['doc', 'home', 'page'] as const
+export type PageLayout = (typeof PAGE_LAYOUTS)[number]
 
 export interface PageMetaInput {
   title?: string
@@ -6,6 +10,19 @@ export interface PageMetaInput {
   tags?: string[]
   image?: string
   pageType?: 'website' | 'article'
+  layout?: PageLayout
+  navbar?: boolean
+  sidebar?: boolean
+  aside?: PageAside
+  outline?: PageOutlineConfig
+  footer?: boolean
+  editLink?: boolean
+  lastUpdated?: boolean
+  pageClass?: string
+  isHome?: boolean
+  markdownStyles?: boolean
+  hero?: Hero
+  features?: Feature[]
   kind?: 'markdown' | 'mdx'
   html?: string
 }
@@ -71,6 +88,15 @@ export function pageImageFromMeta(meta: Record<string, unknown>): string | undef
 
 export function pageTypeFromMeta(meta: Record<string, unknown>): 'website' | 'article' {
   return meta.type === 'article' ? 'article' : 'website'
+}
+
+export function pageLayoutFromMeta(meta: Record<string, unknown> | undefined): PageLayout {
+  const value = meta?.layout
+  return PAGE_LAYOUTS.includes(value as PageLayout) ? (value as PageLayout) : 'doc'
+}
+
+export function isPageLayout(value: unknown): value is PageLayout {
+  return PAGE_LAYOUTS.includes(value as PageLayout)
 }
 
 export function isDraftPage(meta: Record<string, unknown>): boolean {

@@ -1,11 +1,29 @@
 ---
 title: Welcome
 description: Get started with PreactPress in minutes
+layout: home
+hero:
+  name: PreactPress
+  text: Vite and Preact powered static sites
+  tagline: Write Markdown and MDX, configure navigation, and ship a small static documentation site.
+  actions:
+    - theme: brand
+      text: Get started
+      link: /guide/first-five-minutes
+    - theme: alt
+      text: About this site
+      link: /about
+features:
+  - icon: V
+    title: Fast by default
+    details: Static HTML output, Vite dev server, and optional client navigation.
+  - icon: M
+    title: Markdown first
+    details: Frontmatter, MDX, tags, search metadata, and outline extraction.
+  - icon: T
+    title: Themeable
+    details: Use the default theme or replace it with your own Preact layout.
 ---
-
-# Welcome
-
-This site is generated with **PreactPress** — a Vite and Preact static site generator for documentation, blogs, and marketing pages.
 
 ## Quick start
 
@@ -22,14 +40,8 @@ Open **http://localhost:5173**. Edit Markdown files, adjust `.preactpress/config
 
 | Page | Why |
 | --- | --- |
-| [What is PreactPress?](/guide/what-is-preactpress) | Understand the static-site generator and when to use it |
-| [Getting Started](/guide/getting-started) | Install PreactPress and learn the starter structure |
-| [Routing](/guide/routing) | See how Markdown and MDX files become URLs |
-| [Deploy](/guide/deploy) | Build and publish the generated static files |
 | [Your first 5 minutes](/guide/first-five-minutes) | Change the title, add a page, wire up navigation |
-| [About](/about) | Example page created in the tutorial |
-| [Markdown examples](/markdown-examples) | Code blocks, tables, links, and quotes |
-| [Interactive MDX](/interactive) | Preact components inside Markdown |
+| [About](/about) | A plain content page you can replace |
 
 ## What you get
 
@@ -38,8 +50,6 @@ Open **http://localhost:5173**. Edit Markdown files, adjust `.preactpress/config
 | Static HTML build | Yes |
 | Client navigation | Yes |
 | Markdown frontmatter | Yes |
-| MDX with Preact components | Yes |
-| Code highlighting | Yes |
 | Sidebar search | Yes |
 
-> The default theme is intentionally small. Replace it with your own Preact layout when your site grows — see the package README for `theme` configuration.
+The default template is intentionally small. Use `preactpress init --template docs` when you want a fuller documentation starter, or `preactpress init --template magazine` for a custom-theme example.

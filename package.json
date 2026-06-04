@@ -12,7 +12,8 @@
     "dist",
     "src/client",
     "src/shared",
-    "template"
+    "template",
+    "templates"
   ],
   "exports": {
     ".": {
@@ -39,11 +40,7 @@
     "prepack": "pnpm run build",
     "preactpress": "node ./bin/preactpress.mjs",
     "demo": "node ./bin/preactpress.mjs dev template",
-    "demo:preview": "node ./bin/preactpress.mjs build template && node ./bin/preactpress.mjs preview template",
-    "demo:website": "node ./bin/preactpress.mjs dev website",
-    "build:website": "node ./bin/preactpress.mjs build website",
-    "demo:magazine": "node ./bin/preactpress.mjs dev examples/magazine-starter",
-    "demo:magazine:preview": "node ./bin/preactpress.mjs build examples/magazine-starter && node ./bin/preactpress.mjs preview examples/magazine-starter"
+    "demo:preview": "node ./bin/preactpress.mjs build template && node ./bin/preactpress.mjs preview template"
   },
   "dependencies": {
     "@mdx-js/rollup": "^3.1.1",

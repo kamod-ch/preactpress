@@ -54,4 +54,58 @@ describe('check', () => {
       await fs.rm(root, { recursive: true, force: true })
     }
   })
+
+  it('warns about unknown page layouts', async () => {
+    const root = await makeSite(`export default {
+      site: { description: 'Test site' },
+      themeConfig: { nav: [{ text: 'Home', link: '/' }] }
+    }`)
+    try {
+      await fs.writeFile(path.join(root, 'index.md'), `---
+layout: splash
+---
+
+# Home
+`, 'utf8')
+      const result = await check(root)
+
+      expect(result.issues.map((issue) => issue.message)).toEqual([
+        'index.md uses unknown layout "splash" (expected doc, home, page)'
+      ])
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
+
+  it('checks home frontmatter placement and links', async () => {
+    const root = await makeSite(`export default {
+      site: { description: 'Test site' }
+    }`)
+    try {
+      await fs.writeFile(path.join(root, 'index.md'), `---
+layout: page
+hero:
+  text: Custom
+  actions:
+    - text: Missing
+      link: /missing
+features:
+  - title: Feature
+    details: Broken link
+    link: /missing-feature
+---
+
+# Home
+`, 'utf8')
+      const result = await check(root)
+
+      expect(result.issues.map((issue) => issue.message)).toEqual([
+        'index.md defines home-only frontmatter (hero/features) on layout "page"',
+        'index.md hero action "Missing" points to missing route /missing (/missing)',
+        'index.md feature "Feature" points to missing route /missing-feature (/missing-feature)'
+      ])
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
 })

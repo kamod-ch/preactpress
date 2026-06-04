@@ -35,6 +35,7 @@ function printUsage(): void {
       '  preview   Serve the production build',
       '  check     Validate config, routes, nav/sidebar, and local links',
       '  init      Scaffold .preactpress + starter files in [root] or cwd',
+      '            Use --template docs or --template magazine for larger starters',
       '',
       c.dim('In this repo (package root, no site):'),
       '  pnpm run demo          Dev server for the bundled ./template site',
@@ -45,6 +46,7 @@ function printUsage(): void {
       '  --host       Host for dev / preview',
       '  --open       Open browser for dev',
       '  --base <p>   Override configured site.base',
+      '  --template <name>  Starter for init: default, docs, or magazine',
       '  -h, --help   Show this help',
       ''
     ].join('\n')
@@ -103,8 +105,11 @@ async function main(): Promise<void> {
   if (cmd === 'init') {
     const dir = root ? path.resolve(root) : process.cwd()
     const { init } = await import('./init.js')
-    const result = await init(dir)
-    console.log(c.green(`Scaffolded PreactPress site in ${result.root}`))
+    const result = await init(dir, {
+      template: argv.template ? String(argv.template) : undefined
+    })
+    const templateLabel = result.template === 'default' ? 'default template' : `${result.template} template`
+    console.log(c.green(`Scaffolded PreactPress site in ${result.root} using the ${templateLabel}`))
     console.log('')
     console.log(c.dim('Next steps:'))
     const rel = path.relative(process.cwd(), result.root)

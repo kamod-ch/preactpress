@@ -40,9 +40,9 @@ PreactPress is a **Vite + Preact static site generator** with a VitePress-like w
 | SEO | Canonical URLs, Open Graph, JSON-LD |
 | SEO | `sitemap.xml`, `robots.txt`, RSS/Atom `feed.xml` |
 | DX | CSP-friendly boot (`preactpress-theme.js`, non-executable page data template) |
-| DX | Bundled starter template + magazine example |
+| DX | Minimal bundled starter + optional `docs` and `magazine` init templates |
 | Docs | README for site authors, CONTRIBUTING for CLI maintainers |
-| Docs | Dogfooding template with tutorial content (EN + DE) |
+| Docs | Docs starter template with tutorial content (EN + DE) |
 
 ---
 
@@ -88,14 +88,14 @@ Default theme grows carefully; complex marketing layouts stay in custom themes.
 | Priority | Feature | Status | Notes |
 | --- | --- | --- | --- |
 | P2 | `themeConfig.logo` (image URL; light/dark variants) | ✅ | Image URL shipped; light/dark still 📋 |
+| P3 | Home/page layouts (`layout: home` / `layout: page` frontmatter) | ✅ | Default theme supports hero, features, page chrome toggles, and unstyled page content |
 | P2 | Nav dropdowns / nested nav items | 📋 | Flat `{ text, link }` only |
 | P2 | Collapsible sidebar groups | 📋 | |
 | P2 | Nested sidebar items | 📋 | One group → items level today |
-| P2 | Configurable outline levels / label | 📋 | `outline: true \| false` only |
+| P2 | Configurable outline levels / label | ✅ | Page frontmatter supports `outline: false`, number, range, and `deep`; label still follows locale |
 | P2 | Configurable UI labels (beyond hardcoded EN/DE) | 📋 | `labelsForLang()` in default theme |
 | P2 | `cleanUrls` flag + hosting documentation | 📋 | Output is already `*/index.html` |
 | P2 | Route `rewrites` | 📋 | |
-| P3 | Home layout (`layout: home` frontmatter) | 💡 | Magazine example covers custom layouts |
 | P3 | Algolia DocSearch integration | 💡 | Local JSON search works today |
 | P3 | `socialLinks` in default theme | 💡 | |
 
