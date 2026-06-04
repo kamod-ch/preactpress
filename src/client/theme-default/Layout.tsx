@@ -172,7 +172,12 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       <header class="pp-nav">
         <div class="pp-nav-inner">
           <a class="pp-title" href={withBase(site.base, '/')} aria-label={site.title}>
-            <Logo class="pp-logo" label={site.title} />
+            <Logo
+              class="pp-logo"
+              label={site.title}
+              src={themeConfig.logo}
+              base={site.base}
+            />
           </a>
           <div class="pp-nav-right">
             <nav class="pp-nav-links">

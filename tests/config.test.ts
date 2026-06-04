@@ -40,6 +40,15 @@ describe('config', () => {
     })
   })
 
+  it('loads themeConfig.logo', async () => {
+    const root = await makeSite(`export default {
+      site: { title: 'Docs', description: 'Docs' },
+      themeConfig: { logo: '/brand.svg', nav: [{ text: 'Home', link: '/' }] }
+    }`)
+    const config = await resolveConfig(root)
+    expect(config.themeConfig.logo).toBe('/brand.svg')
+  })
+
   it('resolves locale-specific site and theme config', async () => {
     const root = await makeSite(`export default {
       site: { title: 'Docs', description: 'English docs' },

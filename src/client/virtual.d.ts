@@ -77,6 +77,7 @@ declare module 'virtual:preactpress-site' {
     url?: string
   }
   export const themeConfig: {
+    logo?: string
     nav?: { text: string; link: string }[]
     sidebar?: { text?: string; items: { text: string; link: string }[] }[]
     outline?: boolean

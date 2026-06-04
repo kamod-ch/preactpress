@@ -176,7 +176,7 @@ The `init` template also ships npm scripts: `pnpm run dev`, `check`, `build`, `p
 | `srcDir` | Directory containing Markdown/MDX pages (default: `.`) |
 | `outDir` | Build output to deploy (default: `dist/`) |
 | `theme` | Preact layout component (header, sidebar, page shell) |
-| `themeConfig` | Nav, sidebar, search, footer — no theme code required |
+| `themeConfig` | Logo, nav, sidebar, search, footer — no theme code required |
 | `site.base` | Public URL prefix (e.g. `/repo/` for GitHub Pages project sites) |
 | `site.url` | Canonical site URL for SEO, sitemap, and Open Graph |
 
@@ -192,6 +192,7 @@ export default defineConfig({
   srcDir: '.',
   outDir: 'dist',
   themeConfig: {
+    logo: '/logo.svg',
     outline: true,
     search: true,
     footer: 'Released under MIT.',

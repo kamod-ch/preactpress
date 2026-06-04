@@ -94,7 +94,7 @@ export default {
 }
 ```
 
-Nutze `site` für globale Metadaten und `themeConfig` für Optionen des Standard-Themes wie Navigation, Sidebar, Suche, Outline, Footer und Edit-Links.
+Nutze `site` für globale Metadaten und `themeConfig` für Optionen des Standard-Themes wie Logo (`logo: '/logo.svg'`), Navigation, Sidebar, Suche, Outline, Footer und Edit-Links.
 
 ## Quelldateien
 

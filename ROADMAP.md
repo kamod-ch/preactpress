@@ -87,7 +87,7 @@ Default theme grows carefully; complex marketing layouts stay in custom themes.
 
 | Priority | Feature | Status | Notes |
 | --- | --- | --- | --- |
-| P2 | `themeConfig.logo` (incl. light/dark) | 📋 | Text logo component exists |
+| P2 | `themeConfig.logo` (image URL; light/dark variants) | ✅ | Image URL shipped; light/dark still 📋 |
 | P2 | Nav dropdowns / nested nav items | 📋 | Flat `{ text, link }` only |
 | P2 | Collapsible sidebar groups | 📋 | |
 | P2 | Nested sidebar items | 📋 | One group → items level today |

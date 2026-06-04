@@ -94,7 +94,7 @@ export default {
 }
 ```
 
-Use `site` for site-wide metadata and `themeConfig` for default-theme options such as nav, sidebar, search, outline, footer, and edit links.
+Use `site` for site-wide metadata and `themeConfig` for default-theme options such as logo (`logo: '/logo.svg'`), nav, sidebar, search, outline, footer, and edit links.
 
 ## Source files
 

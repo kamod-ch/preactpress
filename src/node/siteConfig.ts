@@ -22,6 +22,8 @@ export interface OutlineItem {
 }
 
 export interface ThemeConfig {
+  /** Image URL for the header logo (site-relative path or absolute http(s) URL). */
+  logo?: string
   nav?: NavItem[]
   sidebar?: SidebarGroup[]
   outline?: boolean
