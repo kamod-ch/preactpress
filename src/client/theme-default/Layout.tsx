@@ -4,10 +4,23 @@ import type { LayoutProps } from '../types.js'
 import { slugifyTagSegment, tagIndexPageRoute } from '../../shared/tags.js'
 import { slugifySegment } from '../../shared/slug.js'
 import { filterHeadingsForOutline, resolvePageChrome } from '../../shared/pageChrome.js'
+import { resolvePageHeadMeta, titleTemplateFromMeta } from '../../shared/pageMeta.js'
+import { flattenSidebarLeafItems, resolveSidebarForRoute } from '../../shared/sidebar.js'
+import { resolveThemeLabels } from '../../shared/themeLabels.js'
+import {
+  algoliaOptionsFromSearch,
+  isAlgoliaSearchEnabled,
+  isLocalSearchEnabled,
+  resolveAlgoliaOptions
+} from '../../shared/search.js'
 import { useSiteSearch } from '../useSiteSearch.js'
+import AlgoliaSearch from './AlgoliaSearch.js'
 import Features from './Features.js'
 import Hero from './Hero.js'
 import Logo from './Logo.js'
+import NavLinks from './NavLinks.js'
+import SidebarNav from './SidebarNav.js'
+import SocialLinks from './SocialLinks.js'
 import ThemeToggle from './ThemeToggle.js'
 import './styles.css'
 
@@ -32,34 +45,6 @@ function isActive(routePath: string, link: string): boolean {
 
 function classNames(...values: Array<string | undefined | false>): string {
   return values.filter(Boolean).join(' ')
-}
-
-function labelsForLang(lang: string) {
-  return lang.toLowerCase().startsWith('de')
-    ? {
-        skip: 'Zum Inhalt springen',
-        navigation: 'Navigation',
-        search: 'Suche',
-        filterPages: 'Seiten filtern',
-        searchResults: 'Suchergebnisse',
-        previous: 'Zurück',
-        next: 'Weiter',
-        lastUpdated: 'Zuletzt aktualisiert',
-        onThisPage: 'Auf dieser Seite',
-        language: 'Sprache'
-      }
-    : {
-        skip: 'Skip to content',
-        navigation: 'Navigation',
-        search: 'Search',
-        filterPages: 'Filter pages',
-        searchResults: 'Search results',
-        previous: 'Previous',
-        next: 'Next',
-        lastUpdated: 'Last updated',
-        onThisPage: 'On this page',
-        language: 'Language'
-      }
 }
 
 function childText(children: ComponentChildren): string {
@@ -106,26 +91,52 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   themeConfig,
   routePath,
   page,
+  i18n,
   locale,
   locales = [],
   localizeRoute
 }) => {
-  const title = page?.title ? `${page.title} | ${site.title}` : site.title
-  const labels = labelsForLang(site.lang)
+  const { title } = resolvePageHeadMeta(
+    page
+      ? {
+          title: page.title,
+          titleTemplate: titleTemplateFromMeta(page.meta),
+          description: page.description,
+          kind: page.kind,
+          html: page.kind === 'markdown' ? page.html : undefined
+        }
+      : undefined,
+    site
+  )
+  const labels = resolveThemeLabels(site.lang, themeConfig.labels)
+  const localSearch = isLocalSearchEnabled(themeConfig.search)
+  const algoliaSearch = isAlgoliaSearchEnabled(themeConfig.search)
+  const algoliaOptions = algoliaSearch
+    ? resolveAlgoliaOptions(algoliaOptionsFromSearch(themeConfig.search)!, locale?.key)
+    : undefined
   const [query, setQuery] = useState('')
   const [activeHeading, setActiveHeading] = useState<string | undefined>()
-  const sidebarItems = (themeConfig.sidebar ?? []).flatMap((group) => group.items)
+  const activeSidebar = resolveSidebarForRoute(themeConfig.sidebar, routePath, i18n)
+  const sidebarItems = activeSidebar.flatMap((group) => flattenSidebarLeafItems(group.items))
   const normalizedQuery = query.trim().toLowerCase()
   const searchResults = useSiteSearch(site.base, query, locale?.key)
   const visibleSidebar = useMemo(() => {
-    if (!normalizedQuery || searchResults.length > 0) return themeConfig.sidebar ?? []
-    return (themeConfig.sidebar ?? [])
-      .map((group) => ({
-        ...group,
-        items: group.items.filter((item) => item.text.toLowerCase().includes(normalizedQuery))
-      }))
+    if (!normalizedQuery || searchResults.length > 0) return activeSidebar
+    const filterItems = (items: typeof activeSidebar[0]['items']): typeof items => {
+      return items
+        .map((item) => {
+          const nested = item.items?.length ? filterItems(item.items) : undefined
+          const selfMatch = item.text.toLowerCase().includes(normalizedQuery)
+          if (nested?.length) return { ...item, items: nested }
+          if (selfMatch) return item
+          return null
+        })
+        .filter((item): item is NonNullable<typeof item> => Boolean(item))
+    }
+    return activeSidebar
+      .map((group) => ({ ...group, items: filterItems(group.items) }))
       .filter((group) => group.items.length > 0)
-  }, [normalizedQuery, searchResults.length, themeConfig.sidebar])
+  }, [normalizedQuery, searchResults.length, activeSidebar])
   const activeIndex = sidebarItems.findIndex((item) => isActive(routePath, item.link))
   const previous = activeIndex > 0 ? sidebarItems[activeIndex - 1] : undefined
   const next =
@@ -218,19 +229,13 @@ const Layout: FunctionalComponent<LayoutProps> = ({
           </a>
           <div class="pp-nav-right">
             <nav class="pp-nav-links">
-              {(themeConfig.nav ?? []).map((item) => {
-                const active = isActive(routePath, item.link)
-                return (
-                  <a
-                    key={item.link}
-                    class={active ? 'active' : ''}
-                    href={withBase(site.base, item.link)}
-                    aria-current={active ? 'page' : undefined}
-                  >
-                    {item.text}
-                  </a>
-                )
-              })}
+              <NavLinks
+                items={themeConfig.nav ?? []}
+                routePath={routePath}
+                base={site.base}
+                isActive={isActive}
+                withBase={withBase}
+              />
             </nav>
             {locales.length > 1 && localizeRoute ? (
               <details class="pp-locale-switcher">
@@ -252,6 +257,12 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 </div>
               </details>
             ) : null}
+            {themeConfig.socialLinks?.length ? (
+              <SocialLinks links={themeConfig.socialLinks} />
+            ) : null}
+            {algoliaSearch && algoliaOptions ? (
+              <AlgoliaSearch options={algoliaOptions} base={site.base} />
+            ) : null}
             <ThemeToggle />
           </div>
         </div>
@@ -262,7 +273,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
           <aside class="pp-sidebar" aria-label={labels.navigation}>
             <details class="pp-sidebar-panel" open>
               <summary>{labels.navigation}</summary>
-              {themeConfig.search ? (
+              {localSearch ? (
                 <label class="pp-search">
                   <span>{labels.search}</span>
                   <input
@@ -273,7 +284,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                   />
                 </label>
               ) : null}
-              {themeConfig.search && normalizedQuery && searchResults.length > 0 ? (
+              {localSearch && normalizedQuery && searchResults.length > 0 ? (
                 <div class="pp-search-results" role="listbox" aria-label={labels.searchResults}>
                   {searchResults.map((result) => (
                     <a key={result.route} role="option" href={withBase(site.base, result.route)}>
@@ -285,29 +296,13 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                   ))}
                 </div>
               ) : null}
-              {visibleSidebar.map((group, gi) => (
-                <div key={gi} class="pp-sidebar-group">
-                  {group.text ? (
-                    <div class="pp-sidebar-heading">{group.text}</div>
-                  ) : null}
-                  <ul>
-                    {group.items.map((it) => {
-                      const active = isActive(routePath, it.link)
-                      return (
-                        <li key={it.link}>
-                          <a
-                            class={active ? 'active' : ''}
-                            href={withBase(site.base, it.link)}
-                            aria-current={active ? 'page' : undefined}
-                          >
-                            {it.text}
-                          </a>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
-              ))}
+              <SidebarNav
+                groups={visibleSidebar}
+                routePath={routePath}
+                base={site.base}
+                withBase={withBase}
+                isActive={isActive}
+              />
             </details>
           </aside>
         ) : null}

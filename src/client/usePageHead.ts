@@ -1,6 +1,12 @@
 import { useEffect } from 'preact/hooks'
 import type { ResolvedI18n, SiteData } from '../node/siteConfig.js'
-import { resolvePageHeadMeta, type PageMetaInput } from '../shared/pageMeta.js'
+import {
+  resolvePageHeadMeta,
+  titleTemplateFromMeta,
+  type PageMetaInput
+} from '../shared/pageMeta.js'
+import { headTagsFromMeta } from '../shared/pageHead.js'
+import type { HeadTag } from '../node/siteConfig.js'
 import { canonicalUrl, publicUrl } from '../shared/url.js'
 import { localizedRouteForLocale, siteForRoute } from '../shared/locale.js'
 
@@ -73,6 +79,44 @@ function replaceAlternates(opts: {
   }
 }
 
+function upsertHeadTag(tag: HeadTag): void {
+  const [name, attrs, content] = tag
+  if (name === 'meta') {
+    const key = 'name' in attrs && attrs.name ? 'name' : 'property' in attrs ? 'property' : undefined
+    if (key && typeof attrs[key] === 'string') {
+      upsertMeta(key as 'name' | 'property', String(attrs[key]), String(attrs.content ?? ''))
+      return
+    }
+  }
+  if (name === 'link' && attrs.rel && typeof attrs.href === 'string') {
+    let el = document.head.querySelector(
+      `link[rel="${attrs.rel}"]${attrs.hreflang ? `[hreflang="${attrs.hreflang}"]` : ''}`
+    ) as HTMLLinkElement | null
+    if (!el) {
+      el = document.createElement('link')
+      for (const [key, value] of Object.entries(attrs)) {
+        if (value != null && value !== false) el.setAttribute(key, String(value))
+      }
+      document.head.appendChild(el)
+    } else {
+      el.href = String(attrs.href)
+    }
+    return
+  }
+  if (name === 'script') {
+    const id = typeof attrs.id === 'string' ? attrs.id : undefined
+    let el = id ? (document.getElementById(id) as HTMLScriptElement | null) : null
+    if (!el) {
+      el = document.createElement('script')
+      for (const [key, value] of Object.entries(attrs)) {
+        if (value != null && value !== false) el.setAttribute(key, String(value))
+      }
+      el.textContent = content ?? ''
+      document.head.appendChild(el)
+    }
+  }
+}
+
 function resolveMetaImage(site: SiteData, image: string | undefined): string | undefined {
   if (!image) return undefined
   if (/^(?:[a-z]+:)?\/\//i.test(image)) return image
@@ -97,12 +141,14 @@ export function usePageHead(opts: {
   const pageType = page?.pageType
   const pageKind = page?.kind
   const pageHtml = page?.kind === 'markdown' ? page.html : undefined
+  const pageMeta = page?.meta
 
   useEffect(() => {
     const head = resolvePageHeadMeta(
       pageKind === 'markdown'
         ? {
             title: pageTitle,
+            titleTemplate: titleTemplateFromMeta(pageMeta),
             description: pageDescription,
             tags: pageTags,
             image: pageImage,
@@ -113,6 +159,7 @@ export function usePageHead(opts: {
         : pageKind
           ? {
               title: pageTitle,
+              titleTemplate: titleTemplateFromMeta(pageMeta),
               description: pageDescription,
               tags: pageTags,
               image: pageImage,
@@ -122,6 +169,8 @@ export function usePageHead(opts: {
           : undefined,
       activeSite
     )
+
+    for (const tag of headTagsFromMeta(pageMeta)) upsertHeadTag(tag)
 
     document.title = head.title
 
@@ -159,5 +208,5 @@ export function usePageHead(opts: {
     if (document.documentElement.lang !== activeSite.lang) {
       document.documentElement.lang = activeSite.lang
     }
-  }, [activeSite, i18n, route, routes, pageTitle, pageDescription, pageTags, pageImage, pageType, pageKind, pageHtml])
+  }, [activeSite, i18n, route, routes, pageTitle, pageDescription, pageTags, pageImage, pageType, pageKind, pageHtml, pageMeta])
 }

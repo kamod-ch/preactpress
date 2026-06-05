@@ -53,13 +53,13 @@ pnpm run dev
 
 Open **http://localhost:5173** — you should see a minimal starter site with a home page, an about page, search, and a **Your first 5 minutes** guide. A small **`README.md`** in the scaffold lists project-specific commands and edit paths.
 
-Try the bundled demo from the package repo (the same `template/` site, dogfooding PreactPress):
+Try the bundled demo from the package repo (the same `templates/default/` site, dogfooding PreactPress):
 
 ```bash
 git clone <repo-url>
 cd preactpress
 pnpm install
-pnpm run demo    # dev server for ./template
+pnpm run dev     # dev server for ./templates/default
 ```
 
 ## Starter templates
@@ -179,7 +179,7 @@ The `init` template also ships npm scripts: `pnpm run dev`, `check`, `build`, `p
 | `srcDir` | Directory containing Markdown/MDX pages (default: `.`) |
 | `outDir` | Build output to deploy (default: `dist/`) |
 | `theme` | Preact layout component (header, sidebar, page shell) |
-| `themeConfig` | Logo, nav, sidebar, search, footer — no theme code required |
+| `themeConfig` | Logo, nav, sidebar, search (local or Algolia), socialLinks, footer — no theme code required |
 | `site.base` | Public URL prefix (e.g. `/repo/` for GitHub Pages project sites) |
 | `site.url` | Canonical site URL for SEO, sitemap, and Open Graph |
 
@@ -227,6 +227,16 @@ export default defineConfig({
 
 Common options:
 
+- **`site.titleTemplate`** — default `:title | :siteTitle`; set `false` on a page via frontmatter for a bare title.
+- **`srcExclude`** — glob patterns for Markdown that should not become routes (e.g. `['**/README.md']`).
+- **`lastUpdatedGit`** — use git commit timestamps when `themeConfig.lastUpdated` is enabled.
+- **`themeConfig.sidebar`** — flat array or path map `{ '/guide/': [...] }`; supports nested items and `collapsed` groups.
+- **`themeConfig.nav`** — supports nested dropdown items via `items`.
+- **`themeConfig.logo`** — string URL or `{ light, dark }` for theme-aware logos.
+- **`themeConfig.labels`** — override default-theme UI strings (merged with EN/DE defaults).
+- **`rewrites`** — map public routes to existing content, e.g. `{ '/docs': '/guide' }`.
+- **`cleanUrls`** — default `true` (`path/index.html`); set `false` for `path.html` output.
+- **`markdown.emoji`** / **`markdown.math`** — opt-in `:rocket:` shortcodes and `$…$` / `$$…$$` MathJax.
 - **`markdown.html`** — disabled by default; enable only for trusted content.
 - **`site.url`** — set before production to emit canonical/Open Graph URLs, `sitemap.xml`, and `robots.txt`.
 - **`preactpress check`** — validates config loading, route collisions, the root page, nav/sidebar links, local Markdown links, and tag routes. Warns about missing descriptions and draft pages.
@@ -256,6 +266,10 @@ Optional YAML at the top of each `.md` / `.mdx` file:
 | `footer: false` | Hide the configured site footer for this page |
 | `editLink: false` | Hide the configured edit link for this page |
 | `lastUpdated: false` | Hide the last-updated timestamp for this page |
+| `titleTemplate` | Override `site.titleTemplate` (`:title \| :siteTitle`); `false` uses the raw page title |
+| `head` | Per-page `<meta>` / `<link>` / `<script>` tags (same tuple format as config `head`) |
+
+Markdown extras (no frontmatter needed): `::: tip` containers, `> [!NOTE]` alerts, `[[toc]]`, `::: code-group`, `<!--@include: path-->`, `<<< @/file` snippets, `{#id}` heading anchors, `{2}` / `[!code highlight]` line markers.
 | `pageClass` | Add an extra class to the page `<article>` |
 | `isHome: true` | Treat a custom page as home-like in the default theme |
 | `markdownStyles: false` | Disable default prose styles for `layout: home` content |

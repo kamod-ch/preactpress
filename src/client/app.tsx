@@ -148,6 +148,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
     page:
       page?.kind === 'markdown'
         ? {
+            meta: page.meta,
             title: page.title,
             description: page.description,
             tags: page.tags,
@@ -158,6 +159,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
           }
         : page
           ? {
+              meta: page.meta,
               title: page.title,
               description: page.description,
               tags: page.tags,
@@ -174,6 +176,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
       themeConfig={activeThemeConfig}
       routePath={currentRoute}
       page={page}
+      i18n={i18n}
       locale={activeLocale}
       locales={i18n?.locales}
       localizeRoute={(locale: ResolvedLocale) =>

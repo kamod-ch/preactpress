@@ -36,7 +36,9 @@ describe('config', () => {
     expect(config.markdown).toEqual({
       html: true,
       linkify: true,
-      typographer: true
+      typographer: true,
+      emoji: false,
+      math: false
     })
   })
 

@@ -18,7 +18,7 @@ export interface InitOptions {
 
 const SKIP_TEMPLATE_ENTRIES = new Set(['dist', 'node_modules', 'pnpm-lock.yaml'])
 const TEMPLATE_DIRS: Record<InitTemplateName, string> = {
-  default: 'template',
+  default: path.join('templates', 'default'),
   docs: path.join('templates', 'docs'),
   magazine: path.join('templates', 'magazine')
 }

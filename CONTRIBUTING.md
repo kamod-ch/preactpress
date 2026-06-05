@@ -13,9 +13,9 @@ From the **package root** (`preactpress/`), two build concepts apply:
 | Command | What it builds |
 | --- | --- |
 | `pnpm run build` | Compiles the **CLI** TypeScript sources to `dist/` (`tsc`). Does **not** build a content site. |
-| `pnpm exec preactpress build [root]` | Runs the **static site generator** for a site (default: current directory). Writes HTML + assets to `outDir` (e.g. `template/dist/`). |
+| `pnpm exec preactpress build [root]` | Runs the **static site generator** for a site (default: current directory). Writes HTML + assets to `outDir` (e.g. `templates/default/dist/`). |
 
-After changing CLI or client code, run `pnpm run build` before `pnpm run demo` or `node ./bin/preactpress.mjs …` so `dist/` is up to date. On `pnpm install`, the `prepare` script builds `dist/` automatically — you only need a manual build after editing sources.
+After changing CLI or client code, run `pnpm run build` before `pnpm run dev` or `node ./bin/preactpress.mjs …` so `dist/` is up to date. On `pnpm install`, the `prepare` script builds `dist/` automatically — you only need a manual build after editing sources.
 
 From this directory: `pnpm install`, `pnpm run build`, then `./bin/preactpress.mjs --help` (or `pnpm exec preactpress` when linked from a workspace).
 
@@ -25,30 +25,30 @@ These scripts target the bundled minimal starter without passing a path each tim
 
 | Script | What it does |
 | --- | --- |
-| `pnpm run demo` | **Dev** server for `./template` — Vite + SSR, HMR |
-| `pnpm run demo:preview` | **Production** build + static preview for `./template` |
+| `pnpm run dev` | **Dev** server for `./templates/default` — Vite + SSR, HMR |
+| `pnpm run preview` | **Production** build + static preview for `./templates/default` |
 
 Typical workflows:
 
 ```bash
 # Hack on the CLI / default theme (dev, hot reload)
 pnpm install            # prepare builds dist/ automatically
-pnpm run demo           # http://localhost:5173 (template site)
+pnpm run dev            # http://localhost:5173 (default starter site)
 
-# Smoke-test production output for the template
-pnpm run demo:preview   # preactpress build template && preactpress preview template
+# Smoke-test production output for the default starter
+pnpm run preview        # preactpress build templates/default && preactpress preview templates/default
 ```
 
 Equivalent explicit CLI invocations:
 
 ```bash
-node ./bin/preactpress.mjs dev template
-node ./bin/preactpress.mjs build template && node ./bin/preactpress.mjs preview template
+node ./bin/preactpress.mjs dev templates/default
+node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default
 ```
 
 ## Optional starter templates
 
-`preactpress init --template docs` and `preactpress init --template magazine` are packaged from `templates/docs` and `templates/magazine`. Keep those templates runnable after scaffolding and free of `node_modules`, `dist`, and workspace lockfiles.
+Init starters are packaged from `templates/default`, `templates/docs`, and `templates/magazine`. Keep those templates runnable after scaffolding and free of `node_modules`, `dist`, and workspace lockfiles.
 
 ## Example sites
 
@@ -73,7 +73,7 @@ pnpm install          # runs prepare → build (compiles TypeScript to dist/)
 pnpm publish          # runs prepack → build automatically before pack
 ```
 
-Requirements: Node 20+, npm account, and the `files` field in `package.json` (includes `dist`, `bin`, `template`, `templates`, etc.).
+Requirements: Node 20+, npm account, and the `files` field in `package.json` (includes `dist`, `bin`, `templates`, etc.).
 
 ## Tests
 

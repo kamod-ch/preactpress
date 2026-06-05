@@ -15,6 +15,7 @@ describe('build helpers', () => {
   it('maps routes to static HTML paths', () => {
     expect(routeToOutPath('/')).toBe('index.html')
     expect(routeToOutPath('/guide')).toBe('guide/index.html')
+    expect(routeToOutPath('/guide', false)).toBe('guide.html')
   })
 
   it('picks an explicit or fallback entry from the Vite manifest', () => {

@@ -39,7 +39,7 @@ During production builds, routes are written as directory indexes:
 /guide/getting-started -> dist/guide/getting-started/index.html
 ```
 
-This gives clean URLs without a `cleanUrls` option.
+By default (`cleanUrls: true`), builds emit directory indexes so hosts can serve extensionless URLs.
 
 ## Project root and source directory
 
@@ -178,14 +178,43 @@ You can also override it for one build:
 pnpm exec preactpress build --base /my-repo/
 ```
 
+## Route rewrites
+
+Map a public URL to existing content without duplicating files:
+
+```ts
+export default {
+  rewrites: {
+    '/docs': '/guide',
+    '/getting-started': '/guide/intro'
+  }
+}
+```
+
+Keys are the routes visitors use; values must point at routes that already exist from your Markdown files. `preactpress check` validates rewrite sources and collisions.
+
+## Clean URLs and hosting
+
+| `cleanUrls` | Output for `/about` | Typical host |
+| --- | --- | --- |
+| `true` (default) | `dist/about/index.html` | Netlify, Vercel, Cloudflare Pages, GitHub Pages |
+| `false` | `dist/about.html` | Static buckets without directory index support |
+
+```ts
+export default {
+  cleanUrls: false
+}
+```
+
+Most modern static hosts work with the default. Set `cleanUrls: false` only when your host cannot resolve `/about` to `about/index.html`.
+
 ## Current limitations
 
 PreactPress intentionally keeps routing small. Compared with VitePress, it does not currently include:
 
 | Feature | Status |
 | --- | --- |
-| Route rewrites | Not supported |
 | Dynamic routes such as `[pkg].paths.ts` | Not supported |
-| A `cleanUrls` config flag | Not needed; builds already write directory indexes |
+| Pattern-based rewrites with params | Not supported |
 
 If your site needs many generated pages from external data, generate Markdown or MDX files before running `preactpress build`.

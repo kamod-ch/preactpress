@@ -77,11 +77,13 @@ declare module 'virtual:preactpress-site' {
     url?: string
   }
   export const themeConfig: {
-    logo?: string
-    nav?: { text: string; link: string }[]
-    sidebar?: { text?: string; items: { text: string; link: string }[] }[]
+    logo?: import('../node/siteConfig.js').ThemeLogo
+    labels?: import('../node/siteConfig.js').ThemeLabels
+    nav?: import('../node/siteConfig.js').NavItem[]
+    sidebar?: import('../node/siteConfig.js').SidebarConfig
     outline?: boolean | import('../shared/pageChrome.js').PageOutlineConfig
-    search?: boolean
+    search?: import('../shared/search.js').SearchConfig
+    socialLinks?: import('../shared/socialIcons.js').SocialLink[]
     tags?: boolean
     footer?: string
     editLink?: { pattern: string; text?: string }

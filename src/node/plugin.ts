@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises'
+import { resolveFileLastUpdated } from './lastUpdated.js'
 import path from 'node:path'
 import type { Plugin, ViteDevServer } from 'vite'
 import type { SiteConfig } from './siteConfig.js'
@@ -22,6 +23,7 @@ import {
 import { resolvePageTags } from '../shared/tags.js'
 import { isDraftPage, pageImageFromMeta, pageTypeFromMeta } from '../shared/pageMeta.js'
 import { localeFromRoute } from '../shared/locale.js'
+import { applyRouteRewrites } from '../shared/rewrites.js'
 
 const VIRTUAL_LAYOUT = '\0virtual:preactpress-layout'
 const VIRTUAL_PAGES = '\0virtual:preactpress-pages'
@@ -47,6 +49,9 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
     for (const file of await scanContentFiles(site)) {
       if (isDraftPage(readMarkdownMetadata(file.file).meta)) continue
       routeToFile.set(file.route, file)
+    }
+    if (Object.keys(site.rewrites).length > 0) {
+      applyRouteRewrites(routeToFile, site.rewrites)
     }
   }
 
@@ -80,9 +85,8 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
     const metaEntries: string[] = []
     let mdxIndex = 0
     for (const [route, file] of routeToFile) {
-      const stats = await fs.stat(file.file)
       const relativePath = path.relative(site.srcDir, file.file).split(path.sep).join('/')
-      const lastUpdated = stats.mtime.toISOString()
+      const lastUpdated = await resolveFileLastUpdated(file.file, site)
       if (file.kind === 'mdx') {
         const r = readMarkdownMetadata(file.file)
         const tags = resolvePageTags(r.meta)
@@ -104,7 +108,8 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         ...site.markdown,
         route,
         routes,
-        localePrefix: localeFromRoute(route, site.i18n)?.prefix
+        localePrefix: localeFromRoute(route, site.i18n)?.prefix,
+        srcDir: site.srcDir
       })
       entries[route] = {
         kind: 'markdown',

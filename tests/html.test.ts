@@ -45,6 +45,26 @@ describe('html head rendering', () => {
     expect(out).toContain('<div id="app"><p>Hi</p></div>')
   })
 
+  it('merges per-page head tags from frontmatter', async () => {
+    const head = await collectHeadTags({
+      site,
+      route: '/about',
+      title: 'About',
+      description: 'About us',
+      pageData: {
+        kind: 'markdown',
+        html: '<p>About</p>',
+        meta: {
+          head: [['meta', { name: 'author', content: 'PreactPress' }]]
+        },
+        headings: []
+      }
+    })
+
+    expect(head).toContain('name="author"')
+    expect(head).toContain('content="PreactPress"')
+  })
+
   it('renders locale-specific lang and alternate links', async () => {
     const i18n = resolveLocales(
       {

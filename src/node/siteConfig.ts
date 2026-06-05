@@ -1,19 +1,41 @@
 import type { Logger } from 'vite'
-import type { PageOutlineConfig } from '../shared/pageChrome.js'
+import type { PageOutlineConfig, ThemeableImage } from '../shared/pageChrome.js'
+import type { SearchConfig } from '../shared/search.js'
+import type { SocialLink } from '../shared/socialIcons.js'
+
+export type ThemeLogo = string | ThemeableImage
 
 export interface NavItem {
   text: string
-  link: string
+  link?: string
+  items?: NavItem[]
 }
 
 export interface SidebarItem {
   text: string
-  link: string
+  link?: string
+  collapsed?: boolean
+  items?: SidebarItem[]
 }
 
 export interface SidebarGroup {
   text?: string
+  /** When true, the group starts collapsed in the default theme sidebar. */
+  collapsed?: boolean
   items: SidebarItem[]
+}
+
+export interface ThemeLabels {
+  skip?: string
+  navigation?: string
+  search?: string
+  filterPages?: string
+  searchResults?: string
+  previous?: string
+  next?: string
+  lastUpdated?: string
+  onThisPage?: string
+  language?: string
 }
 
 export interface OutlineItem {
@@ -22,13 +44,21 @@ export interface OutlineItem {
   level: number
 }
 
+export type SidebarConfig = SidebarGroup[] | Record<string, SidebarGroup[]>
+
 export interface ThemeConfig {
-  /** Image URL for the header logo (site-relative path or absolute http(s) URL). */
-  logo?: string
+  /** Image URL or light/dark variants for the header logo. */
+  logo?: ThemeLogo
+  /** Override default-theme UI strings (merged with built-in EN/DE defaults). */
+  labels?: ThemeLabels
   nav?: NavItem[]
-  sidebar?: SidebarGroup[]
+  /** Global sidebar or path-prefix keyed groups (e.g. `{ '/guide/': [...] }`). */
+  sidebar?: SidebarConfig
   outline?: boolean | PageOutlineConfig
-  search?: boolean
+  /** `true` or `{ provider: 'local' }` for sidebar search; `{ provider: 'algolia', options }` for DocSearch. */
+  search?: SearchConfig
+  /** Social account links shown in the nav bar. */
+  socialLinks?: SocialLink[]
   tags?: boolean
   footer?: string
   editLink?: {
@@ -51,6 +81,10 @@ export interface MarkdownConfig {
   html?: boolean
   linkify?: boolean
   typographer?: boolean
+  /** Enable `:tada:` emoji shortcodes (default: true). */
+  emoji?: boolean
+  /** Enable MathJax rendering for `$…$` and `$$…$$` (default: false). */
+  math?: boolean
 }
 
 export interface SiteData {
@@ -59,6 +93,8 @@ export interface SiteData {
   base: string
   lang: string
   url?: string
+  /** `:title | :siteTitle` by default; set `false` to use the raw page title only. */
+  titleTemplate?: string | false
 }
 
 export type HeadTag =
@@ -89,6 +125,17 @@ export interface ResolvedI18n {
 
 export interface UserConfig {
   srcDir?: string
+  // Glob patterns (relative to srcDir) excluded from routing.
+  srcExclude?: string[]
+  /**
+   * When true (default), routes emit as `path/index.html` for extensionless URLs.
+   * Set false for `path.html` output (e.g. hosts without directory index support).
+   */
+  cleanUrls?: boolean
+  /** Map public routes to existing content routes, e.g. `{ '/docs': '/guide' }`. */
+  rewrites?: Record<string, string>
+  /** Use git commit time for lastUpdated when enabled in theme (falls back to file mtime). */
+  lastUpdatedGit?: boolean
   outDir?: string
   cacheDir?: string
   /** Path to Layout module (e.g. `./theme/Layout.tsx`) relative to `.preactpress` */
@@ -112,6 +159,10 @@ export interface UserConfig {
 export interface SiteConfig {
   root: string
   srcDir: string
+  srcExclude: string[]
+  cleanUrls: boolean
+  rewrites: Record<string, string>
+  lastUpdatedGit: boolean
   configDir: string
   outDir: string
   cacheDir: string

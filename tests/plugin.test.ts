@@ -68,6 +68,21 @@ describe('mdFileToRoute', () => {
     }
   })
 
+  it('excludes files matched by srcExclude', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-exclude-'))
+    try {
+      await fs.writeFile(path.join(root, 'index.md'), '# Home\n', 'utf8')
+      await fs.writeFile(path.join(root, 'README.md'), '# Readme\n', 'utf8')
+      await fs.writeFile(path.join(root, 'notes.md'), '# Notes\n', 'utf8')
+
+      await expect(
+        listMarkdownRoutes({ srcDir: root, srcExclude: ['**/README.md'] } as SiteConfig)
+      ).resolves.toEqual(['/', '/notes'])
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
+
   it('excludes draft pages from generated routes and tag indexes', async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-draft-routes-'))
     try {

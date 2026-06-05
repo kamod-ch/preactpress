@@ -24,11 +24,17 @@ export function mdFileToRoute(srcDir: string, file: string): string {
   return '/' + rel
 }
 
-export async function scanContentFiles(site: Pick<SiteConfig, 'srcDir'>): Promise<ContentFile[]> {
+function contentIgnorePatterns(site: { srcExclude?: string[] }): string[] {
+  return ['**/node_modules/**', '**/.preactpress/**', ...(site.srcExclude ?? [])]
+}
+
+export async function scanContentFiles(
+  site: Pick<SiteConfig, 'srcDir'> & { srcExclude?: string[] }
+): Promise<ContentFile[]> {
   const files = await glob([...CONTENT_GLOBS], {
     cwd: site.srcDir,
     absolute: true,
-    ignore: ['**/node_modules/**', '**/.preactpress/**']
+    ignore: contentIgnorePatterns(site)
   })
   const routeToFile = new Map<string, ContentFile>()
   for (const file of files.sort()) {

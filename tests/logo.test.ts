@@ -19,4 +19,9 @@ describe('resolveLogoHref', () => {
   it('leaves root base unchanged', () => {
     expect(resolveLogoHref('/logo.svg', '/')).toBe('/logo.svg')
   })
+
+  it('resolves light and dark logo paths independently', () => {
+    expect(resolveLogoHref('/logo-light.svg', '/docs/')).toBe('/docs/logo-light.svg')
+    expect(resolveLogoHref('/logo-dark.svg', '/docs/')).toBe('/docs/logo-dark.svg')
+  })
 })

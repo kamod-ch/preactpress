@@ -4,8 +4,12 @@ export const META_DESCRIPTION_MAX = 155
 export const PAGE_LAYOUTS = ['doc', 'home', 'page'] as const
 export type PageLayout = (typeof PAGE_LAYOUTS)[number]
 
+export const DEFAULT_TITLE_TEMPLATE = ':title | :siteTitle'
+
 export interface PageMetaInput {
+  meta?: Record<string, unknown>
   title?: string
+  titleTemplate?: string | false
   description?: string
   tags?: string[]
   image?: string
@@ -30,6 +34,27 @@ export interface PageMetaInput {
 export interface SiteMetaInput {
   title: string
   description: string
+  titleTemplate?: string | false
+}
+
+export function formatTitleTemplate(
+  template: string | false | undefined,
+  params: { title?: string; siteTitle: string }
+): string {
+  if (template === false) {
+    return params.title?.trim() || params.siteTitle
+  }
+  const pattern = template?.trim() || DEFAULT_TITLE_TEMPLATE
+  if (!params.title?.trim()) return params.siteTitle
+  return pattern
+    .replace(/:title/g, params.title.trim())
+    .replace(/:siteTitle/g, params.siteTitle)
+}
+
+export function titleTemplateFromMeta(meta: Record<string, unknown> | undefined): string | false | undefined {
+  const value = meta?.titleTemplate
+  if (value === false) return false
+  return typeof value === 'string' ? value : undefined
 }
 
 export function excerptFromHtml(html: string, maxLen = META_DESCRIPTION_MAX): string {
@@ -64,8 +89,11 @@ export function resolvePageHeadMeta(
   image?: string
   pageType: 'website' | 'article'
 } {
-  const title =
-    page?.title && page.title.length > 0 ? `${page.title} | ${site.title}` : site.title
+  const template = page?.titleTemplate ?? site.titleTemplate
+  const title = formatTitleTemplate(template, {
+    title: page?.title,
+    siteTitle: site.title
+  })
 
   let description =
     (page?.description && String(page.description).trim()) || site.description.trim()

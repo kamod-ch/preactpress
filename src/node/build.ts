@@ -75,10 +75,11 @@ export function pickMainEntry(
   throw new Error('preactpress: no entry chunk in manifest')
 }
 
-export function routeToOutPath(route: string): string {
+export function routeToOutPath(route: string, cleanUrls = true): string {
   if (route === '/') return 'index.html'
   const clean = route.replace(/^\//, '')
-  return path.join(clean, 'index.html')
+  if (cleanUrls) return path.join(clean, 'index.html')
+  return `${clean}.html`
 }
 
 export async function mapConcurrent<T, R>(
@@ -137,7 +138,7 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
           manifest: true,
           outDir: clientOut,
           emptyOutDir: true,
-          rollupOptions: {
+          rolldownOptions: {
             input: { main: CLIENT_ALIAS }
           }
         }
@@ -159,7 +160,7 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
           ssr: true,
           outDir: ssrOut,
           emptyOutDir: true,
-          rollupOptions: {
+          rolldownOptions: {
             input: ssrEntry(),
             output: {
               format: 'esm',
@@ -219,14 +220,15 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
       mainJs: main.file,
       mainCss: main.css
     })
-    const outFile = path.join(site.outDir, routeToOutPath(route))
+    const htmlPath = routeToOutPath(route, site.cleanUrls)
+    const outFile = path.join(site.outDir, htmlPath)
     const contentPath = result.page.kind === 'markdown' ? contentChunkPath(route) : undefined
     await writeRouteArtifacts({
       site,
       route,
       html,
       page: result.page,
-      htmlPath: routeToOutPath(route),
+      htmlPath,
       contentPath,
       previousCache,
       nextCache

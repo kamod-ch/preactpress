@@ -2,7 +2,7 @@ import { renderToString } from 'preact-render-to-string'
 import { App } from './app.js'
 import { pages } from 'virtual:preactpress-pages'
 import { i18n, site } from 'virtual:preactpress-site'
-import { resolvePageHeadMeta } from '../shared/pageMeta.js'
+import { resolvePageHeadMeta, titleTemplateFromMeta } from '../shared/pageMeta.js'
 import type { PageView } from './types.js'
 import { siteForRoute } from '../shared/locale.js'
 
@@ -39,6 +39,7 @@ export function render(routePath: string): RenderResult {
     page.kind === 'markdown'
       ? {
           title: page.title,
+          titleTemplate: titleTemplateFromMeta(page.meta),
           description: page.description,
           tags: page.tags,
           image: page.image,
@@ -48,6 +49,7 @@ export function render(routePath: string): RenderResult {
         }
       : {
           title: page.title,
+          titleTemplate: titleTemplateFromMeta(page.meta),
           description: page.description,
           tags: page.tags,
           image: page.image,

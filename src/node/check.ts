@@ -8,7 +8,17 @@ import { listTagIndexRoutes } from './tagIndex.js'
 import type { SiteConfig } from './siteConfig.js'
 import { normalizeRoute } from '../shared/route.js'
 import { PAGE_LAYOUTS, isDraftPage, isPageLayout, pageLayoutFromMeta } from '../shared/pageMeta.js'
+import { applyRouteRewrites } from '../shared/rewrites.js'
+import { allSidebarGroups, flattenNavLeafItems, flattenSidebarLeafItems } from '../shared/sidebar.js'
 import { parseFeatures, parseHero } from '../shared/pageChrome.js'
+import {
+  algoliaOptionsFromSearch,
+  isAlgoliaSearchEnabled,
+  resolveAlgoliaOptions,
+  validateAlgoliaCredentials
+} from '../shared/search.js'
+import type { SearchConfig } from '../shared/search.js'
+import type { SocialLink } from '../shared/socialIcons.js'
 
 export interface CheckIssue {
   level: 'error' | 'warning'
@@ -28,11 +38,22 @@ export async function check(root?: string): Promise<CheckResult> {
   const files = await scanContentFiles(site)
   const draftFiles = files.filter((file) => isDraftPage(readMarkdownMetadata(file.file).meta))
   const publishedFiles = files.filter((file) => !draftFiles.includes(file))
-  const routes = publishedFiles.map((file) => file.route).sort()
+  const issues: CheckIssue[] = []
+  const routeToFile = new Map(publishedFiles.map((file) => [file.route, file]))
+  try {
+    if (Object.keys(site.rewrites).length > 0) {
+      applyRouteRewrites(routeToFile, site.rewrites)
+    }
+  } catch (err) {
+    issues.push({
+      level: 'error',
+      message: err instanceof Error ? err.message : String(err)
+    })
+  }
+  const routes = [...routeToFile.keys()].sort()
   const routeSet = new Set(routes)
   const tagRoutes = await listTagIndexRoutes(site, routeSet)
   for (const tr of tagRoutes) routeSet.add(tr)
-  const issues: CheckIssue[] = []
 
   const requiredRoots = site.i18n
     ? site.i18n.locales.map((locale) => locale.prefix || '/')
@@ -49,6 +70,8 @@ export async function check(root?: string): Promise<CheckResult> {
   }
 
   checkConfiguredLinks(site, routeSet, issues)
+  checkSearchConfig(site, issues)
+  checkSocialLinks(site, issues)
   checkSeoDescriptions(site, publishedFiles, issues)
   checkPageLayouts(site, publishedFiles, issues)
   checkPageChrome(site, publishedFiles, routeSet, issues)
@@ -160,22 +183,76 @@ function checkConfiguredLinks(
   routes: Set<string>,
   issues: CheckIssue[]
 ): void {
-  for (const item of site.themeConfig.nav ?? []) {
+  for (const item of flattenNavLeafItems(site.themeConfig.nav)) {
     checkRouteLink(`nav item "${item.text}"`, item.link, routes, issues)
   }
-  for (const group of site.themeConfig.sidebar ?? []) {
-    for (const item of group.items) {
+  for (const group of allSidebarGroups(site.themeConfig.sidebar)) {
+    for (const item of flattenSidebarLeafItems(group.items)) {
       checkRouteLink(`sidebar item "${item.text}"`, item.link, routes, issues)
     }
   }
   for (const locale of site.i18n?.locales ?? []) {
-    for (const item of locale.themeConfig.nav ?? []) {
+    for (const item of flattenNavLeafItems(locale.themeConfig.nav)) {
       checkRouteLink(`${locale.key} nav item "${item.text}"`, item.link, routes, issues)
     }
-    for (const group of locale.themeConfig.sidebar ?? []) {
-      for (const item of group.items) {
+    for (const group of allSidebarGroups(locale.themeConfig.sidebar)) {
+      for (const item of flattenSidebarLeafItems(group.items)) {
         checkRouteLink(`${locale.key} sidebar item "${item.text}"`, item.link, routes, issues)
       }
+    }
+  }
+}
+
+function checkSearchConfig(site: SiteConfig, issues: CheckIssue[]): void {
+  checkOneSearchConfig('themeConfig.search', site.themeConfig.search, undefined, issues)
+  for (const locale of site.i18n?.locales ?? []) {
+    if (locale.themeConfig.search === undefined) continue
+    checkOneSearchConfig(
+      `${locale.key} themeConfig.search`,
+      locale.themeConfig.search,
+      locale.key,
+      issues
+    )
+  }
+}
+
+function checkOneSearchConfig(
+  label: string,
+  search: SearchConfig | undefined,
+  localeKey: string | undefined,
+  issues: CheckIssue[]
+): void {
+  if (!isAlgoliaSearchEnabled(search)) return
+  const options = algoliaOptionsFromSearch(search)
+  if (!options) return
+  const resolved = resolveAlgoliaOptions(options, localeKey)
+  if (!validateAlgoliaCredentials(resolved).valid) {
+    issues.push({
+      level: 'warning',
+      message: `${label}: Algolia search is enabled but appId, apiKey, or indexName is missing`
+    })
+  }
+}
+
+function checkSocialLinks(site: SiteConfig, issues: CheckIssue[]): void {
+  checkOneSocialLinks('themeConfig.socialLinks', site.themeConfig.socialLinks, issues)
+  for (const locale of site.i18n?.locales ?? []) {
+    if (!locale.themeConfig.socialLinks?.length) continue
+    checkOneSocialLinks(`${locale.key} themeConfig.socialLinks`, locale.themeConfig.socialLinks, issues)
+  }
+}
+
+function checkOneSocialLinks(
+  label: string,
+  links: SocialLink[] | undefined,
+  issues: CheckIssue[]
+): void {
+  for (const [index, link] of (links ?? []).entries()) {
+    if (!/^https?:\/\//i.test(link.link)) {
+      issues.push({
+        level: 'warning',
+        message: `${label}[${index}] should use an http(s) URL (got "${link.link}")`
+      })
     }
   }
 }

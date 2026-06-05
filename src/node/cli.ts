@@ -38,8 +38,8 @@ function printUsage(): void {
       '            Use --template docs or --template magazine for larger starters',
       '',
       c.dim('In this repo (package root, no site):'),
-      '  pnpm run demo          Dev server for the bundled ./template site',
-      '  pnpm run demo:preview  Build + preview ./template (production output)',
+      '  pnpm run dev           Dev server for the bundled ./templates/default site',
+      '  pnpm run preview       Build + preview ./templates/default (production output)',
       '',
       c.dim('Options:'),
       '  --port <n>   Port for dev / preview',
@@ -56,7 +56,7 @@ function printUsage(): void {
 function resolveRootArg(cmd: string, rootArg: string | undefined): string | undefined {
   if (rootArg || !isPackageRoot(process.cwd())) return rootArg
   if (cmd === 'dev' || cmd === 'build' || cmd === 'preview' || cmd === 'serve' || cmd === 'check') {
-    const templateRoot = path.join(PACKAGE_ROOT, 'template')
+    const templateRoot = path.join(PACKAGE_ROOT, 'templates', 'default')
     console.log(
       c.yellow(
         `No site root was passed from the PreactPress package root; using bundled template site at ${templateRoot}.`
@@ -93,7 +93,7 @@ async function main(): Promise<void> {
     printUsage()
     console.log(
       c.yellow(
-        'No site command was run because this directory contains the PreactPress CLI sources. Use `pnpm run demo` for the bundled starter site.'
+        'No site command was run because this directory contains the PreactPress CLI sources. Use `pnpm run dev` for the bundled starter site.'
       )
     )
     return

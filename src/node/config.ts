@@ -47,7 +47,7 @@ export async function resolveUserConfig(
     const resolvedRoot = path.resolve(root)
     const inToolPackage = sameProjectRoot(resolvedRoot, PACKAGE_ROOT)
     const hint = inToolPackage
-      ? 'You are in the preactpress package (CLI sources), not a content site. From this folder run `pnpm run demo` to start the bundled `template/` site, or `pnpm run preactpress -- init <dir>` to scaffold a new site elsewhere.'
+      ? 'You are in the preactpress package (CLI sources), not a content site. From this folder run `pnpm run dev` to start the bundled `templates/default/` site, or `pnpm run preactpress -- init <dir>` to scaffold a new site elsewhere.'
       : 'Run "preactpress init" to scaffold a site.'
     throw new Error(`preactpress: missing config at ${configPath}. ${hint}`)
   }
@@ -89,12 +89,15 @@ export async function resolveConfig(
     description: user.site?.description ?? '',
     base: normalizeBase(user.site?.base ?? '/'),
     lang: user.site?.lang ?? 'en',
-    url: user.site?.url ? normalizeSiteUrl(user.site.url) : undefined
+    url: user.site?.url ? normalizeSiteUrl(user.site.url) : undefined,
+    titleTemplate: user.site?.titleTemplate
   }
   const markdown = {
     html: user.markdown?.html ?? false,
     linkify: user.markdown?.linkify ?? true,
-    typographer: user.markdown?.typographer ?? true
+    typographer: user.markdown?.typographer ?? true,
+    emoji: user.markdown?.emoji ?? false,
+    math: user.markdown?.math ?? false
   }
 
   const themePath = user.theme ?? DEFAULT_THEME_LAYOUT
@@ -103,6 +106,10 @@ export async function resolveConfig(
   const baseConfig: SiteConfig = {
     root,
     srcDir,
+    srcExclude: user.srcExclude ?? [],
+    cleanUrls: user.cleanUrls ?? true,
+    rewrites: user.rewrites ?? {},
+    lastUpdatedGit: user.lastUpdatedGit ?? false,
     configDir,
     outDir,
     cacheDir,

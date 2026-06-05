@@ -1,6 +1,6 @@
 # PreactPress starter site
 
-This folder was scaffolded with `preactpress init`. It doubles as the bundled docs demo (`pnpm run demo` from the package repo).
+This folder was scaffolded with `preactpress init --template docs`.
 
 ## Commands
 

@@ -34,6 +34,7 @@ PreactPress is a **Vite + Preact static site generator** with a VitePress-like w
 | Content | Lazy Markdown payloads (`preactpress-content/*.json`) |
 | Content | Auto-generated tag indexes (`/tags/<slug>`) |
 | Theme | Default theme: nav, sidebar, search, outline, dark mode, prev/next |
+| Theme | Algolia DocSearch (`themeConfig.search.provider: 'algolia'`), `socialLinks` |
 | Theme | Custom theme via `theme: './Layout.tsx'` |
 | i18n | Locale folders (`de/`, …), locale-scoped nav/search/tags |
 | i18n | Language switcher, `hreflang` alternates (with `site.url`) |
@@ -43,6 +44,12 @@ PreactPress is a **Vite + Preact static site generator** with a VitePress-like w
 | DX | Minimal bundled starter + optional `docs` and `magazine` init templates |
 | Docs | README for site authors, CONTRIBUTING for CLI maintainers |
 | Docs | Docs starter template with tutorial content (EN + DE) |
+| Markdown | Custom containers (`::: tip`, `::: warning`, `::: details`, …) |
+| Markdown | GFM alerts (`> [!NOTE]`, …), code line highlighting, snippet import (`<<< @/…`) |
+| Markdown | Custom heading IDs, emoji, opt-in math, `[[toc]]`, code groups, `@include` |
+| Config | `titleTemplate`, per-page `head`, `srcExclude`, path-based `sidebar` |
+| Config | `lastUpdatedGit` opt-in; Shiki languages loaded on demand |
+| Docs | Template pages: Commands, Configuration (EN + DE) |
 
 ---
 
@@ -52,14 +59,14 @@ High impact for docs sites; moderate effort. Goal: authors coming from VitePress
 
 | Priority | Feature | Status | Notes |
 | --- | --- | --- | --- |
-| P1 | Custom Markdown containers (`::: tip`, `::: warning`, …) | 📋 | Most-requested docs feature vs. VitePress |
-| P1 | `titleTemplate` (site + per-page override) | 📋 | Today: fixed `{title} \| {site.title}` |
-| P1 | Per-page `head` in frontmatter | 📋 | Global `head` + `transformHead` exist |
-| P1 | `srcExclude` (glob patterns for non-page Markdown) | 📋 | e.g. exclude `**/README.md`, `**/TODO.md` |
-| P2 | Path-based sidebar (`sidebar: { '/guide/': [...] }`) | 📋 | Single global sidebar today |
-| P2 | Git-based `lastUpdated` (opt-in) | 📋 | Today: file `mtime` only |
-| P2 | Expand Shiki language loading (avoid hardcoded list) | 📋 | Fallback to plain `<pre>` on unknown langs |
-| P2 | Template docs pages: Commands, Configuration | 📋 | Extend dogfooding starter |
+| P1 | Custom Markdown containers (`::: tip`, `::: warning`, …) | ✅ | v0.1.x — `tip`, `warning`, `danger`, `info`, `note`, `details`, … |
+| P1 | `titleTemplate` (site + per-page override) | ✅ | v0.1.x — `site.titleTemplate`, frontmatter override, `false` for raw title |
+| P1 | Per-page `head` in frontmatter | ✅ | v0.1.x — merged after global `head` / `transformHead` |
+| P1 | `srcExclude` (glob patterns for non-page Markdown) | ✅ | v0.1.x — glob patterns in config, e.g. `**/README.md` |
+| P2 | Path-based sidebar (`sidebar: { '/guide/': [...] }`) | ✅ | v0.1.x — longest prefix match; array form unchanged |
+| P2 | Git-based `lastUpdated` (opt-in) | ✅ | v0.1.x — `lastUpdatedGit: true` in config |
+| P2 | Expand Shiki language loading (avoid hardcoded list) | ✅ | v0.1.x — languages loaded on demand per page |
+| P2 | Template docs pages: Commands, Configuration | ✅ | v0.1.x — EN + DE in `templates/docs` |
 
 ---
 
@@ -69,15 +76,15 @@ Improve technical writing ergonomics without turning every `.md` file into a JS 
 
 | Priority | Feature | Status | Notes |
 | --- | --- | --- | --- |
-| P2 | GFM alerts (`> [!NOTE]`, `> [!WARNING]`, …) | 📋 | Modern callout syntax |
-| P2 | Code line highlighting (`{4}`, `[!code highlight]`) | 📋 | Common in API docs |
-| P2 | Snippet import (`<<< @/filepath`) | 📋 | DRY code examples |
-| P3 | Custom heading anchor IDs (`# Title {#my-id}`) | 📋 | |
-| P3 | Emoji (`:tada:`) | 📋 | |
-| P3 | Math (opt-in, e.g. MathJax) | 📋 | |
-| P3 | `[[toc]]` inline table of contents | 📋 | Theme outline covers h2/h3 today |
-| P3 | Code groups (`::: code-group`) | 📋 | |
-| P3 | Markdown file inclusion | 📋 | |
+| P2 | GFM alerts (`> [!NOTE]`, `> [!WARNING]`, …) | ✅ | v0.1.x — converted to container markup |
+| P2 | Code line highlighting (`{4}`, `[!code highlight]`) | ✅ | v0.1.x — Shiki transformers (meta + notation) |
+| P2 | Snippet import (`<<< @/filepath`) | ✅ | v0.1.x — `@/` = srcDir, regions via `#name` |
+| P3 | Custom heading anchor IDs (`# Title {#my-id}`) | ✅ | v0.1.x — `{#id}` suffix on headings |
+| P3 | Emoji (`:tada:`) | ✅ | v0.1.x — `markdown.emoji` (default on) |
+| P3 | Math (opt-in, e.g. MathJax) | ✅ | v0.1.x — opt-in `markdown.math` |
+| P3 | `[[toc]]` inline table of contents | ✅ | v0.1.x — h2/h3 links at marker position |
+| P3 | Code groups (`::: code-group`) | ✅ | v0.1.x — CSS tab UI, `[label]` on fences |
+| P3 | Markdown file inclusion | ✅ | v0.1.x — `<!--@include: path-->` with regions |
 
 ---
 
@@ -87,17 +94,17 @@ Default theme grows carefully; complex marketing layouts stay in custom themes.
 
 | Priority | Feature | Status | Notes |
 | --- | --- | --- | --- |
-| P2 | `themeConfig.logo` (image URL; light/dark variants) | ✅ | Image URL shipped; light/dark still 📋 |
+| P2 | `themeConfig.logo` (image URL; light/dark variants) | ✅ | v0.1.x — string or `{ light, dark }`; follows theme toggle |
 | P3 | Home/page layouts (`layout: home` / `layout: page` frontmatter) | ✅ | Default theme supports hero, features, page chrome toggles, and unstyled page content |
-| P2 | Nav dropdowns / nested nav items | 📋 | Flat `{ text, link }` only |
-| P2 | Collapsible sidebar groups | 📋 | |
-| P2 | Nested sidebar items | 📋 | One group → items level today |
-| P2 | Configurable outline levels / label | ✅ | Page frontmatter supports `outline: false`, number, range, and `deep`; label still follows locale |
-| P2 | Configurable UI labels (beyond hardcoded EN/DE) | 📋 | `labelsForLang()` in default theme |
-| P2 | `cleanUrls` flag + hosting documentation | 📋 | Output is already `*/index.html` |
-| P2 | Route `rewrites` | 📋 | |
-| P3 | Algolia DocSearch integration | 💡 | Local JSON search works today |
-| P3 | `socialLinks` in default theme | 💡 | |
+| P2 | Nav dropdowns / nested nav items | ✅ | v0.1.x — `items` on nav entries |
+| P2 | Collapsible sidebar groups | ✅ | v0.1.x — `collapsed` on sidebar groups |
+| P2 | Nested sidebar items | ✅ | v0.1.x — recursive `items` on sidebar entries |
+| P2 | Configurable outline levels / label | ✅ | Page frontmatter supports `outline: false`, number, range, and `deep`; `themeConfig.labels.onThisPage` overrides label |
+| P2 | Configurable UI labels (beyond hardcoded EN/DE) | ✅ | v0.1.x — `themeConfig.labels` merged with EN/DE defaults |
+| P2 | `cleanUrls` flag + hosting documentation | ✅ | v0.1.x — default `true`; routing docs cover hosting |
+| P2 | Route `rewrites` | ✅ | v0.1.x — map public routes to existing content |
+| P3 | Algolia DocSearch integration | ✅ | v0.1.x — `themeConfig.search.provider: 'algolia'` |
+| P3 | `socialLinks` in default theme | ✅ | v0.1.x — nav bar icons (built-in + custom SVG) |
 
 ---
 
@@ -153,7 +160,7 @@ Features where PreactPress should stay **ahead** of or **distinct from** VitePre
 | Maturity | Early (0.1.x) | Production (powers Vite, Vue, Pinia docs) |
 | Default theme | Small, intentional | Large, feature-rich |
 | Markdown extensions | Basic + Shiki | Extensive (containers, code groups, includes, …) |
-| Unique extras | Tags, RSS, `check`, lazy Markdown | Algolia, home layout, data loaders, MPA mode |
+| Unique extras | Tags, RSS, `check`, lazy Markdown | Home layout, data loaders, MPA mode |
 
 For a detailed gap analysis, see the discussion that led to this roadmap (feature matrix by category: core, markdown, theme, i18n, SEO, DX).
 

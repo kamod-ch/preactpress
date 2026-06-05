@@ -1,4 +1,5 @@
 import type { HeadTag, SiteConfig } from './siteConfig.js'
+import { headTagsFromMeta } from '../shared/pageHead.js'
 import { parse as parseHtml } from 'node-html-parser'
 import { PREACTPRESS_THEME_SCRIPT } from '../shared/theme.js'
 import { canonicalUrl, publicUrl } from '../shared/url.js'
@@ -98,8 +99,10 @@ export async function collectHeadTags(opts: {
   image?: string
   pageType?: 'website' | 'article'
   pageData?: PageView
+  pageHead?: HeadTag[]
 }): Promise<string> {
   const { site, route, title, description, tags = [], image, pageType, pageData } = opts
+  const pageHead = opts.pageHead ?? headTagsFromMeta(pageData?.meta)
   const activeSite = siteForRoute(site.site, route, site.i18n)
   const defaultHead = buildDefaultHeadTags({
     site,
@@ -114,7 +117,7 @@ export async function collectHeadTags(opts: {
   const transformed = site.transformHead
     ? await site.transformHead({ route, title, description, tags, site: activeSite })
     : []
-  return [...defaultHead, ...site.head, ...transformed]
+  return [...defaultHead, ...site.head, ...pageHead, ...transformed]
     .filter(
       (tag) =>
         tag[1] &&
@@ -143,7 +146,16 @@ export async function pageHtml(opts: {
   const cssTags = renderProductionStylesheetLinks(mainCss, base)
   const scriptSrc = escapeHtml(publicUrl(base, mainJs))
   const themeScriptSrc = escapeHtml(publicUrl(base, PREACTPRESS_THEME_SCRIPT))
-  const headTags = await collectHeadTags({ site, route, title, description, tags, image, pageType, pageData })
+  const headTags = await collectHeadTags({
+    site,
+    route,
+    title,
+    description,
+    tags,
+    image,
+    pageType,
+    pageData
+  })
   const pageDataTemplate = renderPageDataTemplate(pageData)
 
   const activeSite = siteForRoute(site.site, route, site.i18n)
