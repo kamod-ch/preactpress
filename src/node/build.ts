@@ -26,6 +26,7 @@ import {
 } from './buildCache.js'
 import { writeAtomFeed } from './feed.js'
 import { localeFromRoute, localizedRouteForLocale } from '../shared/locale.js'
+import { applyTransformHtml, applyTransformPageData, invokeBuildEnd } from './hooks.js'
 
 export { publicUrl } from './html.js'
 
@@ -178,7 +179,8 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
 
   const ssrAbs = path.join(ssrOut, 'entry-ssr.js')
   const mod = (await import(pathToFileURL(ssrAbs).href)) as {
-    render: (route: string) => {
+    resolveRoutePage: (route: string) => PageView
+    renderFromPage: (route: string, page: PageView) => {
       body: string
       title: string
       description: string
@@ -206,20 +208,26 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
   const previousCache = await readBuildCache(site.cacheDir)
   const nextCache: BuildCache = { routes: {} }
   const renderedPages = await mapConcurrent(routes, 12, async (route) => {
-    const result = mod.render(route)
-    const html = await pageHtml({
+    const page = await applyTransformPageData(site, route, mod.resolveRoutePage(route))
+    const result = mod.renderFromPage(route, page)
+    const html = await applyTransformHtml(
       site,
-      body: result.body,
-      title: result.title,
-      description: result.description,
-      tags: result.tags,
-      image: result.image,
-      pageType: result.pageType,
-      pageData: result.page,
+      await pageHtml({
+        site,
+        body: result.body,
+        title: result.title,
+        description: result.description,
+        tags: result.tags,
+        image: result.image,
+        pageType: result.pageType,
+        pageData: result.page,
+        route,
+        mainJs: main.file,
+        mainCss: main.css
+      }),
       route,
-      mainJs: main.file,
-      mainCss: main.css
-    })
+      result.page
+    )
     const htmlPath = routeToOutPath(route, site.cleanUrls)
     const outFile = path.join(site.outDir, htmlPath)
     const contentPath = result.page.kind === 'markdown' ? contentChunkPath(route) : undefined
@@ -236,23 +244,29 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
     return { route, page: result.page }
   })
 
-  const notFound = mod.render('/404')
+  const notFoundPage = await applyTransformPageData(site, '/404', mod.resolveRoutePage('/404'))
+  const notFound = mod.renderFromPage('/404', notFoundPage)
   await writeRouteArtifacts({
     site,
     route: '/404',
-    html: await pageHtml({
+    html: await applyTransformHtml(
       site,
-      body: notFound.body,
-      title: notFound.title,
-      description: notFound.description,
-      tags: notFound.tags,
-      image: notFound.image,
-      pageType: notFound.pageType,
-      pageData: notFound.page,
-      route: '/404',
-      mainJs: main.file,
-      mainCss: main.css
-    }),
+      await pageHtml({
+        site,
+        body: notFound.body,
+        title: notFound.title,
+        description: notFound.description,
+        tags: notFound.tags,
+        image: notFound.image,
+        pageType: notFound.pageType,
+        pageData: notFound.page,
+        route: '/404',
+        mainJs: main.file,
+        mainCss: main.css
+      }),
+      '/404',
+      notFound.page
+    ),
     page: notFound.page,
     htmlPath: '404.html',
     contentPath: notFound.page.kind === 'markdown' ? contentChunkPath('/404') : undefined,
@@ -272,6 +286,7 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
       typeof site.build.feed === 'object' ? site.build.feed.limit : undefined
     )
   }
+  await invokeBuildEnd(site, renderedPages)
 }
 
 async function copyClientAssets(fromDir: string, toDir: string): Promise<void> {

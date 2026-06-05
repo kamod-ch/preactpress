@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'preact/hooks'
 import Layout from 'virtual:preactpress-layout'
 import { pagesMeta, routes } from 'virtual:preactpress-pages'
-import { i18n, site, themeConfig } from 'virtual:preactpress-site'
+import { i18n, mpa, site, themeConfig } from 'virtual:preactpress-site'
 import type { PageView } from './types.js'
 import type { ResolvedLocale } from '../node/siteConfig.js'
 import { usePageHead } from './usePageHead.js'
 import { normalizeRoute, routeFromPathname } from '../shared/route.js'
 import { loadPage, prefetchPage, seedPage } from './loadPage.js'
+import { setupViewportPrefetch } from './prefetchLinks.js'
 import {
   localeFromRoute,
   localizedRouteForLocale,
@@ -92,6 +93,12 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
   }, [activeSite.description, currentRoute])
 
   useEffect(() => {
+    const prefetch = (route: string) => prefetchPage(route, site.base)
+    const stopViewportPrefetch = setupViewportPrefetch(routeFromHref, prefetch)
+    if (mpa) {
+      return () => stopViewportPrefetch()
+    }
+
     const onPopState = () => setCurrentRoute(routeFromLocation())
     const onClick = (event: MouseEvent) => {
       if (
@@ -122,17 +129,18 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
       const link = anchorFromEvent(event)
       if (!link) return
       const route = routeFromHref(link.href)
-      if (route) prefetchPage(route, site.base)
+      if (route) prefetch(route)
     }
     window.addEventListener('popstate', onPopState)
     document.addEventListener('click', onClick)
     document.addEventListener('mouseenter', onMouseEnter, true)
     return () => {
+      stopViewportPrefetch()
       window.removeEventListener('popstate', onPopState)
       document.removeEventListener('click', onClick)
       document.removeEventListener('mouseenter', onMouseEnter, true)
     }
-  }, [currentRoute])
+  }, [currentRoute, mpa])
 
   useEffect(() => {
     if (currentRoute !== normalizeRoute(routePath)) {

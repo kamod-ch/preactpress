@@ -1,4 +1,5 @@
 import type { Logger } from 'vite'
+import type { PageView } from '../client/types.js'
 import type { PageOutlineConfig, ThemeableImage } from '../shared/pageChrome.js'
 import type { SearchConfig } from '../shared/search.js'
 import type { SocialLink } from '../shared/socialIcons.js'
@@ -108,6 +109,27 @@ export interface BuildConfig {
   feed?: boolean | { limit?: number }
 }
 
+export type IgnoreDeadLinks =
+  | boolean
+  | string[]
+  | ((href: string, ctx: { from: string; route?: string }) => boolean)
+
+export interface TransformPageDataContext {
+  route: string
+  site: SiteData
+}
+
+export interface TransformHtmlContext {
+  route: string
+  site: SiteData
+  page?: PageView
+}
+
+export interface BuildEndContext {
+  site: SiteConfig
+  pages: Array<{ route: string; page: PageView }>
+}
+
 export interface ResolvedLocale {
   key: string
   label: string
@@ -134,6 +156,16 @@ export interface UserConfig {
   cleanUrls?: boolean
   /** Map public routes to existing content routes, e.g. `{ '/docs': '/guide' }`. */
   rewrites?: Record<string, string>
+  /**
+   * Skip dead-link errors in `preactpress check`.
+   * `true`, glob patterns (`'/wip/*'`), or a filter function.
+   */
+  ignoreDeadLinks?: IgnoreDeadLinks
+  /**
+   * Multi-page app mode: markdown pages ship without the client bundle and use
+   * full page loads. MDX pages still hydrate for interactive components.
+   */
+  mpa?: boolean
   /** Use git commit time for lastUpdated when enabled in theme (falls back to file mtime). */
   lastUpdatedGit?: boolean
   outDir?: string
@@ -152,6 +184,15 @@ export interface UserConfig {
     tags: string[]
     site: SiteData
   }) => HeadTag[] | Promise<HeadTag[]>
+  /** Mutate per-page data before SSR and serialization (dev + build). */
+  transformPageData?: (
+    page: PageView,
+    ctx: TransformPageDataContext
+  ) => PageView | void | Promise<PageView | void>
+  /** Transform the final HTML document for a route (dev + build). */
+  transformHtml?: (html: string, ctx: TransformHtmlContext) => string | Promise<string>
+  /** Called once after a production build finishes. */
+  buildEnd?: (ctx: BuildEndContext) => void | Promise<void>
   build?: BuildConfig
   vite?: import('vite').UserConfig
 }
@@ -162,6 +203,8 @@ export interface SiteConfig {
   srcExclude: string[]
   cleanUrls: boolean
   rewrites: Record<string, string>
+  ignoreDeadLinks?: IgnoreDeadLinks
+  mpa: boolean
   lastUpdatedGit: boolean
   configDir: string
   outDir: string
@@ -173,6 +216,9 @@ export interface SiteConfig {
   markdown: Required<MarkdownConfig>
   head: HeadTag[]
   transformHead?: UserConfig['transformHead']
+  transformPageData?: UserConfig['transformPageData']
+  transformHtml?: UserConfig['transformHtml']
+  buildEnd?: UserConfig['buildEnd']
   build: Required<BuildConfig>
   vite: import('vite').UserConfig
   logger: Logger

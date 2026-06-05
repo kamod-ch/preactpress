@@ -1,0 +1,36 @@
+{
+  "kind": "markdown",
+  "meta": {
+    "title": "Commands",
+    "description": "PreactPress CLI reference for local development and production builds"
+  },
+  "html": "<p>PreactPress ships a small CLI. Run commands from your site root (where <code>.preactpress/config.ts</code> lives).</p>\n<h2 id=\"development\" class=\"pp-heading\">Development<a class=\"pp-heading-anchor\" href=\"#development\" aria-label=\"Link to this section\">#</a></h2>\n<pre class=\"shiki shiki-themes github-light github-dark\" style=\"background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#6F42C1;--shiki-dark:#B392F0\">pnpm</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> exec</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> preactpress</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> dev</span></span></code></pre><p>Starts Vite with SSR, hot reload, and the same HTML head shape as production.</p>\n<h2 id=\"production\" class=\"pp-heading\">Production<a class=\"pp-heading-anchor\" href=\"#production\" aria-label=\"Link to this section\">#</a></h2>\n<pre class=\"shiki shiki-themes github-light github-dark\" style=\"background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#6F42C1;--shiki-dark:#B392F0\">pnpm</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> exec</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> preactpress</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> build</span></span>\n<span class=\"line\"><span style=\"color:#6F42C1;--shiki-dark:#B392F0\">pnpm</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> exec</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> preactpress</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> preview</span></span></code></pre><p><code>build</code> writes static HTML to <code>outDir</code> (default <code>dist/</code>). <code>preview</code> serves that folder locally — not for production hosting.</p>\n<h2 id=\"project-setup\" class=\"pp-heading\">Project setup<a class=\"pp-heading-anchor\" href=\"#project-setup\" aria-label=\"Link to this section\">#</a></h2>\n<pre class=\"shiki shiki-themes github-light github-dark\" style=\"background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#6F42C1;--shiki-dark:#B392F0\">pnpm</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> exec</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> preactpress</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> init</span></span>\n<span class=\"line\"><span style=\"color:#6F42C1;--shiki-dark:#B392F0\">pnpm</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> exec</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> preactpress</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> init</span><span style=\"color:#005CC5;--shiki-dark:#79B8FF\"> --template</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> docs</span></span></code></pre><p>Scaffolds a new site. The <code>docs</code> template includes this guide, i18n examples, and reference pages.</p>\n<h2 id=\"validation\" class=\"pp-heading\">Validation<a class=\"pp-heading-anchor\" href=\"#validation\" aria-label=\"Link to this section\">#</a></h2>\n<pre class=\"shiki shiki-themes github-light github-dark\" style=\"background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#6F42C1;--shiki-dark:#B392F0\">pnpm</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> exec</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> preactpress</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> check</span></span></code></pre><p>Validates config, route collisions, nav/sidebar links, internal Markdown links, and draft pages before you deploy.</p>\n<div class=\"pp-container pp-container-tip\"><p class=\"pp-container-title\">TIP</p><div class=\"pp-container-body\"><p>Add <code>check</code> to CI so broken sidebar links fail the pipeline before merge.</p>\n</div></div>",
+  "title": "Commands",
+  "description": "PreactPress CLI reference for local development and production builds",
+  "tags": [],
+  "pageType": "website",
+  "headings": [
+    {
+      "id": "development",
+      "text": "Development",
+      "level": 2
+    },
+    {
+      "id": "production",
+      "text": "Production",
+      "level": 2
+    },
+    {
+      "id": "project-setup",
+      "text": "Project setup",
+      "level": 2
+    },
+    {
+      "id": "validation",
+      "text": "Validation",
+      "level": 2
+    }
+  ],
+  "relativePath": "guide/commands.md",
+  "lastUpdated": "2026-06-05T05:42:40.517Z"
+}

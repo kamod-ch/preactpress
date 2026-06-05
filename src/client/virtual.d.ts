@@ -69,6 +69,7 @@ declare module 'virtual:preactpress-pages' {
 }
 
 declare module 'virtual:preactpress-site' {
+  export const mpa: boolean
   export const site: {
     title: string
     description: string

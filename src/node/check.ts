@@ -3,6 +3,7 @@ import path from 'node:path'
 import c from 'picocolors'
 import { resolveConfig } from './config.js'
 import { fileHrefToRoute, scanContentFiles } from './content.js'
+import { resolveDynamicRoutes } from './dynamicRoutes.js'
 import { readMarkdownMetadata } from './markdown.js'
 import { listTagIndexRoutes } from './tagIndex.js'
 import type { SiteConfig } from './siteConfig.js'
@@ -19,6 +20,7 @@ import {
 } from '../shared/search.js'
 import type { SearchConfig } from '../shared/search.js'
 import type { SocialLink } from '../shared/socialIcons.js'
+import { shouldIgnoreDeadLink } from '../shared/deadLinks.js'
 
 export interface CheckIssue {
   level: 'error' | 'warning'
@@ -50,7 +52,8 @@ export async function check(root?: string): Promise<CheckResult> {
       message: err instanceof Error ? err.message : String(err)
     })
   }
-  const routes = [...routeToFile.keys()].sort()
+  const dynamicRoutes = await resolveDynamicRoutes(site)
+  const routes = [...new Set([...routeToFile.keys(), ...dynamicRoutes.map((entry) => entry.route)])].sort()
   const routeSet = new Set(routes)
   const tagRoutes = await listTagIndexRoutes(site, routeSet)
   for (const tr of tagRoutes) routeSet.add(tr)
@@ -69,12 +72,12 @@ export async function check(root?: string): Promise<CheckResult> {
     })
   }
 
-  checkConfiguredLinks(site, routeSet, issues)
+  checkConfiguredLinks(site, routeSet, issues, site.ignoreDeadLinks)
   checkSearchConfig(site, issues)
   checkSocialLinks(site, issues)
   checkSeoDescriptions(site, publishedFiles, issues)
   checkPageLayouts(site, publishedFiles, issues)
-  checkPageChrome(site, publishedFiles, routeSet, issues)
+  checkPageChrome(site, publishedFiles, routeSet, issues, site.ignoreDeadLinks)
   for (const file of draftFiles) {
     issues.push({
       level: 'warning',
@@ -83,14 +86,16 @@ export async function check(root?: string): Promise<CheckResult> {
   }
 
   for (const file of publishedFiles) {
+    const rel = path.relative(site.srcDir, file.file)
     const raw = await fs.readFile(file.file, 'utf8')
     for (const href of extractLinks(raw)) {
       const target = fileHrefToRoute(href, file.route)
       if (!target) continue
       if (!routeSet.has(target)) {
+        if (shouldIgnoreDeadLink(href, site.ignoreDeadLinks, { from: rel, route: target })) continue
         issues.push({
           level: 'error',
-          message: `${path.relative(site.srcDir, file.file)} links to missing page ${href} (${target})`
+          message: `${rel} links to missing page ${href} (${target})`
         })
       }
     }
@@ -119,7 +124,8 @@ function checkPageChrome(
   site: SiteConfig,
   files: Awaited<ReturnType<typeof scanContentFiles>>,
   routes: Set<string>,
-  issues: CheckIssue[]
+  issues: CheckIssue[],
+  ignoreDeadLinks: SiteConfig['ignoreDeadLinks']
 ): void {
   for (const file of files) {
     const meta = readMarkdownMetadata(file.file).meta
@@ -134,12 +140,12 @@ function checkPageChrome(
 
     const hero = parseHero(meta.hero)
     for (const action of hero?.actions ?? []) {
-      checkRouteLink(`${rel} hero action "${action.text}"`, action.link, routes, issues)
+      checkRouteLink(`${rel} hero action "${action.text}"`, action.link, routes, issues, ignoreDeadLinks, rel)
     }
 
     for (const feature of parseFeatures(meta.features)) {
       if (feature.link) {
-        checkRouteLink(`${rel} feature "${feature.title}"`, feature.link, routes, issues)
+        checkRouteLink(`${rel} feature "${feature.title}"`, feature.link, routes, issues, ignoreDeadLinks, rel)
       }
     }
   }
@@ -181,23 +187,24 @@ function checkSeoDescriptions(
 function checkConfiguredLinks(
   site: SiteConfig,
   routes: Set<string>,
-  issues: CheckIssue[]
+  issues: CheckIssue[],
+  ignoreDeadLinks: SiteConfig['ignoreDeadLinks']
 ): void {
   for (const item of flattenNavLeafItems(site.themeConfig.nav)) {
-    checkRouteLink(`nav item "${item.text}"`, item.link, routes, issues)
+    checkRouteLink(`nav item "${item.text}"`, item.link, routes, issues, ignoreDeadLinks, 'themeConfig.nav')
   }
   for (const group of allSidebarGroups(site.themeConfig.sidebar)) {
     for (const item of flattenSidebarLeafItems(group.items)) {
-      checkRouteLink(`sidebar item "${item.text}"`, item.link, routes, issues)
+      checkRouteLink(`sidebar item "${item.text}"`, item.link, routes, issues, ignoreDeadLinks, 'themeConfig.sidebar')
     }
   }
   for (const locale of site.i18n?.locales ?? []) {
     for (const item of flattenNavLeafItems(locale.themeConfig.nav)) {
-      checkRouteLink(`${locale.key} nav item "${item.text}"`, item.link, routes, issues)
+      checkRouteLink(`${locale.key} nav item "${item.text}"`, item.link, routes, issues, ignoreDeadLinks, `${locale.key}.nav`)
     }
     for (const group of allSidebarGroups(locale.themeConfig.sidebar)) {
       for (const item of flattenSidebarLeafItems(group.items)) {
-        checkRouteLink(`${locale.key} sidebar item "${item.text}"`, item.link, routes, issues)
+        checkRouteLink(`${locale.key} sidebar item "${item.text}"`, item.link, routes, issues, ignoreDeadLinks, `${locale.key}.sidebar`)
       }
     }
   }
@@ -261,11 +268,14 @@ function checkRouteLink(
   label: string,
   link: string,
   routes: Set<string>,
-  issues: CheckIssue[]
+  issues: CheckIssue[],
+  ignoreDeadLinks: SiteConfig['ignoreDeadLinks'],
+  from: string
 ): void {
   if (/^(?:[a-z]+:)?\/\//i.test(link) || /^(?:mailto|tel):/i.test(link)) return
   const route = normalizeRoute(link)
   if (!routes.has(route)) {
+    if (shouldIgnoreDeadLink(link, ignoreDeadLinks, { from, route })) return
     issues.push({
       level: 'error',
       message: `${label} points to missing route ${link} (${route})`

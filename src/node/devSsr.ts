@@ -5,6 +5,7 @@ import type { ViteDevServer } from 'vite'
 import { routeFromPathname } from '../shared/route.js'
 import { collectDevStylesheetHrefs } from './devCss.js'
 import { injectDevPageDocument } from './html.js'
+import { applyTransformHtml, applyTransformPageData } from './hooks.js'
 import { PACKAGE_ROOT } from './packageRoot.js'
 import type { SiteConfig } from './siteConfig.js'
 import type { PageView } from '../client/types.js'
@@ -63,7 +64,7 @@ export function createDevSsrMiddleware(
         const mod = (await server.ssrLoadModule(ssrId)) as {
           resolveRoutePage: (routePath: string) => PageView
         }
-        const page = mod.resolveRoutePage(route)
+        const page = await applyTransformPageData(site, route, mod.resolveRoutePage(route))
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json; charset=utf-8')
         if (req.method === 'HEAD') {
@@ -89,7 +90,8 @@ export function createDevSsrMiddleware(
         site.site.base
       )
       const mod = (await server.ssrLoadModule(ssrId)) as {
-        render: (routePath: string) => {
+        resolveRoutePage: (routePath: string) => PageView
+        renderFromPage: (routePath: string, page: PageView) => {
           body: string
           title: string
           description: string
@@ -99,21 +101,28 @@ export function createDevSsrMiddleware(
           page: PageView
         }
       }
-      const { body, title, description, tags, image, pageType, page } = mod.render(route)
+      const page = await applyTransformPageData(site, route, mod.resolveRoutePage(route))
+      const { body, title, description, tags, image, pageType, page: renderedPage } =
+        mod.renderFromPage(route, page)
       const indexUrl = site.site.base === '/' ? '/' : `${site.site.base}/`
       const transformed = await server.transformIndexHtml(indexUrl, cache.indexTemplate)
-      const html = await injectDevPageDocument(transformed, {
+      const html = await applyTransformHtml(
         site,
-        body,
-        title,
-        description,
-        tags,
-        image,
-        pageType,
-        pageData: page,
+        await injectDevPageDocument(transformed, {
+          site,
+          body,
+          title,
+          description,
+          tags,
+          image,
+          pageType,
+          pageData: renderedPage,
+          route,
+          devStylesheets: await devStylesheets()
+        }),
         route,
-        devStylesheets: await devStylesheets()
-      })
+        renderedPage
+      )
       res.statusCode = 200
       res.setHeader('Content-Type', 'text/html; charset=utf-8')
       if (req.method === 'HEAD') {

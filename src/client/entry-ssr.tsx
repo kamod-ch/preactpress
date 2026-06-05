@@ -31,8 +31,7 @@ export function resolveRoutePage(routePath: string): PageView {
   )
 }
 
-export function render(routePath: string): RenderResult {
-  const page = resolveRoutePage(routePath)
+function renderResult(routePath: string, page: PageView): RenderResult {
   const body = renderToString(<App routePath={routePath} initialPage={page} />)
   const activeSite = siteForRoute(site, routePath, i18n)
   const head = resolvePageHeadMeta(
@@ -67,4 +66,12 @@ export function render(routePath: string): RenderResult {
     pageType: head.pageType,
     page
   }
+}
+
+export function renderFromPage(routePath: string, page: PageView): RenderResult {
+  return renderResult(routePath, page)
+}
+
+export function render(routePath: string): RenderResult {
+  return renderFromPage(routePath, resolveRoutePage(routePath))
 }

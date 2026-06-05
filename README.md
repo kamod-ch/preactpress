@@ -69,6 +69,7 @@ pnpm run dev     # dev server for ./templates/default
 ```bash
 pnpm dlx preactpress init my-docs --template docs
 pnpm dlx preactpress init my-magazine --template magazine
+pnpm dlx preactpress init my-hono-site --template hono
 ```
 
 | Template | Purpose |
@@ -76,6 +77,7 @@ pnpm dlx preactpress init my-magazine --template magazine
 | `default` | Minimal single-language site for blogs, portfolios, and small docs |
 | `docs` | Larger documentation starter with MDX and an i18n demo |
 | `magazine` | Custom-theme starter with a masthead, sticky nav, and MDX teaser grid |
+| `hono` | Hono.dev-inspired custom-theme starter with a landing page, docs, MDX, and i18n |
 
 The official website and larger examples live in the separate [`preactpress-examples`](../preactpress-examples) project.
 

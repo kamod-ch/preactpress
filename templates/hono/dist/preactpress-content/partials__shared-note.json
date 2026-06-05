@@ -1,0 +1,10 @@
+{
+  "kind": "markdown",
+  "meta": {},
+  "html": "<div class=\"pp-container pp-container-tip\"><p class=\"pp-container-title\">Shared fragment</p><div class=\"pp-container-body\"><p>This note is pulled in via <code>::: tip Shared fragment This note is pulled in via </code>&lt;!-- include cycle detected: /home/watzak/master/kamod/preactpress/templates/hono/partials/shared-note.md --&gt;<code>. :::</code>.</p>\n</div></div>",
+  "tags": [],
+  "pageType": "website",
+  "headings": [],
+  "relativePath": "partials/shared-note.md",
+  "lastUpdated": "2026-06-05T06:17:39.711Z"
+}

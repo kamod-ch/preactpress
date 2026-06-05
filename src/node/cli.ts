@@ -35,7 +35,7 @@ function printUsage(): void {
       '  preview   Serve the production build',
       '  check     Validate config, routes, nav/sidebar, and local links',
       '  init      Scaffold .preactpress + starter files in [root] or cwd',
-      '            Use --template docs or --template magazine for larger starters',
+      '            Use --template docs, magazine, or hono for larger starters',
       '',
       c.dim('In this repo (package root, no site):'),
       '  pnpm run dev           Dev server for the bundled ./templates/default site',
@@ -46,7 +46,7 @@ function printUsage(): void {
       '  --host       Host for dev / preview',
       '  --open       Open browser for dev',
       '  --base <p>   Override configured site.base',
-      '  --template <name>  Starter for init: default, docs, or magazine',
+      '  --template <name>  Starter for init: default, docs, magazine, or hono',
       '  -h, --help   Show this help',
       ''
     ].join('\n')
@@ -149,8 +149,10 @@ async function main(): Promise<void> {
 
   if (cmd === 'dev') {
     const { createServer } = await import('./server.js')
+    const port = argv.port ? Number(argv.port) : undefined
     const server = await createServer(root, {
-      port: argv.port ? Number(argv.port) : undefined,
+      port,
+      strictPort: port !== undefined,
       host: parseHostFlag(argv.host),
       open: Boolean(argv.open),
       base: argv.base ? String(argv.base) : undefined

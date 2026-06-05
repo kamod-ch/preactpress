@@ -156,12 +156,19 @@ export async function pageHtml(opts: {
     pageType,
     pageData
   })
-  const pageDataTemplate = renderPageDataTemplate(pageData)
+  const mpaMarkdown = site.mpa && pageData?.kind === 'markdown'
+  const pageDataTemplate = mpaMarkdown ? '' : renderPageDataTemplate(pageData)
+  const clientScript = mpaMarkdown
+    ? ''
+    : `\n    <script type="module" crossorigin src="${scriptSrc}"></script>`
 
   const activeSite = siteForRoute(site.site, route, site.i18n)
+  const mpaAttr = site.mpa
+    ? ` data-preactpress-mpa="${pageData?.kind === 'mdx' ? 'mdx' : 'markdown'}"`
+    : ''
 
   return `<!DOCTYPE html>
-<html lang="${escapeAttr(activeSite.lang)}">
+<html lang="${escapeAttr(activeSite.lang)}"${mpaAttr}>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,8 +179,7 @@ export async function pageHtml(opts: {
   </head>
   <body>
     ${pageDataTemplate}
-    <div id="app">${body}</div>
-    <script type="module" crossorigin src="${scriptSrc}"></script>
+    <div id="app">${body}</div>${clientScript}
   </body>
 </html>
 `

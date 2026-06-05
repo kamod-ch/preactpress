@@ -2,6 +2,7 @@ import path from 'node:path'
 import { glob } from 'tinyglobby'
 import type { SiteConfig } from './siteConfig.js'
 import { normalizeRoute } from '../shared/route.js'
+import { isDynamicTemplateFile } from './dynamicRoutes.js'
 
 export const CONTENT_GLOBS = ['**/*.md', '**/*.mdx'] as const
 export const CONTENT_EXTENSIONS = ['.mdx', '.md'] as const
@@ -25,7 +26,13 @@ export function mdFileToRoute(srcDir: string, file: string): string {
 }
 
 function contentIgnorePatterns(site: { srcExclude?: string[] }): string[] {
-  return ['**/node_modules/**', '**/.preactpress/**', ...(site.srcExclude ?? [])]
+  return [
+    '**/node_modules/**',
+    '**/.preactpress/**',
+    '**/*.data.ts',
+    '**/*.paths.ts',
+    ...(site.srcExclude ?? [])
+  ]
 }
 
 export async function scanContentFiles(
@@ -38,6 +45,7 @@ export async function scanContentFiles(
   })
   const routeToFile = new Map<string, ContentFile>()
   for (const file of files.sort()) {
+    if (isDynamicTemplateFile(file)) continue
     const route = mdFileToRoute(site.srcDir, file)
     const kind: ContentKind = file.endsWith('.mdx') ? 'mdx' : 'markdown'
     const existing = routeToFile.get(route)

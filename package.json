@@ -39,6 +39,7 @@
     "prepack": "pnpm run build",
     "preactpress": "node ./bin/preactpress.mjs",
     "dev": "node ./bin/preactpress.mjs dev templates/default",
+    "dev:templates": "node ./scripts/dev-all-templates.mjs",
     "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
   },
   "dependencies": {

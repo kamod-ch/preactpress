@@ -77,6 +77,23 @@ layout: splash
     }
   })
 
+  it('respects ignoreDeadLinks patterns', async () => {
+    const root = await makeSite(`export default {
+      site: { description: 'Test site' },
+      ignoreDeadLinks: ['/missing', '/wip/*']
+    }`)
+    try {
+      await fs.writeFile(path.join(root, 'index.md'), '[Wip](/wip/page.md)\n[Missing](/missing.md)\n[Broken](/broken.md)\n', 'utf8')
+      const result = await check(root)
+
+      expect(result.issues.map((issue) => issue.message)).toEqual([
+        'index.md links to missing page /broken.md (/broken)'
+      ])
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
+
   it('checks home frontmatter placement and links', async () => {
     const root = await makeSite(`export default {
       site: { description: 'Test site' }

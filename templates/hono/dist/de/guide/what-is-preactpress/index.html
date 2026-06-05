@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Was ist PreactPress? | Hono Starter</title>
+    <script src="/preactpress-theme.js"></script>
+    <meta name="description" content="Erfahre, was PreactPress ist und wann du es einsetzen kannst">
+    <meta property="og:title" content="Was ist PreactPress? | Hono Starter">
+    <meta property="og:description" content="Erfahre, was PreactPress ist und wann du es einsetzen kannst">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/de/guide/what-is-preactpress/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Was ist PreactPress? | Hono Starter">
+    <meta name="twitter:description" content="Erfahre, was PreactPress ist und wann du es einsetzen kannst">
+    <link rel="canonical" href="/de/guide/what-is-preactpress/">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","headline":"Was ist PreactPress? | Hono Starter","name":"Was ist PreactPress? | Hono Starter","description":"Erfahre, was PreactPress ist und wann du es einsetzen kannst","url":"/de/guide/what-is-preactpress/","dateModified":"2026-06-04T07:32:56.298Z"}</script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="any">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="stylesheet" crossorigin href="/assets/main-DIIN7FO0.css">
+  </head>
+  <body>
+    <template id="__PREACTPRESS_PAGE_DATA__">{&quot;kind&quot;:&quot;markdown&quot;,&quot;meta&quot;:{&quot;title&quot;:&quot;Was ist PreactPress?&quot;,&quot;description&quot;:&quot;Erfahre, was PreactPress ist und wann du es einsetzen kannst&quot;},&quot;html&quot;:&quot;\u003ch1 id=\&quot;was-ist-preactpress\&quot; class=\&quot;pp-heading\&quot;&gt;Was ist PreactPress?\u003ca class=\&quot;pp-heading-anchor\&quot; href=\&quot;#was-ist-preactpress\&quot; aria-label=\&quot;Link to this section\&quot;&gt;#\u003c/a&gt;\u003c/h1&gt;\n\u003cp&gt;PreactPress ist ein Static-Site-Generator für schnelle, inhaltsorientierte Websites. Du schreibst Seiten in Markdown oder MDX, konfigurierst Navigation und Theme-Optionen in \u003ccode&gt;.preactpress/config.ts\u003c/code&gt;, und PreactPress erzeugt statisches HTML für beliebige Static Hosts.\u003c/p&gt;\n\u003cp&gt;Es basiert auf \u003ca href=\&quot;https://vite.dev/\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener noreferrer\&quot;&gt;Vite\u003c/a&gt; und \u003ca href=\&quot;https://preactjs.com/\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener noreferrer\&quot;&gt;Preact\u003c/a&gt;. Der Workflow ist von VitePress inspiriert, aber das Komponentenmodell ist Preact statt Vue.\u003c/p&gt;\n\u003ch2 id=\&quot;einsatzbereiche\&quot; class=\&quot;pp-heading\&quot;&gt;Einsatzbereiche\u003ca class=\&quot;pp-heading-anchor\&quot; href=\&quot;#einsatzbereiche\&quot; aria-label=\&quot;Link to this section\&quot;&gt;#\u003c/a&gt;\u003c/h2&gt;\n\u003ch3 id=\&quot;dokumentation\&quot; class=\&quot;pp-heading\&quot;&gt;Dokumentation\u003ca class=\&quot;pp-heading-anchor\&quot; href=\&quot;#dokumentation\&quot; aria-label=\&quot;Link to this section\&quot;&gt;#\u003c/a&gt;\u003c/h3&gt;\n\u003cp&gt;PreactPress bringt ein kleines Standard-Theme für technische Dokumentation mit. Es enthält Navigation, Sidebar-Gruppen, Outline-Links, Suche, Last-Updated-Metadaten und Markdown-Rendering.\u003c/p&gt;\n\u003cp&gt;Es passt besonders gut, wenn deine Dokumentation natürlich als Dateien wächst:\u003c/p&gt;\n\u003cpre class=\&quot;shiki shiki-themes github-light github-dark\&quot; style=\&quot;background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8\&quot; tabindex=\&quot;0\&quot;&gt;\u003ccode&gt;\u003cspan class=\&quot;line\&quot;&gt;\u003cspan&gt;index.md\u003c/span&gt;\u003c/span&gt;\n\u003cspan class=\&quot;line\&quot;&gt;\u003cspan&gt;guide/getting-started.md\u003c/span&gt;\u003c/span&gt;\n\u003cspan class=\&quot;line\&quot;&gt;\u003cspan&gt;guide/routing.md\u003c/span&gt;\u003c/span&gt;\n\u003cspan class=\&quot;line\&quot;&gt;\u003cspan&gt;reference/api.md\u003c/span&gt;\u003c/span&gt;\u003c/code&gt;\u003c/pre&gt;\u003cp&gt;Jede Markdown- oder MDX-Datei wird zu einer Seite. Neue Dokumentation entsteht also durch neue Dateien und Einträge in der Sidebar.\u003c/p&gt;\n\u003ch3 id=\&quot;blogs-portfolios-und-marketing-seiten\&quot; class=\&quot;pp-heading\&quot;&gt;Blogs, Portfolios und Marketing-Seiten\u003ca class=\&quot;pp-heading-anchor\&quot; href=\&quot;#blogs-portfolios-und-marketing-seiten\&quot; aria-label=\&quot;Link to this section\&quot;&gt;#\u003c/a&gt;\u003c/h3&gt;\n\u003cp&gt;PreactPress kann auch Blogs, Portfolios und kleine Marketing-Seiten erzeugen. Markdown trägt den Inhalt, MDX bringt interaktive Preact-Komponenten hinein, und eigene Themes ersetzen bei Bedarf das Standard-Doku-Layout.\u003c/p&gt;\n\u003cp&gt;Im separaten Projekt \u003ccode&gt;preactpress-examples\u003c/code&gt; gibt es ein Custom-Theme-Beispiel mit Magazin-Layout, Artikel-Teasern und Tag-Seiten.\u003c/p&gt;\n\u003ch2 id=\&quot;developer-experience\&quot; class=\&quot;pp-heading\&quot;&gt;Developer Experience\u003ca class=\&quot;pp-heading-anchor\&quot; href=\&quot;#developer-experience\&quot; aria-label=\&quot;Link to this section\&quot;&gt;#\u003c/a&gt;\u003c/h2&gt;\n\u003cp&gt;PreactPress soll Content-Arbeit einfach halten:\u003c/p&gt;\n\u003ctable&gt;\n\u003cthead&gt;\n\u003ctr&gt;\n\u003cth&gt;Feature\u003c/th&gt;\n\u003cth&gt;Nutzen\u003c/th&gt;\n\u003c/tr&gt;\n\u003c/thead&gt;\n\u003ctbody&gt;\n\u003ctr&gt;\n\u003ctd&gt;Vite Dev-Server\u003c/td&gt;\n\u003ctd&gt;Schneller Start und Hot Updates beim Bearbeiten\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;Markdown-Frontmatter\u003c/td&gt;\n\u003ctd&gt;Titel, Beschreibungen, Tags, Draft-Status und Social-Metadaten\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;MDX\u003c/td&gt;\n\u003ctd&gt;Preact-Komponenten direkt in Inhaltsseiten\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;Standard-Theme\u003c/td&gt;\n\u003ctd&gt;Nav, Sidebar, Outline, Suche, Footer, Sprachumschalter\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;\u003ccode&gt;preactpress check\u003c/code&gt;\u003c/td&gt;\n\u003ctd&gt;Validierung von Config, Routen und Links vor dem Release\u003c/td&gt;\n\u003c/tr&gt;\n\u003c/tbody&gt;\n\u003c/table&gt;\n\u003cp&gt;Für normale Inhalte nimmst du \u003ccode&gt;.md\u003c/code&gt;. Wenn eine Seite Interaktivität braucht, nimmst du \u003ccode&gt;.mdx\u003c/code&gt; und importierst eine Preact-Komponente:\u003c/p&gt;\n\u003cpre class=\&quot;shiki shiki-themes github-light github-dark\&quot; style=\&quot;background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8\&quot; tabindex=\&quot;0\&quot;&gt;\u003ccode&gt;\u003cspan class=\&quot;line\&quot;&gt;\u003cspan style=\&quot;color:#24292E;--shiki-dark:#E1E4E8\&quot;&gt;import Counter from './components/Counter.tsx'\u003c/span&gt;\u003c/span&gt;\n\u003cspan class=\&quot;line\&quot;&gt;\u003c/span&gt;\n\u003cspan class=\&quot;line\&quot;&gt;\u003cspan style=\&quot;color:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold\&quot;&gt;## Demo\u003c/span&gt;\u003c/span&gt;\n\u003cspan class=\&quot;line\&quot;&gt;\u003c/span&gt;\n\u003cspan class=\&quot;line\&quot;&gt;\u003cspan style=\&quot;color:#24292E;--shiki-dark:#E1E4E8\&quot;&gt;&amp;#x3C;Counter initial={3} /&gt;\u003c/span&gt;\u003c/span&gt;\u003c/code&gt;\u003c/pre&gt;\u003ch2 id=\&quot;performance\&quot; class=\&quot;pp-heading\&quot;&gt;Performance\u003ca class=\&quot;pp-heading-anchor\&quot; href=\&quot;#performance\&quot; aria-label=\&quot;Link to this section\&quot;&gt;#\u003c/a&gt;\u003c/h2&gt;\n\u003cp&gt;PreactPress erzeugt beim Produktionsbuild statisches HTML für jede Route. Der erste Besuch erhält also HTML, das den Seiteninhalt bereits enthält. Das ist gut für Ladezeit und SEO.\u003c/p&gt;\n\u003cp&gt;Nach der Hydration übernimmt die Client-Navigation. Markdown-Seiten werden als kleine JSON-Payloads aus \u003ccode&gt;preactpress-content/*.json\u003c/code&gt; geladen, sodass große Sites nicht jeden Markdown-Body im ersten JavaScript-Bundle ausliefern müssen.\u003c/p&gt;\n\u003cp&gt;Der Produktionsbuild besteht nur aus statischen Dateien:\u003c/p&gt;\n\u003ctable&gt;\n\u003cthead&gt;\n\u003ctr&gt;\n\u003cth&gt;Ausgabe\u003c/th&gt;\n\u003cth&gt;Zweck\u003c/th&gt;\n\u003c/tr&gt;\n\u003c/thead&gt;\n\u003ctbody&gt;\n\u003ctr&gt;\n\u003ctd&gt;\u003ccode&gt;index.html\u003c/code&gt;, \u003ccode&gt;*/index.html\u003c/code&gt;\u003c/td&gt;\n\u003ctd&gt;Eine HTML-Datei pro Route\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;\u003ccode&gt;assets/*\u003c/code&gt;\u003c/td&gt;\n\u003ctd&gt;Gehashtes JavaScript und CSS von Vite\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;\u003ccode&gt;preactpress-search.json\u003c/code&gt;\u003c/td&gt;\n\u003ctd&gt;Suchdaten für das Standard-Theme\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;\u003ccode&gt;preactpress-content/*.json\u003c/code&gt;\u003c/td&gt;\n\u003ctd&gt;Lazy geladene Markdown-Payloads\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;\u003ccode&gt;404.html\u003c/code&gt;\u003c/td&gt;\n\u003ctd&gt;Fehlerseite\u003c/td&gt;\n\u003c/tr&gt;\n\u003c/tbody&gt;\n\u003c/table&gt;\n\u003ch2 id=\&quot;was-ist-mit-vitepress\&quot; class=\&quot;pp-heading\&quot;&gt;Was ist mit VitePress?\u003ca class=\&quot;pp-heading-anchor\&quot; href=\&quot;#was-ist-mit-vitepress\&quot; aria-label=\&quot;Link to this section\&quot;&gt;#\u003c/a&gt;\u003c/h2&gt;\n\u003cp&gt;Wenn du VitePress kennst, wird sich PreactPress vertraut anfühlen: Beide nutzen Vite, dateibasierte Markdown-Routen, ein Standard-Doku-Theme und statischen Output.\u003c/p&gt;\n\u003cp&gt;Der wichtigste Unterschied ist der UI-Stack. VitePress nutzt Vue. PreactPress nutzt Preact und MDX, daher werden interaktive Inhalte und eigene Themes als Preact-Komponenten geschrieben.\u003c/p&gt;\n\u003cp&gt;PreactPress ist in Produktion außerdem static-only. Du baust die Site einmal, lädst das Ausgabeverzeichnis hoch und hostest es auf Netlify, Vercel, Cloudflare Pages, GitHub Pages, S3, Nginx oder einem anderen Static Host.\u003c/p&gt;\n\u003ch2 id=\&quot;n-chste-schritte\&quot; class=\&quot;pp-heading\&quot;&gt;Nächste Schritte\u003ca class=\&quot;pp-heading-anchor\&quot; href=\&quot;#n-chste-schritte\&quot; aria-label=\&quot;Link to this section\&quot;&gt;#\u003c/a&gt;\u003c/h2&gt;\n\u003ctable&gt;\n\u003cthead&gt;\n\u003ctr&gt;\n\u003cth&gt;Seite\u003c/th&gt;\n\u003cth&gt;Warum\u003c/th&gt;\n\u003c/tr&gt;\n\u003c/thead&gt;\n\u003ctbody&gt;\n\u003ctr&gt;\n\u003ctd&gt;\u003ca href=\&quot;/de/guide/getting-started\&quot;&gt;Getting Started\u003c/a&gt;\u003c/td&gt;\n\u003ctd&gt;PreactPress installieren und die Starter-Struktur verstehen\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;\u003ca href=\&quot;/de/guide/routing\&quot;&gt;Routing\u003c/a&gt;\u003c/td&gt;\n\u003ctd&gt;Lernen, wie Dateien zu URLs werden\u003c/td&gt;\n\u003c/tr&gt;\n\u003ctr&gt;\n\u003ctd&gt;\u003ca href=\&quot;/de/guide/deploy\&quot;&gt;Deploy\u003c/a&gt;\u003c/td&gt;\n\u003ctd&gt;Eine statische Site bauen und veröffentlichen\u003c/td&gt;\n\u003c/tr&gt;\n\u003c/tbody&gt;\n\u003c/table&gt;\n&quot;,&quot;title&quot;:&quot;Was ist PreactPress?&quot;,&quot;description&quot;:&quot;Erfahre, was PreactPress ist und wann du es einsetzen kannst&quot;,&quot;tags&quot;:[],&quot;pageType&quot;:&quot;website&quot;,&quot;headings&quot;:[{&quot;id&quot;:&quot;einsatzbereiche&quot;,&quot;text&quot;:&quot;Einsatzbereiche&quot;,&quot;level&quot;:2},{&quot;id&quot;:&quot;dokumentation&quot;,&quot;text&quot;:&quot;Dokumentation&quot;,&quot;level&quot;:3},{&quot;id&quot;:&quot;blogs-portfolios-und-marketing-seiten&quot;,&quot;text&quot;:&quot;Blogs, Portfolios und Marketing-Seiten&quot;,&quot;level&quot;:3},{&quot;id&quot;:&quot;developer-experience&quot;,&quot;text&quot;:&quot;Developer Experience&quot;,&quot;level&quot;:2},{&quot;id&quot;:&quot;performance&quot;,&quot;text&quot;:&quot;Performance&quot;,&quot;level&quot;:2},{&quot;id&quot;:&quot;was-ist-mit-vitepress&quot;,&quot;text&quot;:&quot;Was ist mit VitePress?&quot;,&quot;level&quot;:2},{&quot;id&quot;:&quot;n-chste-schritte&quot;,&quot;text&quot;:&quot;Nächste Schritte&quot;,&quot;level&quot;:2}],&quot;relativePath&quot;:&quot;de/guide/what-is-preactpress.md&quot;,&quot;lastUpdated&quot;:&quot;2026-06-04T07:32:56.298Z&quot;}</template>
+    <div id="app"><div class="hn-site"><a class="hn-skip" href="#content">Skip to content</a><header class="hn-header"><div class="hn-header-inner"><a class="hn-brand" href="/de" aria-label="Hono Starter"><span class="hn-logo" aria-label="Hono Starter"><svg aria-hidden="true" viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="11" fill="currentColor" opacity="0.12"></rect><path d="M19.8 5.5c.8 4-2.8 5.9-4.7 8.2-1.8 2.1-2.5 4.9-.3 7 0-2.8 1.7-4.6 4.2-6.7 3.2 3 5.3 5.8 5.3 9.2 0 4.4-3.3 7.3-7.6 7.3-4.8 0-8.3-3.6-8.3-8.4 0-6.1 6.3-9.2 11.4-16.6Z" fill="currentColor"></path><path d="M21.7 25.7c0 2.2-1.7 3.8-3.9 3.8s-4-1.6-4-3.8c0-1.7 1-3.1 3.4-5.2.1 1.7 1.4 2.6 2.4 3.4.8.6 2.1 1 2.1 1.8Z" fill="currentColor" opacity="0.38"></path></svg><span>Hono Starter</span></span></a><div class="hn-header-actions"><nav class="hn-nav" aria-label="Main navigation"><a class="active" href="/de/guide/what-is-preactpress" aria-current="page">Docs</a><a class href="/de/markdown-examples">Beispiele</a><a class href="/de/about">Über uns</a></nav><div class="hn-social" aria-label="Social links"><a href="https://github.com/your-org/your-project" aria-label="GitHub"><span><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.404 1.02.005 2.04.137 3 .404 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></span></a></div><details class="hn-locale-switcher"><summary>Deutsch</summary><div class="hn-locale-menu"><a href="/guide/what-is-preactpress" class>English</a><a href="/de/guide/what-is-preactpress" aria-current="page" class="active">Deutsch</a></div></details><button type="button" class="hn-theme-toggle" aria-label="Toggle theme"><span class="hn-theme-toggle-moon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><path d="M21 14.8A8.5 8.5 0 0 1 9.2 3a7 7 0 1 0 11.8 11.8Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"></path></svg></span><span class="hn-theme-toggle-sun" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3.5" stroke-width="1.7"></circle><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4" stroke-linecap="round" stroke-width="1.7"></path></svg></span></button></div></div></header><div class="hn-doc-shell"><aside class="hn-sidebar" aria-label="Documentation navigation"><div class="hn-sidebar-panel"><label class="hn-search"><span>Search pages</span><input type="search" value placeholder="Filter documentation..."/></label><div class="hn-sidebar-group"><h2>Einführung</h2><ul><li><a class="active" href="/de" aria-current="page">Willkommen</a></li><li><a class="active" href="/de/guide/what-is-preactpress" aria-current="page">Was ist PreactPress?</a></li><li><a class href="/de/guide/getting-started">Getting Started</a></li><li><a class href="/de/guide/routing">Routing</a></li><li><a class href="/de/guide/deploy">Deploy</a></li><li><a class href="/de/guide/first-five-minutes">Die ersten 5 Minuten</a></li><li><a class href="/de/guide/seiten-erstellen">Seiten erstellen</a></li><li><a class href="/de/guide/commands">Befehle</a></li><li><a class href="/de/guide/configuration">Konfiguration</a></li></ul></div><div class="hn-sidebar-group"><h2>Referenz</h2><ul><li><a class href="/de/markdown-examples">Markdown-Beispiele</a></li><li><a class href="/de/interactive">Interaktives MDX</a></li></ul></div></div></aside><main id="content" class="hn-doc-main"><article class="hn-doc"><h1 class="hn-doc-title">Was ist PreactPress?</h1><p class="hn-doc-lead">Erfahre, was PreactPress ist und wann du es einsetzen kannst</p><div class="hn-doc-content"><h1 id="was-ist-preactpress" class="pp-heading">Was ist PreactPress?<a class="pp-heading-anchor" href="#was-ist-preactpress" aria-label="Link to this section">#</a></h1>
+<p>PreactPress ist ein Static-Site-Generator für schnelle, inhaltsorientierte Websites. Du schreibst Seiten in Markdown oder MDX, konfigurierst Navigation und Theme-Optionen in <code>.preactpress/config.ts</code>, und PreactPress erzeugt statisches HTML für beliebige Static Hosts.</p>
+<p>Es basiert auf <a href="https://vite.dev/" target="_blank" rel="noopener noreferrer">Vite</a> und <a href="https://preactjs.com/" target="_blank" rel="noopener noreferrer">Preact</a>. Der Workflow ist von VitePress inspiriert, aber das Komponentenmodell ist Preact statt Vue.</p>
+<h2 id="einsatzbereiche" class="pp-heading">Einsatzbereiche<a class="pp-heading-anchor" href="#einsatzbereiche" aria-label="Link to this section">#</a></h2>
+<h3 id="dokumentation" class="pp-heading">Dokumentation<a class="pp-heading-anchor" href="#dokumentation" aria-label="Link to this section">#</a></h3>
+<p>PreactPress bringt ein kleines Standard-Theme für technische Dokumentation mit. Es enthält Navigation, Sidebar-Gruppen, Outline-Links, Suche, Last-Updated-Metadaten und Markdown-Rendering.</p>
+<p>Es passt besonders gut, wenn deine Dokumentation natürlich als Dateien wächst:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8" tabindex="0"><code><span class="line"><span>index.md</span></span>
+<span class="line"><span>guide/getting-started.md</span></span>
+<span class="line"><span>guide/routing.md</span></span>
+<span class="line"><span>reference/api.md</span></span></code></pre><p>Jede Markdown- oder MDX-Datei wird zu einer Seite. Neue Dokumentation entsteht also durch neue Dateien und Einträge in der Sidebar.</p>
+<h3 id="blogs-portfolios-und-marketing-seiten" class="pp-heading">Blogs, Portfolios und Marketing-Seiten<a class="pp-heading-anchor" href="#blogs-portfolios-und-marketing-seiten" aria-label="Link to this section">#</a></h3>
+<p>PreactPress kann auch Blogs, Portfolios und kleine Marketing-Seiten erzeugen. Markdown trägt den Inhalt, MDX bringt interaktive Preact-Komponenten hinein, und eigene Themes ersetzen bei Bedarf das Standard-Doku-Layout.</p>
+<p>Im separaten Projekt <code>preactpress-examples</code> gibt es ein Custom-Theme-Beispiel mit Magazin-Layout, Artikel-Teasern und Tag-Seiten.</p>
+<h2 id="developer-experience" class="pp-heading">Developer Experience<a class="pp-heading-anchor" href="#developer-experience" aria-label="Link to this section">#</a></h2>
+<p>PreactPress soll Content-Arbeit einfach halten:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Nutzen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vite Dev-Server</td>
+<td>Schneller Start und Hot Updates beim Bearbeiten</td>
+</tr>
+<tr>
+<td>Markdown-Frontmatter</td>
+<td>Titel, Beschreibungen, Tags, Draft-Status und Social-Metadaten</td>
+</tr>
+<tr>
+<td>MDX</td>
+<td>Preact-Komponenten direkt in Inhaltsseiten</td>
+</tr>
+<tr>
+<td>Standard-Theme</td>
+<td>Nav, Sidebar, Outline, Suche, Footer, Sprachumschalter</td>
+</tr>
+<tr>
+<td><code>preactpress check</code></td>
+<td>Validierung von Config, Routen und Links vor dem Release</td>
+</tr>
+</tbody>
+</table>
+<p>Für normale Inhalte nimmst du <code>.md</code>. Wenn eine Seite Interaktivität braucht, nimmst du <code>.mdx</code> und importierst eine Preact-Komponente:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8" tabindex="0"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">import Counter from './components/Counter.tsx'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold">## Demo</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">&#x3C;Counter initial={3} /></span></span></code></pre><h2 id="performance" class="pp-heading">Performance<a class="pp-heading-anchor" href="#performance" aria-label="Link to this section">#</a></h2>
+<p>PreactPress erzeugt beim Produktionsbuild statisches HTML für jede Route. Der erste Besuch erhält also HTML, das den Seiteninhalt bereits enthält. Das ist gut für Ladezeit und SEO.</p>
+<p>Nach der Hydration übernimmt die Client-Navigation. Markdown-Seiten werden als kleine JSON-Payloads aus <code>preactpress-content/*.json</code> geladen, sodass große Sites nicht jeden Markdown-Body im ersten JavaScript-Bundle ausliefern müssen.</p>
+<p>Der Produktionsbuild besteht nur aus statischen Dateien:</p>
+<table>
+<thead>
+<tr>
+<th>Ausgabe</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index.html</code>, <code>*/index.html</code></td>
+<td>Eine HTML-Datei pro Route</td>
+</tr>
+<tr>
+<td><code>assets/*</code></td>
+<td>Gehashtes JavaScript und CSS von Vite</td>
+</tr>
+<tr>
+<td><code>preactpress-search.json</code></td>
+<td>Suchdaten für das Standard-Theme</td>
+</tr>
+<tr>
+<td><code>preactpress-content/*.json</code></td>
+<td>Lazy geladene Markdown-Payloads</td>
+</tr>
+<tr>
+<td><code>404.html</code></td>
+<td>Fehlerseite</td>
+</tr>
+</tbody>
+</table>
+<h2 id="was-ist-mit-vitepress" class="pp-heading">Was ist mit VitePress?<a class="pp-heading-anchor" href="#was-ist-mit-vitepress" aria-label="Link to this section">#</a></h2>
+<p>Wenn du VitePress kennst, wird sich PreactPress vertraut anfühlen: Beide nutzen Vite, dateibasierte Markdown-Routen, ein Standard-Doku-Theme und statischen Output.</p>
+<p>Der wichtigste Unterschied ist der UI-Stack. VitePress nutzt Vue. PreactPress nutzt Preact und MDX, daher werden interaktive Inhalte und eigene Themes als Preact-Komponenten geschrieben.</p>
+<p>PreactPress ist in Produktion außerdem static-only. Du baust die Site einmal, lädst das Ausgabeverzeichnis hoch und hostest es auf Netlify, Vercel, Cloudflare Pages, GitHub Pages, S3, Nginx oder einem anderen Static Host.</p>
+<h2 id="n-chste-schritte" class="pp-heading">Nächste Schritte<a class="pp-heading-anchor" href="#n-chste-schritte" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Seite</th>
+<th>Warum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/de/guide/getting-started">Getting Started</a></td>
+<td>PreactPress installieren und die Starter-Struktur verstehen</td>
+</tr>
+<tr>
+<td><a href="/de/guide/routing">Routing</a></td>
+<td>Lernen, wie Dateien zu URLs werden</td>
+</tr>
+<tr>
+<td><a href="/de/guide/deploy">Deploy</a></td>
+<td>Eine statische Site bauen und veröffentlichen</td>
+</tr>
+</tbody>
+</table>
+</div><nav class="hn-pager" aria-label="Page navigation"><span></span><a class="next" href="/de/guide/what-is-preactpress"><span>Next</span>Was ist PreactPress?</a></nav><footer class="hn-doc-meta"><span>Updated 4. Juni 2026</span></footer></article></main><aside class="hn-outline" aria-label="On this page"><div class="hn-outline-panel"><h2>On this page</h2><ul><li class="level-2"><a href="#einsatzbereiche">Einsatzbereiche</a></li><li class="level-3"><a href="#dokumentation">Dokumentation</a></li><li class="level-3"><a href="#blogs-portfolios-und-marketing-seiten">Blogs, Portfolios und Marketing-Seiten</a></li><li class="level-2"><a href="#developer-experience">Developer Experience</a></li><li class="level-2"><a href="#performance">Performance</a></li><li class="level-2"><a href="#was-ist-mit-vitepress">Was ist mit VitePress?</a></li><li class="level-2"><a href="#n-chste-schritte">Nächste Schritte</a></li></ul></div></aside></div><footer class="hn-footer">Erstellt mit PreactPress.</footer></div></div>
+    <script type="module" crossorigin src="/assets/main-Bqi-VFEk.js"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "kind": "markdown",
+  "meta": {},
+  "html": "<h1 id=\"preactpress-hono-style-starter-site\" class=\"pp-heading\">PreactPress Hono-style starter site<a class=\"pp-heading-anchor\" href=\"#preactpress-hono-style-starter-site\" aria-label=\"Link to this section\">#</a></h1>\n<p>This folder was scaffolded with <code>preactpress init --template hono</code>.</p>\n<p>It combines a hono.dev-inspired landing page with a full documentation starter, MDX examples, and an English/German i18n demo.</p>\n<h2 id=\"commands\" class=\"pp-heading\">Commands<a class=\"pp-heading-anchor\" href=\"#commands\" aria-label=\"Link to this section\">#</a></h2>\n<table>\n<thead>\n<tr>\n<th>Script</th>\n<th>What it does</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>pnpm run dev</code></td>\n<td>Start the dev server at <a href=\"http://localhost:5173\" target=\"_blank\" rel=\"noopener noreferrer\">http://localhost:5173</a></td>\n</tr>\n<tr>\n<td><code>pnpm run check</code></td>\n<td>Validate config, routes, and links</td>\n</tr>\n<tr>\n<td><code>pnpm run build</code></td>\n<td>Write static HTML to <code>dist/</code></td>\n</tr>\n<tr>\n<td><code>pnpm run preview</code></td>\n<td>Serve the production build locally</td>\n</tr>\n</tbody>\n</table>\n<h2 id=\"where-to-edit\" class=\"pp-heading\">Where to edit<a class=\"pp-heading-anchor\" href=\"#where-to-edit\" aria-label=\"Link to this section\">#</a></h2>\n<table>\n<thead>\n<tr>\n<th>Path</th>\n<th>Purpose</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>*.md</code>, <code>*.mdx</code></td>\n<td>Page content — file path becomes the URL</td>\n</tr>\n<tr>\n<td><code>index.mdx</code>, <code>de/index.mdx</code></td>\n<td>Landing pages with the hero and feature cards</td>\n</tr>\n<tr>\n<td><code>de/*.md</code>, <code>de/*.mdx</code></td>\n<td>German pages for the bundled i18n demo</td>\n</tr>\n<tr>\n<td><code>.preactpress/config.ts</code></td>\n<td>Site title, nav, sidebar, locales, build options</td>\n</tr>\n<tr>\n<td><code>.preactpress/theme/</code></td>\n<td>Custom Hono-style layout, components, and CSS</td>\n</tr>\n<tr>\n<td><code>components/</code></td>\n<td>Preact components for MDX pages</td>\n</tr>\n<tr>\n<td><code>index.html</code></td>\n<td>Vite entry (rarely edited)</td>\n</tr>\n</tbody>\n</table>\n<p>Start with <a href=\"/guide/first-five-minutes\">Your first 5 minutes</a> in the local site, or read the full PreactPress README in the npm package / repository.</p>\n<p>This starter includes English pages at the root and German pages under <code>/de/</code>. Remove the <code>de/</code> folder and <code>locales</code> config if you want a single-language site.</p>\n<h2 id=\"deploy\" class=\"pp-heading\">Deploy<a class=\"pp-heading-anchor\" href=\"#deploy\" aria-label=\"Link to this section\">#</a></h2>\n<pre class=\"shiki shiki-themes github-light github-dark\" style=\"background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#6F42C1;--shiki-dark:#B392F0\">pnpm</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> run</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> check</span></span>\n<span class=\"line\"><span style=\"color:#6F42C1;--shiki-dark:#B392F0\">pnpm</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> run</span><span style=\"color:#032F62;--shiki-dark:#9ECBFF\"> build</span></span></code></pre><p>Upload <strong>only</strong> <code>dist/</code> to Netlify, Vercel, Cloudflare Pages, GitHub Pages, or any static host. No Node server is required in production.</p>\n<p>Before the first production build, set <code>site.url</code> (and <code>site.base</code> for subpath hosting) in <code>.preactpress/config.ts</code>.</p>\n",
+  "tags": [],
+  "pageType": "website",
+  "headings": [
+    {
+      "id": "commands",
+      "text": "Commands",
+      "level": 2
+    },
+    {
+      "id": "where-to-edit",
+      "text": "Where to edit",
+      "level": 2
+    },
+    {
+      "id": "deploy",
+      "text": "Deploy",
+      "level": 2
+    }
+  ],
+  "relativePath": "README.md",
+  "lastUpdated": "2026-06-05T07:27:55.507Z"
+}

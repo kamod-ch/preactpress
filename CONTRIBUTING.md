@@ -48,7 +48,7 @@ node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs
 
 ## Optional starter templates
 
-Init starters are packaged from `templates/default`, `templates/docs`, and `templates/magazine`. Keep those templates runnable after scaffolding and free of `node_modules`, `dist`, and workspace lockfiles.
+Init starters are packaged from `templates/default`, `templates/docs`, `templates/magazine`, and `templates/hono`. Keep those templates runnable after scaffolding and free of `node_modules`, `dist`, and workspace lockfiles.
 
 ## Example sites
 

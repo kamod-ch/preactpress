@@ -62,4 +62,36 @@ describe('init', () => {
       await fs.rm(root, { recursive: true, force: true })
     }
   })
+
+  it('scaffolds the hono template on request', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-init-hono-'))
+    try {
+      const result = await init(root, { template: 'hono' })
+
+      await expect(fs.access(path.join(root, 'index.mdx'))).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'de', 'index.mdx'))).resolves.toBeUndefined()
+      await expect(
+        fs.access(path.join(root, '.preactpress', 'theme', 'Layout.tsx'))
+      ).resolves.toBeUndefined()
+      await expect(
+        fs.access(path.join(root, '.preactpress', 'theme', 'hono.css'))
+      ).resolves.toBeUndefined()
+      await expect(fs.access(path.join(root, 'node_modules'))).rejects.toThrow()
+      await expect(fs.access(path.join(root, 'pnpm-lock.yaml'))).rejects.toThrow()
+
+      const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8')) as {
+        devDependencies: { preactpress: string }
+      }
+      const toolPkg = JSON.parse(
+        await fs.readFile(path.join(PACKAGE_ROOT, 'package.json'), 'utf8')
+      ) as { version: string }
+
+      expect(pkg.devDependencies.preactpress).toBe(`^${toolPkg.version}`)
+      expect(result.preactpressVersion).toBe(toolPkg.version)
+      expect(result.root).toBe(root)
+      expect(result.template).toBe('hono')
+    } finally {
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
 })

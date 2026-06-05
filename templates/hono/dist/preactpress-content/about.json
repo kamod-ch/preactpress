@@ -1,0 +1,15 @@
+{
+  "kind": "markdown",
+  "meta": {
+    "title": "About",
+    "description": "About this site"
+  },
+  "html": "<h1 id=\"about-us\" class=\"pp-heading\">About us<a class=\"pp-heading-anchor\" href=\"#about-us\" aria-label=\"Link to this section\">#</a></h1>\n<p>Your content here.</p>\n<p>This page was added as part of the <a href=\"/guide/first-five-minutes\">Your first 5 minutes</a> tutorial. Replace this text with your own copy — team bio, project mission, contact details, or anything else that belongs on an About page.</p>\n",
+  "title": "About",
+  "description": "About this site",
+  "tags": [],
+  "pageType": "website",
+  "headings": [],
+  "relativePath": "about.md",
+  "lastUpdated": "2026-06-04T07:28:10.784Z"
+}

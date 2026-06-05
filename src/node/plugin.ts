@@ -15,6 +15,9 @@ import {
   type ContentFile,
   type ContentKind
 } from './content.js'
+import { resolveDynamicRoutes, type DynamicRouteEntry } from './dynamicRoutes.js'
+import { resolvePageDataMap } from './pageDataLoaders.js'
+import { renderMarkdown } from './markdown.js'
 import {
   collectTagIndexPages,
   renderTagIndexHtml,
@@ -34,31 +37,50 @@ export async function listMarkdownRoutes(site: SiteConfig): Promise<string[]> {
   const files = (await scanContentFiles(site))
     .filter((file) => !isDraftPage(readMarkdownMetadata(file.file).meta))
     .map((file) => file.route)
-    .sort()
-  const tagRoutes = await listTagIndexRoutes(site, new Set(files))
-  return [...files, ...tagRoutes].sort()
+  const dynamicRoutes = (await resolveDynamicRoutes(site)).map((entry) => entry.route)
+  const routeSet = new Set([...files, ...dynamicRoutes])
+  const tagRoutes = await listTagIndexRoutes(site, routeSet)
+  return [...routeSet, ...tagRoutes].sort()
 }
 
 export function preactPressPlugin(site: SiteConfig): Plugin {
   const routeToFile = new Map<string, ContentFile>()
+  const dynamicRoutes = new Map<string, DynamicRouteEntry>()
+  let pageDataByRoute = new Map<string, unknown>()
   let ssrPagesModule = ''
   let clientPagesModule = ''
 
   async function scan(): Promise<void> {
     routeToFile.clear()
+    dynamicRoutes.clear()
     for (const file of await scanContentFiles(site)) {
       if (isDraftPage(readMarkdownMetadata(file.file).meta)) continue
       routeToFile.set(file.route, file)
     }
+    for (const entry of await resolveDynamicRoutes(site)) {
+      if (entry.kind === 'mdx') {
+        throw new Error(
+          `preactpress: dynamic MDX templates are not supported (${path.relative(site.srcDir, entry.templateFile)})`
+        )
+      }
+      dynamicRoutes.set(entry.route, entry)
+    }
+    pageDataByRoute = await resolvePageDataMap(site)
     if (Object.keys(site.rewrites).length > 0) {
       applyRouteRewrites(routeToFile, site.rewrites)
     }
   }
 
+  function attachPageData(route: string, meta: Record<string, unknown>): Record<string, unknown> {
+    const data = pageDataByRoute.get(route)
+    if (data === undefined) return meta
+    return { ...meta, contentData: data }
+  }
+
   async function buildPagesModule(ssr: boolean): Promise<string> {
     const filesList = [...routeToFile.values()]
     const tagPages = collectTagIndexPages(filesList, site)
-    const fileRouteSet = new Set(routeToFile.keys())
+    const fileRouteSet = new Set([...routeToFile.keys(), ...dynamicRoutes.keys()])
     const syntheticTagRoutes = tagPages
       .map((tagPage) => tagPage.route)
       .filter((route) => !fileRouteSet.has(route))
@@ -92,14 +114,25 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         const tags = resolvePageTags(r.meta)
         const image = pageImageFromMeta(r.meta)
         const pageType = pageTypeFromMeta(r.meta)
-        const meta = { kind: 'mdx', meta: r.meta, title: r.title, description: r.description, tags, image, pageType, headings: r.headings, relativePath, lastUpdated }
+        const meta = {
+          kind: 'mdx',
+          meta: attachPageData(route, r.meta),
+          title: r.title,
+          description: r.description,
+          tags,
+          image,
+          pageType,
+          headings: r.headings,
+          relativePath,
+          lastUpdated
+        }
         metaEntries.push(`${JSON.stringify(route)}: ${JSON.stringify(meta)}`)
         mdxLoaders.push(`${JSON.stringify(route)}: () => import(${JSON.stringify(file.file)})`)
         const componentName = `MdxPage${mdxIndex}`
         mdxIndex += 1
         if (ssr) {
           mdxImports.push(`import ${componentName} from ${JSON.stringify(file.file)};`)
-          mdxEntries.push(`${JSON.stringify(route)}: { kind: "mdx", Component: ${componentName}, meta: ${JSON.stringify(r.meta)}, title: ${JSON.stringify(r.title)}, description: ${JSON.stringify(r.description)}, tags: ${JSON.stringify(tags)}, image: ${JSON.stringify(image)}, pageType: ${JSON.stringify(pageType)}, headings: ${JSON.stringify(r.headings)}, relativePath: ${JSON.stringify(relativePath)}, lastUpdated: ${JSON.stringify(lastUpdated)} }`)
+          mdxEntries.push(`${JSON.stringify(route)}: { kind: "mdx", Component: ${componentName}, meta: ${JSON.stringify(meta.meta)}, title: ${JSON.stringify(r.title)}, description: ${JSON.stringify(r.description)}, tags: ${JSON.stringify(tags)}, image: ${JSON.stringify(image)}, pageType: ${JSON.stringify(pageType)}, headings: ${JSON.stringify(r.headings)}, relativePath: ${JSON.stringify(relativePath)}, lastUpdated: ${JSON.stringify(lastUpdated)} }`)
         }
         continue
       }
@@ -113,7 +146,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       })
       entries[route] = {
         kind: 'markdown',
-        meta: r.meta,
+        meta: attachPageData(route, r.meta),
         html: r.html,
         title: r.title,
         description: r.description,
@@ -123,6 +156,37 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         headings: r.headings,
         relativePath,
         lastUpdated
+      }
+      metaEntries.push(`${JSON.stringify(route)}: ${JSON.stringify({
+        ...entries[route],
+        html: undefined
+      })}`)
+    }
+    for (const [route, dynamic] of dynamicRoutes) {
+      const r = await renderMarkdown(dynamic.source, dynamic.templateFile, {
+        ...site.markdown,
+        route,
+        routes,
+        localePrefix: localeFromRoute(route, site.i18n)?.prefix,
+        srcDir: site.srcDir
+      })
+      const meta = attachPageData(route, {
+        ...r.meta,
+        params: dynamic.params,
+        props: dynamic.props
+      })
+      entries[route] = {
+        kind: 'markdown',
+        meta,
+        html: r.html,
+        title: r.title,
+        description: r.description,
+        tags: resolvePageTags(r.meta),
+        image: pageImageFromMeta(r.meta),
+        pageType: pageTypeFromMeta(r.meta),
+        headings: r.headings,
+        relativePath: path.relative(site.srcDir, dynamic.templateFile).split(path.sep).join('/'),
+        lastUpdated: undefined
       }
       metaEntries.push(`${JSON.stringify(route)}: ${JSON.stringify({
         ...entries[route],
@@ -210,7 +274,12 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       })
       server.watcher.add(site.srcDir)
       server.watcher.on('all', async (_evt, file) => {
-        if (typeof file === 'string' && CONTENT_EXTENSIONS.some((ext) => file.endsWith(ext))) {
+        if (typeof file !== 'string') return
+        if (
+          CONTENT_EXTENSIONS.some((ext) => file.endsWith(ext)) ||
+          file.endsWith('.data.ts') ||
+          file.endsWith('.paths.ts')
+        ) {
           await scan()
           invalidateVirtuals(server)
         }
@@ -232,7 +301,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
           themeConfig: SiteConfig['themeConfig']
           i18n: SiteConfig['i18n']
         }
-        return `export const site = ${JSON.stringify(data.site)};\nexport const themeConfig = ${JSON.stringify(data.themeConfig)};\nexport const i18n = ${JSON.stringify(data.i18n)};\n`
+        return `export const site = ${JSON.stringify(data.site)};\nexport const themeConfig = ${JSON.stringify(data.themeConfig)};\nexport const i18n = ${JSON.stringify(data.i18n)};\nexport const mpa = ${JSON.stringify(Boolean((data as { mpa?: boolean }).mpa))};\n`
       }
       if (id === VIRTUAL_PAGES) {
         if (options?.ssr) {

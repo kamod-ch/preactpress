@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { collectHeadTags, injectDevPageDocument } from '../src/node/html.js'
+import { collectHeadTags, injectDevPageDocument, pageHtml } from '../src/node/html.js'
 import type { SiteConfig } from '../src/node/siteConfig.js'
 import { resolveLocales } from '../src/shared/locale.js'
 
@@ -63,6 +63,49 @@ describe('html head rendering', () => {
 
     expect(head).toContain('name="author"')
     expect(head).toContain('content="PreactPress"')
+  })
+
+  it('omits client bundle for markdown pages in mpa mode', async () => {
+    const html = await pageHtml({
+      site: { ...site, mpa: true },
+      body: '<p>Static</p>',
+      title: 'Doc',
+      description: 'Desc',
+      route: '/doc',
+      mainJs: '/assets/main.js',
+      mainCss: [],
+      pageData: {
+        kind: 'markdown',
+        html: '<p>Static</p>',
+        meta: {},
+        headings: []
+      }
+    })
+
+    expect(html).toContain('data-preactpress-mpa="markdown"')
+    expect(html).not.toContain('/assets/main.js')
+    expect(html).not.toContain('__PREACTPRESS_PAGE_DATA__')
+  })
+
+  it('keeps client bundle for mdx pages in mpa mode', async () => {
+    const html = await pageHtml({
+      site: { ...site, mpa: true },
+      body: '<p>Interactive</p>',
+      title: 'Home',
+      description: 'Desc',
+      route: '/',
+      mainJs: '/assets/main.js',
+      mainCss: [],
+      pageData: {
+        kind: 'mdx',
+        Component: () => null,
+        meta: {},
+        headings: []
+      }
+    })
+
+    expect(html).toContain('data-preactpress-mpa="mdx"')
+    expect(html).toContain('/assets/main.js')
   })
 
   it('renders locale-specific lang and alternate links', async () => {

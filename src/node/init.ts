@@ -9,7 +9,7 @@ export interface InitResult {
   template: InitTemplateName
 }
 
-export const INIT_TEMPLATES = ['default', 'docs', 'magazine'] as const
+export const INIT_TEMPLATES = ['default', 'docs', 'magazine', 'hono'] as const
 export type InitTemplateName = (typeof INIT_TEMPLATES)[number]
 
 export interface InitOptions {
@@ -20,7 +20,8 @@ const SKIP_TEMPLATE_ENTRIES = new Set(['dist', 'node_modules', 'pnpm-lock.yaml']
 const TEMPLATE_DIRS: Record<InitTemplateName, string> = {
   default: path.join('templates', 'default'),
   docs: path.join('templates', 'docs'),
-  magazine: path.join('templates', 'magazine')
+  magazine: path.join('templates', 'magazine'),
+  hono: path.join('templates', 'hono')
 }
 
 function shouldCopyTemplateEntry(rel: string): boolean {

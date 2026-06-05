@@ -27,7 +27,10 @@ PreactPress is a **Vite + Preact static site generator** with a VitePress-like w
 | Core | `dev`, `build`, `preview`, `init`, `check` CLI |
 | Core | File-based routing (`.md` / `.mdx` → URLs) |
 | Core | SSR in dev, static HTML in production |
-| Core | SPA client navigation + prefetch hook |
+| Core | SPA client navigation + hover/viewport prefetch |
+| Core | MPA mode (`mpa: true`) for zero-JS markdown pages |
+| Core | Data loaders (`createContentLoader`) and dynamic `[param].paths.ts` routes |
+| Core | `ignoreDeadLinks` filters for `preactpress check` |
 | Core | Incremental builds (`build-manifest.json` in `cacheDir`) |
 | Content | Markdown (markdown-it) + MDX (Preact components) |
 | Content | Frontmatter, drafts, heading anchors, Shiki highlighting |
@@ -49,6 +52,8 @@ PreactPress is a **Vite + Preact static site generator** with a VitePress-like w
 | Markdown | Custom heading IDs, emoji, opt-in math, `[[toc]]`, code groups, `@include` |
 | Config | `titleTemplate`, per-page `head`, `srcExclude`, path-based `sidebar` |
 | Config | `lastUpdatedGit` opt-in; Shiki languages loaded on demand |
+| Config | `transformPageData`, `transformHtml`, `buildEnd` hooks |
+| Config | Async config (`export default async () => ({…})`, `defineConfig`) |
 | Docs | Template pages: Commands, Configuration (EN + DE) |
 
 ---
@@ -114,13 +119,13 @@ For plugin authors and larger sites. Lower priority until Phases 1–2 cover typ
 
 | Priority | Feature | Status | Notes |
 | --- | --- | --- | --- |
-| P3 | `transformPageData` hook | 💡 | `transformHead` exists |
-| P3 | `transformHtml` / `buildEnd` hooks | 💡 | |
-| P3 | Async config (fetch sidebar from CMS at build time) | 💡 | |
-| P3 | Data loaders / dynamic routes at build time | 💡 | VitePress-style `createContentLoader` |
-| P3 | MPA mode (zero client JS) | 💡 | Conflicts with MDX interactivity |
-| P3 | Viewport link prefetch (match VitePress behavior) | 💡 | `prefetchPage()` exists, not wired to links |
-| P4 | `ignoreDeadLinks` with granular filters | 💡 | `preactpress check` fails on dead links today |
+| P3 | `transformPageData` hook | ✅ | v0.1.x — dev + build; runs before SSR |
+| P3 | `transformHtml` / `buildEnd` hooks | ✅ | v0.1.x — `buildEnd` is build-only |
+| P3 | Async config (fetch sidebar from CMS at build time) | ✅ | v0.1.x — `export default async () => ({…})` or `defineConfig(async () => …)` |
+| P3 | Data loaders / dynamic routes at build time | ✅ | v0.1.x — `createContentLoader`, `*.data.ts`, `[param].paths.ts` |
+| P3 | MPA mode (zero client JS) | ✅ | v0.1.x — markdown pages skip client bundle; MDX still hydrates |
+| P3 | Viewport link prefetch (match VitePress behavior) | ✅ | v0.1.x — `IntersectionObserver` + hover prefetch |
+| P4 | `ignoreDeadLinks` with granular filters | ✅ | v0.1.x — `true`, glob patterns, or filter function |
 
 ---
 

@@ -57,10 +57,15 @@ export async function resolveUserConfig(
     throw new Error(`preactpress: failed to load config from ${configPath}`)
   }
 
-  const raw = loaded.config as UserConfig & { default?: UserConfig }
-  const user = (raw.default ?? raw) as UserConfig
+  const raw = loaded.config as UserConfig & {
+    default?: UserConfig | (() => UserConfig | Promise<UserConfig>)
+  }
+  let user = (raw.default ?? raw) as UserConfig | (() => UserConfig | Promise<UserConfig>)
+  if (typeof user === 'function') {
+    user = await user()
+  }
   if (!user || typeof user !== 'object') {
-    throw new Error('preactpress: config must export a default object')
+    throw new Error('preactpress: config must export a default object or async factory')
   }
   return user
 }
@@ -109,6 +114,8 @@ export async function resolveConfig(
     srcExclude: user.srcExclude ?? [],
     cleanUrls: user.cleanUrls ?? true,
     rewrites: user.rewrites ?? {},
+    ignoreDeadLinks: user.ignoreDeadLinks,
+    mpa: user.mpa ?? false,
     lastUpdatedGit: user.lastUpdatedGit ?? false,
     configDir,
     outDir,
@@ -123,6 +130,9 @@ export async function resolveConfig(
       ...(user.head ?? [])
     ],
     transformHead: user.transformHead,
+    transformPageData: user.transformPageData,
+    transformHtml: user.transformHtml,
+    buildEnd: user.buildEnd,
     build: {
       sitemap: user.build?.sitemap ?? true,
       robots: user.build?.robots ?? true,
@@ -149,7 +159,8 @@ export function siteConfigToClientJson(config: SiteConfig): string {
   return JSON.stringify({
     site: config.site,
     themeConfig: config.themeConfig,
-    i18n: config.i18n
+    i18n: config.i18n,
+    mpa: config.mpa
   })
 }
 

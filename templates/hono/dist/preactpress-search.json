@@ -1,0 +1,242 @@
+[
+  {
+    "route": "/",
+    "locale": "root",
+    "title": "Fast, lightweight, built on Web Standards",
+    "description": "A Hono-inspired starter for documentation and product sites built with PreactPress.",
+    "excerpt": "A Hono-inspired starter for documentation and product sites built with PreactPress.",
+    "tags": []
+  },
+  {
+    "route": "/README",
+    "locale": "root",
+    "excerpt": "PreactPress Hono-style starter site # This folder was scaffolded with preactpress init --template hono . It combines a hono.dev-inspired landing page with…",
+    "tags": []
+  },
+  {
+    "route": "/about",
+    "locale": "root",
+    "title": "About",
+    "description": "About this site",
+    "excerpt": "About us # Your content here. This page was added as part of the Your first 5 minutes tutorial. Replace this text with your own copy — team bio, project…",
+    "tags": []
+  },
+  {
+    "route": "/de",
+    "locale": "de",
+    "title": "Schnell, schlank, auf Web-Standards gebaut",
+    "description": "Ein von hono.dev inspiriertes Starter-Template für Dokumentation und Produktseiten mit PreactPress.",
+    "excerpt": "Ein von hono.dev inspiriertes Starter-Template für Dokumentation und Produktseiten mit PreactPress.",
+    "tags": []
+  },
+  {
+    "route": "/de/about",
+    "locale": "de",
+    "title": "Über uns",
+    "description": "Über diese Website",
+    "excerpt": "Über uns # Hier steht dein Inhalt. Diese Seite wurde im Tutorial Die ersten 5 Minuten hinzugefügt. Ersetze diesen Text durch deine eigenen Inhalte —…",
+    "tags": []
+  },
+  {
+    "route": "/de/guide/commands",
+    "locale": "de",
+    "title": "Befehle",
+    "description": "PreactPress-CLI für Entwicklung und Produktions-Builds",
+    "excerpt": "Die PreactPress-CLI wird im Site-Root ausgeführt (Ordner mit .preactpress/config.ts ). Entwicklung # pnpm exec preactpress dev Startet Vite mit SSR, Hot…",
+    "tags": []
+  },
+  {
+    "route": "/de/guide/configuration",
+    "locale": "de",
+    "title": "Konfiguration",
+    "description": "Site-Config, Theme-Optionen und häufige Frontmatter-Felder",
+    "excerpt": "Die Konfiguration liegt in .preactpress/config.ts im Site-Root. Site-Metadaten # export default { site: { title: 'Meine Docs' , description:…",
+    "tags": []
+  },
+  {
+    "route": "/de/guide/deploy",
+    "locale": "de",
+    "title": "Deploy",
+    "description": "Eine PreactPress-Site bauen und veröffentlichen",
+    "excerpt": "Deploy # PreactPress erzeugt statische Dateien. Produktion bedeutet: Build ausführen und das Ausgabeverzeichnis, normalerweise dist/ , auf einen Static…",
+    "tags": []
+  },
+  {
+    "route": "/de/guide/first-five-minutes",
+    "locale": "de",
+    "title": "Die ersten 5 Minuten",
+    "description": "Seitentitel ändern, eine Seite hinzufügen und die Navigation aktualisieren",
+    "excerpt": "Die ersten 5 Minuten # Dieses praktische Tutorial folgt der Setup-Übersicht in Getting Started . Folge den Schritten in deinem Projekt — diese Website…",
+    "tags": []
+  },
+  {
+    "route": "/de/guide/getting-started",
+    "locale": "de",
+    "title": "Getting Started",
+    "description": "PreactPress installieren und eine neue Dokumentationsseite starten",
+    "excerpt": "Getting Started # Diese Anleitung zeigt, wie du eine PreactPress-Site erstellst, die generierten Dateien verstehst und den Dev-Server startest.…",
+    "tags": []
+  },
+  {
+    "route": "/de/guide/routing",
+    "locale": "de",
+    "title": "Routing",
+    "description": "Verstehe, wie PreactPress Dateien auf URLs abbildet",
+    "excerpt": "Routing # PreactPress nutzt dateibasiertes Routing. Jede .md - und .mdx -Datei unter srcDir wird zu einer Route, und Produktionsbuilds schreiben jede…",
+    "tags": []
+  },
+  {
+    "route": "/de/guide/seiten-erstellen",
+    "locale": "de",
+    "title": "Seiten erstellen",
+    "description": "Neue Markdown- und MDX-Seiten anlegen, URLs verstehen und in die Navigation einbinden",
+    "excerpt": "Seiten erstellen # In PreactPress entstehen Seiten aus Dateien — es gibt keinen separaten Seiten-Editor oder CMS. Jede .md - oder .mdx -Datei unter dem…",
+    "tags": []
+  },
+  {
+    "route": "/de/guide/what-is-preactpress",
+    "locale": "de",
+    "title": "Was ist PreactPress?",
+    "description": "Erfahre, was PreactPress ist und wann du es einsetzen kannst",
+    "excerpt": "Was ist PreactPress? # PreactPress ist ein Static-Site-Generator für schnelle, inhaltsorientierte Websites. Du schreibst Seiten in Markdown oder MDX,…",
+    "tags": []
+  },
+  {
+    "route": "/de/interactive",
+    "locale": "de",
+    "title": "Interaktives MDX",
+    "description": "Markdown mit importierten Preact-Komponenten",
+    "excerpt": "Markdown mit importierten Preact-Komponenten",
+    "tags": []
+  },
+  {
+    "route": "/de/markdown-examples",
+    "locale": "de",
+    "title": "Markdown-Beispiele",
+    "description": "Häufige Authoring-Snippets",
+    "excerpt": "Code # export function greet ( name : string ) { return `Hallo, ${ name }!` } Einzelne Zeilen kannst du per Fence-Meta ( {2} ) oder Inline-Notation…",
+    "tags": [
+      "markdown"
+    ]
+  },
+  {
+    "route": "/de/parts/include-body",
+    "locale": "de",
+    "excerpt": "Zeile eins — übersprungen. Zeile zwei — übersprungen. Zeile drei — übersprungen. Zeile vier — übersprungen. Eingebetteter Inhalt # Dieser Absatz wird per…",
+    "tags": []
+  },
+  {
+    "route": "/de/tags/markdown",
+    "locale": "de",
+    "title": "Tag: markdown",
+    "description": "Pages tagged “markdown”",
+    "excerpt": "Pages tagged: markdown 1 page(s). Markdown-Beispiele",
+    "tags": [
+      "markdown"
+    ]
+  },
+  {
+    "route": "/guide/commands",
+    "locale": "root",
+    "title": "Commands",
+    "description": "PreactPress CLI reference for local development and production builds",
+    "excerpt": "PreactPress ships a small CLI. Run commands from your site root (where .preactpress/config.ts lives). Development # pnpm exec preactpress dev Starts Vite…",
+    "tags": []
+  },
+  {
+    "route": "/guide/configuration",
+    "locale": "root",
+    "title": "Configuration",
+    "description": "Site config, theme options, and common frontmatter fields",
+    "excerpt": "Configuration lives in .preactpress/config.ts at your site root. Site metadata # export default { site: { title: 'My docs' , description: 'Short site…",
+    "tags": []
+  },
+  {
+    "route": "/guide/creating-pages",
+    "locale": "root",
+    "title": "Creating pages",
+    "description": "Add new Markdown and MDX pages, understand URLs, and wire them into navigation",
+    "excerpt": "Creating pages # PreactPress builds pages from files — there is no separate page editor or CMS. Every .md or .mdx file under the source directory ( srcDir…",
+    "tags": []
+  },
+  {
+    "route": "/guide/deploy",
+    "locale": "root",
+    "title": "Deploy",
+    "description": "Build and publish a PreactPress site",
+    "excerpt": "Deploy # PreactPress builds static files. Production deployment means running a build and uploading the output directory, usually dist/ , to a static…",
+    "tags": []
+  },
+  {
+    "route": "/guide/first-five-minutes",
+    "locale": "root",
+    "title": "Your first 5 minutes",
+    "description": "Change the site title, add a page, and update navigation",
+    "excerpt": "Your first 5 minutes # This hands-on tutorial follows the setup overview in Getting Started . Follow the steps below in your project — this site is the…",
+    "tags": []
+  },
+  {
+    "route": "/guide/getting-started",
+    "locale": "root",
+    "title": "Getting Started",
+    "description": "Install PreactPress and start a new documentation site",
+    "excerpt": "Getting Started # This guide shows how to create a PreactPress site, understand the generated files, and start the development server. Prerequisites # You…",
+    "tags": []
+  },
+  {
+    "route": "/guide/routing",
+    "locale": "root",
+    "title": "Routing",
+    "description": "Understand how PreactPress maps files to URLs",
+    "excerpt": "Routing # PreactPress uses file-based routing. Every .md and .mdx file under srcDir becomes a route, and production builds write each route as static…",
+    "tags": []
+  },
+  {
+    "route": "/guide/what-is-preactpress",
+    "locale": "root",
+    "title": "What is PreactPress?",
+    "description": "Learn what PreactPress is and when to use it",
+    "excerpt": "What is PreactPress? # PreactPress is a static site generator for fast, content-focused websites. You write pages in Markdown or MDX, configure navigation…",
+    "tags": []
+  },
+  {
+    "route": "/interactive",
+    "locale": "root",
+    "title": "Interactive MDX",
+    "description": "Markdown with imported Preact components",
+    "excerpt": "Markdown with imported Preact components",
+    "tags": []
+  },
+  {
+    "route": "/markdown-examples",
+    "locale": "root",
+    "title": "Markdown examples",
+    "description": "Common authoring snippets",
+    "excerpt": "Code # export function greet ( name : string ) { return `Hello, ${ name }!` } Highlight a single line with fence meta ( {2} ) or inline notation: export…",
+    "tags": [
+      "markdown"
+    ]
+  },
+  {
+    "route": "/partials/shared-note",
+    "locale": "root",
+    "excerpt": "Shared fragment This note is pulled in via ::: tip Shared fragment This note is pulled in via !-- include cycle detected:…",
+    "tags": []
+  },
+  {
+    "route": "/parts/include-body",
+    "locale": "root",
+    "excerpt": "Line one — skipped. Line two — skipped. Line three — skipped. Line four — skipped. Included body # This paragraph is pulled in via !-- include not found:…",
+    "tags": []
+  },
+  {
+    "route": "/tags/markdown",
+    "locale": "root",
+    "title": "Tag: markdown",
+    "description": "Pages tagged “markdown”",
+    "excerpt": "Pages tagged: markdown 1 page(s). Markdown examples",
+    "tags": [
+      "markdown"
+    ]
+  }
+]

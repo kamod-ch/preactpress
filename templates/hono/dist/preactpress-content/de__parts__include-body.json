@@ -1,0 +1,16 @@
+{
+  "kind": "markdown",
+  "meta": {},
+  "html": "<p>Zeile eins — übersprungen.\nZeile zwei — übersprungen.\nZeile drei — übersprungen.\nZeile vier — übersprungen.</p>\n<h2 id=\"eingebetteter-inhalt\" class=\"pp-heading\">Eingebetteter Inhalt<a class=\"pp-heading-anchor\" href=\"#eingebetteter-inhalt\" aria-label=\"Link to this section\">#</a></h2>\n<p>Dieser Absatz wird per <code>&lt;!-- include not found: /home/watzak/master/kamod/preactpress/templates/hono/de/parts/… --&gt;</code> eingebunden.</p>\n<p>Zeile sieben — übersprungen.</p>\n",
+  "tags": [],
+  "pageType": "website",
+  "headings": [
+    {
+      "id": "eingebetteter-inhalt",
+      "text": "Eingebetteter Inhalt",
+      "level": 2
+    }
+  ],
+  "relativePath": "de/parts/include-body.md",
+  "lastUpdated": "2026-06-05T06:17:57.331Z"
+}

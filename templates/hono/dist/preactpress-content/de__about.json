@@ -1,0 +1,15 @@
+{
+  "kind": "markdown",
+  "meta": {
+    "title": "Über uns",
+    "description": "Über diese Website"
+  },
+  "html": "<h1 id=\"ber-uns\" class=\"pp-heading\">Über uns<a class=\"pp-heading-anchor\" href=\"#ber-uns\" aria-label=\"Link to this section\">#</a></h1>\n<p>Hier steht dein Inhalt.</p>\n<p>Diese Seite wurde im Tutorial <a href=\"/de/guide/first-five-minutes\">Die ersten 5 Minuten</a> hinzugefügt. Ersetze diesen Text durch deine eigenen Inhalte — Teamvorstellung, Projektziel, Kontaktinformationen oder alles, was auf eine Über-uns-Seite gehört.</p>\n",
+  "title": "Über uns",
+  "description": "Über diese Website",
+  "tags": [],
+  "pageType": "website",
+  "headings": [],
+  "relativePath": "de/about.md",
+  "lastUpdated": "2026-06-04T07:28:10.783Z"
+}

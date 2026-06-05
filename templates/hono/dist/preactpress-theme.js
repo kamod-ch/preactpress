@@ -1,0 +1,1 @@
+(function(){try{var k="preactpress-theme";var m=localStorage.getItem(k);if(m==='light'||m==='dark')document.documentElement.setAttribute('data-theme',m);}catch(e){}})();

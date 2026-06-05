@@ -1,8 +1,10 @@
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
 import { normalizeBase, resolveConfig } from '../src/node/config.js'
+import { PACKAGE_ROOT } from '../src/node/packageRoot.js'
 
 const tempRoots: string[] = []
 
@@ -49,6 +51,38 @@ describe('config', () => {
     }`)
     const config = await resolveConfig(root)
     expect(config.themeConfig.logo).toBe('/brand.svg')
+  })
+
+  it('loads async config factories', async () => {
+    const root = await makeSite(`export default async () => ({
+      site: { title: 'Async Docs', description: 'Loaded at runtime' },
+      themeConfig: {
+        nav: [{ text: 'Home', link: '/' }],
+        sidebar: [{ text: 'Guide', items: [{ text: 'Intro', link: '/intro' }] }]
+      }
+    })`)
+
+    const config = await resolveConfig(root)
+    expect(config.site.title).toBe('Async Docs')
+    expect(config.themeConfig.sidebar).toEqual([
+      { text: 'Guide', items: [{ text: 'Intro', link: '/intro' }] }
+    ])
+  })
+
+  it('loads defineConfig async factories', async () => {
+    const defineConfigImport = pathToFileURL(
+      path.join(PACKAGE_ROOT, 'dist/node/config-helpers.js')
+    ).href
+    const root = await makeSite(`import { defineConfig } from '${defineConfigImport}'
+
+export default defineConfig(async () => ({
+  site: { title: 'Factory Docs', description: 'From defineConfig' },
+  themeConfig: { nav: [{ text: 'Home', link: '/' }] }
+}))`)
+
+    const config = await resolveConfig(root)
+    expect(config.site.title).toBe('Factory Docs')
+    expect(config.themeConfig.nav).toEqual([{ text: 'Home', link: '/' }])
   })
 
   it('resolves locale-specific site and theme config', async () => {
