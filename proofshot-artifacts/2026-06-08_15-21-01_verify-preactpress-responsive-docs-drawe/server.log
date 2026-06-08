@@ -6,3 +6,37 @@
 1780932063784	  ➜  Network: use --host to expose
 1780932069271	5:21:07 PM [vite] (client) ✨ new dependencies optimized: @docsearch/js
 1780932069272	5:21:07 PM [vite] (client) ✨ optimized dependencies changed. reloading
+1780953279157	11:14:39 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/Layout.tsx
+1780953279157	11:14:39 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/Layout.tsx
+1780953279367	11:14:39 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css, /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css?direct
+1780953279367	11:14:39 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css
+1780953279670	11:14:39 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css, /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css?direct
+1780953279670	11:14:39 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css
+1780953279952	11:14:39 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css, /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css?direct
+1780953279953	11:14:39 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css
+1780953280348	11:14:40 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css, /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css?direct
+1780953280348	11:14:40 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css
+1780953280600	11:14:40 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css, /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css?direct
+1780953280600	11:14:40 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css
+1780953280831	11:14:40 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css, /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css?direct
+1780953280831	11:14:40 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css
+1780953313911	11:15:13 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/Layout.tsx
+1780953313911	11:15:13 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/Layout.tsx
+1780953314024	11:15:14 PM [vite] (client) [Unhandled rejection] ReferenceError: locales is not defined
+1780953314024	 > locales ../../src/client/theme-default/Layout.tsx:306:15
+1780953314024	    304 |                  />
+1780953314024	    305 |                </nav>
+1780953314024	    306 |                {locales.length > 1 && localizeRoute ? (
+1780953314024	        |                 ^
+1780953314024	    307 |                  <details class="pp-locale-switcher">
+1780953314024	    308 |                    <summary>{locale?.label ?? labels.language}</summary>
+1780953314024	 > C.Q [as render] ../../node_modules/.pnpm/preact@10.29.2/node_modules/preact/dist/preact.mjs:1:9295
+1780953314024	 > q ../../node_modules/.pnpm/preact@10.29.2/node_modules/preact/dist/preact.mjs:1:6202
+1780953314024	 > I ../../node_modules/.pnpm/preact@10.29.2/node_modules/preact/dist/preact.mjs:1:1120
+1780953314024	 > H ../../node_modules/.pnpm/preact@10.29.2/node_modules/preact/dist/preact.mjs:1:1636
+1780953314024	 > ../../node_modules/.pnpm/@prefresh+core@1.5.10_preact@10.29.2/node_modules/@prefresh/core/src/runtime/debounceRendering.js?v=71e8714d:13:7
+1780953314024	
+1780953314559	11:15:14 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/Layout.tsx
+1780953314559	11:15:14 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/Layout.tsx
+1780953315629	11:15:15 PM [vite] (client) hmr update /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css, /@fs/home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css?direct
+1780953315630	11:15:15 PM [vite] (ssr) page reload /home/watzak/master/kamod/preactpress/src/client/theme-default/styles.css

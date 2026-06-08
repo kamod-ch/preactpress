@@ -92,9 +92,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   routePath,
   page,
   i18n,
-  locale,
-  locales = [],
-  localizeRoute
+  locale
 }) => {
   const { title } = resolvePageHeadMeta(
     page
@@ -305,26 +303,6 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                   withBase={withBase}
                 />
               </nav>
-              {locales.length > 1 && localizeRoute ? (
-                <details class="pp-locale-switcher">
-                  <summary>{locale?.label ?? labels.language}</summary>
-                  <div class="pp-locale-menu">
-                    {locales.map((item) => {
-                      const active = item.key === locale?.key
-                      return (
-                        <a
-                          key={item.key}
-                          href={withBase(site.base, localizeRoute(item))}
-                          aria-current={active ? 'page' : undefined}
-                          class={active ? 'active' : ''}
-                        >
-                          {item.label}
-                        </a>
-                      )
-                    })}
-                  </div>
-                </details>
-              ) : null}
               {themeConfig.socialLinks?.length ? (
                 <SocialLinks links={themeConfig.socialLinks} />
               ) : null}
@@ -387,26 +365,6 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 withBase={withBase}
               />
             </nav>
-            {locales.length > 1 && localizeRoute ? (
-              <div class="pp-mobile-languages">
-                <strong>{labels.language}</strong>
-                <div>
-                  {locales.map((item) => {
-                    const active = item.key === locale?.key
-                    return (
-                      <a
-                        key={item.key}
-                        href={withBase(site.base, localizeRoute(item))}
-                        aria-current={active ? 'page' : undefined}
-                        class={active ? 'active' : ''}
-                      >
-                        {item.label}
-                      </a>
-                    )
-                  })}
-                </div>
-              </div>
-            ) : null}
             {themeConfig.socialLinks?.length ? (
               <SocialLinks links={themeConfig.socialLinks} />
             ) : null}

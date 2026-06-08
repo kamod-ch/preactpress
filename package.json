@@ -2,6 +2,22 @@
   "name": "preactpress",
   "version": "0.1.0",
   "description": "Vite and Preact powered static site generator",
+  "keywords": [
+    "markdown",
+    "mdx",
+    "preact",
+    "ssg",
+    "static-site-generator",
+    "typescript",
+    "vite"
+  ],
+  "homepage": "https://kamod-ch.github.io/preactpress/",
+  "license": "MIT",
+  "author": "Klaus Zahiragic <watzak>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/preactpress.git"
+  },
   "type": "module",
   "bin": {
     "preactpress": "./bin/preactpress.mjs"
@@ -39,11 +55,20 @@
     "prepack": "pnpm run build",
     "preactpress": "node ./bin/preactpress.mjs",
     "dev": "node ./bin/preactpress.mjs dev templates/default",
-    "dev:templates": "node ./scripts/dev-all-templates.mjs",
-    "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default",
+    "dev:default": "node ./bin/preactpress.mjs dev templates/default",
+    "check:default": "node ./bin/preactpress.mjs check templates/default",
+    "build:default": "node ./bin/preactpress.mjs build templates/default",
     "dev:docs": "node ./bin/preactpress.mjs dev templates/docs",
     "check:docs": "node ./bin/preactpress.mjs check templates/docs",
-    "build:docs": "node ./bin/preactpress.mjs build templates/docs"
+    "build:docs": "node ./bin/preactpress.mjs build templates/docs",
+    "dev:hono": "node ./bin/preactpress.mjs dev templates/hono",
+    "check:hono": "node ./bin/preactpress.mjs check templates/hono",
+    "build:hono": "node ./bin/preactpress.mjs build templates/hono",
+    "dev:magazine": "node ./bin/preactpress.mjs dev templates/magazine",
+    "check:magazine": "node ./bin/preactpress.mjs check templates/magazine",
+    "build:magazine": "node ./bin/preactpress.mjs build templates/magazine",
+    "dev:templates": "node ./scripts/dev-all-templates.mjs",
+    "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
   },
   "dependencies": {
     "@docsearch/css": "^4.6.3",
@@ -52,7 +77,7 @@
     "@preact/preset-vite": "^2.10.5",
     "@shikijs/transformers": "^4.2.0",
     "gray-matter": "^4.0.3",
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.2.0",
     "markdown-it-emoji": "^3.0.0",
     "markdown-it-mathjax3": "^5.2.0",
     "minimist": "^1.2.8",
@@ -61,17 +86,17 @@
     "preact": "^10.29.2",
     "preact-render-to-string": "^6.7.0",
     "remark-frontmatter": "^5.0.0",
-    "shiki": "^3.15.0",
+    "shiki": "^4.2.0",
     "sirv": "^3.0.2",
-    "tinyglobby": "^0.2.15",
-    "vite": "^8.0.0"
+    "tinyglobby": "^0.2.17",
+    "vite": "^8.0.16"
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
     "@types/minimist": "^1.2.5",
-    "@types/node": "^22.15.21",
-    "typescript": "^5.8.3",
-    "vitest": "^4.1.0"
+    "@types/node": "^25.9.2",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
   },
   "engines": {
     "node": ">=20"

@@ -1,5 +1,7 @@
 /// <reference types="vite/client" />
 
+declare module '@docsearch/css'
+
 declare module '*.mdx' {
   import type { ComponentType } from 'preact'
   const MdxPage: ComponentType<{
