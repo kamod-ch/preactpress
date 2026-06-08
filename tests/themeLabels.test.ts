@@ -3,11 +3,19 @@ import { defaultLabelsForLang, resolveThemeLabels } from '../src/shared/themeLab
 
 describe('resolveThemeLabels', () => {
   it('returns English defaults', () => {
-    expect(defaultLabelsForLang('en').search).toBe('Search')
+    expect(defaultLabelsForLang('en')).toMatchObject({
+      search: 'Search',
+      menu: 'Menu',
+      closeMenu: 'Close menu'
+    })
   })
 
   it('returns German defaults', () => {
-    expect(defaultLabelsForLang('de-DE').previous).toBe('Zurück')
+    expect(defaultLabelsForLang('de-DE')).toMatchObject({
+      previous: 'Zurück',
+      menu: 'Menü',
+      closeMenu: 'Menü schließen'
+    })
   })
 
   it('merges themeConfig label overrides', () => {

@@ -1,0 +1,8 @@
+1780932063027	
+1780932063027	> preactpress@0.1.0 dev:docs /home/watzak/master/kamod/preactpress
+1780932063027	> node ./bin/preactpress.mjs dev templates/docs
+1780932063027	
+1780932063783	  ➜  Local:   http://localhost:5173/
+1780932063784	  ➜  Network: use --host to expose
+1780932069271	5:21:07 PM [vite] (client) ✨ new dependencies optimized: @docsearch/js
+1780932069272	5:21:07 PM [vite] (client) ✨ optimized dependencies changed. reloading

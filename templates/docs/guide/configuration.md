@@ -1,177 +1,103 @@
 ---
-title: Configuration
-description: Site config, theme options, and common frontmatter fields
+title: Configuration reference
+description: Complete reference for PreactPress site, theme, Markdown, build, and hook options.
 ---
 
-Configuration lives in `.preactpress/config.ts` at your site root.
-
-## Site metadata
-
-```ts
-export default {
-  site: {
-    title: 'My docs',
-    description: 'Short site summary for SEO',
-    base: '/',
-    url: 'https://example.com',
-    titleTemplate: ':title | :siteTitle'
-  }
-}
-```
-
-Set `site.url` before production so canonical URLs, `sitemap.xml`, Open Graph, and `hreflang` alternates resolve correctly.
-
-## Content directory
-
-| Option | Purpose |
-| --- | --- |
-| `srcDir` | Folder with `.md` / `.mdx` pages (default `.`) |
-| `srcExclude` | Glob patterns for non-page Markdown, e.g. `['**/README.md']` |
-| `lastUpdatedGit` | Use git commit time for “last updated” (falls back to file mtime) |
-
-## Theme without custom code
-
-`themeConfig` drives the default layout:
-
-- `nav` — top links; supports nested dropdowns via `items`
-- `sidebar` — flat array **or** path map: `{ '/guide/': [...], '/reference/': [...] }`; groups and items support `collapsed` and nested `items`
-- `outline`, `search`, `socialLinks`, `footer`, `lastUpdated`, `editLink`, `logo`, `labels`
-- `logo` — string URL or `{ light, dark }` for theme-aware images
-- `search` — `true` or `{ provider: 'local' }` for sidebar search; `{ provider: 'algolia', options }` for Algolia DocSearch in the nav bar
-- `socialLinks` — `{ icon, link, ariaLabel? }[]` with built-in icons (`github`, `discord`, `x`, …) or custom `{ svg }`
-
-Per-locale overrides go under `locales.<key>.themeConfig`.
-
-Example nested nav and sidebar:
-
-```ts
-themeConfig: {
-  logo: { light: '/logo-light.svg', dark: '/logo-dark.svg' },
-  labels: { search: 'Find pages' },
-  nav: [
-    { text: 'Guide', items: [{ text: 'Intro', link: '/guide/intro' }] },
-    { text: 'Blog', link: '/blog' }
-  ],
-  sidebar: [
-    {
-      text: 'Guide',
-      collapsed: false,
-      items: [
-        { text: 'Intro', link: '/guide/intro' },
-        {
-          text: 'Advanced',
-          collapsed: true,
-          items: [{ text: 'API', link: '/guide/api' }]
-        }
-      ]
-    }
-  ]
-}
-```
-
-### Search providers
-
-Local search (default when `search: true`) filters the sidebar and loads `preactpress-search.json` at build time.
-
-Algolia DocSearch mounts a search button in the nav bar:
-
-```ts
-themeConfig: {
-  search: {
-    provider: 'algolia',
-    options: {
-      appId: 'YOUR_APP_ID',
-      apiKey: 'YOUR_SEARCH_API_KEY',
-      indexName: 'YOUR_INDEX_NAME',
-      locales: {
-        de: { indexName: 'YOUR_DE_INDEX' }
-      }
-    }
-  }
-}
-```
-
-### Social links
-
-```ts
-themeConfig: {
-  socialLinks: [
-    { icon: 'github', link: 'https://github.com/your-org/your-repo' },
-    { icon: { svg: '<svg ...></svg>' }, link: 'https://example.com', ariaLabel: 'Company site' }
-  ]
-}
-```
-
-## Global head tags
-
-```ts
-head: [
-  ['meta', { name: 'theme-color', content: '#0f766e' }]
-],
-async transformHead({ route, title, tags, site }) {
-  return [['meta', { name: 'pp-route', content: route }]]
-}
-```
-
-## Build hooks
-
-Hooks run during `dev` and `build` unless noted otherwise.
-
-```ts
-async transformPageData(page, { route, site }) {
-  if (page.kind !== 'markdown') return page
-  return {
-    ...page,
-    meta: { ...page.meta, sourceRoute: route }
-  }
-},
-
-async transformHtml(html, { route }) {
-  return html.replace('</body>', `<!-- built:${route} --></body>`)
-},
-
-async buildEnd({ site, pages }) {
-  console.log(`Built ${pages.length} pages to ${site.outDir}`)
-}
-```
-
-### Async config
-
-Export a factory to load nav or sidebar from an API at config time:
+Configuration lives in `.preactpress/config.ts`. A plain object works without imports; `defineConfig` adds type inference once PreactPress is installed.
 
 ```ts
 import { defineConfig } from 'preactpress/config'
 
-export default defineConfig(async () => ({
-  site: { title: 'My docs', description: 'Docs from CMS' },
-  themeConfig: {
-    nav: await fetchNav(),
-    sidebar: await fetchSidebar()
-  }
-}))
+export default defineConfig({
+  site: { title: 'My docs', description: 'Product documentation' }
+})
 ```
+
+## Top-level options
+
+| Option | Purpose |
+| --- | --- |
+| `srcDir` | Content root, default `.` |
+| `srcExclude` | Glob patterns that must not become pages |
+| `outDir` | Static output directory, default `dist` |
+| `cacheDir` | Incremental build cache directory |
+| `cleanUrls` | Emit `path/index.html` when true |
+| `rewrites` | Map public routes to existing content routes |
+| `ignoreDeadLinks` | Boolean, glob list, or callback used by `check` |
+| `mpa` | Remove client navigation from regular Markdown pages |
+| `lastUpdatedGit` | Prefer git commit times for last-updated metadata |
+| `theme` | Custom Preact layout module relative to `.preactpress` |
+| `site` | Global title, description, language, URL, base, and title template |
+| `locales` | Locale metadata and locale-specific theme settings |
+| `themeConfig` | Default-theme navigation and page chrome |
+| `markdown` | Markdown parser features |
+| `head` | Global meta, link, and script tuples |
+| `vite` | User Vite configuration merged into the internal config |
+| `build` | Sitemap, robots, and feed output |
+
+## Site metadata
+
+```ts
+site: {
+  title: 'My docs',
+  description: 'Short summary for search and social previews',
+  lang: 'en',
+  url: 'https://example.com',
+  base: '/',
+  titleTemplate: ':title | :siteTitle'
+}
+```
+
+Set `site.url` for canonical URLs, Open Graph, sitemap, robots, feeds, and locale alternates. Use `site.base` for subpath hosting.
+
+## Theme options
+
+| Option | Purpose |
+| --- | --- |
+| `logo` | URL or `{ light, dark }` image pair |
+| `labels` | Override localized UI labels |
+| `nav` | Header links and nested dropdowns |
+| `sidebar` | Global groups or path-prefix map |
+| `outline` | Enable or choose heading levels |
+| `search` | Local search or Algolia DocSearch |
+| `socialLinks` | Built-in or custom SVG social icons |
+| `tags` | Show or hide page tag chips |
+| `footer` | Site footer text |
+| `editLink` | Repository edit URL pattern using `:path` |
+| `lastUpdated` | Show page timestamps |
+
+Available label keys are `skip`, `navigation`, `menu`, `closeMenu`, `search`, `filterPages`, `searchResults`, `previous`, `next`, `lastUpdated`, `onThisPage`, and `language`.
+
+## Markdown options
+
+```ts
+markdown: {
+  html: false,
+  linkify: true,
+  typographer: true,
+  emoji: true,
+  math: false
+}
+```
+
+Math is opt-in because it adds MathJax processing. Raw HTML should remain disabled for untrusted content.
+
+## Build output
+
+```ts
+build: {
+  sitemap: true,
+  robots: true,
+  feed: { limit: 20 }
+}
+```
+
+Feed, sitemap, and robots output require `site.url`.
+
+## Hooks
+
+`transformHead`, `transformPageData`, and `transformHtml` run in development and production builds. `buildEnd` runs once after a successful production build. See [Advanced APIs](/guide/advanced).
 
 ## Page frontmatter
 
-| Field | Purpose |
-| --- | --- |
-| `title` / `description` | Page title and SEO summary |
-| `titleTemplate` | Override site template; `false` uses the raw page title |
-| `head` | Extra `<meta>` / `<link>` / `<script>` tags for this page only |
-| `draft: true` | Excluded from routes, search, and sitemap |
-
-Example per-page head:
-
-```yaml
----
-title: About
-head:
-  - - meta
-    - name: author
-      content: Your Name
----
-```
-
-::: warning
-Enable `markdown.html` only for trusted authors — it allows raw HTML in Markdown.
-:::
+Common fields include `title`, `description`, `tags`, `image`, `type`, `draft`, `layout`, `hero`, `features`, `navbar`, `sidebar`, `aside`, `outline`, `footer`, `editLink`, `lastUpdated`, `titleTemplate`, `head`, `pageClass`, `isHome`, and `markdownStyles`.

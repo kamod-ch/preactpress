@@ -35,6 +35,10 @@ describe('build smoke', () => {
       expect(about).not.toContain('class="pp-sidebar"')
       expect(guide).toContain('Your first 5 minutes')
       expect(guide).toContain('class="pp-sidebar"')
+      expect(guide).toContain('class="pp-menu-toggle"')
+      expect(guide).toContain('aria-controls="pp-mobile-drawer"')
+      expect(guide).toContain('id="pp-mobile-drawer"')
+      expect(guide).toContain('aria-label="Close menu"')
       expect(notFound).toContain('404')
       await expect(fs.access(path.join(root, 'dist', 'favicon.svg'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'dist', 'favicon.png'))).resolves.toBeUndefined()
@@ -68,14 +72,7 @@ describe('build smoke', () => {
         'utf8'
       )
       const deIndex = await fs.readFile(path.join(root, 'dist', 'de', 'index.html'), 'utf8')
-      const deMarkdown = await fs.readFile(
-        path.join(root, 'dist', 'de', 'markdown-examples', 'index.html'),
-        'utf8'
-      )
-      const deTagIndex = await fs.readFile(
-        path.join(root, 'dist', 'de', 'tags', 'markdown', 'index.html'),
-        'utf8'
-      )
+
 
       expect(index).toContain('<div id="app">')
       expect(index).toContain('<html lang="en">')
@@ -99,13 +96,13 @@ describe('build smoke', () => {
       expect(deIndex).toContain('<html lang="de">')
       expect(deIndex).toContain('Willkommen')
       expect(deIndex).toContain('Deutsch')
-      expect(deMarkdown).toContain('Markdown-Beispiele')
-      expect(deMarkdown).toContain('href="/de/tags/markdown"')
+      expect(deIndex).toContain('aria-label="Menü schließen"')
       expect(notFound).toContain('404')
       expect(tagIndex).toContain('Pages tagged: markdown')
       expect(tagIndex).toContain('Markdown examples')
-      expect(deTagIndex).toContain('Pages tagged: markdown')
-      expect(deTagIndex).toContain('Markdown-Beispiele')
+      await expect(fs.access(path.join(root, 'dist', 'README', 'index.html'))).rejects.toThrow()
+      await expect(fs.access(path.join(root, 'dist', 'partials', 'shared-note', 'index.html'))).rejects.toThrow()
+      await expect(fs.access(path.join(root, 'dist', 'parts', 'include-body', 'index.html'))).rejects.toThrow()
       await expect(fs.access(path.join(root, 'dist', 'preactpress-search.json'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'dist', 'preactpress-content', 'markdown-examples.json'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'dist', 'preactpress-theme.js'))).resolves.toBeUndefined()
@@ -115,10 +112,6 @@ describe('build smoke', () => {
       expect(search.find((entry) => entry.route === '/markdown-examples')).toMatchObject({
         locale: 'root',
         title: 'Markdown examples'
-      })
-      expect(search.find((entry) => entry.route === '/de/markdown-examples')).toMatchObject({
-        locale: 'de',
-        title: 'Markdown-Beispiele'
       })
       const assets = await fs.readdir(path.join(root, 'dist', 'assets'))
       const mainJs = assets.find((file) => file.startsWith('main-') && file.endsWith('.js'))

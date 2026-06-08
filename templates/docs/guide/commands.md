@@ -1,44 +1,41 @@
 ---
-title: Commands
-description: PreactPress CLI reference for local development and production builds
+title: CLI and validation
+description: Commands for scaffolding, development, validation, builds, and previews.
 ---
 
-PreactPress ships a small CLI. Run commands from your site root (where `.preactpress/config.ts` lives).
+Run commands from the site root or pass a root path as the final argument.
 
-## Development
+| Command | Purpose |
+| --- | --- |
+| `preactpress init [dir]` | Scaffold the minimal starter |
+| `preactpress init [dir] --template docs` | Scaffold the full documentation starter |
+| `preactpress init [dir] --template magazine` | Scaffold a custom editorial theme |
+| `preactpress init [dir] --template hono` | Scaffold a product/docs custom theme |
+| `preactpress dev [root]` | Start Vite SSR and hot reload |
+| `preactpress check [root]` | Validate config, routes, links, locales, and drafts |
+| `preactpress build [root]` | Emit static production files |
+| `preactpress preview [root]` | Serve `outDir` locally |
 
-```bash
-pnpm exec preactpress dev
-```
-
-Starts Vite with SSR, hot reload, and the same HTML head shape as production.
-
-## Production
-
-```bash
-pnpm exec preactpress build
-pnpm exec preactpress preview
-```
-
-`build` writes static HTML to `outDir` (default `dist/`). `preview` serves that folder locally — not for production hosting.
-
-## Project setup
+## Recommended workflow
 
 ```bash
-pnpm exec preactpress init
-pnpm exec preactpress init --template docs
+pnpm run dev
+pnpm run check
+pnpm run build
+pnpm run preview
 ```
 
-Scaffolds a new site. The `docs` template includes this guide, i18n examples, and reference pages.
+Add `check` and `build` to CI. `preview` is a local smoke-test server, not a production runtime.
 
-## Validation
+## What check validates
 
-```bash
-pnpm exec preactpress check
-```
+- configuration loading
+- route collisions and a root page
+- nav and sidebar destinations
+- relative and root-relative Markdown links
+- locale roots and locale-specific navigation
+- generated tag routes
+- invalid page layouts and misplaced home frontmatter
+- drafts and missing descriptions as warnings
 
-Validates config, route collisions, nav/sidebar links, internal Markdown links, and draft pages before you deploy.
-
-::: tip
-Add `check` to CI so broken sidebar links fail the pipeline before merge.
-:::
+Use `ignoreDeadLinks` only for intentional external or generated destinations.

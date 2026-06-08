@@ -1,0 +1,6 @@
+{
+  "branch": "feat/locale",
+  "commitSha": "ed9ca4e3e266e1dc3638c72c410234be106aec4d",
+  "startedAt": "2026-06-08T15:21:01.719Z",
+  "description": "Verify PreactPress responsive docs drawer, focus behavior, dark mode, and content overflow"
+}

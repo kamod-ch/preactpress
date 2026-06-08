@@ -1171,8 +1171,168 @@ body::selection {
   width: 100%;
 }
 
+.pp-nav-desktop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pp-menu-toggle,
+.pp-mobile-menu {
+  display: none;
+}
+
+.pp-menu-toggle,
+.pp-mobile-close {
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--pp-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--pp-sidebar-bg) 80%, var(--pp-bg));
+  color: var(--pp-text);
+  cursor: pointer;
+}
+
+.pp-menu-toggle {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pp-menu-toggle > span {
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.pp-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0.48);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.pp-mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: min(88vw, 360px);
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) 20px;
+  border-left: 1px solid var(--pp-border);
+  background: var(--pp-bg);
+  box-shadow: -16px 0 40px rgba(0, 0, 0, 0.2);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 200ms ease, visibility 0s linear 200ms;
+}
+
+.pp-mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+}
+
+.pp-mobile-close {
+  display: inline-flex;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.pp-mobile-nav,
+.pp-mobile-nav .pp-nav-dropdown-menu,
+.pp-mobile-languages > div {
+  display: grid;
+  gap: 4px;
+}
+
+.pp-mobile-nav > a,
+.pp-mobile-nav .pp-nav-dropdown > summary,
+.pp-mobile-nav .pp-nav-dropdown-menu a,
+.pp-mobile-languages a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  color: var(--pp-text);
+  text-decoration: none;
+}
+
+.pp-mobile-nav > a:hover,
+.pp-mobile-nav > a.active,
+.pp-mobile-nav .pp-nav-dropdown-menu a:hover,
+.pp-mobile-nav .pp-nav-dropdown-menu a.active,
+.pp-mobile-languages a:hover,
+.pp-mobile-languages a.active {
+  color: var(--pp-accent);
+  background: color-mix(in srgb, var(--pp-accent) 12%, transparent);
+}
+
+.pp-mobile-nav .pp-nav-dropdown-menu {
+  position: static;
+  min-width: 0;
+  margin: 4px 0 0 12px;
+  padding: 4px 0 4px 8px;
+  border: 0;
+  border-left: 1px solid var(--pp-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.pp-mobile-languages,
+.pp-mobile-docs {
+  display: grid;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--pp-border);
+}
+
+.pp-mobile-languages > strong,
+.pp-mobile-docs > strong {
+  color: var(--pp-muted);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pp-mobile-drawer .pp-social-links {
+  min-height: 44px;
+}
+
+.pp-mobile-drawer .pp-search {
+  margin-bottom: 8px;
+}
+
+.pp-mobile-drawer .pp-sidebar-group-collapsible > summary.pp-sidebar-heading,
+.pp-mobile-drawer .pp-sidebar-nested-panel > summary,
+.pp-mobile-drawer .pp-sidebar a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
 .pp-title:focus-visible,
 .pp-theme-toggle:focus-visible,
+.pp-menu-toggle:focus-visible,
+.pp-mobile-close:focus-visible,
+.pp-mobile-nav a:focus-visible,
+.pp-mobile-nav summary:focus-visible,
+.pp-mobile-languages a:focus-visible,
 .pp-search input:focus-visible,
 .pp-nav-links a:focus-visible,
 .pp-sidebar a:focus-visible,
@@ -1191,22 +1351,68 @@ body::selection {
 
 @media (max-width: 900px) {
   .pp-nav {
-    position: static;
+    position: sticky;
   }
 
   .pp-nav-inner {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
+    min-height: 64px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    gap: 12px;
+  }
+
+  .pp-logo,
+  .pp-logo-themeable img {
+    max-width: min(10rem, 44vw);
   }
 
   .pp-nav-right {
-    justify-content: flex-start;
-    width: 100%;
+    flex-wrap: nowrap;
+    gap: 8px;
   }
 
-  .pp-nav-links {
-    justify-content: flex-start;
+  .pp-nav-desktop {
+    display: none;
+  }
+
+  .pp-docsearch .DocSearch-Button,
+  .pp-theme-toggle {
+    min-width: 44px;
+    height: 44px;
+  }
+
+  .pp-docsearch .DocSearch-Button-Placeholder,
+  .pp-docsearch .DocSearch-Button-Keys {
+    display: none;
+  }
+
+  .pp-menu-toggle {
+    display: inline-flex;
+  }
+
+  .pp-mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: block;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .pp-mobile-menu.open {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .pp-mobile-menu.open .pp-mobile-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .pp-mobile-menu.open .pp-mobile-drawer {
+    transform: translateX(0);
+    visibility: visible;
+    transition-delay: 0s;
   }
 
   .pp-body {
@@ -1214,23 +1420,7 @@ body::selection {
   }
 
   .pp-sidebar {
-    width: 100%;
-    align-self: stretch;
-    position: static;
-    top: auto;
-    max-height: none;
-    overflow: visible;
-    border-right: none;
-    border-bottom: 1px solid var(--pp-border);
-    padding: 12px 20px;
-  }
-
-  .pp-sidebar-panel {
-    position: static;
-  }
-
-  .pp-sidebar-panel > summary {
-    display: list-item;
+    display: none;
   }
 
   .pp-main {
@@ -1270,7 +1460,6 @@ body::selection {
 
 @media (max-width: 520px) {
   .pp-nav-inner,
-  .pp-sidebar,
   .pp-main {
     padding-left: var(--pp-gutter-x-narrow);
     padding-right: var(--pp-gutter-x-narrow);
@@ -1278,5 +1467,42 @@ body::selection {
 
   .pp-doc-title {
     font-size: 2rem;
+    overflow-wrap: anywhere;
+  }
+
+  .pp-doc-content,
+  .pp-doc-content-plain,
+  .pp-pager-link,
+  .pp-home-feature {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .pp-doc-content pre,
+  .pp-doc-content table,
+  .pp-doc-content .pp-code-group {
+    max-width: calc(100vw - (2 * var(--pp-gutter-x-narrow)));
+  }
+
+  .pp-home-hero-text {
+    font-size: clamp(2rem, 12vw, 3rem);
+    overflow-wrap: anywhere;
+  }
+
+  .pp-home-hero-actions,
+  .pp-home-action {
+    width: 100%;
+  }
+
+  .pp-home-action {
+    justify-content: center;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-mobile-overlay,
+  .pp-mobile-drawer {
+    transition-duration: 0.01ms;
   }
 }

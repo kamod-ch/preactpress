@@ -1,45 +1,28 @@
 ---
-title: Welcome
-description: Get started with PreactPress in minutes
+layout: home
+title: PreactPress
+description: Build static documentation and content sites with Markdown, MDX, Vite, and Preact.
+hero:
+  name: PreactPress
+  text: Static sites, written in Markdown
+  tagline: Use Vite and Preact when you need speed, static HTML, and optional interactive components.
+  actions:
+    - theme: brand
+      text: Get started
+      link: /guide/getting-started
+    - theme: alt
+      text: Configuration
+      link: /guide/configuration
+features:
+  - icon: ⚡
+    title: Fast development
+    details: Vite-powered SSR, hot reload, and static production output.
+  - icon: MD
+    title: Markdown and MDX
+    details: Keep regular pages small and add Preact components only where needed.
+  - icon: ✓
+    title: Release checks
+    details: Validate routes, links, navigation, locales, and drafts before deployment.
 ---
 
-# Welcome
-
-This site is generated with **PreactPress** — a Vite and Preact static site generator for documentation, blogs, and marketing pages.
-
-## Quick start
-
-From this folder:
-
-```bash
-pnpm install
-pnpm run dev
-```
-
-Open **http://localhost:5173**. Edit Markdown files, adjust `.preactpress/config.ts`, and the dev server hot-reloads your changes.
-
-## What to read next
-
-| Page | Why |
-| --- | --- |
-| [What is PreactPress?](/guide/what-is-preactpress) | Understand the static-site generator and when to use it |
-| [Getting Started](/guide/getting-started) | Install PreactPress and learn the starter structure |
-| [Routing](/guide/routing) | See how Markdown and MDX files become URLs |
-| [Deploy](/guide/deploy) | Build and publish the generated static files |
-| [Your first 5 minutes](/guide/first-five-minutes) | Change the title, add a page, wire up navigation |
-| [About](/about) | Example page created in the tutorial |
-| [Markdown examples](/markdown-examples) | Code blocks, tables, links, and quotes |
-| [Interactive MDX](/interactive) | Preact components inside Markdown |
-
-## What you get
-
-| Feature | Included |
-| --- | --- |
-| Static HTML build | Yes |
-| Client navigation | Yes |
-| Markdown frontmatter | Yes |
-| MDX with Preact components | Yes |
-| Code highlighting | Yes |
-| Sidebar search | Yes |
-
-> The default theme is intentionally small. Replace it with your own Preact layout when your site grows — see the package README for `theme` configuration.
+PreactPress generates deployable HTML and assets. No Node server is required in production.

@@ -1,5 +1,5 @@
 import type { ComponentChildren, FunctionalComponent, JSX } from 'preact'
-import { useEffect, useMemo, useState } from 'preact/hooks'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import type { LayoutProps } from '../types.js'
 import { slugifyTagSegment, tagIndexPageRoute } from '../../shared/tags.js'
 import { slugifySegment } from '../../shared/slug.js'
@@ -116,6 +116,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
     : undefined
   const [query, setQuery] = useState('')
   const [activeHeading, setActiveHeading] = useState<string | undefined>()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const drawerRef = useRef<HTMLElement>(null)
   const activeSidebar = resolveSidebarForRoute(themeConfig.sidebar, routePath, i18n)
   const sidebarItems = activeSidebar.flatMap((group) => flattenSidebarLeafItems(group.items))
   const normalizedQuery = query.trim().toLowerCase()
@@ -190,9 +193,73 @@ const Layout: FunctionalComponent<LayoutProps> = ({
     </aside>
   ) : null
 
+  const closeMobileMenu = useCallback((restoreFocus = true) => {
+    setMobileMenuOpen(false)
+    if (restoreFocus) {
+      requestAnimationFrame(() => menuButtonRef.current?.focus())
+    }
+  }, [])
+
   useEffect(() => {
     setQuery('')
+    setMobileMenuOpen(false)
   }, [routePath])
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const focusableSelector = [
+      'a[href]',
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'summary',
+      '[tabindex]:not([tabindex="-1"])'
+    ].join(',')
+    const focusFirst = () => {
+      const focusable = drawerRef.current?.querySelectorAll<HTMLElement>(focusableSelector)
+      focusable?.[0]?.focus()
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        closeMobileMenu()
+        return
+      }
+      if (event.key !== 'Tab') return
+
+      const focusable = Array.from(
+        drawerRef.current?.querySelectorAll<HTMLElement>(focusableSelector) ?? []
+      ).filter((element) => !element.hasAttribute('disabled'))
+      if (!focusable.length) {
+        event.preventDefault()
+        return
+      }
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+    const media = window.matchMedia('(max-width: 900px)')
+    const onBreakpointChange = (event: MediaQueryListEvent) => {
+      if (!event.matches) closeMobileMenu(false)
+    }
+
+    requestAnimationFrame(focusFirst)
+    document.addEventListener('keydown', onKeyDown)
+    media.addEventListener('change', onBreakpointChange)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', onKeyDown)
+      media.removeEventListener('change', onBreakpointChange)
+    }
+  }, [closeMobileMenu, mobileMenuOpen])
 
   useEffect(() => {
     if (!showOutline || !outlineHeadings.length) {
@@ -228,7 +295,90 @@ const Layout: FunctionalComponent<LayoutProps> = ({
             />
           </a>
           <div class="pp-nav-right">
-            <nav class="pp-nav-links">
+            <div class="pp-nav-desktop">
+              <nav class="pp-nav-links" aria-label={labels.navigation}>
+                <NavLinks
+                  items={themeConfig.nav ?? []}
+                  routePath={routePath}
+                  base={site.base}
+                  isActive={isActive}
+                  withBase={withBase}
+                />
+              </nav>
+              {locales.length > 1 && localizeRoute ? (
+                <details class="pp-locale-switcher">
+                  <summary>{locale?.label ?? labels.language}</summary>
+                  <div class="pp-locale-menu">
+                    {locales.map((item) => {
+                      const active = item.key === locale?.key
+                      return (
+                        <a
+                          key={item.key}
+                          href={withBase(site.base, localizeRoute(item))}
+                          aria-current={active ? 'page' : undefined}
+                          class={active ? 'active' : ''}
+                        >
+                          {item.label}
+                        </a>
+                      )
+                    })}
+                  </div>
+                </details>
+              ) : null}
+              {themeConfig.socialLinks?.length ? (
+                <SocialLinks links={themeConfig.socialLinks} />
+              ) : null}
+            </div>
+            {algoliaSearch && algoliaOptions ? (
+              <AlgoliaSearch options={algoliaOptions} base={site.base} />
+            ) : null}
+            <ThemeToggle />
+            <button
+              ref={menuButtonRef}
+              type="button"
+              class="pp-menu-toggle"
+              aria-label={labels.menu}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="pp-mobile-drawer"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+        </header>
+      ) : null}
+      {chrome.showNavbar ? (
+        <div class={`pp-mobile-menu${mobileMenuOpen ? ' open' : ''}`}>
+          <button
+            type="button"
+            class="pp-mobile-overlay"
+            aria-label={labels.closeMenu}
+            tabIndex={-1}
+            onClick={() => closeMobileMenu()}
+          />
+          <aside
+            ref={drawerRef}
+            id="pp-mobile-drawer"
+            class="pp-mobile-drawer"
+            aria-label={labels.menu}
+            aria-hidden={!mobileMenuOpen}
+            inert={!mobileMenuOpen}
+          >
+            <div class="pp-mobile-drawer-header">
+              <strong>{labels.menu}</strong>
+              <button
+                type="button"
+                class="pp-mobile-close"
+                aria-label={labels.closeMenu}
+                onClick={() => closeMobileMenu()}
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <nav class="pp-mobile-nav" aria-label={labels.navigation}>
               <NavLinks
                 items={themeConfig.nav ?? []}
                 routePath={routePath}
@@ -238,9 +388,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               />
             </nav>
             {locales.length > 1 && localizeRoute ? (
-              <details class="pp-locale-switcher">
-                <summary>{locale?.label ?? labels.language}</summary>
-                <div class="pp-locale-menu">
+              <div class="pp-mobile-languages">
+                <strong>{labels.language}</strong>
+                <div>
                   {locales.map((item) => {
                     const active = item.key === locale?.key
                     return (
@@ -255,18 +405,48 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                     )
                   })}
                 </div>
-              </details>
+              </div>
             ) : null}
             {themeConfig.socialLinks?.length ? (
               <SocialLinks links={themeConfig.socialLinks} />
             ) : null}
-            {algoliaSearch && algoliaOptions ? (
-              <AlgoliaSearch options={algoliaOptions} base={site.base} />
+            {chrome.showSidebar ? (
+              <div class="pp-mobile-docs">
+                <strong>{labels.navigation}</strong>
+                {localSearch ? (
+                  <label class="pp-search">
+                    <span>{labels.search}</span>
+                    <input
+                      type="search"
+                      value={query}
+                      placeholder={labels.filterPages}
+                      onInput={(event) => setQuery((event.currentTarget as HTMLInputElement).value)}
+                    />
+                  </label>
+                ) : null}
+                {localSearch && normalizedQuery && searchResults.length > 0 ? (
+                  <div class="pp-search-results" role="listbox" aria-label={labels.searchResults}>
+                    {searchResults.map((result) => (
+                      <a key={result.route} role="option" href={withBase(site.base, result.route)}>
+                        <span>{result.title ?? result.route}</span>
+                        {result.description || result.excerpt ? (
+                          <small>{result.description ?? result.excerpt}</small>
+                        ) : null}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
+                <SidebarNav
+                  groups={visibleSidebar}
+                  routePath={routePath}
+                  base={site.base}
+                  withBase={withBase}
+                  isActive={isActive}
+                />
+              </div>
             ) : null}
-            <ThemeToggle />
-          </div>
+          </aside>
         </div>
-        </header>
       ) : null}
       <div class={`pp-body pp-body-${chrome.layout}`}>
         {chrome.showSidebar ? (

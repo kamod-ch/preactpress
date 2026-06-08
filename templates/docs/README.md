@@ -1,37 +1,21 @@
-# PreactPress starter site
+# PreactPress documentation starter
 
-This folder was scaffolded with `preactpress init --template docs`.
+This is the canonical PreactPress documentation and the site created by `preactpress init --template docs`.
 
 ## Commands
 
-| Script | What it does |
+| Script | Purpose |
 | --- | --- |
-| `pnpm run dev` | Start the dev server at http://localhost:5173 |
-| `pnpm run check` | Validate config, routes, and links |
-| `pnpm run build` | Write static HTML to `dist/` |
-| `pnpm run preview` | Serve the production build locally |
+| `pnpm run dev` | Start the docs at http://localhost:5173 |
+| `pnpm run check` | Validate routes, config, and links |
+| `pnpm run build` | Generate static output in `dist/` |
+| `pnpm run preview` | Preview the production output locally |
 
-## Where to edit
+## Structure
 
-| Path | Purpose |
-| --- | --- |
-| `*.md`, `*.mdx` | Page content — file path becomes the URL |
-| `de/*.md`, `de/*.mdx` | German pages for the bundled i18n demo |
-| `.preactpress/config.ts` | Site title, nav, sidebar, build options |
-| `components/` | Preact components for MDX pages |
-| `index.html` | Vite entry (rarely edited) |
+- English pages are the complete, maintained reference.
+- `de/` is a deliberately small i18n demonstration.
+- `partials/` and `parts/` contain included fragments and are excluded from routes.
+- `.preactpress/config.ts` defines navigation, locales, Markdown features, and build behavior.
 
-Start with [Your first 5 minutes](/guide/first-five-minutes) in the local site, or read the full PreactPress README in the npm package / repository.
-
-This starter includes English pages at the root and German pages under `/de/`. Remove the `de/` folder and `locales` config if you want a single-language site.
-
-## Deploy
-
-```bash
-pnpm run check
-pnpm run build
-```
-
-Upload **only** `dist/` to Netlify, Vercel, Cloudflare Pages, GitHub Pages, or any static host. No Node server is required in production.
-
-Before the first production build, set `site.url` (and `site.base` for subpath hosting) in `.preactpress/config.ts`.
+Set `site.url` and, when needed, `site.base` before production deployment. Upload `dist/` only.

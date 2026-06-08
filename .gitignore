@@ -1,6 +1,8 @@
 node_modules/
-.preactpress/
+/.preactpress/
 template/dist/
 *.tgz
 
 /dist
+
+templates/*/dist/

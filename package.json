@@ -40,7 +40,10 @@
     "preactpress": "node ./bin/preactpress.mjs",
     "dev": "node ./bin/preactpress.mjs dev templates/default",
     "dev:templates": "node ./scripts/dev-all-templates.mjs",
-    "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
+    "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default",
+    "dev:docs": "node ./bin/preactpress.mjs dev templates/docs",
+    "check:docs": "node ./bin/preactpress.mjs check templates/docs",
+    "build:docs": "node ./bin/preactpress.mjs build templates/docs"
   },
   "dependencies": {
     "@docsearch/css": "^4.6.3",

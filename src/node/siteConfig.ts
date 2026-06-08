@@ -29,6 +29,8 @@ export interface SidebarGroup {
 export interface ThemeLabels {
   skip?: string
   navigation?: string
+  menu?: string
+  closeMenu?: string
   search?: string
   filterPages?: string
   searchResults?: string

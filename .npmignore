@@ -1,0 +1,5 @@
+templates/*/node_modules/
+templates/*/dist/
+templates/*/pnpm-lock.yaml
+proofshot-artifacts/
+*.tgz

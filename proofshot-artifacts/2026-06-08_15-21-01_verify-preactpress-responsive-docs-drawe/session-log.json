@@ -1,0 +1,292 @@
+[
+  {
+    "action": "set viewport 390 844",
+    "relativeTimeSec": 5,
+    "timestamp": "2026-06-08T15:21:47.137Z"
+  },
+  {
+    "action": "open http://localhost:5173/guide/configuration",
+    "relativeTimeSec": 5.4,
+    "timestamp": "2026-06-08T15:21:47.546Z"
+  },
+  {
+    "action": "wait 800",
+    "relativeTimeSec": 5.7,
+    "timestamp": "2026-06-08T15:21:47.888Z"
+  },
+  {
+    "action": "snapshot -i",
+    "relativeTimeSec": 6.7,
+    "timestamp": "2026-06-08T15:21:48.912Z"
+  },
+  {
+    "action": "eval JSON.stringify({innerWidth,scrollWidth:document.documentElement.scrollWidth,overflow:document.documentElement.scrollWidth>innerWidth,active:document.activeElement?.getAttribute('aria-label')||document.activeElement?.tagName})",
+    "relativeTimeSec": 7,
+    "timestamp": "2026-06-08T15:21:49.191Z"
+  },
+  {
+    "action": "screenshot mobile-configuration-closed.png",
+    "relativeTimeSec": 7.2,
+    "timestamp": "2026-06-08T15:21:49.418Z"
+  },
+  {
+    "action": "click @e4",
+    "relativeTimeSec": 17.2,
+    "timestamp": "2026-06-08T15:21:59.387Z"
+  },
+  {
+    "action": "wait 300",
+    "relativeTimeSec": 17.4,
+    "timestamp": "2026-06-08T15:21:59.611Z"
+  },
+  {
+    "action": "snapshot -i",
+    "relativeTimeSec": 18,
+    "timestamp": "2026-06-08T15:22:00.130Z"
+  },
+  {
+    "action": "eval JSON.stringify({expanded:document.querySelector('.pp-menu-toggle')?.getAttribute('aria-expanded'),drawerHidden:document.querySelector('.pp-mobile-drawer')?.getAttribute('aria-hidden'),bodyOverflow:document.body.style.overflow,active:document.activeElement?.getAttribute('aria-label'),scrollWidth:document.documentElement.scrollWidth,innerWidth})",
+    "relativeTimeSec": 18.2,
+    "timestamp": "2026-06-08T15:22:00.384Z"
+  },
+  {
+    "action": "screenshot mobile-drawer-open.png",
+    "relativeTimeSec": 18.4,
+    "timestamp": "2026-06-08T15:22:00.594Z"
+  },
+  {
+    "action": "press Escape",
+    "relativeTimeSec": 18.7,
+    "timestamp": "2026-06-08T15:22:00.843Z"
+  },
+  {
+    "action": "wait 250",
+    "relativeTimeSec": 18.9,
+    "timestamp": "2026-06-08T15:22:01.054Z"
+  },
+  {
+    "action": "eval JSON.stringify({expanded:document.querySelector('.pp-menu-toggle')?.getAttribute('aria-expanded'),active:document.activeElement?.getAttribute('aria-label'),bodyOverflow:document.body.style.overflow})",
+    "relativeTimeSec": 19.3,
+    "timestamp": "2026-06-08T15:22:01.514Z"
+  },
+  {
+    "action": "click @e4",
+    "relativeTimeSec": 30.5,
+    "timestamp": "2026-06-08T15:22:12.685Z"
+  },
+  {
+    "action": "wait 200",
+    "relativeTimeSec": 30.7,
+    "timestamp": "2026-06-08T15:22:12.913Z"
+  },
+  {
+    "action": "press Shift+Tab",
+    "relativeTimeSec": 31.2,
+    "timestamp": "2026-06-08T15:22:13.323Z"
+  },
+  {
+    "action": "eval JSON.stringify({afterShiftTab:document.activeElement?.textContent?.trim(),href:document.activeElement?.getAttribute('href')})",
+    "relativeTimeSec": 31.4,
+    "timestamp": "2026-06-08T15:22:13.555Z"
+  },
+  {
+    "action": "press Tab",
+    "relativeTimeSec": 31.6,
+    "timestamp": "2026-06-08T15:22:13.757Z"
+  },
+  {
+    "action": "eval JSON.stringify({afterTab:document.activeElement?.getAttribute('aria-label')})",
+    "relativeTimeSec": 31.8,
+    "timestamp": "2026-06-08T15:22:13.957Z"
+  },
+  {
+    "action": "click .pp-mobile-drawer a[href=\"/guide/advanced\"]",
+    "relativeTimeSec": 32,
+    "timestamp": "2026-06-08T15:22:14.156Z"
+  },
+  {
+    "action": "wait 700",
+    "relativeTimeSec": 32.2,
+    "timestamp": "2026-06-08T15:22:14.368Z"
+  },
+  {
+    "action": "eval JSON.stringify({path:location.pathname,expanded:document.querySelector('.pp-menu-toggle')?.getAttribute('aria-expanded'),drawerHidden:document.querySelector('.pp-mobile-drawer')?.getAttribute('aria-hidden'),activeId:document.activeElement?.id})",
+    "relativeTimeSec": 33.1,
+    "timestamp": "2026-06-08T15:22:15.267Z"
+  },
+  {
+    "action": "click .pp-theme-toggle",
+    "relativeTimeSec": 33.3,
+    "timestamp": "2026-06-08T15:22:15.467Z"
+  },
+  {
+    "action": "wait 200",
+    "relativeTimeSec": 33.5,
+    "timestamp": "2026-06-08T15:22:15.695Z"
+  },
+  {
+    "action": "eval JSON.stringify({theme:document.documentElement.dataset.theme})",
+    "relativeTimeSec": 33.9,
+    "timestamp": "2026-06-08T15:22:16.107Z"
+  },
+  {
+    "action": "screenshot mobile-advanced-dark.png",
+    "relativeTimeSec": 34.1,
+    "timestamp": "2026-06-08T15:22:16.313Z"
+  },
+  {
+    "action": "snapshot -i",
+    "relativeTimeSec": 44.1,
+    "timestamp": "2026-06-08T15:22:26.268Z"
+  },
+  {
+    "action": "click @e103",
+    "relativeTimeSec": 53.1,
+    "timestamp": "2026-06-08T15:22:35.306Z"
+  },
+  {
+    "action": "wait 900",
+    "relativeTimeSec": 53.3,
+    "timestamp": "2026-06-08T15:22:35.514Z"
+  },
+  {
+    "action": "eval JSON.stringify({path:location.pathname,expanded:document.querySelector('.pp-menu-toggle')?.getAttribute('aria-expanded'),hidden:document.querySelector('.pp-mobile-drawer')?.getAttribute('aria-hidden'),active:document.activeElement?.id})",
+    "relativeTimeSec": 54.5,
+    "timestamp": "2026-06-08T15:22:36.624Z"
+  },
+  {
+    "action": "click @e3",
+    "relativeTimeSec": 55.6,
+    "timestamp": "2026-06-08T15:22:37.817Z"
+  },
+  {
+    "action": "wait 200",
+    "relativeTimeSec": 55.9,
+    "timestamp": "2026-06-08T15:22:38.054Z"
+  },
+  {
+    "action": "eval JSON.stringify({theme:document.documentElement.getAttribute('data-theme'),stored:localStorage.getItem('preactpress-theme')})",
+    "relativeTimeSec": 56.3,
+    "timestamp": "2026-06-08T15:22:38.463Z"
+  },
+  {
+    "action": "screenshot mobile-route-dark.png",
+    "relativeTimeSec": 56.5,
+    "timestamp": "2026-06-08T15:22:38.676Z"
+  },
+  {
+    "action": "get attr href @e103",
+    "relativeTimeSec": 67,
+    "timestamp": "2026-06-08T15:22:49.174Z"
+  },
+  {
+    "action": "get attr href .pp-mobile-drawer a[href*=\"advanced\"]",
+    "relativeTimeSec": 72.9,
+    "timestamp": "2026-06-08T15:22:55.118Z"
+  },
+  {
+    "action": "eval JSON.stringify(Array.from(document.querySelectorAll('.pp-mobile-drawer a')).map(a=>({text:a.textContent.trim(),href:a.getAttribute('href')})).slice(-8))",
+    "relativeTimeSec": 77.6,
+    "timestamp": "2026-06-08T15:22:59.815Z"
+  },
+  {
+    "action": "eval document.querySelector('.pp-mobile-drawer a[href=\"/guide/advanced\"]')?.click(); 'clicked'",
+    "relativeTimeSec": 83.3,
+    "timestamp": "2026-06-08T15:23:05.504Z"
+  },
+  {
+    "action": "wait 900",
+    "relativeTimeSec": 83.5,
+    "timestamp": "2026-06-08T15:23:05.714Z"
+  },
+  {
+    "action": "eval JSON.stringify({path:location.pathname,expanded:document.querySelector('.pp-menu-toggle')?.getAttribute('aria-expanded'),hidden:document.querySelector('.pp-mobile-drawer')?.getAttribute('aria-hidden'),active:document.activeElement?.id})",
+    "relativeTimeSec": 84.6,
+    "timestamp": "2026-06-08T15:23:06.819Z"
+  },
+  {
+    "action": "snapshot -i",
+    "relativeTimeSec": 90.2,
+    "timestamp": "2026-06-08T15:23:12.335Z"
+  },
+  {
+    "action": "click @e3",
+    "relativeTimeSec": 91.4,
+    "timestamp": "2026-06-08T15:23:13.527Z"
+  },
+  {
+    "action": "wait 200",
+    "relativeTimeSec": 91.6,
+    "timestamp": "2026-06-08T15:23:13.755Z"
+  },
+  {
+    "action": "eval JSON.stringify({theme:document.documentElement.getAttribute('data-theme'),stored:localStorage.getItem('preactpress-theme')})",
+    "relativeTimeSec": 92,
+    "timestamp": "2026-06-08T15:23:14.178Z"
+  },
+  {
+    "action": "screenshot mobile-advanced-dark.png",
+    "relativeTimeSec": 92.2,
+    "timestamp": "2026-06-08T15:23:14.384Z"
+  },
+  {
+    "action": "set viewport 768 1024",
+    "relativeTimeSec": 101.3,
+    "timestamp": "2026-06-08T15:23:23.490Z"
+  },
+  {
+    "action": "open http://localhost:5173/markdown-examples",
+    "relativeTimeSec": 101.7,
+    "timestamp": "2026-06-08T15:23:23.859Z"
+  },
+  {
+    "action": "wait 700",
+    "relativeTimeSec": 102,
+    "timestamp": "2026-06-08T15:23:24.175Z"
+  },
+  {
+    "action": "eval JSON.stringify({innerWidth,scrollWidth:document.documentElement.scrollWidth,overflow:document.documentElement.scrollWidth>innerWidth,menu:document.querySelector('.pp-menu-toggle')&&getComputedStyle(document.querySelector('.pp-menu-toggle')).display,sidebar:getComputedStyle(document.querySelector('.pp-sidebar')).display,theme:document.documentElement.dataset.theme})",
+    "relativeTimeSec": 102.9,
+    "timestamp": "2026-06-08T15:23:25.078Z"
+  },
+  {
+    "action": "screenshot tablet-markdown.png",
+    "relativeTimeSec": 103.1,
+    "timestamp": "2026-06-08T15:23:25.286Z"
+  },
+  {
+    "action": "set viewport 1440 1000",
+    "relativeTimeSec": 103.4,
+    "timestamp": "2026-06-08T15:23:25.555Z"
+  },
+  {
+    "action": "open http://localhost:5173/guide/configuration",
+    "relativeTimeSec": 103.8,
+    "timestamp": "2026-06-08T15:23:25.957Z"
+  },
+  {
+    "action": "wait 700",
+    "relativeTimeSec": 104.1,
+    "timestamp": "2026-06-08T15:23:26.237Z"
+  },
+  {
+    "action": "eval JSON.stringify({innerWidth,scrollWidth:document.documentElement.scrollWidth,overflow:document.documentElement.scrollWidth>innerWidth,menu:getComputedStyle(document.querySelector('.pp-menu-toggle')).display,sidebar:getComputedStyle(document.querySelector('.pp-sidebar')).display,outline:getComputedStyle(document.querySelector('.pp-outline')).display})",
+    "relativeTimeSec": 105,
+    "timestamp": "2026-06-08T15:23:27.145Z"
+  },
+  {
+    "action": "screenshot desktop-configuration.png",
+    "relativeTimeSec": 105.2,
+    "timestamp": "2026-06-08T15:23:27.346Z"
+  },
+  {
+    "action": "errors",
+    "relativeTimeSec": 105.5,
+    "timestamp": "2026-06-08T15:23:27.623Z"
+  },
+  {
+    "action": "console",
+    "relativeTimeSec": 105.7,
+    "timestamp": "2026-06-08T15:23:27.851Z"
+  }
+]

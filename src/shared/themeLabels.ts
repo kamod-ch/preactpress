@@ -3,6 +3,8 @@ import type { ThemeLabels } from '../node/siteConfig.js'
 export interface ResolvedThemeLabels {
   skip: string
   navigation: string
+  menu: string
+  closeMenu: string
   search: string
   filterPages: string
   searchResults: string
@@ -16,6 +18,8 @@ export interface ResolvedThemeLabels {
 const EN_LABELS: ResolvedThemeLabels = {
   skip: 'Skip to content',
   navigation: 'Navigation',
+  menu: 'Menu',
+  closeMenu: 'Close menu',
   search: 'Search',
   filterPages: 'Filter pages',
   searchResults: 'Search results',
@@ -29,6 +33,8 @@ const EN_LABELS: ResolvedThemeLabels = {
 const DE_LABELS: ResolvedThemeLabels = {
   skip: 'Zum Inhalt springen',
   navigation: 'Navigation',
+  menu: 'Menü',
+  closeMenu: 'Menü schließen',
   search: 'Suche',
   filterPages: 'Seiten filtern',
   searchResults: 'Suchergebnisse',
@@ -52,6 +58,8 @@ export function resolveThemeLabels(
   return {
     skip: overrides.skip ?? defaults.skip,
     navigation: overrides.navigation ?? defaults.navigation,
+    menu: overrides.menu ?? defaults.menu,
+    closeMenu: overrides.closeMenu ?? defaults.closeMenu,
     search: overrides.search ?? defaults.search,
     filterPages: overrides.filterPages ?? defaults.filterPages,
     searchResults: overrides.searchResults ?? defaults.searchResults,
