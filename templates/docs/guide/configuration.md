@@ -101,3 +101,30 @@ Feed, sitemap, and robots output require `site.url`.
 ## Page frontmatter
 
 Common fields include `title`, `description`, `tags`, `image`, `type`, `draft`, `layout`, `hero`, `features`, `navbar`, `sidebar`, `aside`, `outline`, `footer`, `editLink`, `lastUpdated`, `titleTemplate`, `head`, `pageClass`, `isHome`, and `markdownStyles`.
+
+## TypeScript types
+
+Import `defineConfig` from `preactpress/config` for typed site configuration. Frontmatter and page metadata are described by `PageFrontmatter` from `preactpress/shared` or `preactpress/config`.
+
+For blogs and magazines, optional content-model helpers are available:
+
+```ts
+import { createContentLoader } from 'preactpress/config'
+import { articleFromFrontmatter, type ArticlePost } from 'preactpress/shared'
+
+export default createContentLoader<ArticlePost[]>(['posts/*.md'], {
+  transform(items) {
+    return items.map((item) =>
+      articleFromFrontmatter({
+        route: item.route,
+        url: item.url,
+        title: item.title,
+        description: item.description,
+        frontmatter: item.frontmatter
+      })
+    )
+  }
+})
+```
+
+Loader output is exposed on `page.meta.contentData` for the matching route.

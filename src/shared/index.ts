@@ -10,8 +10,19 @@ export {
   resolvePageHeadMeta,
   resolvePageMeta,
   titleTemplateFromMeta,
-  type PageLayout
+  type PageFrontmatter,
+  type PageLayout,
+  type PageMetaInput
 } from './pageMeta.js'
+export {
+  articleFromFrontmatter,
+  parseAuthor,
+  parseCategory,
+  type ArticleFrontmatter,
+  type ArticlePost,
+  type Author,
+  type ContentCategory
+} from './contentSchema.js'
 export { headTagsFromMeta } from './pageHead.js'
 export {
   allSidebarGroups,

@@ -6,6 +6,7 @@ export type PageLayout = (typeof PAGE_LAYOUTS)[number]
 
 export const DEFAULT_TITLE_TEMPLATE = ':title | :siteTitle'
 
+/** Frontmatter and page metadata fields supported by PreactPress pages. */
 export interface PageMetaInput {
   meta?: Record<string, unknown>
   title?: string
@@ -30,6 +31,9 @@ export interface PageMetaInput {
   kind?: 'markdown' | 'mdx'
   html?: string
 }
+
+/** Alias for {@link PageMetaInput} — use in themes, hooks, and custom frontmatter helpers. */
+export type PageFrontmatter = PageMetaInput
 
 export interface SiteMetaInput {
   title: string

@@ -1,4 +1,6 @@
-export default {
+import { defineConfig } from 'preactpress/config'
+
+export default defineConfig({
   site: {
     title: 'Branchenjournal',
     description: 'Static magazine-style starter for PreactPress',
@@ -31,4 +33,4 @@ export default {
       }
     ]
   }
-}
+})

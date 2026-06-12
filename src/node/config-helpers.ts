@@ -10,3 +10,12 @@ export function defineConfig(config: UserConfigExport): UserConfigExport {
 
 export { createContentLoader } from './createContentLoader.js'
 export type { ContentItem, ContentLoader } from './createContentLoader.js'
+export type {
+  ArticleFrontmatter,
+  ArticlePost,
+  Author,
+  ContentCategory,
+  PageFrontmatter,
+  PageLayout,
+  PageMetaInput
+} from '../shared/index.js'

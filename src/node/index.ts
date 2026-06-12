@@ -18,3 +18,12 @@ export type {
   ThemeConfig,
   SiteData
 } from './siteConfig.js'
+export type {
+  ArticleFrontmatter,
+  ArticlePost,
+  Author,
+  ContentCategory,
+  PageFrontmatter,
+  PageLayout,
+  PageMetaInput
+} from '../shared/index.js'

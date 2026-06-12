@@ -4,6 +4,9 @@ description: 'Zwischen Volumen und Warenwert: wie Händlerinnen und Händler ihr
 tags:
   - Handel
   - Margen
+author: Redaktion
+category: Märkte
+readTime: 6 Min.
 ---
 
 ## Einordnung

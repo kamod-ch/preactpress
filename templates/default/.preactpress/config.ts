@@ -1,4 +1,6 @@
-export default {
+import { defineConfig } from 'preactpress/config'
+
+export default defineConfig({
   srcExclude: ['README.md', 'partials/**', 'parts/**'],
   site: {
     title: 'My PreactPress Site',
@@ -26,4 +28,4 @@ export default {
       }
     ]
   }
-}
+})

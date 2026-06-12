@@ -1,6 +1,8 @@
 import type { ComponentChildren, ComponentType, FunctionalComponent, JSX } from 'preact'
 import { useEffect, useMemo, useState } from 'preact/hooks'
+import type { ArticlePost } from 'preactpress/shared'
 import ThemeToggle from './ThemeToggle.js'
+import TeaserGrid, { articlesToTeasers } from './TeaserGrid.js'
 import './magazine.css'
 
 /** Mirrors `preactpress` `LayoutProps` so this example stays self-contained. */
@@ -154,6 +156,10 @@ const Layout: FunctionalComponent<LayoutProps> = ({ site, themeConfig, routePath
     : undefined
   const hasRail = (themeConfig.sidebar?.length ?? 0) > 0
   const isHome = normalizeLink(routePath) === '/'
+  const homeArticles = isHome
+    ? (page?.meta.contentData as ArticlePost[] | undefined)
+    : undefined
+  const homeTeasers = homeArticles?.length ? articlesToTeasers(homeArticles) : undefined
   const pageTags = page?.tags ?? []
   const showTags =
     themeConfig.tags !== false && pageTags.length > 0 && !Boolean(page?.meta.tagIndex)
@@ -222,6 +228,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({ site, themeConfig, routePath
                 ))}
               </ul>
             ) : null}
+            {homeTeasers?.length ? <TeaserGrid items={homeTeasers} /> : null}
             {MdxComponent ? (
               <div class="mag-doc-content">
                 <MdxComponent components={mdxComponents} />

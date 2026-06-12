@@ -39,6 +39,26 @@ async function readPreactpressVersion(): Promise<string> {
   return pkg.version
 }
 
+async function linkLocalPreactpress(targetRoot: string): Promise<void> {
+  const nodeModules = path.join(targetRoot, 'node_modules')
+  const linkPath = path.join(nodeModules, 'preactpress')
+  await fs.mkdir(nodeModules, { recursive: true })
+  try {
+    const existing = await fs.readlink(linkPath)
+    if (path.resolve(path.dirname(linkPath), existing) === PACKAGE_ROOT) return
+    await fs.rm(linkPath, { recursive: true, force: true })
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException).code
+    if (code !== 'ENOENT' && code !== 'EINVAL' && code !== 'ELOOP') throw err
+    try {
+      await fs.rm(linkPath, { recursive: true, force: true })
+    } catch {
+      /* ignore */
+    }
+  }
+  await fs.symlink(PACKAGE_ROOT, linkPath, 'dir')
+}
+
 async function patchStarterPackageJson(targetRoot: string, preactpressVersion: string): Promise<void> {
   const pkgPath = path.join(targetRoot, 'package.json')
   const raw = await fs.readFile(pkgPath, 'utf8')
@@ -74,6 +94,7 @@ export async function init(targetRoot: string, options: InitOptions = {}): Promi
 
   const preactpressVersion = await readPreactpressVersion()
   await patchStarterPackageJson(resolvedRoot, preactpressVersion)
+  await linkLocalPreactpress(resolvedRoot)
 
   return { root: resolvedRoot, preactpressVersion, template }
 }

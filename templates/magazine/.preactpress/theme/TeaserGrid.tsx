@@ -1,4 +1,5 @@
 import type { FunctionalComponent } from 'preact'
+import type { ArticlePost } from 'preactpress/shared'
 
 export interface TeaserItem {
   href: string
@@ -10,6 +11,16 @@ export interface TeaserItem {
 
 export interface TeaserGridProps {
   items: TeaserItem[]
+}
+
+export function articlesToTeasers(posts: ArticlePost[]): TeaserItem[] {
+  return posts.map((post) => ({
+    href: post.route,
+    kicker: post.category?.name ?? 'Artikel',
+    title: post.title,
+    dek: post.description ?? '',
+    readTime: post.readTime
+  }))
 }
 
 const TeaserGrid: FunctionalComponent<TeaserGridProps> = ({ items }) => (

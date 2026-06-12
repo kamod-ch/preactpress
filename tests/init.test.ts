@@ -19,7 +19,8 @@ describe('init', () => {
       await expect(fs.access(path.join(root, 'interactive.mdx'))).rejects.toThrow()
       await expect(fs.access(path.join(root, '.preactpress', 'config.ts'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'dist'))).rejects.toThrow()
-      await expect(fs.access(path.join(root, 'node_modules'))).rejects.toThrow()
+      const linked = await fs.readlink(path.join(root, 'node_modules', 'preactpress'))
+      expect(path.resolve(path.join(root, 'node_modules'), linked)).toBe(PACKAGE_ROOT)
       await expect(fs.access(path.join(root, 'pnpm-lock.yaml'))).rejects.toThrow()
 
       const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8')) as {
@@ -76,7 +77,8 @@ describe('init', () => {
       await expect(
         fs.access(path.join(root, '.preactpress', 'theme', 'hono.css'))
       ).resolves.toBeUndefined()
-      await expect(fs.access(path.join(root, 'node_modules'))).rejects.toThrow()
+      const linked = await fs.readlink(path.join(root, 'node_modules', 'preactpress'))
+      expect(path.resolve(path.join(root, 'node_modules'), linked)).toBe(PACKAGE_ROOT)
       await expect(fs.access(path.join(root, 'pnpm-lock.yaml'))).rejects.toThrow()
 
       const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8')) as {
