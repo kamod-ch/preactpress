@@ -11,11 +11,11 @@ export default {
 }
 ```
 
-The module default-exports a Preact component receiving `LayoutProps` from `preactpress/client`.
+The module default-exports a Preact component receiving `LayoutProps` from `@kamod-ch/preactpress/client`.
 
 ```tsx
 import type { FunctionalComponent } from 'preact'
-import type { LayoutProps } from 'preactpress/client'
+import type { LayoutProps } from '@kamod-ch/preactpress/client'
 import './theme.css'
 
 const Layout: FunctionalComponent<LayoutProps> = ({ site, page }) => (
@@ -34,6 +34,6 @@ const Layout: FunctionalComponent<LayoutProps> = ({ site, page }) => (
 export default Layout
 ```
 
-Theme authors are responsible for navigation, responsive behavior, focus management, search UI, and rendering Markdown versus MDX pages. Helpers for routes, page head data, tags, slugs, and theme state are exported from `preactpress/client` and `preactpress/shared`.
+Theme authors are responsible for navigation, responsive behavior, focus management, search UI, and rendering Markdown versus MDX pages. Helpers for routes, page head data, tags, slugs, and theme state are exported from `@kamod-ch/preactpress/client` and `@kamod-ch/preactpress/shared`.
 
 The `magazine` and `hono` init templates are complete custom-theme examples.

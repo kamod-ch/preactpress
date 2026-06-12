@@ -24,7 +24,7 @@ Start in an empty directory:
 ```bash
 mkdir my-site
 cd my-site
-pnpm dlx preactpress init
+pnpm dlx @kamod-ch/preactpress init
 pnpm install
 pnpm run dev
 ```
@@ -34,7 +34,7 @@ With npm:
 ```bash
 mkdir my-site
 cd my-site
-npx preactpress init
+npx @kamod-ch/preactpress init
 npm install
 npm run dev
 ```
@@ -42,7 +42,7 @@ npm run dev
 Open **http://localhost:5173** to see the starter site.
 
 > **Note**
-> `preactpress init` copies the built-in starter template and writes `preactpress` to `devDependencies`. You do not need to install PreactPress separately before running the initializer.
+> `preactpress init` copies the built-in starter template and writes `@kamod-ch/preactpress` to `devDependencies`. You do not need to install PreactPress separately before running the initializer.
 
 ## File structure
 

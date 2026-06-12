@@ -31,18 +31,27 @@ function shouldCopyTemplateEntry(rel: string): boolean {
   return true
 }
 
-async function readPreactpressVersion(): Promise<string> {
-  const pkgPath = path.join(PACKAGE_ROOT, 'package.json')
-  const raw = await fs.readFile(pkgPath, 'utf8')
-  const pkg = JSON.parse(raw) as { version?: string }
-  if (!pkg.version) throw new Error('preactpress: missing version in package.json')
-  return pkg.version
+function packageInstallPath(nodeModules: string, packageName: string): string {
+  if (packageName.startsWith('@')) {
+    const [scope, name] = packageName.split('/')
+    return path.join(nodeModules, scope, name)
+  }
+  return path.join(nodeModules, packageName)
 }
 
-async function linkLocalPreactpress(targetRoot: string): Promise<void> {
+async function readPreactpressPackage(): Promise<{ name: string; version: string }> {
+  const pkgPath = path.join(PACKAGE_ROOT, 'package.json')
+  const raw = await fs.readFile(pkgPath, 'utf8')
+  const pkg = JSON.parse(raw) as { name?: string; version?: string }
+  if (!pkg.name) throw new Error('preactpress: missing name in package.json')
+  if (!pkg.version) throw new Error('preactpress: missing version in package.json')
+  return { name: pkg.name, version: pkg.version }
+}
+
+async function linkLocalPreactpress(targetRoot: string, packageName: string): Promise<void> {
   const nodeModules = path.join(targetRoot, 'node_modules')
-  const linkPath = path.join(nodeModules, 'preactpress')
-  await fs.mkdir(nodeModules, { recursive: true })
+  const linkPath = packageInstallPath(nodeModules, packageName)
+  await fs.mkdir(path.dirname(linkPath), { recursive: true })
   try {
     const existing = await fs.readlink(linkPath)
     if (path.resolve(path.dirname(linkPath), existing) === PACKAGE_ROOT) return
@@ -59,14 +68,19 @@ async function linkLocalPreactpress(targetRoot: string): Promise<void> {
   await fs.symlink(PACKAGE_ROOT, linkPath, 'dir')
 }
 
-async function patchStarterPackageJson(targetRoot: string, preactpressVersion: string): Promise<void> {
+async function patchStarterPackageJson(
+  targetRoot: string,
+  packageName: string,
+  preactpressVersion: string
+): Promise<void> {
   const pkgPath = path.join(targetRoot, 'package.json')
   const raw = await fs.readFile(pkgPath, 'utf8')
   const pkg = JSON.parse(raw) as {
     devDependencies?: Record<string, string>
   }
   pkg.devDependencies = pkg.devDependencies ?? {}
-  pkg.devDependencies.preactpress = `^${preactpressVersion}`
+  delete pkg.devDependencies.preactpress
+  pkg.devDependencies[packageName] = `^${preactpressVersion}`
   await fs.writeFile(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`)
 }
 
@@ -92,9 +106,9 @@ export async function init(targetRoot: string, options: InitOptions = {}): Promi
     }
   })
 
-  const preactpressVersion = await readPreactpressVersion()
-  await patchStarterPackageJson(resolvedRoot, preactpressVersion)
-  await linkLocalPreactpress(resolvedRoot)
+  const { name: packageName, version: preactpressVersion } = await readPreactpressPackage()
+  await patchStarterPackageJson(resolvedRoot, packageName, preactpressVersion)
+  await linkLocalPreactpress(resolvedRoot, packageName)
 
   return { root: resolvedRoot, preactpressVersion, template }
 }

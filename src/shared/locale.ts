@@ -101,7 +101,10 @@ export function siteForRoute(
   route: string,
   i18n: ResolvedI18n | undefined
 ): SiteData {
-  return localeFromRoute(route, i18n)?.site ?? site
+  const localeSite = localeFromRoute(route, i18n)?.site
+  if (!localeSite) return site
+  // `base` is a deployment setting; locale copies are resolved before CLI overrides.
+  return { ...localeSite, base: site.base }
 }
 
 export function themeConfigForRoute(

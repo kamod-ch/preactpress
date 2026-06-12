@@ -151,6 +151,30 @@ export function normalizeBase(base: string): string {
   return base
 }
 
+const DEFAULT_FAVICON_FILES = new Set(['favicon.svg', 'favicon.png', 'favicon-32.png'])
+
+function isDefaultFaviconHeadTag(tag: import('./siteConfig.js').HeadTag): boolean {
+  if (tag[0] !== 'link' || typeof tag[1].href !== 'string') return false
+  const name = path.posix.basename(tag[1].href)
+  return DEFAULT_FAVICON_FILES.has(name)
+}
+
+/** Apply a CLI or runtime base override across site, locales, and default favicon head tags. */
+export function applySiteBaseOverride(config: SiteConfig, base: string): void {
+  const normalized = normalizeBase(base)
+  config.site.base = normalized
+  if (config.i18n) {
+    for (const locale of config.i18n.locales) {
+      locale.site.base = normalized
+    }
+  }
+  const userHead = config.head.filter((tag) => !isDefaultFaviconHeadTag(tag))
+  config.head = [
+    ...(hasFaviconHead(userHead) ? [] : defaultFaviconHead(normalized)),
+    ...userHead
+  ]
+}
+
 function normalizeSiteUrl(url: string): string {
   return url.replace(/\/+$/, '')
 }

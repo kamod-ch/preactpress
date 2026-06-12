@@ -13,7 +13,10 @@
   ],
   "homepage": "https://kamod-ch.github.io/preactpress/",
   "license": "MIT",
-  "author": "Klaus Zahiragic <watzak>",
+  "author": "Klaus Zahiragic <watzak@users.noreply.github.com>",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/preactpress.git"

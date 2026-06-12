@@ -3,7 +3,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
-import { normalizeBase, resolveConfig } from '../src/node/config.js'
+import { applySiteBaseOverride, normalizeBase, resolveConfig } from '../src/node/config.js'
 import { PACKAGE_ROOT } from '../src/node/packageRoot.js'
 
 const tempRoots: string[] = []
@@ -115,5 +115,22 @@ export default defineConfig(async () => ({
       search: true,
       nav: [{ text: 'Start', link: '/de' }]
     })
+  })
+
+  it('applies CLI base overrides to locales and default favicon head tags', async () => {
+    const root = await makeSite(`export default {
+      site: { title: 'Docs', description: 'English docs' },
+      locales: {
+        root: { label: 'English', lang: 'en' },
+        de: { label: 'Deutsch', lang: 'de' }
+      }
+    }`)
+
+    const config = await resolveConfig(root)
+    applySiteBaseOverride(config, '/preactpress/')
+
+    expect(config.site.base).toBe('/preactpress')
+    expect(config.i18n?.locales.every((locale) => locale.site.base === '/preactpress')).toBe(true)
+    expect(config.head.find((tag) => tag[1].href === '/preactpress/favicon.svg')).toBeTruthy()
   })
 })

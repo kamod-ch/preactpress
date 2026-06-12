@@ -1,6 +1,6 @@
 import type { ComponentChildren, FunctionalComponent, JSX } from 'preact'
 import { useEffect, useMemo, useState } from 'preact/hooks'
-import type { LayoutProps } from 'preactpress/client'
+import type { LayoutProps } from '@kamod-ch/preactpress/client'
 import Logo from './Logo.js'
 import ThemeToggle from './ThemeToggle.js'
 import './hono.css'

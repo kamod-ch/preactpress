@@ -237,11 +237,11 @@ This emits `/packages/preact` and `/packages/vite`. Use `{{ params.key }}` and `
 
 ## Data loaders
 
-Colocate `*.data.ts` with a page to load build-time data via `createContentLoader` from `preactpress/config`. The result is exposed on `page.meta.contentData` (and in themes through the `page` prop).
+Colocate `*.data.ts` with a page to load build-time data via `createContentLoader` from `@kamod-ch/preactpress/config`. The result is exposed on `page.meta.contentData` (and in themes through the `page` prop).
 
 ```ts
 // blog.data.ts
-import { createContentLoader } from 'preactpress/config'
+import { createContentLoader } from '@kamod-ch/preactpress/config'
 
 export default createContentLoader('posts/*.md', {
   transform(items) {

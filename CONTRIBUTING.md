@@ -4,7 +4,7 @@ This guide is for people working on the **PreactPress CLI and package**, not for
 
 ## Monorepo
 
-This repo lists `preactpress` in `pnpm-workspace.yaml`. Add `preactpress` as a devDependency (`workspace:*`) to consume the CLI from another package.
+This repo publishes `@kamod-ch/preactpress` on npm. Add `@kamod-ch/preactpress` as a devDependency (`workspace:*` in a monorepo, or a semver range from npm) to consume the CLI from another package.
 
 ## Two different “build” commands
 
@@ -70,10 +70,24 @@ To release the **CLI/tool** itself (not a content site), from the `preactpress` 
 
 ```bash
 pnpm install          # runs prepare → build (compiles TypeScript to dist/)
-pnpm publish          # runs prepack → build automatically before pack
+pnpm test
+npm publish           # runs prepack → build automatically before pack
 ```
 
-Requirements: Node 20+, npm account, and the `files` field in `package.json` (includes `dist`, `bin`, `templates`, etc.).
+Requirements:
+
+- Node 20+
+- npm account with access to the `@kamod-ch` organization
+- `publishConfig.access` set to `public` in `package.json` (scoped packages default to private)
+- the `files` field in `package.json` (includes `dist`, `bin`, `templates`, etc.)
+
+Verify the tarball before the first release:
+
+```bash
+npm pack --dry-run
+```
+
+Tag-driven releases are automated via `.github/workflows/publish.yml` when you push a `v*` tag (for example `v1.0.1`). Set the `NPM_TOKEN` repository secret first.
 
 ## Tests
 

@@ -141,19 +141,19 @@ const two = 2 // [!code highlight]
     const page = await renderMarkdown(`::: code-group
 
 \`\`\`js [npm]
-npm install preactpress
+npm install @kamod-ch/preactpress
 \`\`\`
 
 \`\`\`js [pnpm]
-pnpm add preactpress
+pnpm add @kamod-ch/preactpress
 \`\`\`
 
 :::
 `)
     expect(page.html).toContain('pp-code-group')
     expect(page.html).toContain('pp-code-group-tab')
-    expect(page.html).toContain('npm install preactpress')
-    expect(page.html).toContain('pnpm add preactpress')
+    expect(page.html).toContain('npm install @kamod-ch/preactpress')
+    expect(page.html).toContain('pnpm add @kamod-ch/preactpress')
   })
 
   it('includes markdown files via include comments', async () => {

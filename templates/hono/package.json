@@ -9,7 +9,7 @@
     "preview": "preactpress preview"
   },
   "devDependencies": {
-    "preactpress": "file:../..",
+    "@kamod-ch/preactpress": "file:../..",
     "typescript": "^5.8.3"
   }
 }

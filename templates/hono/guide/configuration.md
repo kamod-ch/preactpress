@@ -140,7 +140,7 @@ async buildEnd({ site, pages }) {
 Export a factory to load nav or sidebar from an API at config time:
 
 ```ts
-import { defineConfig } from 'preactpress/config'
+import { defineConfig } from '@kamod-ch/preactpress/config'
 
 export default defineConfig(async () => ({
   site: { title: 'My docs', description: 'Docs from CMS' },

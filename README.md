@@ -9,13 +9,13 @@
 **Preact + Vite static site generator** for documentation, blogs, and marketing sites. Write **Markdown** and **MDX**, use a **VitePress-style** default theme, and ship static HTML — no Node server in production.
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/preactpress"><img src="https://img.shields.io/npm/v/preactpress" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@kamod-ch/preactpress"><img src="https://img.shields.io/npm/v/@kamod-ch/preactpress" alt="npm version" /></a>
   <a href="https://github.com/kamod-ch/preactpress/actions/workflows/ci.yml"><img src="https://github.com/kamod-ch/preactpress/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://github.com/kamod-ch/preactpress/stargazers"><img src="https://img.shields.io/github/stars/kamod-ch/preactpress?style=social" alt="GitHub stars" /></a>
   <a href="https://github.com/kamod-ch/preactpress/blob/main/LICENSE"><img src="https://img.shields.io/github/license/kamod-ch/preactpress" alt="license" /></a>
 </p>
 
-**[Live demo](https://kamod-ch.github.io/preactpress/)** · **[Docs starter](./templates/docs)** · **[npm](https://www.npmjs.com/package/preactpress)** · **[GitHub](https://github.com/kamod-ch/preactpress)** · **[Issues](https://github.com/kamod-ch/preactpress/issues)**
+**[Live demo](https://kamod-ch.github.io/preactpress/)** · **[Docs starter](./templates/docs)** · **[npm](https://www.npmjs.com/package/@kamod-ch/preactpress)** · **[GitHub](https://github.com/kamod-ch/preactpress)** · **[Issues](https://github.com/kamod-ch/preactpress/issues)**
 
 > If PreactPress saves you time, **[star the repo](https://github.com/kamod-ch/preactpress)** — it helps others discover the project.
 
@@ -51,7 +51,7 @@ Requirements: Node 20 or newer. pnpm is recommended; npm and yarn work too.
 
 ```bash
 mkdir my-site && cd my-site
-pnpm dlx preactpress init
+pnpm dlx @kamod-ch/preactpress init
 pnpm install
 pnpm run dev
 ```
@@ -61,7 +61,7 @@ Open [http://localhost:5173](http://localhost:5173).
 For the complete documentation starter:
 
 ```bash
-pnpm dlx preactpress init my-docs --template docs
+pnpm dlx @kamod-ch/preactpress init my-docs --template docs
 cd my-docs && pnpm install && pnpm run dev
 ```
 
@@ -69,10 +69,10 @@ cd my-docs && pnpm install && pnpm run dev
 
 | Template | Use case | Scaffold |
 | --- | --- | --- |
-| `default` | Minimal docs site with home hero and guide pages | `pnpm dlx preactpress init` |
-| `docs` | Full documentation starter (canonical reference) | `pnpm dlx preactpress init my-docs --template docs` |
-| `magazine` | Custom theme with article teasers and tag pages | `pnpm dlx preactpress init my-mag --template magazine` |
-| `hono` | Polished product/docs layout with custom Preact theme | `pnpm dlx preactpress init my-site --template hono` |
+| `default` | Minimal docs site with home hero and guide pages | `pnpm dlx @kamod-ch/preactpress init` |
+| `docs` | Full documentation starter (canonical reference) | `pnpm dlx @kamod-ch/preactpress init my-docs --template docs` |
+| `magazine` | Custom theme with article teasers and tag pages | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine` |
+| `hono` | Polished product/docs layout with custom Preact theme | `pnpm dlx @kamod-ch/preactpress init my-site --template hono` |
 
 Browse the [live demo](https://kamod-ch.github.io/preactpress/) for the `docs` template, or run `pnpm run dev:docs` from the package root while contributing.
 

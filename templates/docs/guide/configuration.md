@@ -6,7 +6,7 @@ description: Complete reference for PreactPress site, theme, Markdown, build, an
 Configuration lives in `.preactpress/config.ts`. A plain object works without imports; `defineConfig` adds type inference once PreactPress is installed.
 
 ```ts
-import { defineConfig } from 'preactpress/config'
+import { defineConfig } from '@kamod-ch/preactpress/config'
 
 export default defineConfig({
   site: { title: 'My docs', description: 'Product documentation' }
@@ -104,13 +104,13 @@ Common fields include `title`, `description`, `tags`, `image`, `type`, `draft`, 
 
 ## TypeScript types
 
-Import `defineConfig` from `preactpress/config` for typed site configuration. Frontmatter and page metadata are described by `PageFrontmatter` from `preactpress/shared` or `preactpress/config`.
+Import `defineConfig` from `@kamod-ch/preactpress/config` for typed site configuration. Frontmatter and page metadata are described by `PageFrontmatter` from `@kamod-ch/preactpress/shared` or `@kamod-ch/preactpress/config`.
 
 For blogs and magazines, optional content-model helpers are available:
 
 ```ts
-import { createContentLoader } from 'preactpress/config'
-import { articleFromFrontmatter, type ArticlePost } from 'preactpress/shared'
+import { createContentLoader } from '@kamod-ch/preactpress/config'
+import { articleFromFrontmatter, type ArticlePost } from '@kamod-ch/preactpress/shared'
 
 export default createContentLoader<ArticlePost[]>(['posts/*.md'], {
   transform(items) {

@@ -1,4 +1,4 @@
-import { defineConfig } from 'preactpress/config'
+import { defineConfig } from '@kamod-ch/preactpress/config'
 
 export default defineConfig({
   site: {

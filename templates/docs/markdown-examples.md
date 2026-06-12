@@ -52,11 +52,11 @@ The generated table of contents includes level-three headings.
 ::: code-group
 
 ```bash [pnpm]
-pnpm add -D preactpress
+pnpm add -D @kamod-ch/preactpress
 ```
 
 ```bash [npm]
-npm install --save-dev preactpress
+npm install --save-dev @kamod-ch/preactpress
 ```
 
 :::

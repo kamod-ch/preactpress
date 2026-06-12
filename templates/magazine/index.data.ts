@@ -1,5 +1,5 @@
-import { createContentLoader } from 'preactpress/config'
-import { articleFromFrontmatter, type ArticlePost } from 'preactpress/shared'
+import { createContentLoader } from '@kamod-ch/preactpress/config'
+import { articleFromFrontmatter, type ArticlePost } from '@kamod-ch/preactpress/shared'
 
 export default createContentLoader<ArticlePost[]>(['article-*.md', 'article-*.mdx'], {
   transform(items) {

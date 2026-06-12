@@ -7,7 +7,7 @@ description: PreactPress installieren und lokal starten.
 
 ```bash
 mkdir meine-seite && cd meine-seite
-pnpm dlx preactpress init
+pnpm dlx @kamod-ch/preactpress init
 pnpm install
 pnpm run dev
 ```

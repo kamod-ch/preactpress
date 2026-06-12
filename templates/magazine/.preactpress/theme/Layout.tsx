@@ -1,6 +1,6 @@
 import type { ComponentChildren, ComponentType, FunctionalComponent, JSX } from 'preact'
 import { useEffect, useMemo, useState } from 'preact/hooks'
-import type { ArticlePost } from 'preactpress/shared'
+import type { ArticlePost } from '@kamod-ch/preactpress/shared'
 import ThemeToggle from './ThemeToggle.js'
 import TeaserGrid, { articlesToTeasers } from './TeaserGrid.js'
 import './magazine.css'

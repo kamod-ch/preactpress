@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import { pathToFileURL } from 'node:url'
 import { build as viteBuild, mergeConfig } from 'vite'
 import preact from '@preact/preset-vite'
-import { normalizeBase, resolveConfigForBuild } from './config.js'
+import { applySiteBaseOverride, resolveConfigForBuild } from './config.js'
 import type { SiteConfig } from './siteConfig.js'
 import { absoluteUrl, escapeHtml, pageHtml, publicUrl } from './html.js'
 import { PACKAGE_ROOT } from './packageRoot.js'
@@ -103,7 +103,7 @@ export async function mapConcurrent<T, R>(
 
 export async function build(root?: string, opts: { base?: string } = {}): Promise<void> {
   const site = await resolveConfigForBuild(root)
-  if (opts.base) site.site.base = normalizeBase(opts.base)
+  if (opts.base) applySiteBaseOverride(site, opts.base)
   const clientOut = path.join(site.cacheDir, 'pp-client')
   const ssrOut = path.join(site.cacheDir, 'pp-ssr')
 

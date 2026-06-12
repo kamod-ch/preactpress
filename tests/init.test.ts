@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest'
 import { init } from '../src/node/init.js'
 import { PACKAGE_ROOT } from '../src/node/packageRoot.js'
 
+const PACKAGE_NAME = '@kamod-ch/preactpress'
+
 describe('init', () => {
   it('scaffolds the minimal starter without build artifacts or workspace deps', async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), 'preactpress-init-'))
@@ -19,18 +21,21 @@ describe('init', () => {
       await expect(fs.access(path.join(root, 'interactive.mdx'))).rejects.toThrow()
       await expect(fs.access(path.join(root, '.preactpress', 'config.ts'))).resolves.toBeUndefined()
       await expect(fs.access(path.join(root, 'dist'))).rejects.toThrow()
-      const linked = await fs.readlink(path.join(root, 'node_modules', 'preactpress'))
-      expect(path.resolve(path.join(root, 'node_modules'), linked)).toBe(PACKAGE_ROOT)
+      const linked = await fs.readlink(
+        path.join(root, 'node_modules', '@kamod-ch', 'preactpress')
+      )
+      expect(path.resolve(path.join(root, 'node_modules', '@kamod-ch'), linked)).toBe(PACKAGE_ROOT)
       await expect(fs.access(path.join(root, 'pnpm-lock.yaml'))).rejects.toThrow()
 
       const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8')) as {
-        devDependencies: { preactpress: string }
+        devDependencies: Record<string, string>
       }
       const toolPkg = JSON.parse(
         await fs.readFile(path.join(PACKAGE_ROOT, 'package.json'), 'utf8')
       ) as { version: string }
 
-      expect(pkg.devDependencies.preactpress).toBe(`^${toolPkg.version}`)
+      expect(pkg.devDependencies[PACKAGE_NAME]).toBe(`^${toolPkg.version}`)
+      expect(pkg.devDependencies.preactpress).toBeUndefined()
       expect(result.preactpressVersion).toBe(toolPkg.version)
       expect(result.root).toBe(root)
       expect(result.template).toBe('default')
@@ -49,13 +54,13 @@ describe('init', () => {
       await expect(fs.access(path.join(root, 'markdown-examples.md'))).resolves.toBeUndefined()
 
       const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8')) as {
-        devDependencies: { preactpress: string }
+        devDependencies: Record<string, string>
       }
       const toolPkg = JSON.parse(
         await fs.readFile(path.join(PACKAGE_ROOT, 'package.json'), 'utf8')
       ) as { version: string }
 
-      expect(pkg.devDependencies.preactpress).toBe(`^${toolPkg.version}`)
+      expect(pkg.devDependencies[PACKAGE_NAME]).toBe(`^${toolPkg.version}`)
       expect(result.preactpressVersion).toBe(toolPkg.version)
       expect(result.root).toBe(root)
       expect(result.template).toBe('docs')
@@ -77,18 +82,20 @@ describe('init', () => {
       await expect(
         fs.access(path.join(root, '.preactpress', 'theme', 'hono.css'))
       ).resolves.toBeUndefined()
-      const linked = await fs.readlink(path.join(root, 'node_modules', 'preactpress'))
-      expect(path.resolve(path.join(root, 'node_modules'), linked)).toBe(PACKAGE_ROOT)
+      const linked = await fs.readlink(
+        path.join(root, 'node_modules', '@kamod-ch', 'preactpress')
+      )
+      expect(path.resolve(path.join(root, 'node_modules', '@kamod-ch'), linked)).toBe(PACKAGE_ROOT)
       await expect(fs.access(path.join(root, 'pnpm-lock.yaml'))).rejects.toThrow()
 
       const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8')) as {
-        devDependencies: { preactpress: string }
+        devDependencies: Record<string, string>
       }
       const toolPkg = JSON.parse(
         await fs.readFile(path.join(PACKAGE_ROOT, 'package.json'), 'utf8')
       ) as { version: string }
 
-      expect(pkg.devDependencies.preactpress).toBe(`^${toolPkg.version}`)
+      expect(pkg.devDependencies[PACKAGE_NAME]).toBe(`^${toolPkg.version}`)
       expect(result.preactpressVersion).toBe(toolPkg.version)
       expect(result.root).toBe(root)
       expect(result.template).toBe('hono')

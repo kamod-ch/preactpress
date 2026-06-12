@@ -8,7 +8,7 @@ description: Build hooks, data loaders, dynamic routes, MPA mode, and incrementa
 Export an async factory when navigation or metadata comes from another system.
 
 ```ts
-import { defineConfig } from 'preactpress/config'
+import { defineConfig } from '@kamod-ch/preactpress/config'
 
 export default defineConfig(async () => ({
   site: { title: 'CMS docs', description: 'Generated navigation' },
@@ -27,7 +27,7 @@ Hooks may be asynchronous. Keep output deterministic so incremental builds and C
 
 ## Content loaders
 
-Import `createContentLoader` from `preactpress/config` in a `*.data.ts` module to collect and transform content metadata at build time. Loader results are available to the associated page module.
+Import `createContentLoader` from `@kamod-ch/preactpress/config` in a `*.data.ts` module to collect and transform content metadata at build time. Loader results are available to the associated page module.
 
 ## Dynamic routes
 

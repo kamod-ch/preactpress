@@ -6,6 +6,7 @@ import {
   localizedRouteForLocale,
   resolveLocales,
   routePathKey,
+  siteForRoute,
   stripLocalePrefix
 } from '../src/shared/locale.js'
 import { tagIndexPageRoute } from '../src/shared/tags.js'
@@ -77,5 +78,20 @@ describe('locale helpers', () => {
   it('builds locale-prefixed tag routes', () => {
     expect(tagIndexPageRoute('markdown')).toBe('/tags/markdown')
     expect(tagIndexPageRoute('markdown', '/de')).toBe('/de/tags/markdown')
+  })
+
+  it('keeps the canonical site base when a locale site was resolved earlier', () => {
+    const i18n = resolveLocales(
+      {
+        root: { label: 'English', lang: 'en' },
+        de: { label: 'Deutsch', lang: 'de' }
+      },
+      site,
+      themeConfig
+    )!
+    const deployedSite = { ...site, base: '/preactpress' }
+
+    expect(siteForRoute(deployedSite, '/', i18n).base).toBe('/preactpress')
+    expect(siteForRoute(deployedSite, '/de', i18n).base).toBe('/preactpress')
   })
 })

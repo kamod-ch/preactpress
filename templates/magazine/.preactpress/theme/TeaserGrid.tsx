@@ -1,5 +1,5 @@
 import type { FunctionalComponent } from 'preact'
-import type { ArticlePost } from 'preactpress/shared'
+import type { ArticlePost } from '@kamod-ch/preactpress/shared'
 
 export interface TeaserItem {
   href: string
