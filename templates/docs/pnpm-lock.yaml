@@ -8,9 +8,9 @@ importers:
 
   .:
     devDependencies:
-      preactpress:
+      '@kamod-ch/preactpress':
         specifier: file:../..
-        version: '@kamod-ch/preactpress@file:../..(@babel/core@7.29.7)(rollup@4.61.1)'
+        version: file:../..(@babel/core@7.29.7)(rollup@4.61.1)
       typescript:
         specifier: ^5.8.3
         version: 5.9.3
