@@ -6,8 +6,6 @@
   </picture>
 </p>
 
-<h1 align="center">PreactPress</h1>
-
 **Preact + Vite static site generator** for documentation, blogs, and marketing sites. Write **Markdown** and **MDX**, use a **VitePress-style** default theme, and ship static HTML — no Node server in production.
 
 <p align="center">
