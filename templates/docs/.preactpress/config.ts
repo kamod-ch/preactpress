@@ -1,5 +1,10 @@
 import { defineConfig } from '@kamod-ch/preactpress/config'
 
+const matomoImageTracker =
+  '<!-- Matomo Image Tracker--><img referrerpolicy="no-referrer-when-downgrade" src="https://matomo.kamod.ch/matomo.php?idsite=6&amp;rec=1" style="border:0" alt="" /><!-- End Matomo -->'
+
+const includeMatomoImageTracker = process.env.PREACTPRESS_INCLUDE_MATOMO === 'true'
+
 export default defineConfig({
   srcExclude: ['README.md', 'partials/**', 'parts/**'],
   site: {
@@ -10,6 +15,10 @@ export default defineConfig({
     html: false,
     emoji: true,
     math: true
+  },
+  transformHtml(html) {
+    if (!includeMatomoImageTracker) return html
+    return html.replace('</body>', `  ${matomoImageTracker}\n  </body>`)
   },
   themeConfig: {
     outline: true,

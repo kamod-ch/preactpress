@@ -52,6 +52,8 @@ jobs:
 
       - name: Build docs for GitHub Pages
         working-directory: templates/docs
+        env:
+          PREACTPRESS_INCLUDE_MATOMO: 'true'
         run: pnpm exec preactpress build . --base /${{ github.event.repository.name }}/
 
       - name: Upload Pages artifact
