@@ -19,6 +19,57 @@ The documentation framework for Preact projects.
 
 > If PreactPress saves you time, **[star the repo](https://github.com/kamod-ch/preactpress)** — it helps others discover the project.
 
+## PreactPress in 30 seconds
+
+**PreactPress** is a documentation framework for teams who want **VitePress-style docs**, but built with **Preact + MDX** instead of Vue.
+
+It is for you if you want to:
+- ship product docs, guides, knowledge bases, or marketing-adjacent content
+- author mostly in Markdown/MDX, but still embed interactive Preact components
+- deploy static output to any host without a complex runtime
+- keep the stack small and close to the Preact ecosystem
+
+It is probably **not** for you if you want:
+- Vue-first docs tooling → use **VitePress**
+- React-first docs tooling and a bigger plugin ecosystem → use **Docusaurus**
+- a broader content/site framework with islands and many rendering models → use **Astro**
+
+## Why not VitePress, Docusaurus, or Astro?
+
+| Tool | Choose it when | Why choose PreactPress instead |
+| --- | --- | --- |
+| **VitePress** | You are happy with Vue and want the reference docs DX in that ecosystem | You want the same docs workflow, but with **Preact components and MDX** |
+| **Docusaurus** | You want React, versioning-heavy docs, and its mature plugin ecosystem | You want a **smaller runtime** and a more lightweight **Preact-first** stack |
+| **Astro** | You are building a broader content site and want islands across frameworks | You want a **focused docs framework** with a built-in docs theme, not a general site framework |
+
+## Start in 30 seconds
+
+Requirements: Node 20+.
+
+```bash
+pnpm dlx @kamod-ch/preactpress init my-docs
+cd my-docs
+pnpm install
+pnpm dev
+```
+
+Open [http://localhost:5173](http://localhost:5173).
+
+Want the full reference starter instead?
+
+```bash
+pnpm dlx @kamod-ch/preactpress init my-docs --template docs
+cd my-docs && pnpm install && pnpm dev
+```
+
+## What does the result look like?
+
+You get a production-ready docs site with:
+- responsive navigation, sidebar, outline, and dark mode
+- Markdown/MDX pages with Preact components
+- built-in search, SEO defaults, sitemap, feeds, and static output
+- a default docs theme you can use immediately or replace later
+
 ![Docs theme built with PreactPress](.github/assets/docs-hero.png)
 
 ## Why PreactPress?
@@ -50,8 +101,8 @@ Pair with **[Kamod UI](https://ui.kamod.ch/)** for Preact + Tailwind components 
 Requirements: Node 20 or newer. pnpm is recommended; npm and yarn work too.
 
 ```bash
-mkdir my-site && cd my-site
-pnpm dlx @kamod-ch/preactpress init
+pnpm dlx @kamod-ch/preactpress init my-docs
+cd my-docs
 pnpm install
 pnpm run dev
 ```

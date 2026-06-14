@@ -6,3 +6,8 @@ template/dist/
 /dist
 
 templates/*/dist/
+
+# Temporary and generated artifacts
+tmp/
+temp/
+proofshot-artifacts/
