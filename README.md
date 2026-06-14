@@ -6,7 +6,7 @@
   </picture>
 </p>
 
-**Preact + Vite static site generator** for documentation, blogs, and marketing sites. Write **Markdown** and **MDX**, use a **VitePress-style** default theme, and ship static HTML — no Node server in production.
+The documentation framework for Preact projects.
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@kamod-ch/preactpress"><img src="https://img.shields.io/npm/v/@kamod-ch/preactpress" alt="npm version" /></a>
