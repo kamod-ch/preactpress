@@ -41,7 +41,7 @@ PreactPress serves it at `/about`. Every `.md` or `.mdx` file under `srcDir` (de
 
 Example: `news/2025/intro.md` → `/news/2025/intro`.
 
-This starter already includes [About](/about) so you can see the finished page.
+Create the file in your project, save it, and you can open `/about` right away.
 
 ## 3. Add it to the navigation
 

@@ -42,7 +42,6 @@ export default defineConfig({
           { text: "Guide", link: "/guide/getting-started" },
           { text: "Reference", link: "/guide/configuration" },
           { text: "Examples", link: "/markdown-examples" },
-          { text: "About", link: "/about" },
         ],
         sidebar: [
           {
@@ -52,7 +51,6 @@ export default defineConfig({
               { text: "What is PreactPress?", link: "/guide/what-is-preactpress" },
               { text: "Getting started", link: "/guide/getting-started" },
               { text: "First five minutes", link: "/guide/first-five-minutes" },
-              { text: "About", link: "/about" },
             ],
           },
           {

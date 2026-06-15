@@ -53,7 +53,6 @@ my-site/
 ├── README.md
 ├── index.html
 ├── index.md
-├── about.md
 ├── guide/
 │   └── first-five-minutes.md
 ├── markdown-examples.md
@@ -102,7 +101,6 @@ PreactPress uses file-based routing. By default, the source directory is the pro
 
 ```text
 index.md                  -> /
-about.md                  -> /about
 guide/getting-started.md  -> /guide/getting-started
 interactive.mdx           -> /interactive
 ```
