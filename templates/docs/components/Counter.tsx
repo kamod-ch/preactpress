@@ -1,6 +1,8 @@
+/** @jsx h */
+import { h } from 'preact'
 import { useState } from 'preact/hooks'
 
-export default function Counter({ initial = 0 }: { initial?: number }) {
+export function Counter({ initial = 0 }: { initial?: number }) {
   const [count, setCount] = useState(initial)
 
   return (
@@ -23,3 +25,5 @@ export default function Counter({ initial = 0 }: { initial?: number }) {
     </div>
   )
 }
+
+export default Counter

@@ -9,7 +9,7 @@ export default defineConfig({
   srcExclude: ['README.md', 'partials/**', 'parts/**'],
   site: {
     title: 'PreactPress',
-    description: 'Vite + Preact static site generator for Markdown and MDX'
+    description: 'The documentation framework for Preact'
   },
   markdown: {
     html: false,
@@ -24,7 +24,14 @@ export default defineConfig({
     outline: true,
     search: true,
     lastUpdated: true,
-    footer: 'Built with PreactPress.'
+    footer: 'Built with PreactPress.',
+    socialLinks: [
+      {
+        icon: 'github',
+        link: 'https://github.com/kamod-ch/preactpress',
+        ariaLabel: 'PreactPress on GitHub'
+      }
+    ]
   },
   locales: {
     root: {

@@ -72,6 +72,27 @@ You get a production-ready docs site with:
 
 ![Docs theme built with PreactPress](.github/assets/docs-hero.png)
 
+## Remotion YouTube starter
+
+A ready-to-edit **Remotion starter for YouTube videos** is available in [`examples/remotion-youtube-starter`](./examples/remotion-youtube-starter).
+
+- starter source: [`examples/remotion-youtube-starter`](./examples/remotion-youtube-starter)
+- implementation plan: [`docs/remotion-youtube-plan.md`](./docs/remotion-youtube-plan.md)
+
+```bash
+cd examples/remotion-youtube-starter
+pnpm install
+pnpm run dev
+```
+
+Render the video with:
+
+```bash
+pnpm run render
+```
+
+![Remotion YouTube starter preview](.github/assets/remotion-youtube-starter.svg)
+
 ## Why PreactPress?
 
 Many static site generators are tied to React, Vue, or a heavy runtime. PreactPress targets a smaller stack:

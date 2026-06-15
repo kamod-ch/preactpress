@@ -1,0 +1,60 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A0F1E"/>
+      <stop offset="1" stop-color="#18233F"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(250 140) rotate(37) scale(360 230)">
+      <stop stop-color="#4F8CFF" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="#4F8CFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1040 110) rotate(160) scale(280 190)">
+      <stop stop-color="#00C2A8" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#00C2A8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" rx="32" fill="url(#bg)"/>
+  <rect width="1280" height="720" rx="32" fill="url(#glow1)"/>
+  <rect width="1280" height="720" rx="32" fill="url(#glow2)"/>
+  <g opacity="0.16">
+    <path d="M0 120H1280" stroke="white"/>
+    <path d="M0 240H1280" stroke="white"/>
+    <path d="M0 360H1280" stroke="white"/>
+    <path d="M0 480H1280" stroke="white"/>
+    <path d="M0 600H1280" stroke="white"/>
+    <path d="M120 0V720" stroke="white"/>
+    <path d="M240 0V720" stroke="white"/>
+    <path d="M360 0V720" stroke="white"/>
+    <path d="M480 0V720" stroke="white"/>
+    <path d="M600 0V720" stroke="white"/>
+    <path d="M720 0V720" stroke="white"/>
+    <path d="M840 0V720" stroke="white"/>
+    <path d="M960 0V720" stroke="white"/>
+    <path d="M1080 0V720" stroke="white"/>
+    <path d="M1200 0V720" stroke="white"/>
+  </g>
+  <rect x="850" y="60" width="344" height="84" rx="24" fill="rgba(13,21,39,0.62)" stroke="rgba(255,253,245,0.14)"/>
+  <text x="892" y="111" fill="#FFFDF5" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="900" letter-spacing="-0.8">preactpress</text>
+  <rect x="84" y="74" width="372" height="62" rx="31" fill="rgba(255,255,255,0.08)" stroke="rgba(255,253,245,0.14)"/>
+  <circle cx="126" cy="105" r="11" fill="#4F8CFF"/>
+  <path d="M151 95.5L169 105L151 114.5V95.5Z" fill="#FFFDF5"/>
+  <text x="188" y="114" fill="#FFFDF5" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">preactpress · YouTube starter</text>
+  <text x="84" y="248" fill="#FFFDF5" font-family="Inter, Arial, sans-serif" font-size="82" font-weight="900">PreactPress ships</text>
+  <text x="84" y="332" fill="#FFFDF5" font-family="Inter, Arial, sans-serif" font-size="82" font-weight="900">docs fast</text>
+  <text x="84" y="392" fill="rgba(255,253,245,0.84)" font-family="Inter, Arial, sans-serif" font-size="28">Preact + MDX documentation, packaged as a clean YouTube starter in Remotion</text>
+  <g>
+    <rect x="82" y="486" width="330" height="160" rx="28" fill="rgba(13,21,39,0.72)" stroke="rgba(255,253,245,0.14)"/>
+    <rect x="116" y="520" width="54" height="54" rx="18" fill="#4F8CFF"/>
+    <text x="116" y="606" fill="#FFFDF5" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800">Write in MDX</text>
+  </g>
+  <g>
+    <rect x="474" y="486" width="330" height="160" rx="28" fill="rgba(13,21,39,0.72)" stroke="rgba(255,253,245,0.14)"/>
+    <rect x="508" y="520" width="54" height="54" rx="18" fill="#00C2A8"/>
+    <text x="508" y="606" fill="#FFFDF5" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800">Theme quickly</text>
+  </g>
+  <g>
+    <rect x="866" y="486" width="330" height="160" rx="28" fill="rgba(13,21,39,0.72)" stroke="rgba(255,253,245,0.14)"/>
+    <rect x="900" y="520" width="54" height="54" rx="18" fill="#FF8A3D"/>
+    <text x="900" y="606" fill="#FFFDF5" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800">Deploy anywhere</text>
+  </g>
+</svg>
