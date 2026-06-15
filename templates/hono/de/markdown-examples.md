@@ -17,7 +17,7 @@ Einzelne Zeilen kannst du per Fence-Meta (`{2}`) oder Inline-Notation markieren:
 
 ```ts
 export function greet(name: string) {
-  return `Hallo, ${name}!` // [!code highlight]
+  return `Hallo, ${name}!`; // [!code highlight]
 }
 ```
 
@@ -37,9 +37,9 @@ Das `@/`-Präfix wird relativ zum Content-Root (`srcDir`) aufgelöst.
 
 ## Tabellen
 
-| Syntax | Ergebnis |
-| --- | --- |
-| `# Titel` | Überschrift |
+| Syntax            | Ergebnis        |
+| ----------------- | --------------- |
+| `# Titel`         | Überschrift     |
 | `---` Frontmatter | Seitenmetadaten |
 
 ## Zitate
@@ -128,11 +128,11 @@ Verschachtelte Überschrift für die Gliederung.
 ::: code-group
 
 ```js [config.js]
-export default { lang: 'js' }
+export default { lang: "js" };
 ```
 
 ```ts [config.ts]
-export default { lang: 'ts' }
+export default { lang: "ts" };
 ```
 
 :::

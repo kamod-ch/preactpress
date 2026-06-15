@@ -31,7 +31,7 @@ Raw HTML is disabled by default. Enable `markdown.html` only when every author i
 title: Counter demo
 ---
 
-import Counter from './components/Counter.tsx'
+import Counter from "./components/Counter.tsx";
 
 ## Demo
 

@@ -11,11 +11,11 @@ Diese Anleitung zeigt, wie du eine PreactPress-Site erstellst, die generierten D
 
 Du brauchst:
 
-| Voraussetzung | Version |
-| --- | --- |
-| Node.js | 20 oder höher |
+| Voraussetzung   | Version                                                   |
+| --------------- | --------------------------------------------------------- |
+| Node.js         | 20 oder höher                                             |
 | Package Manager | pnpm empfohlen; npm, yarn und bun funktionieren ebenfalls |
-| Editor | Jeder Editor mit Markdown- und TypeScript-Unterstützung |
+| Editor          | Jeder Editor mit Markdown- und TypeScript-Unterstützung   |
 
 ## Site erstellen
 
@@ -73,25 +73,25 @@ Die Starter-Config liegt unter `.preactpress/config.ts`:
 ```ts
 export default {
   site: {
-    title: 'Meine Doku',
-    description: 'Kurze Beschreibung für Suche und Social Previews'
+    title: "Meine Doku",
+    description: "Kurze Beschreibung für Suche und Social Previews",
   },
   themeConfig: {
     nav: [
-      { text: 'Start', link: '/de' },
-      { text: 'Anleitung', link: '/de/guide/what-is-preactpress' }
+      { text: "Start", link: "/de" },
+      { text: "Anleitung", link: "/de/guide/what-is-preactpress" },
     ],
     sidebar: [
       {
-        text: 'Einführung',
+        text: "Einführung",
         items: [
-          { text: 'Was ist PreactPress?', link: '/de/guide/what-is-preactpress' },
-          { text: 'Getting Started', link: '/de/guide/getting-started' }
-        ]
-      }
-    ]
-  }
-}
+          { text: "Was ist PreactPress?", link: "/de/guide/what-is-preactpress" },
+          { text: "Getting Started", link: "/de/guide/getting-started" },
+        ],
+      },
+    ],
+  },
+};
 ```
 
 Nutze `site` für globale Metadaten und `themeConfig` für Optionen des Standard-Themes wie Logo (`logo: '/logo.svg'`), Navigation, Sidebar, Suche, Outline, Footer und Edit-Links.
@@ -111,8 +111,8 @@ Mit `srcDir` kannst du das Quellverzeichnis ändern:
 
 ```ts
 export default {
-  srcDir: 'docs'
-}
+  srcDir: "docs",
+};
 ```
 
 Mit dieser Config liest PreactPress Seiten aus `docs/`, während `.preactpress/config.ts` weiterhin zum Projektroot gehört.
@@ -121,12 +121,12 @@ Mit dieser Config liest PreactPress Seiten aus `docs/`, während `.preactpress/c
 
 Der Starter enthält npm-Scripts:
 
-| Befehl | Zweck |
-| --- | --- |
-| `pnpm run dev` | Dev-Server mit SSR und Hot Reload starten |
-| `pnpm run check` | Config, Routen und Links validieren |
-| `pnpm run build` | Statischen Produktionsbuild nach `dist/` schreiben |
-| `pnpm run preview` | Produktionsbuild lokal ansehen |
+| Befehl             | Zweck                                              |
+| ------------------ | -------------------------------------------------- |
+| `pnpm run dev`     | Dev-Server mit SSR und Hot Reload starten          |
+| `pnpm run check`   | Config, Routen und Links validieren                |
+| `pnpm run build`   | Statischen Produktionsbuild nach `dist/` schreiben |
+| `pnpm run preview` | Produktionsbuild lokal ansehen                     |
 
 Du kannst die CLI auch direkt aufrufen:
 
@@ -139,8 +139,8 @@ pnpm exec preactpress preview
 
 ## Was kommt als Nächstes?
 
-| Seite | Warum |
-| --- | --- |
-| [Die ersten 5 Minuten](/de/guide/first-five-minutes) | Titel ändern, Seite anlegen und Navigation verdrahten |
-| [Routing](/de/guide/routing) | Lernen, wie Markdown-Dateien zu URLs werden |
-| [Deploy](/de/guide/deploy) | Das erzeugte `dist/`-Verzeichnis bauen und veröffentlichen |
+| Seite                                                | Warum                                                      |
+| ---------------------------------------------------- | ---------------------------------------------------------- |
+| [Die ersten 5 Minuten](/de/guide/first-five-minutes) | Titel ändern, Seite anlegen und Navigation verdrahten      |
+| [Routing](/de/guide/routing)                         | Lernen, wie Markdown-Dateien zu URLs werden                |
+| [Deploy](/de/guide/deploy)                           | Das erzeugte `dist/`-Verzeichnis bauen und veröffentlichen |

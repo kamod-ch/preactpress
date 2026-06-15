@@ -1,112 +1,105 @@
-import path from 'node:path'
-import fs from 'node:fs'
-import { pathToFileURL } from 'node:url'
-import { createLogger, loadConfigFromFile, normalizePath, type ConfigEnv } from 'vite'
-import type { SiteConfig, UserConfig } from './siteConfig.js'
-import { resolveConfigDir, resolveConfigPath } from './paths.js'
-import { DEFAULT_THEME_LAYOUT, PACKAGE_ROOT } from './packageRoot.js'
-import { defaultFaviconHead, hasFaviconHead } from './favicon.js'
-import { resolveLocales } from '../shared/locale.js'
+import path from "node:path";
+import fs from "node:fs";
+import { createLogger, loadConfigFromFile, normalizePath, type ConfigEnv } from "vite";
+import type { SiteConfig, UserConfig } from "./siteConfig.js";
+import { resolveConfigDir, resolveConfigPath } from "./paths.js";
+import { DEFAULT_THEME_LAYOUT, PACKAGE_ROOT } from "./packageRoot.js";
+import { defaultFaviconHead, hasFaviconHead } from "./favicon.js";
+import { resolveLocales } from "../shared/locale.js";
+import { ensurePreactpressLinked } from "./init.js";
 
 function fileExists(p: string): boolean {
   try {
-    fs.accessSync(p)
-    return true
+    fs.accessSync(p);
+    return true;
   } catch {
-    return false
+    return false;
   }
 }
 
 function sameProjectRoot(a: string, b: string): boolean {
-  const ra = path.resolve(a)
-  const rb = path.resolve(b)
-  if (ra === rb) return true
+  const ra = path.resolve(a);
+  const rb = path.resolve(b);
+  if (ra === rb) return true;
   try {
-    return fs.realpathSync(ra) === fs.realpathSync(rb)
+    return fs.realpathSync(ra) === fs.realpathSync(rb);
   } catch {
-    return false
+    return false;
   }
 }
 
 function resolveThemeLayout(root: string, configDir: string, theme: string): string {
-  const abs = path.isAbsolute(theme)
-    ? theme
-    : path.resolve(configDir, theme)
+  const abs = path.isAbsolute(theme) ? theme : path.resolve(configDir, theme);
   if (!fileExists(abs)) {
-    throw new Error(`preactpress: theme Layout not found: ${abs}`)
+    throw new Error(`preactpress: theme Layout not found: ${abs}`);
   }
-  return normalizePath(abs)
+  return normalizePath(abs);
 }
 
-export async function resolveUserConfig(
-  root: string,
-  env: ConfigEnv
-): Promise<UserConfig> {
-  const configPath = resolveConfigPath(root)
+export async function resolveUserConfig(root: string, env: ConfigEnv): Promise<UserConfig> {
+  const configPath = resolveConfigPath(root);
   if (!fileExists(configPath)) {
-    const resolvedRoot = path.resolve(root)
-    const inToolPackage = sameProjectRoot(resolvedRoot, PACKAGE_ROOT)
+    const resolvedRoot = path.resolve(root);
+    const inToolPackage = sameProjectRoot(resolvedRoot, PACKAGE_ROOT);
     const hint = inToolPackage
-      ? 'You are in the preactpress package (CLI sources), not a content site. From this folder run `pnpm run dev` to start the bundled `templates/default/` site, or `pnpm run preactpress -- init <dir>` to scaffold a new site elsewhere.'
-      : 'Run "preactpress init" to scaffold a site.'
-    throw new Error(`preactpress: missing config at ${configPath}. ${hint}`)
+      ? "You are in the preactpress package (CLI sources), not a content site. From this folder run `pnpm run dev` to start the bundled `templates/default/` site, or `pnpm run preactpress -- init <dir>` to scaffold a new site elsewhere."
+      : 'Run "preactpress init" to scaffold a site.';
+    throw new Error(`preactpress: missing config at ${configPath}. ${hint}`);
   }
 
-  const loaded = await loadConfigFromFile(env, configPath, root)
+  await ensurePreactpressLinked(root);
+
+  const loaded = await loadConfigFromFile(env, configPath, root);
   if (!loaded?.config) {
-    throw new Error(`preactpress: failed to load config from ${configPath}`)
+    throw new Error(`preactpress: failed to load config from ${configPath}`);
   }
 
   const raw = loaded.config as UserConfig & {
-    default?: UserConfig | (() => UserConfig | Promise<UserConfig>)
+    default?: UserConfig | (() => UserConfig | Promise<UserConfig>);
+  };
+  let user = (raw.default ?? raw) as UserConfig | (() => UserConfig | Promise<UserConfig>);
+  if (typeof user === "function") {
+    user = await user();
   }
-  let user = (raw.default ?? raw) as UserConfig | (() => UserConfig | Promise<UserConfig>)
-  if (typeof user === 'function') {
-    user = await user()
+  if (!user || typeof user !== "object") {
+    throw new Error("preactpress: config must export a default object or async factory");
   }
-  if (!user || typeof user !== 'object') {
-    throw new Error('preactpress: config must export a default object or async factory')
-  }
-  return user
+  return user;
 }
 
 export async function resolveConfig(
   rootArg?: string,
-  command: ConfigEnv['command'] = 'serve',
-  mode: string = 'development'
+  command: ConfigEnv["command"] = "serve",
+  mode: string = "development",
 ): Promise<SiteConfig> {
-  const root = path.resolve(rootArg ?? process.cwd())
-  const configDir = resolveConfigDir(root)
-  const logger = createLogger()
+  const root = path.resolve(rootArg ?? process.cwd());
+  const configDir = resolveConfigDir(root);
+  const logger = createLogger();
 
-  const user = await resolveUserConfig(root, { command, mode, isPreview: false })
+  const user = await resolveUserConfig(root, { command, mode, isPreview: false });
 
-  const srcDir = normalizePath(
-    path.resolve(root, user.srcDir ?? '.')
-  )
-  const outDir = normalizePath(path.resolve(root, user.outDir ?? 'dist'))
-  const cacheDir = normalizePath(
-    path.resolve(root, user.cacheDir ?? 'node_modules/.preactpress')
-  )
+  const srcDir = normalizePath(path.resolve(root, user.srcDir ?? "."));
+  const outDir = normalizePath(path.resolve(root, user.outDir ?? "dist"));
+  const cacheDir = normalizePath(path.resolve(root, user.cacheDir ?? "node_modules/.preactpress"));
 
   const site = {
-    title: user.site?.title ?? 'PreactPress',
-    description: user.site?.description ?? '',
-    base: normalizeBase(user.site?.base ?? '/'),
-    lang: user.site?.lang ?? 'en',
+    title: user.site?.title ?? "PreactPress",
+    description: user.site?.description ?? "",
+    base: normalizeBase(user.site?.base ?? "/"),
+    lang: user.site?.lang ?? "en",
     url: user.site?.url ? normalizeSiteUrl(user.site.url) : undefined,
-    titleTemplate: user.site?.titleTemplate
-  }
+    titleTemplate: user.site?.titleTemplate,
+  };
   const markdown = {
     html: user.markdown?.html ?? false,
     linkify: user.markdown?.linkify ?? true,
     typographer: user.markdown?.typographer ?? true,
     emoji: user.markdown?.emoji ?? false,
-    math: user.markdown?.math ?? false
-  }
+    math: user.markdown?.math ?? false,
+  };
 
-  const themePath = user.theme ?? DEFAULT_THEME_LAYOUT
-  const theme = resolveThemeLayout(root, configDir, themePath)
+  const themePath = user.theme ?? DEFAULT_THEME_LAYOUT;
+  const theme = resolveThemeLayout(root, configDir, themePath);
 
   const baseConfig: SiteConfig = {
     root,
@@ -127,7 +120,7 @@ export async function resolveConfig(
     markdown,
     head: [
       ...(hasFaviconHead(user.head ?? []) ? [] : defaultFaviconHead(site.base)),
-      ...(user.head ?? [])
+      ...(user.head ?? []),
     ],
     transformHead: user.transformHead,
     transformPageData: user.transformPageData,
@@ -136,47 +129,44 @@ export async function resolveConfig(
     build: {
       sitemap: user.build?.sitemap ?? true,
       robots: user.build?.robots ?? true,
-      feed: user.build?.feed ?? false
+      feed: user.build?.feed ?? false,
     },
     vite: user.vite ?? {},
-    logger
-  }
+    logger,
+  };
 
-  return baseConfig
+  return baseConfig;
 }
 
 export function normalizeBase(base: string): string {
-  if (!base.startsWith('/')) base = '/' + base
-  if (base !== '/' && base.endsWith('/')) base = base.replace(/\/+$/, '')
-  return base
+  if (!base.startsWith("/")) base = "/" + base;
+  if (base !== "/" && base.endsWith("/")) base = base.replace(/\/+$/, "");
+  return base;
 }
 
-const DEFAULT_FAVICON_FILES = new Set(['favicon.svg', 'favicon.png', 'favicon-32.png'])
+const DEFAULT_FAVICON_FILES = new Set(["favicon.svg", "favicon.png", "favicon-32.png"]);
 
-function isDefaultFaviconHeadTag(tag: import('./siteConfig.js').HeadTag): boolean {
-  if (tag[0] !== 'link' || typeof tag[1].href !== 'string') return false
-  const name = path.posix.basename(tag[1].href)
-  return DEFAULT_FAVICON_FILES.has(name)
+function isDefaultFaviconHeadTag(tag: import("./siteConfig.js").HeadTag): boolean {
+  if (tag[0] !== "link" || typeof tag[1].href !== "string") return false;
+  const name = path.posix.basename(tag[1].href);
+  return DEFAULT_FAVICON_FILES.has(name);
 }
 
 /** Apply a CLI or runtime base override across site, locales, and default favicon head tags. */
 export function applySiteBaseOverride(config: SiteConfig, base: string): void {
-  const normalized = normalizeBase(base)
-  config.site.base = normalized
+  const normalized = normalizeBase(base);
+  config.site.base = normalized;
   if (config.i18n) {
     for (const locale of config.i18n.locales) {
-      locale.site.base = normalized
+      locale.site.base = normalized;
     }
   }
-  const userHead = config.head.filter((tag) => !isDefaultFaviconHeadTag(tag))
-  config.head = [
-    ...(hasFaviconHead(userHead) ? [] : defaultFaviconHead(normalized)),
-    ...userHead
-  ]
+  const userHead = config.head.filter((tag) => !isDefaultFaviconHeadTag(tag));
+  config.head = [...(hasFaviconHead(userHead) ? [] : defaultFaviconHead(normalized)), ...userHead];
 }
 
 function normalizeSiteUrl(url: string): string {
-  return url.replace(/\/+$/, '')
+  return url.replace(/\/+$/, "");
 }
 
 export function siteConfigToClientJson(config: SiteConfig): string {
@@ -184,15 +174,13 @@ export function siteConfigToClientJson(config: SiteConfig): string {
     site: config.site,
     themeConfig: config.themeConfig,
     i18n: config.i18n,
-    mpa: config.mpa
-  })
+    mpa: config.mpa,
+  });
 }
 
 /** For SSR: re-resolve config with production mode. */
-export async function resolveConfigForBuild(
-  root?: string
-): Promise<SiteConfig> {
-  return resolveConfig(root, 'build', 'production')
+export async function resolveConfigForBuild(root?: string): Promise<SiteConfig> {
+  return resolveConfig(root, "build", "production");
 }
 
-export { PACKAGE_ROOT }
+export { PACKAGE_ROOT };

@@ -15,10 +15,10 @@ Edit `.preactpress/config.ts`:
 ```ts
 export default {
   site: {
-    title: 'My Docs',
-    description: 'Short summary for search and social previews'
-  }
-}
+    title: "My Docs",
+    description: "Short summary for search and social previews",
+  },
+};
 ```
 
 Save the file. The dev server picks up config changes on the next request.
@@ -50,34 +50,34 @@ In `.preactpress/config.ts`:
 
 ```ts
 export default {
-  site: { title: 'My Docs' },
+  site: { title: "My Docs" },
   themeConfig: {
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'About', link: '/about' }
+      { text: "Home", link: "/" },
+      { text: "About", link: "/about" },
     ],
     sidebar: [
       {
-        text: 'Guide',
+        text: "Guide",
         items: [
-          { text: 'Home', link: '/' },
-          { text: 'About', link: '/about' }
-        ]
-      }
-    ]
-  }
-}
+          { text: "Home", link: "/" },
+          { text: "About", link: "/about" },
+        ],
+      },
+    ],
+  },
+};
 ```
 
 Save — the dev server hot-reloads your changes.
 
 ## Next steps
 
-| Command | Purpose |
-| --- | --- |
-| `pnpm run dev` | Dev server with SSR and hot reload |
-| `pnpm run check` | Validate config, links, and routes |
-| `pnpm run build` | Static production build → `dist/` |
-| `pnpm run preview` | Local preview of the build |
+| Command            | Purpose                            |
+| ------------------ | ---------------------------------- |
+| `pnpm run dev`     | Dev server with SSR and hot reload |
+| `pnpm run check`   | Validate config, links, and routes |
+| `pnpm run build`   | Static production build → `dist/`  |
+| `pnpm run preview` | Local preview of the build         |
 
 Before deploying, set `site.url` in config for canonical URLs, Open Graph tags, and `sitemap.xml`. Read the package README for routing, MDX, deployment, and custom theme details.

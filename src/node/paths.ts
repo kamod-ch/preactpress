@@ -1,15 +1,15 @@
-import path from 'node:path'
+import path from "node:path";
 
-export const PREACTPRESS_DIR = '.preactpress'
+export const PREACTPRESS_DIR = ".preactpress";
 
 export function resolveConfigDir(root: string): string {
-  return path.resolve(root, PREACTPRESS_DIR)
+  return path.resolve(root, PREACTPRESS_DIR);
 }
 
 export function resolveConfigPath(root: string): string {
-  return path.resolve(root, PREACTPRESS_DIR, 'config.ts')
+  return path.resolve(root, PREACTPRESS_DIR, "config.ts");
 }
 
 export function slash(p: string): string {
-  return p.replace(/\\/g, '/')
+  return p.replace(/\\/g, "/");
 }

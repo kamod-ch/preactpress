@@ -40,14 +40,14 @@ Save the file — with `pnpm run dev` running, the page is immediately available
 
 PreactPress uses **file-based routing**. The path relative to `srcDir` becomes the route:
 
-| File | URL |
-| --- | --- |
-| `index.md` | `/` |
-| `about.md` | `/about` |
-| `guide/intro.md` | `/guide/intro` |
-| `guide/index.md` | `/guide` |
+| File                 | URL                |
+| -------------------- | ------------------ |
+| `index.md`           | `/`                |
+| `about.md`           | `/about`           |
+| `guide/intro.md`     | `/guide/intro`     |
+| `guide/index.md`     | `/guide`           |
 | `news/2025/intro.md` | `/news/2025/intro` |
-| `interactive.mdx` | `/interactive` |
+| `interactive.mdx`    | `/interactive`     |
 
 Production builds write directory indexes (`dist/about/index.html`) so URLs work without `.html`.
 
@@ -60,8 +60,8 @@ By default, Markdown files live in the project root next to `.preactpress/`. You
 ```ts
 // .preactpress/config.ts
 export default {
-  srcDir: 'docs'
-}
+  srcDir: "docs",
+};
 ```
 
 Then all pages live under `docs/` — e.g. `docs/index.md` → `/`, `docs/guide/foo.md` → `/guide/foo`. URLs stay the same; only the file location changes.
@@ -78,14 +78,14 @@ layout: doc
 ---
 ```
 
-| Field | Purpose |
-| --- | --- |
-| `title` | Page title (nav, `<title>`, search) |
-| `description` | Summary for SEO and search |
-| `layout: doc` | Docs layout with sidebar, outline, and previous/next links |
-| `layout: page` | Content page without sidebar or doc outline |
-| `layout: home` | Home layout with optional `hero` and `features` |
-| `draft: true` | Excluded from build, sitemap, and search |
+| Field          | Purpose                                                    |
+| -------------- | ---------------------------------------------------------- |
+| `title`        | Page title (nav, `<title>`, search)                        |
+| `description`  | Summary for SEO and search                                 |
+| `layout: doc`  | Docs layout with sidebar, outline, and previous/next links |
+| `layout: page` | Content page without sidebar or doc outline                |
+| `layout: home` | Home layout with optional `hero` and `features`            |
+| `draft: true`  | Excluded from build, sitemap, and search                   |
 
 Additional fields (`tags`, `sidebar: false`, `navbar: false`, …) are documented in the package README and starter reference.
 
@@ -99,7 +99,7 @@ title: Demo
 description: Interactive component
 ---
 
-import Counter from './components/Counter.tsx'
+import Counter from "./components/Counter.tsx";
 
 ## Counter
 
@@ -110,6 +110,27 @@ Import components relative to the MDX file. `##` and `###` headings feed the on-
 
 Example in this starter: [Interactive MDX](/interactive).
 
+## Marketing pages with MDX
+
+For a homepage or landing page that should use the default shell but custom section design, keep `layout: home`, disable the default Markdown prose styles, and add a page-specific class:
+
+```mdx
+---
+layout: home
+title: Product docs
+sidebar: false
+pageClass: product-home
+markdownStyles: false
+---
+
+import "./components/product-home.css";
+import ProductHero from "./components/ProductHero.tsx";
+
+<ProductHero />
+```
+
+`pageClass` gives your CSS a stable scope, while `markdownStyles: false` prevents default prose spacing from fighting custom sections. The docs starter homepage uses this pattern in [`index.mdx`](/).
+
 ## Add to navigation
 
 New pages do **not** appear in the header or sidebar automatically. Register them in `.preactpress/config.ts`:
@@ -118,20 +139,20 @@ New pages do **not** appear in the header or sidebar automatically. Register the
 export default {
   themeConfig: {
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Contact', link: '/contact' }
+      { text: "Home", link: "/" },
+      { text: "Contact", link: "/contact" },
     ],
     sidebar: [
       {
-        text: 'Guide',
+        text: "Guide",
         items: [
-          { text: 'Creating pages', link: '/guide/creating-pages' },
-          { text: 'Contact', link: '/contact' }
-        ]
-      }
-    ]
-  }
-}
+          { text: "Creating pages", link: "/guide/creating-pages" },
+          { text: "Contact", link: "/contact" },
+        ],
+      },
+    ],
+  },
+};
 ```
 
 For multilingual sites (`locales`), put `nav` and `sidebar` in each locale block — see [Getting Started](/guide/getting-started).
@@ -154,18 +175,18 @@ Each locale is a **separate file**, not an alias of the default page.
 
 ## Common issues
 
-| Problem | Fix |
-| --- | --- |
-| Page returns 404 | `.md` / `.mdx` extension? File under `srcDir`? Dev server running? |
-| Markdown link broken | Omit extension: `/guide/foo`, not `/guide/foo.md` |
-| Duplicate URL | Two files must not map to the same route (e.g. `foo.md` and `foo/index.md`) |
-| Page missing from nav | Add to `nav` / `sidebar` in config |
+| Problem               | Fix                                                                         |
+| --------------------- | --------------------------------------------------------------------------- |
+| Page returns 404      | `.md` / `.mdx` extension? File under `srcDir`? Dev server running?          |
+| Markdown link broken  | Omit extension: `/guide/foo`, not `/guide/foo.md`                           |
+| Duplicate URL         | Two files must not map to the same route (e.g. `foo.md` and `foo/index.md`) |
+| Page missing from nav | Add to `nav` / `sidebar` in config                                          |
 
 ## Next steps
 
-| Topic | Link |
-| --- | --- |
+| Topic                      | Link                                              |
+| -------------------------- | ------------------------------------------------- |
 | First changes in 5 minutes | [Your first 5 minutes](/guide/first-five-minutes) |
-| Routing, `srcDir`, tags | [Routing](/guide/routing) |
-| Markdown syntax | [Markdown examples](/markdown-examples) |
-| Production build | [Deploy](/guide/deploy) |
+| Routing, `srcDir`, tags    | [Routing](/guide/routing)                         |
+| Markdown syntax            | [Markdown examples](/markdown-examples)           |
+| Production build           | [Deploy](/guide/deploy)                           |

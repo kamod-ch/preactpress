@@ -11,7 +11,7 @@
   --mag-shadow: 0 12px 40px rgba(20, 16, 12, 0.08);
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --mag-ink: #ece8e1;
   --mag-paper: #121110;
   --mag-muted: #a39e96;
@@ -36,7 +36,7 @@ html {
 
 body {
   margin: 0;
-  font-family: 'Newsreader', 'Georgia', 'Times New Roman', serif;
+  font-family: "Newsreader", "Georgia", "Times New Roman", serif;
   font-size: 1.05rem;
   line-height: 1.55;
   background: var(--mag-paper);
@@ -68,7 +68,10 @@ body {
 .mag-topbar {
   background: var(--mag-top);
   color: var(--mag-top-fg);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
   font-size: 0.78rem;
   letter-spacing: 0.02em;
 }
@@ -115,7 +118,7 @@ body {
 }
 
 .mag-logo-title {
-  font-family: 'Newsreader', Georgia, serif;
+  font-family: "Newsreader", Georgia, serif;
   font-weight: 700;
   font-size: clamp(1.85rem, 4vw, 2.75rem);
   line-height: 1.05;
@@ -354,7 +357,7 @@ body {
 }
 
 .mag-doc-content code {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.9em;
 }
 
@@ -502,7 +505,9 @@ body {
   text-decoration: none;
   color: inherit;
   box-shadow: var(--mag-shadow);
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .mag-teaser-card:hover {
@@ -578,10 +583,10 @@ body {
   }
 }
 
-:root[data-theme='light'] .mag-theme-toggle .mag-theme-toggle-moon {
+:root[data-theme="light"] .mag-theme-toggle .mag-theme-toggle-moon {
   display: inline-flex;
 }
 
-:root[data-theme='dark'] .mag-theme-toggle .mag-theme-toggle-sun {
+:root[data-theme="dark"] .mag-theme-toggle .mag-theme-toggle-sun {
   display: inline-flex;
 }

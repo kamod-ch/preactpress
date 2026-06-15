@@ -40,14 +40,14 @@ Speichern — unter `pnpm run dev` ist die Seite sofort unter **/kontakt** errei
 
 PreactPress nutzt **dateibasiertes Routing**. Der Pfad relativ zu `srcDir` wird zur Route:
 
-| Datei | URL |
-| --- | --- |
-| `index.md` | `/` |
-| `about.md` | `/about` |
+| Datei                  | URL                  |
+| ---------------------- | -------------------- |
+| `index.md`             | `/`                  |
+| `about.md`             | `/about`             |
 | `guide/einfuehrung.md` | `/guide/einfuehrung` |
-| `guide/index.md` | `/guide` |
-| `news/2025/intro.md` | `/news/2025/intro` |
-| `interactive.mdx` | `/interactive` |
+| `guide/index.md`       | `/guide`             |
+| `news/2025/intro.md`   | `/news/2025/intro`   |
+| `interactive.mdx`      | `/interactive`       |
 
 Produktionsbuilds schreiben Verzeichnis-Indexe (`dist/about/index.html`), damit URLs ohne `.html` funktionieren.
 
@@ -60,8 +60,8 @@ Standardmäßig liegen Markdown-Dateien im Projektroot neben `.preactpress/`. Du
 ```ts
 // .preactpress/config.ts
 export default {
-  srcDir: 'docs'
-}
+  srcDir: "docs",
+};
 ```
 
 Dann gehören alle Seiten nach `docs/` — z. B. `docs/index.md` → `/`, `docs/guide/foo.md` → `/guide/foo`. Die URLs bleiben gleich; nur der Speicherort der Dateien ändert sich.
@@ -78,14 +78,14 @@ layout: doc
 ---
 ```
 
-| Feld | Zweck |
-| --- | --- |
-| `title` | Seitentitel (Navigation, `<title>`, Suche) |
-| `description` | Zusammenfassung für SEO und Suche |
-| `layout: doc` | Doku-Layout mit Sidebar, Gliederung und Vor/Zurück-Links |
-| `layout: page` | Inhaltsseite ohne Sidebar und ohne Doku-Gliederung |
-| `layout: home` | Startseiten-Layout mit optional `hero` und `features` |
-| `draft: true` | Seite wird aus Build, Sitemap und Suche ausgeschlossen |
+| Feld           | Zweck                                                    |
+| -------------- | -------------------------------------------------------- |
+| `title`        | Seitentitel (Navigation, `<title>`, Suche)               |
+| `description`  | Zusammenfassung für SEO und Suche                        |
+| `layout: doc`  | Doku-Layout mit Sidebar, Gliederung und Vor/Zurück-Links |
+| `layout: page` | Inhaltsseite ohne Sidebar und ohne Doku-Gliederung       |
+| `layout: home` | Startseiten-Layout mit optional `hero` und `features`    |
+| `draft: true`  | Seite wird aus Build, Sitemap und Suche ausgeschlossen   |
 
 Weitere Felder (`tags`, `sidebar: false`, `navbar: false`, …) stehen im README des npm-Pakets bzw. in der Referenz des Starters.
 
@@ -99,7 +99,7 @@ title: Demo
 description: Interaktive Komponente
 ---
 
-import Counter from './components/Counter.tsx'
+import Counter from "./components/Counter.tsx";
 
 ## Zähler
 
@@ -118,20 +118,20 @@ Neue Seiten erscheinen **nicht automatisch** in der Kopfzeile oder Sidebar. Trag
 export default {
   themeConfig: {
     nav: [
-      { text: 'Start', link: '/' },
-      { text: 'Kontakt', link: '/kontakt' }
+      { text: "Start", link: "/" },
+      { text: "Kontakt", link: "/kontakt" },
     ],
     sidebar: [
       {
-        text: 'Anleitung',
+        text: "Anleitung",
         items: [
-          { text: 'Seiten erstellen', link: '/de/guide/seiten-erstellen' },
-          { text: 'Kontakt', link: '/kontakt' }
-        ]
-      }
-    ]
-  }
-}
+          { text: "Seiten erstellen", link: "/de/guide/seiten-erstellen" },
+          { text: "Kontakt", link: "/kontakt" },
+        ],
+      },
+    ],
+  },
+};
 ```
 
 Bei mehrsprachigen Sites (`locales`) gehören `nav` und `sidebar` in die jeweilige Locale-Konfiguration — siehe [Getting Started](/de/guide/getting-started).
@@ -154,18 +154,18 @@ Die deutsche Version ist eine **eigene Datei**, kein Alias der englischen Seite.
 
 ## Typische Fehler
 
-| Problem | Lösung |
-| --- | --- |
-| Seite 404 | Dateiendung `.md` / `.mdx`? Liegt die Datei unter `srcDir`? Dev-Server läuft? |
-| Link in Markdown funktioniert nicht | Extension weglassen: `/guide/foo`, nicht `/guide/foo.md` |
-| Doppelte URL | Zwei Dateien dürfen nicht dieselbe Route erzeugen (z. B. `foo.md` und `foo/index.md`) |
-| Seite fehlt in der Navigation | `nav` / `sidebar` in der Config ergänzen |
+| Problem                             | Lösung                                                                                |
+| ----------------------------------- | ------------------------------------------------------------------------------------- |
+| Seite 404                           | Dateiendung `.md` / `.mdx`? Liegt die Datei unter `srcDir`? Dev-Server läuft?         |
+| Link in Markdown funktioniert nicht | Extension weglassen: `/guide/foo`, nicht `/guide/foo.md`                              |
+| Doppelte URL                        | Zwei Dateien dürfen nicht dieselbe Route erzeugen (z. B. `foo.md` und `foo/index.md`) |
+| Seite fehlt in der Navigation       | `nav` / `sidebar` in der Config ergänzen                                              |
 
 ## Nächste Schritte
 
-| Thema | Link |
-| --- | --- |
+| Thema                         | Link                                                 |
+| ----------------------------- | ---------------------------------------------------- |
 | Erste Änderungen in 5 Minuten | [Die ersten 5 Minuten](/de/guide/first-five-minutes) |
-| Routing, `srcDir`, Tags | [Routing](/de/guide/routing) |
-| Markdown-Syntax | [Markdown-Beispiele](/de/markdown-examples) |
-| Produktion bauen | [Deploy](/de/guide/deploy) |
+| Routing, `srcDir`, Tags       | [Routing](/de/guide/routing)                         |
+| Markdown-Syntax               | [Markdown-Beispiele](/de/markdown-examples)          |
+| Produktion bauen              | [Deploy](/de/guide/deploy)                           |

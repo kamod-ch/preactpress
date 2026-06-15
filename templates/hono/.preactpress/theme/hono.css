@@ -15,7 +15,8 @@
   --hono-code-text: #f3f4f6;
   --hono-radius: 1.1rem;
   --hono-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
-  --hono-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --hono-font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --hono-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --hono-layout-max: 1360px;
   --hono-layout-gutter: 2rem;
@@ -23,7 +24,7 @@
   color-scheme: dark;
 }
 
-:root[data-theme='light'] {
+:root[data-theme="light"] {
   --hono-bg: #ffffff;
   --hono-bg-soft: #f7f7f8;
   --hono-panel: rgba(15, 23, 42, 0.04);
@@ -56,7 +57,11 @@ body {
   margin: 0;
   min-width: 320px;
   background:
-    radial-gradient(circle at 70% 0, color-mix(in srgb, var(--hono-accent) 16%, transparent), transparent 24rem),
+    radial-gradient(
+      circle at 70% 0,
+      color-mix(in srgb, var(--hono-accent) 16%, transparent),
+      transparent 24rem
+    ),
     linear-gradient(180deg, var(--hono-bg-soft), var(--hono-bg) 22rem);
   color: var(--hono-text);
   font-family: var(--hono-font-sans);
@@ -240,8 +245,8 @@ a {
   color: var(--hono-text-strong);
 }
 
-:root[data-theme='light'] .hn-theme-toggle-sun,
-:root:not([data-theme='light']) .hn-theme-toggle-moon {
+:root[data-theme="light"] .hn-theme-toggle-sun,
+:root:not([data-theme="light"]) .hn-theme-toggle-moon {
   display: none;
 }
 
@@ -655,8 +660,8 @@ a {
   min-width: 100%;
 }
 
-:root:not([data-theme='light']) .hn-doc-content .shiki,
-:root:not([data-theme='light']) .hn-doc-content .shiki span {
+:root:not([data-theme="light"]) .hn-doc-content .shiki,
+:root:not([data-theme="light"]) .hn-doc-content .shiki span {
   color: var(--shiki-dark) !important;
   background-color: var(--shiki-dark-bg) !important;
 }
@@ -780,12 +785,24 @@ a {
   display: none;
 }
 
-.hn-doc-content .pp-code-group:has(.pp-code-group-input:nth-of-type(1):checked) .pp-code-group-block:nth-child(1),
-.hn-doc-content .pp-code-group:has(.pp-code-group-input:nth-of-type(2):checked) .pp-code-group-block:nth-child(2),
-.hn-doc-content .pp-code-group:has(.pp-code-group-input:nth-of-type(3):checked) .pp-code-group-block:nth-child(3),
-.hn-doc-content .pp-code-group:has(.pp-code-group-input:nth-of-type(4):checked) .pp-code-group-block:nth-child(4),
-.hn-doc-content .pp-code-group:has(.pp-code-group-input:nth-of-type(5):checked) .pp-code-group-block:nth-child(5),
-.hn-doc-content .pp-code-group:has(.pp-code-group-input:nth-of-type(6):checked) .pp-code-group-block:nth-child(6) {
+.hn-doc-content
+  .pp-code-group:has(.pp-code-group-input:nth-of-type(1):checked)
+  .pp-code-group-block:nth-child(1),
+.hn-doc-content
+  .pp-code-group:has(.pp-code-group-input:nth-of-type(2):checked)
+  .pp-code-group-block:nth-child(2),
+.hn-doc-content
+  .pp-code-group:has(.pp-code-group-input:nth-of-type(3):checked)
+  .pp-code-group-block:nth-child(3),
+.hn-doc-content
+  .pp-code-group:has(.pp-code-group-input:nth-of-type(4):checked)
+  .pp-code-group-block:nth-child(4),
+.hn-doc-content
+  .pp-code-group:has(.pp-code-group-input:nth-of-type(5):checked)
+  .pp-code-group-block:nth-child(5),
+.hn-doc-content
+  .pp-code-group:has(.pp-code-group-input:nth-of-type(6):checked)
+  .pp-code-group-block:nth-child(6) {
   display: block;
 }
 
@@ -971,7 +988,7 @@ a {
   }
 
   .hn-sidebar-panel > summary::after {
-    content: '▾';
+    content: "▾";
     color: var(--hono-muted);
     font-size: 0.85rem;
     transition: transform 0.15s ease;

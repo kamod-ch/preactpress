@@ -1,37 +1,41 @@
 /** @jsx h */
-import { h } from 'preact'
-import { Counter } from './Counter.tsx'
+import { h } from "preact";
+import { Counter } from "./Counter.tsx";
 
 const sourceLines = [
   {
     line: 1,
     parts: [
-      { kind: 'keyword', text: 'import' },
-      { kind: 'plain', text: ' { Counter } ' },
-      { kind: 'keyword', text: 'from' },
-      { kind: 'string', text: "'./components/Counter'" }
-    ]
+      { kind: "keyword", text: "import" },
+      { kind: "plain", text: " { Counter } " },
+      { kind: "keyword", text: "from" },
+      { kind: "string", text: "'./components/Counter'" },
+    ],
   },
   { line: 2, parts: [] },
   {
     line: 3,
-    parts: [{ kind: 'heading', text: '# Interactive documentation' }]
+    parts: [{ kind: "heading", text: "# Interactive documentation" }],
   },
   { line: 4, parts: [] },
   {
     line: 5,
-    parts: [{ kind: 'component', text: '<Counter />' }],
-    active: true
-  }
-]
+    parts: [{ kind: "component", text: "<Counter />" }],
+    active: true,
+  },
+];
 
 function EditorToken({ kind, text }: { kind: string; text: string }) {
-  return <span class={`pp-mkt-editor-token pp-mkt-editor-token-${kind}`}>{text}</span>
+  return <span class={`pp-mkt-editor-token pp-mkt-editor-token-${kind}`}>{text}</span>;
 }
 
 export default function MdxDemo() {
   return (
-    <section class="pp-mkt-section pp-mkt-demo" id="interactive-demo" aria-labelledby="interactive-demo-title">
+    <section
+      class="pp-mkt-section pp-mkt-demo"
+      id="interactive-demo"
+      aria-labelledby="interactive-demo-title"
+    >
       <div class="pp-mkt-section-heading">
         <p class="pp-mkt-eyebrow">Interactive demo</p>
         <h2 id="interactive-demo-title">A small MDX example</h2>
@@ -55,7 +59,7 @@ export default function MdxDemo() {
               <code>
                 {sourceLines.map((sourceLine) => (
                   <span
-                    class={`pp-mkt-editor-line${sourceLine.active ? ' pp-mkt-editor-line-active' : ''}`}
+                    class={`pp-mkt-editor-line${sourceLine.active ? " pp-mkt-editor-line-active" : ""}`}
                     key={sourceLine.line}
                   >
                     <span class="pp-mkt-editor-gutter" aria-hidden="true">
@@ -63,9 +67,15 @@ export default function MdxDemo() {
                     </span>
                     <span class="pp-mkt-editor-content">
                       {sourceLine.parts.map((part) => (
-                        <EditorToken kind={part.kind} key={`${sourceLine.line}-${part.text}`} text={part.text} />
+                        <EditorToken
+                          kind={part.kind}
+                          key={`${sourceLine.line}-${part.text}`}
+                          text={part.text}
+                        />
                       ))}
-                      {sourceLine.active ? <span class="pp-mkt-editor-cursor" aria-hidden="true" /> : null}
+                      {sourceLine.active ? (
+                        <span class="pp-mkt-editor-cursor" aria-hidden="true" />
+                      ) : null}
                     </span>
                   </span>
                 ))}
@@ -82,5 +92,5 @@ export default function MdxDemo() {
         </div>
       </div>
     </section>
-  )
+  );
 }

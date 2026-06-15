@@ -1,12 +1,12 @@
-import type { FunctionalComponent } from 'preact'
+import type { FunctionalComponent } from "preact";
 
 interface LogoProps {
-  class?: string
-  label: string
+  class?: string;
+  label: string;
 }
 
 const Logo: FunctionalComponent<LogoProps> = ({ class: className, label }) => (
-  <span class={`hn-logo ${className ?? ''}`.trim()} aria-label={label}>
+  <span class={`hn-logo ${className ?? ""}`.trim()} aria-label={label}>
     <svg aria-hidden="true" viewBox="0 0 36 36" width="36" height="36">
       <rect width="36" height="36" rx="11" fill="currentColor" opacity="0.12" />
       <path
@@ -21,6 +21,6 @@ const Logo: FunctionalComponent<LogoProps> = ({ class: className, label }) => (
     </svg>
     <span>{label}</span>
   </span>
-)
+);
 
-export default Logo
+export default Logo;

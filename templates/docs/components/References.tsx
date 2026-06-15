@@ -1,33 +1,33 @@
 /** @jsx h */
-import { h } from 'preact'
+import { h } from "preact";
 
 const references = [
   {
-    name: 'PreactPress documentation',
-    description: 'The public reference site you are reading now.',
-    href: 'https://kamod-ch.github.io/preactpress/'
+    name: "PreactPress documentation",
+    description: "The public reference site you are reading now.",
+    href: "https://kamod-ch.github.io/preactpress/",
   },
   {
-    name: 'Kamod UI',
-    description: 'Preact + Tailwind components that can be documented and demonstrated with MDX.',
-    href: 'https://ui.kamod.ch/'
+    name: "Kamod UI",
+    description: "Preact + Tailwind components that can be documented and demonstrated with MDX.",
+    href: "https://ui.kamod.ch/",
   },
   {
-    name: 'Kamod Hooks',
-    description: 'A Preact hooks library with documentation built around the same tooling stack.',
-    href: 'https://github.com/kamod-ch/kamod-hooks'
+    name: "Kamod Hooks",
+    description: "A Preact hooks library with documentation built around the same tooling stack.",
+    href: "https://github.com/kamod-ch/kamod-hooks",
   },
   {
-    name: 'Hono starter template',
-    description: 'A product-and-docs starter shipped with PreactPress.',
-    href: 'https://github.com/kamod-ch/preactpress/tree/main/templates/hono'
+    name: "Hono starter template",
+    description: "A product-and-docs starter shipped with PreactPress.",
+    href: "https://github.com/kamod-ch/preactpress/tree/main/templates/hono",
   },
   {
-    name: 'More Kamod projects',
-    description: 'Additional open-source projects from Kamod GmbH.',
-    href: 'https://github.com/kamod-ch'
-  }
-]
+    name: "More Kamod projects",
+    description: "Additional open-source projects from Kamod GmbH.",
+    href: "https://github.com/kamod-ch",
+  },
+];
 
 export default function References() {
   return (
@@ -58,5 +58,5 @@ export default function References() {
         ))}
       </div>
     </section>
-  )
+  );
 }

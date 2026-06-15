@@ -17,7 +17,7 @@ Highlight a single line with fence meta (`{2}`) or inline notation:
 
 ```ts
 export function greet(name: string) {
-  return `Hello, ${name}!` // [!code highlight]
+  return `Hello, ${name}!`; // [!code highlight]
 }
 ```
 
@@ -37,9 +37,9 @@ The `@/` prefix resolves from the site content root (`srcDir`).
 
 ## Tables
 
-| Syntax | Result |
-| --- | --- |
-| `# Title` | Heading |
+| Syntax            | Result        |
+| ----------------- | ------------- |
+| `# Title`         | Heading       |
 | `---` frontmatter | Page metadata |
 
 ## Quotes
@@ -100,11 +100,11 @@ Nested heading for the outline.
 ::: code-group
 
 ```js [config.js]
-export default { lang: 'js' }
+export default { lang: "js" };
 ```
 
 ```ts [config.ts]
-export default { lang: 'ts' }
+export default { lang: "ts" };
 ```
 
 :::

@@ -1,10 +1,10 @@
-import { useState } from 'preact/hooks'
+import { useState } from "preact/hooks";
 
-export default function Counter({ initial = 0 }: { initial?: number }) {
-  const [count, setCount] = useState(initial)
+export function Counter({ initial = 0 }: { initial?: number }) {
+  const [count, setCount] = useState(initial);
 
   return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+    <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
       <button
         type="button"
         onClick={() => setCount((value) => value - 1)}
@@ -21,5 +21,7 @@ export default function Counter({ initial = 0 }: { initial?: number }) {
         +
       </button>
     </div>
-  )
+  );
 }
+
+export default Counter;

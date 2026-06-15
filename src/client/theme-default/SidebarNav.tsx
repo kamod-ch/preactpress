@@ -1,26 +1,26 @@
-import type { FunctionalComponent } from 'preact'
-import type { SidebarGroup, SidebarItem } from '../../node/siteConfig.js'
+import type { FunctionalComponent } from "preact";
+import type { SidebarGroup, SidebarItem } from "../../node/siteConfig.js";
 
 interface SidebarNavProps {
-  groups: SidebarGroup[]
-  routePath: string
-  withBase: (base: string, link: string) => string
-  base: string
-  isActive: (routePath: string, link: string) => boolean
+  groups: SidebarGroup[];
+  routePath: string;
+  withBase: (base: string, link: string) => string;
+  base: string;
+  isActive: (routePath: string, link: string) => boolean;
 }
 
 const SidebarItems: FunctionalComponent<{
-  items: SidebarItem[]
-  depth: number
-  routePath: string
-  base: string
-  withBase: SidebarNavProps['withBase']
-  isActive: SidebarNavProps['isActive']
+  items: SidebarItem[];
+  depth: number;
+  routePath: string;
+  base: string;
+  withBase: SidebarNavProps["withBase"];
+  isActive: SidebarNavProps["isActive"];
 }> = ({ items, depth, routePath, base, withBase, isActive }) => (
-  <ul class={depth > 0 ? 'pp-sidebar-nested' : undefined}>
+  <ul class={depth > 0 ? "pp-sidebar-nested" : undefined}>
     {items.map((item) => {
-      const nested = item.items?.length
-      const key = item.link ?? item.text
+      const nested = item.items?.length;
+      const key = item.link ?? item.text;
 
       if (nested) {
         return (
@@ -37,33 +37,33 @@ const SidebarItems: FunctionalComponent<{
               />
             </details>
           </li>
-        )
+        );
       }
 
-      if (!item.link) return null
+      if (!item.link) return null;
 
-      const active = isActive(routePath, item.link)
+      const active = isActive(routePath, item.link);
       return (
         <li key={item.link}>
           <a
-            class={active ? 'active' : ''}
+            class={active ? "active" : ""}
             href={withBase(base, item.link)}
-            aria-current={active ? 'page' : undefined}
+            aria-current={active ? "page" : undefined}
           >
             {item.text}
           </a>
         </li>
-      )
+      );
     })}
   </ul>
-)
+);
 
 const SidebarNav: FunctionalComponent<SidebarNavProps> = ({
   groups,
   routePath,
   withBase,
   base,
-  isActive
+  isActive,
 }) => (
   <>
     {groups.map((group, gi) => {
@@ -76,7 +76,7 @@ const SidebarNav: FunctionalComponent<SidebarNavProps> = ({
           withBase={withBase}
           isActive={isActive}
         />
-      )
+      );
 
       if (group.text) {
         return (
@@ -88,16 +88,16 @@ const SidebarNav: FunctionalComponent<SidebarNavProps> = ({
             <summary class="pp-sidebar-heading">{group.text}</summary>
             {body}
           </details>
-        )
+        );
       }
 
       return (
         <div key={gi} class="pp-sidebar-group">
           {body}
         </div>
-      )
+      );
     })}
   </>
-)
+);
 
-export default SidebarNav
+export default SidebarNav;

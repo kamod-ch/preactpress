@@ -60,8 +60,8 @@ You can move content into a nested source directory with `srcDir`:
 
 ```ts
 export default {
-  srcDir: 'docs'
-}
+  srcDir: "docs",
+};
 ```
 
 That produces this shape:
@@ -97,6 +97,7 @@ Avoid linking directly to generated HTML or source Markdown:
 
 ```md
 <!-- Avoid -->
+
 [Getting Started](/guide/getting-started.md)
 [Getting Started](/guide/getting-started.html)
 ```
@@ -120,16 +121,16 @@ Configure locale labels, language codes, and locale-specific nav in `.preactpres
 export default {
   locales: {
     root: {
-      label: 'English',
-      lang: 'en'
+      label: "English",
+      lang: "en",
     },
     de: {
-      label: 'Deutsch',
-      lang: 'de',
-      link: '/de/'
-    }
-  }
-}
+      label: "Deutsch",
+      lang: "de",
+      link: "/de/",
+    },
+  },
+};
 ```
 
 The default theme shows a language switcher when multiple locales are configured.
@@ -167,9 +168,9 @@ Use `site.base` when the site is served from a subpath, for example GitHub Pages
 ```ts
 export default {
   site: {
-    base: '/my-repo/'
-  }
-}
+    base: "/my-repo/",
+  },
+};
 ```
 
 You can also override it for one build:
@@ -185,25 +186,25 @@ Map a public URL to existing content without duplicating files:
 ```ts
 export default {
   rewrites: {
-    '/docs': '/guide',
-    '/getting-started': '/guide/intro'
-  }
-}
+    "/docs": "/guide",
+    "/getting-started": "/guide/intro",
+  },
+};
 ```
 
 Keys are the routes visitors use; values must point at routes that already exist from your Markdown files. `preactpress check` validates rewrite sources and collisions.
 
 ## Clean URLs and hosting
 
-| `cleanUrls` | Output for `/about` | Typical host |
-| --- | --- | --- |
+| `cleanUrls`      | Output for `/about`     | Typical host                                    |
+| ---------------- | ----------------------- | ----------------------------------------------- |
 | `true` (default) | `dist/about/index.html` | Netlify, Vercel, Cloudflare Pages, GitHub Pages |
-| `false` | `dist/about.html` | Static buckets without directory index support |
+| `false`          | `dist/about.html`       | Static buckets without directory index support  |
 
 ```ts
 export default {
-  cleanUrls: false
-}
+  cleanUrls: false,
+};
 ```
 
 Most modern static hosts work with the default. Set `cleanUrls: false` only when your host cannot resolve `/about` to `about/index.html`.
@@ -213,10 +214,9 @@ Most modern static hosts work with the default. Set `cleanUrls: false` only when
 Generate routes at build time with a bracket template and a colocated `.paths.ts` file:
 
 ```md
-<!-- packages/[pkg].md -->
----
-title: "{{ params.pkg }}"
----
+## <!-- packages/[pkg].md -->
+
+## title: "{{ params.pkg }}"
 
 # {{ params.pkg }}
 ```
@@ -226,11 +226,11 @@ title: "{{ params.pkg }}"
 export default {
   paths() {
     return [
-      { params: { pkg: 'preact' } },
-      { params: { pkg: 'vite' }, props: { note: 'Build tool' } }
-    ]
-  }
-}
+      { params: { pkg: "preact" } },
+      { params: { pkg: "vite" }, props: { note: "Build tool" } },
+    ];
+  },
+};
 ```
 
 This emits `/packages/preact` and `/packages/vite`. Use `{{ params.key }}` and `{{ props.key }}` in frontmatter and body.
@@ -241,23 +241,23 @@ Colocate `*.data.ts` with a page to load build-time data via `createContentLoade
 
 ```ts
 // blog.data.ts
-import { createContentLoader } from '@kamod-ch/preactpress/config'
+import { createContentLoader } from "@kamod-ch/preactpress/config";
 
-export default createContentLoader('posts/*.md', {
+export default createContentLoader("posts/*.md", {
   transform(items) {
     return items.map((item) => ({
       title: item.title,
-      route: item.route
-    }))
-  }
-})
+      route: item.route,
+    }));
+  },
+});
 ```
 
 Pair with `blog.md` or `blog/index.md` for route `/blog`.
 
 ## Current limitations
 
-| Feature | Status |
-| --- | --- |
+| Feature                            | Status                              |
+| ---------------------------------- | ----------------------------------- |
 | Dynamic MDX templates (`[id].mdx`) | Not supported (use `.md` templates) |
-| Pattern-based rewrites with params | Not supported |
+| Pattern-based rewrites with params | Not supported                       |

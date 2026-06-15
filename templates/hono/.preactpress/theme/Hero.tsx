@@ -1,18 +1,18 @@
-import type { FunctionalComponent } from 'preact'
-import CodeSnippet from './CodeSnippet.js'
+import type { FunctionalComponent } from "preact";
+import CodeSnippet from "./CodeSnippet.js";
 
 interface HeroAction {
-  text: string
-  link: string
-  theme?: 'brand' | 'alt'
+  text: string;
+  link: string;
+  theme?: "brand" | "alt";
 }
 
 interface HeroProps {
-  eyebrow?: string
-  title: string
-  subtitle: string
-  actions?: HeroAction[]
-  code: string
+  eyebrow?: string;
+  title: string;
+  subtitle: string;
+  actions?: HeroAction[];
+  code: string;
 }
 
 const Hero: FunctionalComponent<HeroProps> = ({ eyebrow, title, subtitle, actions = [], code }) => (
@@ -26,7 +26,7 @@ const Hero: FunctionalComponent<HeroProps> = ({ eyebrow, title, subtitle, action
         <div class="hn-hero-actions">
           {actions.map((action) => (
             <a
-              class={`hn-button hn-button-${action.theme ?? 'alt'}`}
+              class={`hn-button hn-button-${action.theme ?? "alt"}`}
               href={action.link}
               key={`${action.text}:${action.link}`}
             >
@@ -40,6 +40,6 @@ const Hero: FunctionalComponent<HeroProps> = ({ eyebrow, title, subtitle, action
       <CodeSnippet code={code} />
     </div>
   </section>
-)
+);
 
-export default Hero
+export default Hero;

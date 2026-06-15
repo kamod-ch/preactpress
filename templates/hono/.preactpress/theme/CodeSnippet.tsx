@@ -1,22 +1,22 @@
-import type { FunctionalComponent } from 'preact'
+import type { FunctionalComponent } from "preact";
 
 interface CodeSnippetProps {
-  code: string
+  code: string;
 }
 
 function tokenClass(line: string): string {
-  const trimmed = line.trim()
-  if (!trimmed) return 'empty'
+  const trimmed = line.trim();
+  if (!trimmed) return "empty";
   if (
-    trimmed.startsWith('import ') ||
-    trimmed.startsWith('export ') ||
-    trimmed.startsWith('const ') ||
-    trimmed.startsWith('return ')
+    trimmed.startsWith("import ") ||
+    trimmed.startsWith("export ") ||
+    trimmed.startsWith("const ") ||
+    trimmed.startsWith("return ")
   ) {
-    return 'keyword'
+    return "keyword";
   }
-  if (trimmed.includes("'.") || trimmed.includes("'") || trimmed.includes('"')) return 'string'
-  return 'plain'
+  if (trimmed.includes("'.") || trimmed.includes("'") || trimmed.includes('"')) return "string";
+  return "plain";
 }
 
 const CodeSnippet: FunctionalComponent<CodeSnippetProps> = ({ code }) => (
@@ -28,14 +28,14 @@ const CodeSnippet: FunctionalComponent<CodeSnippetProps> = ({ code }) => (
     </div>
     <pre>
       <code>
-        {code.split('\n').map((line, index) => (
+        {code.split("\n").map((line, index) => (
           <span class={`hn-code-line hn-code-${tokenClass(line)}`} key={`${index}:${line}`}>
-            {line || ' '}
+            {line || " "}
           </span>
         ))}
       </code>
     </pre>
   </div>
-)
+);
 
-export default CodeSnippet
+export default CodeSnippet;

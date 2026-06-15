@@ -1,50 +1,50 @@
 /** @jsx h */
-import { h } from 'preact'
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
+import { h } from "preact";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
 async function copyText(text: string): Promise<void> {
   if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text)
-    return
+    await navigator.clipboard.writeText(text);
+    return;
   }
 
-  const textarea = document.createElement('textarea')
-  textarea.value = text
-  textarea.setAttribute('readonly', '')
-  textarea.style.position = 'fixed'
-  textarea.style.left = '-9999px'
-  document.body.appendChild(textarea)
-  textarea.select()
-  document.execCommand('copy')
-  document.body.removeChild(textarea)
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
 }
 
 export default function CopyableCommand({ command }: { command: string }) {
-  const [copied, setCopied] = useState(false)
-  const resetTimer = useRef<number | undefined>(undefined)
+  const [copied, setCopied] = useState(false);
+  const resetTimer = useRef<number | undefined>(undefined);
 
   const copy = useCallback(async () => {
     try {
-      await copyText(command)
-      setCopied(true)
-      window.clearTimeout(resetTimer.current)
-      resetTimer.current = window.setTimeout(() => setCopied(false), 2000)
+      await copyText(command);
+      setCopied(true);
+      window.clearTimeout(resetTimer.current);
+      resetTimer.current = window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      setCopied(false)
+      setCopied(false);
     }
-  }, [command])
+  }, [command]);
 
-  useEffect(() => () => window.clearTimeout(resetTimer.current), [])
+  useEffect(() => () => window.clearTimeout(resetTimer.current), []);
 
   return (
     <div class="pp-mkt-copyable">
       <code class="pp-mkt-copyable-code">{command}</code>
       <button
         type="button"
-        class={`pp-mkt-copy-btn${copied ? ' pp-mkt-copy-btn-copied' : ''}`}
+        class={`pp-mkt-copy-btn${copied ? " pp-mkt-copy-btn-copied" : ""}`}
         onClick={copy}
-        aria-label={copied ? 'Command copied' : 'Copy command'}
-        title={copied ? 'Copied' : 'Copy command'}
+        aria-label={copied ? "Command copied" : "Copy command"}
+        title={copied ? "Copied" : "Copy command"}
       >
         {copied ? (
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -79,8 +79,8 @@ export default function CopyableCommand({ command }: { command: string }) {
             />
           </svg>
         )}
-        <span class="pp-mkt-copy-btn-label">{copied ? 'Copied' : 'Copy'}</span>
+        <span class="pp-mkt-copy-btn-label">{copied ? "Copied" : "Copy"}</span>
       </button>
     </div>
-  )
+  );
 }

@@ -36,18 +36,18 @@ Im separaten Projekt `preactpress-examples` gibt es ein Custom-Theme-Beispiel mi
 
 PreactPress soll Content-Arbeit einfach halten:
 
-| Feature | Nutzen |
-| --- | --- |
-| Vite Dev-Server | Schneller Start und Hot Updates beim Bearbeiten |
+| Feature              | Nutzen                                                         |
+| -------------------- | -------------------------------------------------------------- |
+| Vite Dev-Server      | Schneller Start und Hot Updates beim Bearbeiten                |
 | Markdown-Frontmatter | Titel, Beschreibungen, Tags, Draft-Status und Social-Metadaten |
-| MDX | Preact-Komponenten direkt in Inhaltsseiten |
-| Standard-Theme | Nav, Sidebar, Outline, Suche, Footer, Sprachumschalter |
-| `preactpress check` | Validierung von Config, Routen und Links vor dem Release |
+| MDX                  | Preact-Komponenten direkt in Inhaltsseiten                     |
+| Standard-Theme       | Nav, Sidebar, Outline, Suche, Footer, Sprachumschalter         |
+| `preactpress check`  | Validierung von Config, Routen und Links vor dem Release       |
 
 Für normale Inhalte nimmst du `.md`. Wenn eine Seite Interaktivität braucht, nimmst du `.mdx` und importierst eine Preact-Komponente:
 
 ```mdx
-import Counter from './components/Counter.tsx'
+import Counter from "./components/Counter.tsx";
 
 ## Demo
 
@@ -62,13 +62,13 @@ Nach der Hydration übernimmt die Client-Navigation. Markdown-Seiten werden als 
 
 Der Produktionsbuild besteht nur aus statischen Dateien:
 
-| Ausgabe | Zweck |
-| --- | --- |
-| `index.html`, `*/index.html` | Eine HTML-Datei pro Route |
-| `assets/*` | Gehashtes JavaScript und CSS von Vite |
-| `preactpress-search.json` | Suchdaten für das Standard-Theme |
-| `preactpress-content/*.json` | Lazy geladene Markdown-Payloads |
-| `404.html` | Fehlerseite |
+| Ausgabe                      | Zweck                                 |
+| ---------------------------- | ------------------------------------- |
+| `index.html`, `*/index.html` | Eine HTML-Datei pro Route             |
+| `assets/*`                   | Gehashtes JavaScript und CSS von Vite |
+| `preactpress-search.json`    | Suchdaten für das Standard-Theme      |
+| `preactpress-content/*.json` | Lazy geladene Markdown-Payloads       |
+| `404.html`                   | Fehlerseite                           |
 
 ## Was ist mit VitePress?
 
@@ -80,8 +80,8 @@ PreactPress ist in Produktion außerdem static-only. Du baust die Site einmal, l
 
 ## Nächste Schritte
 
-| Seite | Warum |
-| --- | --- |
+| Seite                                        | Warum                                                       |
+| -------------------------------------------- | ----------------------------------------------------------- |
 | [Getting Started](/de/guide/getting-started) | PreactPress installieren und die Starter-Struktur verstehen |
-| [Routing](/de/guide/routing) | Lernen, wie Dateien zu URLs werden |
-| [Deploy](/de/guide/deploy) | Eine statische Site bauen und veröffentlichen |
+| [Routing](/de/guide/routing)                 | Lernen, wie Dateien zu URLs werden                          |
+| [Deploy](/de/guide/deploy)                   | Eine statische Site bauen und veröffentlichen               |

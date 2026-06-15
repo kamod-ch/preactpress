@@ -1,11 +1,11 @@
 ---
 title: Markdown examples
-description: Rendered examples of PreactPress Markdown extensions.
+description: Common authoring snippets and rendered PreactPress Markdown extensions.
 tags:
   - markdown
 ---
 
-## Code highlighting
+## Code
 
 ```ts{2}
 export function greet(name: string) {
@@ -13,43 +13,87 @@ export function greet(name: string) {
 }
 ```
 
-Inline code such as `themeConfig.outline` uses the theme's code tokens.
+Highlight a single line with fence meta (`{2}`) or inline notation:
+
+```ts
+export function greet(name: string) {
+  return `Hello, ${name}!`; // [!code highlight]
+}
+```
+
+Inline code like `themeConfig.outline` uses the same theme tokens as code blocks.
 
 ## Snippet import
 
+Reuse source files instead of duplicating code:
+
 <<< @/snippets/greet.ts{2}
 
-## Containers and alerts
+The `@/` prefix resolves from the site content root (`srcDir`).
 
-::: tip
-Custom containers support `tip`, `warning`, `danger`, `info`, and `details`.
-:::
+## Links
+
+[Home](/) · [External link](https://preactjs.com)
+
+## Tables
+
+| Syntax            | Result        |
+| ----------------- | ------------- |
+| `# Title`         | Heading       |
+| `---` frontmatter | Page metadata |
+
+## Containers
+
+:::: tip
+`::: tip`, `::: warning`, `::: danger`, `::: info`, and `::: details` work like VitePress custom containers.
+::::
+
+:::: warning Optional title
+You can pass a custom title after the container type.
+::::
+
+:::: details Learn more
+Details blocks render as native `<details>` elements.
+::::
+
+## GFM alerts
+
+GitHub-flavored alert syntax renders with the same styling as custom containers:
 
 > [!NOTE]
-> GFM alert syntax is supported too.
+> Useful information that readers should know.
 
-## Table
+> [!TIP]
+> Optional advice for doing things more easily.
 
-| Source | Result |
-| --- | --- |
-| `# Title` | Heading |
-| YAML frontmatter | Page metadata |
+> [!WARNING]
+> Critical content that needs immediate attention.
 
-## Stable heading {#stable-heading}
+## Custom heading IDs
 
-Use `{#id}` to control a heading fragment.
+## Stable links {#stable-id}
+
+Append `{#id}` to any heading to control its anchor.
+
+## Emoji
+
+PreactPress supports `:tada:` and `:rocket:` shortcodes out of the box.
 
 ## Inline table of contents
 
 [[toc]]
 
-### Nested section
+### First section
 
-The generated table of contents includes level-three headings.
+Content below the inline TOC.
 
-## Code group
+### Second section
 
-::: code-group
+Nested heading for the outline.
+
+## Code groups
+
+:::: code-group
 
 ```bash [pnpm]
 pnpm add -D @kamod-ch/preactpress
@@ -59,9 +103,17 @@ pnpm add -D @kamod-ch/preactpress
 npm install --save-dev @kamod-ch/preactpress
 ```
 
-:::
+::::
 
-## Included content
+## Markdown inclusion
+
+Use includes for shared fragments or selected line ranges:
+
+<!--@include: @/parts/include-body.md{5,6}-->
+
+## Markdown includes
+
+Reuse shared fragments with HTML comments:
 
 <!--@include: @/partials/shared-note.md-->
 

@@ -1,60 +1,60 @@
-import type { ThemeLabels } from '../node/siteConfig.js'
+import type { ThemeLabels } from "../node/siteConfig.js";
 
 export interface ResolvedThemeLabels {
-  skip: string
-  navigation: string
-  menu: string
-  closeMenu: string
-  search: string
-  filterPages: string
-  searchResults: string
-  previous: string
-  next: string
-  lastUpdated: string
-  onThisPage: string
-  language: string
+  skip: string;
+  navigation: string;
+  menu: string;
+  closeMenu: string;
+  search: string;
+  filterPages: string;
+  searchResults: string;
+  previous: string;
+  next: string;
+  lastUpdated: string;
+  onThisPage: string;
+  language: string;
 }
 
 const EN_LABELS: ResolvedThemeLabels = {
-  skip: 'Skip to content',
-  navigation: 'Navigation',
-  menu: 'Menu',
-  closeMenu: 'Close menu',
-  search: 'Search',
-  filterPages: 'Filter pages',
-  searchResults: 'Search results',
-  previous: 'Previous',
-  next: 'Next',
-  lastUpdated: 'Last updated',
-  onThisPage: 'On this page',
-  language: 'Language'
-}
+  skip: "Skip to content",
+  navigation: "Navigation",
+  menu: "Menu",
+  closeMenu: "Close menu",
+  search: "Search",
+  filterPages: "Filter pages",
+  searchResults: "Search results",
+  previous: "Previous",
+  next: "Next",
+  lastUpdated: "Last updated",
+  onThisPage: "On this page",
+  language: "Language",
+};
 
 const DE_LABELS: ResolvedThemeLabels = {
-  skip: 'Zum Inhalt springen',
-  navigation: 'Navigation',
-  menu: 'Menü',
-  closeMenu: 'Menü schließen',
-  search: 'Suche',
-  filterPages: 'Seiten filtern',
-  searchResults: 'Suchergebnisse',
-  previous: 'Zurück',
-  next: 'Weiter',
-  lastUpdated: 'Zuletzt aktualisiert',
-  onThisPage: 'Auf dieser Seite',
-  language: 'Sprache'
-}
+  skip: "Zum Inhalt springen",
+  navigation: "Navigation",
+  menu: "Menü",
+  closeMenu: "Menü schließen",
+  search: "Suche",
+  filterPages: "Seiten filtern",
+  searchResults: "Suchergebnisse",
+  previous: "Zurück",
+  next: "Weiter",
+  lastUpdated: "Zuletzt aktualisiert",
+  onThisPage: "Auf dieser Seite",
+  language: "Sprache",
+};
 
 export function defaultLabelsForLang(lang: string): ResolvedThemeLabels {
-  return lang.toLowerCase().startsWith('de') ? DE_LABELS : EN_LABELS
+  return lang.toLowerCase().startsWith("de") ? DE_LABELS : EN_LABELS;
 }
 
 export function resolveThemeLabels(
   lang: string,
-  overrides: ThemeLabels | undefined
+  overrides: ThemeLabels | undefined,
 ): ResolvedThemeLabels {
-  const defaults = defaultLabelsForLang(lang)
-  if (!overrides) return defaults
+  const defaults = defaultLabelsForLang(lang);
+  if (!overrides) return defaults;
   return {
     skip: overrides.skip ?? defaults.skip,
     navigation: overrides.navigation ?? defaults.navigation,
@@ -67,6 +67,6 @@ export function resolveThemeLabels(
     next: overrides.next ?? defaults.next,
     lastUpdated: overrides.lastUpdated ?? defaults.lastUpdated,
     onThisPage: overrides.onThisPage ?? defaults.onThisPage,
-    language: overrides.language ?? defaults.language
-  }
+    language: overrides.language ?? defaults.language,
+  };
 }

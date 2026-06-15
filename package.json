@@ -14,14 +14,10 @@
   "homepage": "https://kamod-ch.github.io/preactpress/",
   "license": "MIT",
   "author": "Klaus Zahiragic <watzak@users.noreply.github.com>",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/preactpress.git"
   },
-  "type": "module",
   "bin": {
     "preactpress": "./bin/preactpress.mjs"
   },
@@ -33,6 +29,7 @@
     "src/shared",
     "templates"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/node/index.d.ts",
@@ -51,10 +48,21 @@
       "default": "./dist/shared/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepare": "pnpm run build",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:browser": "playwright test",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check .",
+    "pack:dry-run": "npm pack --dry-run",
+    "verify": "pnpm run fmt && pnpm run lint && pnpm run build && pnpm run test:coverage && pnpm run check:templates && pnpm run test:browser && pnpm run pack:dry-run",
     "prepack": "pnpm run build",
     "preactpress": "node ./bin/preactpress.mjs",
     "dev": "node ./bin/preactpress.mjs dev templates/default",
@@ -70,6 +78,7 @@
     "dev:magazine": "node ./bin/preactpress.mjs dev templates/magazine",
     "check:magazine": "node ./bin/preactpress.mjs check templates/magazine",
     "build:magazine": "node ./bin/preactpress.mjs build templates/magazine",
+    "check:templates": "node ./scripts/check-all-templates.mjs",
     "dev:templates": "node ./scripts/dev-all-templates.mjs",
     "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
   },
@@ -95,11 +104,15 @@
     "vite": "^8.0.16"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.0",
     "@types/markdown-it": "^14.1.2",
     "@types/minimist": "^1.2.5",
     "@types/node": "^25.9.2",
+    "@vitest/coverage-v8": "^4.1.9",
+    "oxfmt": "^0.54.0",
+    "oxlint": "^1.69.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.9"
   },
   "engines": {
     "node": ">=20"

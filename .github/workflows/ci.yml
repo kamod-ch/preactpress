@@ -39,5 +39,25 @@ jobs:
       - name: Build package
         run: pnpm run build
 
-      - name: Run tests
-        run: pnpm test
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Format check
+        run: pnpm run fmt:check
+
+      - name: Run tests with coverage
+        run: pnpm run test:coverage
+
+      - name: Check bundled templates
+        run: pnpm run check:templates
+
+      - name: Install Playwright browsers
+        if: matrix.node-version == 22
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run browser tests
+        if: matrix.node-version == 22
+        run: pnpm run test:browser
+
+      - name: Verify package tarball
+        run: pnpm run pack:dry-run

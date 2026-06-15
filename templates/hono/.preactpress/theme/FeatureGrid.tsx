@@ -1,13 +1,13 @@
-import type { FunctionalComponent } from 'preact'
+import type { FunctionalComponent } from "preact";
 
 interface Feature {
-  icon: string
-  title: string
-  details: string
+  icon: string;
+  title: string;
+  details: string;
 }
 
 interface FeatureGridProps {
-  features: Feature[]
+  features: Feature[];
 }
 
 const FeatureGrid: FunctionalComponent<FeatureGridProps> = ({ features }) => (
@@ -22,6 +22,6 @@ const FeatureGrid: FunctionalComponent<FeatureGridProps> = ({ features }) => (
       </article>
     ))}
   </section>
-)
+);
 
-export default FeatureGrid
+export default FeatureGrid;

@@ -1,6 +1,6 @@
 ---
 title: Handel und Margen im Frühjahr
-description: 'Zwischen Volumen und Warenwert: wie Händlerinnen und Händler ihre KPI-Sets überdenken.'
+description: "Zwischen Volumen und Warenwert: wie Händlerinnen und Händler ihre KPI-Sets überdenken."
 tags:
   - Handel
   - Margen
@@ -11,7 +11,7 @@ readTime: 6 Min.
 
 ## Einordnung
 
-Die Berichtssaison liefert wieder **Mischsignale**: Während einige Segmente von Volumenrückgängen sprechen, halten sich Warenwerte in ausgewählten Kategorien stabil. Entscheidend ist weniger die reine Fläche, sondern die *Rotation pro Quadratmeter* und die **Treue** am PoS.
+Die Berichtssaison liefert wieder **Mischsignale**: Während einige Segmente von Volumenrückgängen sprechen, halten sich Warenwerte in ausgewählten Kategorien stabil. Entscheidend ist weniger die reine Fläche, sondern die _Rotation pro Quadratmeter_ und die **Treue** am PoS.
 
 ### Was Analysen häufig übersehen
 

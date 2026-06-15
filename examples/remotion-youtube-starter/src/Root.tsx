@@ -1,5 +1,5 @@
-import {Composition} from 'remotion';
-import {YouTubeStarter} from './YouTubeStarter';
+import { Composition } from "remotion";
+import { YouTubeStarter } from "./YouTubeStarter";
 
 export const Root = () => {
   return (
@@ -11,8 +11,8 @@ export const Root = () => {
       fps={30}
       durationInFrames={450}
       defaultProps={{
-        title: 'PreactPress ships docs fast',
-        subtitle: 'Preact + MDX documentation, packaged as a clean YouTube starter in Remotion',
+        title: "PreactPress ships docs fast",
+        subtitle: "Preact + MDX documentation, packaged as a clean YouTube starter in Remotion",
       }}
     />
   );

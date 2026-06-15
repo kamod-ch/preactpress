@@ -11,11 +11,11 @@ This guide shows how to create a PreactPress site, understand the generated file
 
 You need:
 
-| Requirement | Version |
-| --- | --- |
-| Node.js | 20 or higher |
-| Package manager | pnpm recommended; npm, yarn, and bun also work |
-| Editor | Any editor with Markdown and TypeScript support |
+| Requirement     | Version                                         |
+| --------------- | ----------------------------------------------- |
+| Node.js         | 20 or higher                                    |
+| Package manager | pnpm recommended; npm, yarn, and bun also work  |
+| Editor          | Any editor with Markdown and TypeScript support |
 
 ## Create a site
 
@@ -73,25 +73,25 @@ The starter config lives at `.preactpress/config.ts`:
 ```ts
 export default {
   site: {
-    title: 'My Docs',
-    description: 'Short summary for search and social previews'
+    title: "My Docs",
+    description: "Short summary for search and social previews",
   },
   themeConfig: {
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Guide', link: '/guide/what-is-preactpress' }
+      { text: "Home", link: "/" },
+      { text: "Guide", link: "/guide/what-is-preactpress" },
     ],
     sidebar: [
       {
-        text: 'Introduction',
+        text: "Introduction",
         items: [
-          { text: 'What is PreactPress?', link: '/guide/what-is-preactpress' },
-          { text: 'Getting Started', link: '/guide/getting-started' }
-        ]
-      }
-    ]
-  }
-}
+          { text: "What is PreactPress?", link: "/guide/what-is-preactpress" },
+          { text: "Getting Started", link: "/guide/getting-started" },
+        ],
+      },
+    ],
+  },
+};
 ```
 
 Use `site` for site-wide metadata and `themeConfig` for default-theme options such as logo (`logo: '/logo.svg'`), nav, sidebar, search, outline, footer, and edit links.
@@ -111,8 +111,8 @@ You can change the source directory with `srcDir`:
 
 ```ts
 export default {
-  srcDir: 'docs'
-}
+  srcDir: "docs",
+};
 ```
 
 With this config, PreactPress reads pages from `docs/` while `.preactpress/config.ts` still belongs to the project root.
@@ -121,12 +121,12 @@ With this config, PreactPress reads pages from `docs/` while `.preactpress/confi
 
 The starter includes npm scripts:
 
-| Command | Purpose |
-| --- | --- |
-| `pnpm run dev` | Start the dev server with SSR and hot reload |
-| `pnpm run check` | Validate config, routes, and links |
-| `pnpm run build` | Build the static production site into `dist/` |
-| `pnpm run preview` | Preview the production build locally |
+| Command            | Purpose                                       |
+| ------------------ | --------------------------------------------- |
+| `pnpm run dev`     | Start the dev server with SSR and hot reload  |
+| `pnpm run check`   | Validate config, routes, and links            |
+| `pnpm run build`   | Build the static production site into `dist/` |
+| `pnpm run preview` | Preview the production build locally          |
 
 You can also call the CLI directly:
 
@@ -139,8 +139,8 @@ pnpm exec preactpress preview
 
 ## What's next?
 
-| Page | Why |
-| --- | --- |
+| Page                                              | Why                                               |
+| ------------------------------------------------- | ------------------------------------------------- |
 | [Your first 5 minutes](/guide/first-five-minutes) | Change the title, add a page, and wire navigation |
-| [Routing](/guide/routing) | Learn how Markdown files map to URLs |
-| [Deploy](/guide/deploy) | Build and publish the generated `dist/` directory |
+| [Routing](/guide/routing)                         | Learn how Markdown files map to URLs              |
+| [Deploy](/guide/deploy)                           | Build and publish the generated `dist/` directory |

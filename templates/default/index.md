@@ -38,18 +38,18 @@ Open **http://localhost:5173**. Edit Markdown files, adjust `.preactpress/config
 
 ## What to read next
 
-| Page | Why |
-| --- | --- |
+| Page                                              | Why                                              |
+| ------------------------------------------------- | ------------------------------------------------ |
 | [Your first 5 minutes](/guide/first-five-minutes) | Change the title, add a page, wire up navigation |
-| [About](/about) | A plain content page you can replace |
+| [About](/about)                                   | A plain content page you can replace             |
 
 ## What you get
 
-| Feature | Included |
-| --- | --- |
-| Static HTML build | Yes |
-| Client navigation | Yes |
-| Markdown frontmatter | Yes |
-| Sidebar search | Yes |
+| Feature              | Included |
+| -------------------- | -------- |
+| Static HTML build    | Yes      |
+| Client navigation    | Yes      |
+| Markdown frontmatter | Yes      |
+| Sidebar search       | Yes      |
 
 The default template is intentionally small. Use `preactpress init --template docs` when you want a fuller documentation starter, or `preactpress init --template magazine` for a custom-theme example.

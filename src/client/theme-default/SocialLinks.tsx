@@ -1,19 +1,19 @@
-import type { FunctionalComponent } from 'preact'
-import type { SocialLink } from '../../shared/socialIcons.js'
-import { socialIconSvg, socialLinkLabel } from '../../shared/socialIcons.js'
+import type { FunctionalComponent } from "preact";
+import type { SocialLink } from "../../shared/socialIcons.js";
+import { socialIconSvg, socialLinkLabel } from "../../shared/socialIcons.js";
 
 export interface SocialLinksProps {
-  links: SocialLink[]
+  links: SocialLink[];
 }
 
 const SocialLinks: FunctionalComponent<SocialLinksProps> = ({ links }) => {
-  if (!links.length) return null
+  if (!links.length) return null;
 
   return (
     <nav class="pp-social-links" aria-label="Social links">
       {links.map((item, index) => {
-        const svg = socialIconSvg(item.icon)
-        const label = socialLinkLabel(item.icon, item.ariaLabel)
+        const svg = socialIconSvg(item.icon);
+        const label = socialLinkLabel(item.icon, item.ariaLabel);
         return (
           <a
             key={`${item.link}-${index}`}
@@ -32,10 +32,10 @@ const SocialLinks: FunctionalComponent<SocialLinksProps> = ({ links }) => {
               </span>
             )}
           </a>
-        )
+        );
       })}
     </nav>
-  )
-}
+  );
+};
 
-export default SocialLinks
+export default SocialLinks;

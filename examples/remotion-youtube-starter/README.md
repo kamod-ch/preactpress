@@ -32,12 +32,12 @@ Die Datei wird nach `out/preactpress-youtube-starter.mp4` geschrieben.
 
 ## Wichtige Dateien
 
-| Pfad | Zweck |
-| --- | --- |
-| `src/index.ts` | registriert den Remotion Root |
-| `src/Root.tsx` | definiert die Composition |
-| `src/YouTubeStarter.tsx` | enthält den eigentlichen Videoaufbau |
-| `public/preactpress-wordmark-light.svg` | Wordmark für das Video |
+| Pfad                                    | Zweck                                |
+| --------------------------------------- | ------------------------------------ |
+| `src/index.ts`                          | registriert den Remotion Root        |
+| `src/Root.tsx`                          | definiert die Composition            |
+| `src/YouTubeStarter.tsx`                | enthält den eigentlichen Videoaufbau |
+| `public/preactpress-wordmark-light.svg` | Wordmark für das Video               |
 
 ## Anpassen
 

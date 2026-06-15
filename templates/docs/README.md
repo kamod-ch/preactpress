@@ -4,12 +4,12 @@ This is the canonical PreactPress documentation and the site created by `preactp
 
 ## Commands
 
-| Script | Purpose |
-| --- | --- |
-| `pnpm run dev` | Start the docs at http://localhost:5173 |
-| `pnpm run check` | Validate routes, config, and links |
-| `pnpm run build` | Generate static output in `dist/` |
-| `pnpm run preview` | Preview the production output locally |
+| Script             | Purpose                                 |
+| ------------------ | --------------------------------------- |
+| `pnpm run dev`     | Start the docs at http://localhost:5173 |
+| `pnpm run check`   | Validate routes, config, and links      |
+| `pnpm run build`   | Generate static output in `dist/`       |
+| `pnpm run preview` | Preview the production output locally   |
 
 ## Structure
 

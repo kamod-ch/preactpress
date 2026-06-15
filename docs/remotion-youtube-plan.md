@@ -31,22 +31,26 @@ Ein einfacher, sofort nutzbarer **Remotion-Starter für YouTube-Videos** soll di
 ## Umsetzungsplan
 
 ### 1. Beispielstruktur anlegen
+
 - separaten Beispielordner erstellen
 - eigenes `package.json`, damit keine Root-Dependencies aufgebläht werden
 - TypeScript-Setup für Remotion definieren
 
 ### 2. Starter-Komposition bauen
+
 - `Composition` mit 30 fps und ca. 15 Sekunden Länge
 - klare Szenenstruktur aufbauen
 - einfache Motion mit `spring()`, `interpolate()`, `Sequence()`
 - visuell neutrales, produktnahes Layout verwenden
 
 ### 3. Developer Experience
+
 - Skripte für `dev`, `studio` und `render`
 - kurze Beispielbefehle dokumentieren
 - Props so anlegen, dass Titel/Subtitle leicht angepasst werden können
 
 ### 4. README-Integration
+
 - neuen Abschnitt im Root-README ergänzen
 - auf Beispielordner und Plan-Datei verlinken
 - Preview-Grafik einbinden

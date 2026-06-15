@@ -1,12 +1,12 @@
 /** @jsx h */
-import { h } from 'preact'
+import { h } from "preact";
 
 const commands = [
-  { cwd: '~', cmd: 'pnpm dlx @kamod-ch/preactpress init my-docs --template docs' },
-  { cwd: '~', cmd: 'cd my-docs' },
-  { cwd: 'my-docs', cmd: 'pnpm install' },
-  { cwd: 'my-docs', cmd: 'pnpm dev', active: true }
-]
+  { cwd: "~", cmd: "pnpm dlx @kamod-ch/preactpress init my-docs --template docs" },
+  { cwd: "~", cmd: "cd my-docs" },
+  { cwd: "my-docs", cmd: "pnpm install" },
+  { cwd: "my-docs", cmd: "pnpm dev", active: true },
+];
 
 export default function CliBlock() {
   return (
@@ -34,5 +34,5 @@ export default function CliBlock() {
         </pre>
       </div>
     </section>
-  )
+  );
 }

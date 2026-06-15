@@ -5,16 +5,16 @@ description: Commands for scaffolding, development, validation, builds, and prev
 
 Run commands from the site root or pass a root path as the final argument.
 
-| Command | Purpose |
-| --- | --- |
-| `preactpress init [dir]` | Scaffold the minimal starter |
-| `preactpress init [dir] --template docs` | Scaffold the full documentation starter |
-| `preactpress init [dir] --template magazine` | Scaffold a custom editorial theme |
-| `preactpress init [dir] --template hono` | Scaffold a product/docs custom theme |
-| `preactpress dev [root]` | Start Vite SSR and hot reload |
-| `preactpress check [root]` | Validate config, routes, links, locales, and drafts |
-| `preactpress build [root]` | Emit static production files |
-| `preactpress preview [root]` | Serve `outDir` locally |
+| Command                                      | Purpose                                             |
+| -------------------------------------------- | --------------------------------------------------- |
+| `preactpress init [dir]`                     | Scaffold the minimal starter                        |
+| `preactpress init [dir] --template docs`     | Scaffold the full documentation starter             |
+| `preactpress init [dir] --template magazine` | Scaffold a custom editorial theme                   |
+| `preactpress init [dir] --template hono`     | Scaffold a product/docs custom theme                |
+| `preactpress dev [root]`                     | Start Vite SSR and hot reload                       |
+| `preactpress check [root]`                   | Validate config, routes, links, locales, and drafts |
+| `preactpress build [root]`                   | Emit static production files                        |
+| `preactpress preview [root]`                 | Serve `outDir` locally                              |
 
 ## Recommended workflow
 

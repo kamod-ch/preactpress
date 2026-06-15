@@ -33,16 +33,16 @@ Set `site.url` before publishing. PreactPress uses it for canonical URLs, Open G
 ```ts
 export default {
   site: {
-    title: 'My site',
-    description: 'Short summary for search and social previews',
-    url: 'https://example.com',
-    base: '/'
+    title: "My site",
+    description: "Short summary for search and social previews",
+    url: "https://example.com",
+    base: "/",
   },
   build: {
     sitemap: true,
-    robots: true
-  }
-}
+    robots: true,
+  },
+};
 ```
 
 ## Public base path
@@ -58,10 +58,10 @@ If the site is served from a subpath, set `site.base`:
 ```ts
 export default {
   site: {
-    url: 'https://user.github.io',
-    base: '/my-repo/'
-  }
-}
+    url: "https://user.github.io",
+    base: "/my-repo/",
+  },
+};
 ```
 
 You can also override the base path for a single build:
@@ -74,15 +74,15 @@ pnpm exec preactpress build --base /my-repo/
 
 The default output directory is `dist/`:
 
-| Output | Description |
-| --- | --- |
-| `index.html`, `*/index.html` | Static HTML for each route |
-| `assets/*` | Hashed JavaScript and CSS from Vite |
-| `404.html` | Not-found page |
-| `preactpress-search.json` | Search index for the default theme |
+| Output                       | Description                                         |
+| ---------------------------- | --------------------------------------------------- |
+| `index.html`, `*/index.html` | Static HTML for each route                          |
+| `assets/*`                   | Hashed JavaScript and CSS from Vite                 |
+| `404.html`                   | Not-found page                                      |
+| `preactpress-search.json`    | Search index for the default theme                  |
 | `preactpress-content/*.json` | Lazy-loaded Markdown payloads for client navigation |
-| `sitemap.xml`, `robots.txt` | Generated when `site.url` and build flags are set |
-| `feed.xml` | Generated when `build.feed` is configured |
+| `sitemap.xml`, `robots.txt`  | Generated when `site.url` and build flags are set   |
+| `feed.xml`                   | Generated when `build.feed` is configured           |
 
 Deploy only the output directory. Do not deploy `node_modules`, `.preactpress`, or the build cache.
 
@@ -90,12 +90,12 @@ Deploy only the output directory. Do not deploy `node_modules`, `.preactpress`, 
 
 For most static hosts, use these settings:
 
-| Host | Build command | Output directory |
-| --- | --- | --- |
-| Netlify | `pnpm run build` | `dist` |
-| Vercel | `pnpm run build` | `dist` |
-| Cloudflare Pages | `pnpm run build` | `dist` |
-| Render Static Site | `pnpm run build` | `dist` |
+| Host               | Build command    | Output directory |
+| ------------------ | ---------------- | ---------------- |
+| Netlify            | `pnpm run build` | `dist`           |
+| Vercel             | `pnpm run build` | `dist`           |
+| Cloudflare Pages   | `pnpm run build` | `dist`           |
+| Render Static Site | `pnpm run build` | `dist`           |
 
 Install command:
 
@@ -112,10 +112,10 @@ For a project site at `https://user.github.io/my-repo/`, configure:
 ```ts
 export default {
   site: {
-    url: 'https://user.github.io',
-    base: '/my-repo/'
-  }
-}
+    url: "https://user.github.io",
+    base: "/my-repo/",
+  },
+};
 ```
 
 Then deploy the `dist/` directory.

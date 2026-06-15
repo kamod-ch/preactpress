@@ -11,3 +11,6 @@ templates/*/dist/
 tmp/
 temp/
 proofshot-artifacts/
+coverage/
+playwright-report/
+test-results/

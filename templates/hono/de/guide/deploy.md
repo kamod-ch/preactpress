@@ -33,16 +33,16 @@ Setze `site.url` vor der Veröffentlichung. PreactPress nutzt diese URL für Can
 ```ts
 export default {
   site: {
-    title: 'Meine Site',
-    description: 'Kurze Beschreibung für Suche und Social Previews',
-    url: 'https://example.com',
-    base: '/'
+    title: "Meine Site",
+    description: "Kurze Beschreibung für Suche und Social Previews",
+    url: "https://example.com",
+    base: "/",
   },
   build: {
     sitemap: true,
-    robots: true
-  }
-}
+    robots: true,
+  },
+};
 ```
 
 ## Public Base Path
@@ -58,10 +58,10 @@ Wenn die Site unter einem Unterpfad liegt, setze `site.base`:
 ```ts
 export default {
   site: {
-    url: 'https://user.github.io',
-    base: '/my-repo/'
-  }
-}
+    url: "https://user.github.io",
+    base: "/my-repo/",
+  },
+};
 ```
 
 Du kannst den Base Path auch nur für einen einzelnen Build überschreiben:
@@ -74,15 +74,15 @@ pnpm exec preactpress build --base /my-repo/
 
 Das Standard-Ausgabeverzeichnis ist `dist/`:
 
-| Ausgabe | Beschreibung |
-| --- | --- |
-| `index.html`, `*/index.html` | Statisches HTML für jede Route |
-| `assets/*` | Gehashtes JavaScript und CSS von Vite |
-| `404.html` | Fehlerseite |
-| `preactpress-search.json` | Suchindex für das Standard-Theme |
+| Ausgabe                      | Beschreibung                                          |
+| ---------------------------- | ----------------------------------------------------- |
+| `index.html`, `*/index.html` | Statisches HTML für jede Route                        |
+| `assets/*`                   | Gehashtes JavaScript und CSS von Vite                 |
+| `404.html`                   | Fehlerseite                                           |
+| `preactpress-search.json`    | Suchindex für das Standard-Theme                      |
 | `preactpress-content/*.json` | Lazy geladene Markdown-Payloads für Client-Navigation |
-| `sitemap.xml`, `robots.txt` | Erzeugt, wenn `site.url` und Build-Flags gesetzt sind |
-| `feed.xml` | Erzeugt, wenn `build.feed` konfiguriert ist |
+| `sitemap.xml`, `robots.txt`  | Erzeugt, wenn `site.url` und Build-Flags gesetzt sind |
+| `feed.xml`                   | Erzeugt, wenn `build.feed` konfiguriert ist           |
 
 Deploye nur das Ausgabeverzeichnis. Deploye nicht `node_modules`, `.preactpress` oder den Build-Cache.
 
@@ -90,12 +90,12 @@ Deploye nur das Ausgabeverzeichnis. Deploye nicht `node_modules`, `.preactpress`
 
 Für die meisten Static Hosts reichen diese Einstellungen:
 
-| Host | Build-Befehl | Output-Verzeichnis |
-| --- | --- | --- |
-| Netlify | `pnpm run build` | `dist` |
-| Vercel | `pnpm run build` | `dist` |
-| Cloudflare Pages | `pnpm run build` | `dist` |
-| Render Static Site | `pnpm run build` | `dist` |
+| Host               | Build-Befehl     | Output-Verzeichnis |
+| ------------------ | ---------------- | ------------------ |
+| Netlify            | `pnpm run build` | `dist`             |
+| Vercel             | `pnpm run build` | `dist`             |
+| Cloudflare Pages   | `pnpm run build` | `dist`             |
+| Render Static Site | `pnpm run build` | `dist`             |
 
 Install-Befehl:
 
@@ -112,10 +112,10 @@ Für eine Projektseite unter `https://user.github.io/my-repo/` konfigurierst du:
 ```ts
 export default {
   site: {
-    url: 'https://user.github.io',
-    base: '/my-repo/'
-  }
-}
+    url: "https://user.github.io",
+    base: "/my-repo/",
+  },
+};
 ```
 
 Danach deployest du das Verzeichnis `dist/`.

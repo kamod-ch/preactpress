@@ -25,8 +25,16 @@
   border: 1px solid var(--pp-border);
   border-radius: 28px;
   background:
-    radial-gradient(circle at 82% 12%, color-mix(in srgb, var(--pp-accent) 18%, transparent), transparent 18rem),
-    linear-gradient(135deg, color-mix(in srgb, var(--pp-sidebar-bg) 82%, var(--pp-bg)), var(--pp-bg));
+    radial-gradient(
+      circle at 82% 12%,
+      color-mix(in srgb, var(--pp-accent) 18%, transparent),
+      transparent 18rem
+    ),
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--pp-sidebar-bg) 82%, var(--pp-bg)),
+      var(--pp-bg)
+    );
   overflow: hidden;
 }
 
@@ -171,7 +179,7 @@
 
 .pp-mkt-panel-arrow::before,
 .pp-mkt-panel-arrow::after {
-  content: '';
+  content: "";
   flex: 1;
   max-width: 96px;
   height: 2px;
@@ -392,7 +400,7 @@
 }
 
 .pp-mkt-editor-tab::before {
-  content: '';
+  content: "";
   width: 7px;
   height: 7px;
   border-radius: 2px;
@@ -532,8 +540,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .pp-mkt-code-card-terminal,
-  :root:not([data-theme='light']) .pp-mkt-code-card-editor {
+  :root:not([data-theme="light"]) .pp-mkt-code-card-terminal,
+  :root:not([data-theme="light"]) .pp-mkt-code-card-editor {
     --pp-mkt-terminal-bg: color-mix(in srgb, var(--pp-code-bg) 90%, black);
     --pp-mkt-terminal-chrome: color-mix(in srgb, var(--pp-sidebar-bg) 58%, var(--pp-bg));
     --pp-mkt-terminal-muted: var(--pp-muted);
@@ -545,7 +553,7 @@
       0 24px 70px rgba(0, 0, 0, 0.34);
   }
 
-  :root:not([data-theme='light']) .pp-mkt-code-card-terminal {
+  :root:not([data-theme="light"]) .pp-mkt-code-card-terminal {
     background:
       radial-gradient(
         circle at 12% -20%,
@@ -559,7 +567,7 @@
       );
   }
 
-  :root:not([data-theme='light']) .pp-mkt-code-card-editor {
+  :root:not([data-theme="light"]) .pp-mkt-code-card-editor {
     background:
       radial-gradient(
         circle at 88% -18%,
@@ -573,15 +581,15 @@
       );
   }
 
-  :root:not([data-theme='light']) .pp-mkt-code-card-terminal .pp-mkt-code-topbar,
-  :root:not([data-theme='light']) .pp-mkt-code-card-editor .pp-mkt-code-topbar {
+  :root:not([data-theme="light"]) .pp-mkt-code-card-terminal .pp-mkt-code-topbar,
+  :root:not([data-theme="light"]) .pp-mkt-code-card-editor .pp-mkt-code-topbar {
     border-bottom-color: var(--pp-border);
     background: var(--pp-mkt-terminal-chrome);
   }
 }
 
-:root[data-theme='dark'] .pp-mkt-code-card-terminal,
-:root[data-theme='dark'] .pp-mkt-code-card-editor {
+:root[data-theme="dark"] .pp-mkt-code-card-terminal,
+:root[data-theme="dark"] .pp-mkt-code-card-editor {
   --pp-mkt-terminal-bg: color-mix(in srgb, var(--pp-code-bg) 90%, black);
   --pp-mkt-terminal-chrome: color-mix(in srgb, var(--pp-sidebar-bg) 58%, var(--pp-bg));
   --pp-mkt-terminal-muted: var(--pp-muted);
@@ -593,7 +601,7 @@
     0 24px 70px rgba(0, 0, 0, 0.34);
 }
 
-:root[data-theme='dark'] .pp-mkt-code-card-terminal {
+:root[data-theme="dark"] .pp-mkt-code-card-terminal {
   background:
     radial-gradient(
       circle at 12% -20%,
@@ -607,7 +615,7 @@
     );
 }
 
-:root[data-theme='dark'] .pp-mkt-code-card-editor {
+:root[data-theme="dark"] .pp-mkt-code-card-editor {
   background:
     radial-gradient(
       circle at 88% -18%,
@@ -621,8 +629,8 @@
     );
 }
 
-:root[data-theme='dark'] .pp-mkt-code-card-terminal .pp-mkt-code-topbar,
-:root[data-theme='dark'] .pp-mkt-code-card-editor .pp-mkt-code-topbar {
+:root[data-theme="dark"] .pp-mkt-code-card-terminal .pp-mkt-code-topbar,
+:root[data-theme="dark"] .pp-mkt-code-card-editor .pp-mkt-code-topbar {
   border-bottom-color: var(--pp-border);
   background: var(--pp-mkt-terminal-chrome);
 }

@@ -1,8 +1,8 @@
 # PreactPress roadmap
 
-PreactPress is an early-stage Vite and Preact static site generator. The current focus is release quality: clear documentation, dependable mobile and accessible defaults, and stable behavior across starter templates.
+PreactPress is a v1.x Vite and Preact static site generator. The current focus is keeping the public API dependable: clear documentation, accessible defaults, stable starter templates, and release processes that make behavior changes easy to track.
 
-## Shipped in 0.1.x
+## Shipped in 1.0.x
 
 - Markdown and MDX routing with development SSR and static builds
 - client navigation, prefetching, incremental builds, and optional MPA mode
@@ -13,6 +13,7 @@ PreactPress is an early-stage Vite and Preact static site generator. The current
 - canonical metadata, Open Graph, JSON-LD, sitemap, robots, and feeds
 - `preactpress check` validation and four init templates
 - canonical English documentation starter with a small German i18n demo
+- oxlint and oxfmt quality gates for source, tests, and bundled templates
 
 ## Next priorities
 
@@ -20,7 +21,7 @@ PreactPress is an early-stage Vite and Preact static site generator. The current
 
 - keep `templates/docs` synchronized with every public option and CLI behavior
 - add migration notes when public behavior changes
-- publish a hosted copy of the canonical docs when repository and release URLs are finalized
+- keep the hosted canonical docs aligned with the latest published release
 
 ### Accessibility and responsive UX
 

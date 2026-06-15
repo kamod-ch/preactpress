@@ -1,26 +1,26 @@
 /** @jsx h */
-import { h } from 'preact'
+import { h } from "preact";
 
 const benefits = [
   {
-    title: 'Preact components in MDX',
+    title: "Preact components in MDX",
     details:
-      'Bring interactive examples, demos and product-specific widgets into otherwise simple content.',
-    href: '/guide/markdown-and-mdx'
+      "Bring interactive examples, demos and product-specific widgets into otherwise simple content.",
+    href: "/guide/markdown-and-mdx",
   },
   {
-    title: 'Documentation features included',
+    title: "Documentation features included",
     details:
-      'Navigation, sidebars, local search, outlines, tags, i18n and validation are ready in the docs template.',
-    href: '/guide/configuration'
+      "Navigation, sidebars, local search, outlines, tags, i18n and validation are ready in the docs template.",
+    href: "/guide/configuration",
   },
   {
-    title: 'Static deployment anywhere',
+    title: "Static deployment anywhere",
     details:
-      'Build once and publish the generated files to GitHub Pages, Netlify, Vercel, Cloudflare Pages or any static host.',
-    href: '/guide/deploy'
-  }
-]
+      "Build once and publish the generated files to GitHub Pages, Netlify, Vercel, Cloudflare Pages or any static host.",
+    href: "/guide/deploy",
+  },
+];
 
 export default function BenefitsGrid() {
   return (
@@ -41,5 +41,5 @@ export default function BenefitsGrid() {
         ))}
       </div>
     </section>
-  )
+  );
 }

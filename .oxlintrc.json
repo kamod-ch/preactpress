@@ -1,0 +1,18 @@
+{
+  "ignorePatterns": [
+    "dist/**",
+    "node_modules/**",
+    "coverage/**",
+    "playwright-report/**",
+    "test-results/**",
+    "templates/*/dist/**",
+    "templates/*/node_modules/**",
+    "examples/**/node_modules/**",
+    "examples/**/dist/**",
+    "**/.cursor/**",
+    "**/tmp/**",
+    "**/*.tsbuildinfo",
+    "**/*.tgz",
+    "pnpm-lock.yaml"
+  ]
+}

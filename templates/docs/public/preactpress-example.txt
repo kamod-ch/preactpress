@@ -1,0 +1,1 @@
+This file comes from templates/docs/public and is copied to dist/preactpress-example.txt.

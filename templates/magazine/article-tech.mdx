@@ -1,6 +1,6 @@
 ---
 title: Automatisierung in der letzten Meile
-description: 'Kleines MDX-Beispiel mit Code — passend zu Logistik- und Tech-Rubriken.'
+description: "Kleines MDX-Beispiel mit Code — passend zu Logistik- und Tech-Rubriken."
 tags:
   - Tech
   - Logistik
@@ -15,21 +15,21 @@ Viele Teams beginnen mit einem schlanken **Node**-Skript, das Sendungen gruppier
 
 ```js
 export function clusterByPostalCode(parcels) {
-  const map = new Map()
+  const map = new Map();
   for (const p of parcels) {
-    const k = p.postalCode.slice(0, 2)
-    const list = map.get(k) ?? []
-    list.push(p)
-    map.set(k, list)
+    const k = p.postalCode.slice(0, 2);
+    const list = map.get(k) ?? [];
+    list.push(p);
+    map.set(k, list);
   }
-  return map
+  return map;
 }
 ```
 
 ### Nächste Schritte
 
-1. Datenqualität an der Quelle absichern  
-2. Routing-Engine mit echten SLAs testen  
-3. Dashboards auf **Echtzeit**-Fehlerquoten trimmen  
+1. Datenqualität an der Quelle absichern
+2. Routing-Engine mit echten SLAs testen
+3. Dashboards auf **Echtzeit**-Fehlerquoten trimmen
 
 Interaktive Bausteine (Zähler, Charts) kannst du wie gewohnt als **Preact-Komponenten** importieren.

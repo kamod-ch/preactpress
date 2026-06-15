@@ -1,28 +1,28 @@
 /** @jsx h */
-import { h } from 'preact'
+import { h } from "preact";
 
 const products = [
   {
-    product: 'PreactPress',
-    components: 'Preact + MDX',
-    focus: 'Preact documentation'
+    product: "PreactPress",
+    components: "Preact + MDX",
+    focus: "Preact documentation",
   },
   {
-    product: 'VitePress',
-    components: 'Vue',
-    focus: 'Vue documentation'
+    product: "VitePress",
+    components: "Vue",
+    focus: "Vue documentation",
   },
   {
-    product: 'Docusaurus',
-    components: 'React',
-    focus: 'Large documentation portals'
+    product: "Docusaurus",
+    components: "React",
+    focus: "Large documentation portals",
   },
   {
-    product: 'Starlight',
-    components: 'Astro',
-    focus: 'Cross-framework content sites'
-  }
-]
+    product: "Starlight",
+    components: "Astro",
+    focus: "Cross-framework content sites",
+  },
+];
 
 export default function ComparisonTable() {
   return (
@@ -56,5 +56,5 @@ export default function ComparisonTable() {
         </table>
       </div>
     </section>
-  )
+  );
 }

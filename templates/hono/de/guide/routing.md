@@ -60,8 +60,8 @@ Mit `srcDir` kannst du Inhalte in ein verschachteltes Quellverzeichnis legen:
 
 ```ts
 export default {
-  srcDir: 'docs'
-}
+  srcDir: "docs",
+};
 ```
 
 Dann sieht die Struktur so aus:
@@ -97,6 +97,7 @@ Vermeide direkte Links auf generiertes HTML oder Markdown-Quelldateien:
 
 ```md
 <!-- Vermeiden -->
+
 [Getting Started](/de/guide/getting-started.md)
 [Getting Started](/de/guide/getting-started.html)
 ```
@@ -120,16 +121,16 @@ Labels, Sprachcodes und lokale Navigation konfigurierst du in `.preactpress/conf
 export default {
   locales: {
     root: {
-      label: 'English',
-      lang: 'en'
+      label: "English",
+      lang: "en",
     },
     de: {
-      label: 'Deutsch',
-      lang: 'de',
-      link: '/de/'
-    }
-  }
-}
+      label: "Deutsch",
+      lang: "de",
+      link: "/de/",
+    },
+  },
+};
 ```
 
 Das Standard-Theme zeigt einen Sprachumschalter, wenn mehrere Locales konfiguriert sind.
@@ -167,9 +168,9 @@ Nutze `site.base`, wenn die Site unter einem Unterpfad ausgeliefert wird, zum Be
 ```ts
 export default {
   site: {
-    base: '/my-repo/'
-  }
-}
+    base: "/my-repo/",
+  },
+};
 ```
 
 Du kannst den Base Path auch für einen einzelnen Build überschreiben:
@@ -185,25 +186,25 @@ pnpm exec preactpress build --base /my-repo/
 ```ts
 export default {
   rewrites: {
-    '/docs': '/guide',
-    '/getting-started': '/guide/intro'
-  }
-}
+    "/docs": "/guide",
+    "/getting-started": "/guide/intro",
+  },
+};
 ```
 
 Keys sind die Routen für Besucher; Values müssen auf Routen zeigen, die bereits aus Markdown-Dateien existieren. `preactpress check` validiert Quellen und Kollisionen.
 
 ## Clean URLs und Hosting
 
-| `cleanUrls` | Ausgabe für `/about` | Typischer Host |
-| --- | --- | --- |
+| `cleanUrls`       | Ausgabe für `/about`    | Typischer Host                                  |
+| ----------------- | ----------------------- | ----------------------------------------------- |
 | `true` (Standard) | `dist/about/index.html` | Netlify, Vercel, Cloudflare Pages, GitHub Pages |
-| `false` | `dist/about.html` | Statische Buckets ohne Directory-Index |
+| `false`           | `dist/about.html`       | Statische Buckets ohne Directory-Index          |
 
 ```ts
 export default {
-  cleanUrls: false
-}
+  cleanUrls: false,
+};
 ```
 
 Die meisten modernen Static Hosts funktionieren mit dem Standard. Setze `cleanUrls: false` nur, wenn dein Host `/about` nicht zu `about/index.html` auflösen kann.
@@ -212,9 +213,9 @@ Die meisten modernen Static Hosts funktionieren mit dem Standard. Setze `cleanUr
 
 PreactPress hält Routing bewusst klein. Im Vergleich zu VitePress enthält es aktuell nicht:
 
-| Feature | Status |
-| --- | --- |
-| Dynamische Routen wie `[pkg].paths.ts` | Nicht unterstützt |
+| Feature                                  | Status            |
+| ---------------------------------------- | ----------------- |
+| Dynamische Routen wie `[pkg].paths.ts`   | Nicht unterstützt |
 | Pattern-basierte Rewrites mit Parametern | Nicht unterstützt |
 
 Wenn deine Site viele Seiten aus externen Daten erzeugen muss, generiere Markdown- oder MDX-Dateien vor `preactpress build`.

@@ -3,8 +3,8 @@ title: Fast, lightweight, built on Web Standards
 description: A Hono-inspired starter for documentation and product sites built with PreactPress.
 ---
 
-import FeatureGrid from './.preactpress/theme/FeatureGrid.tsx'
-import Hero from './.preactpress/theme/Hero.tsx'
+import FeatureGrid from "./.preactpress/theme/FeatureGrid.tsx";
+import Hero from "./.preactpress/theme/Hero.tsx";
 
 <Hero
   eyebrow="Hono-inspired starter"
@@ -12,14 +12,14 @@ import Hero from './.preactpress/theme/Hero.tsx'
   subtitle="Use this template for polished documentation, examples, and product pages with a compact Preact theme."
   actions={[
     { text: 'Get Started', link: '/guide/getting-started', theme: 'brand' },
-    { text: 'View on GitHub', link: 'https://github.com/your-org/your-project', theme: 'alt' }
+    { text: 'View on GitHub', link: 'https://github.com/kamod-ch/preactpress', theme: 'alt' }
   ]}
   code={`import { App } from 'your-framework'
 
 const app = new App()
 
 app.get('/', (c) => {
-  return c.text('Hello Web Standards!')
+return c.text('Hello Web Standards!')
 })
 
 export default app`}
@@ -28,24 +28,28 @@ export default app`}
 <FeatureGrid
   features={[
     {
-      icon: 'F',
-      title: 'Ultrafast & Lightweight',
-      details: 'Static HTML output, small client code, and a theme that keeps your docs responsive.'
+      icon: "F",
+      title: "Ultrafast & Lightweight",
+      details:
+        "Static HTML output, small client code, and a theme that keeps your docs responsive.",
     },
     {
-      icon: 'R',
-      title: 'Multi-runtime mindset',
-      details: 'Write portable examples for Node, Bun, Deno, edge workers, and static hosting workflows.'
+      icon: "R",
+      title: "Multi-runtime mindset",
+      details:
+        "Write portable examples for Node, Bun, Deno, edge workers, and static hosting workflows.",
     },
     {
-      icon: 'B',
-      title: 'Batteries included',
-      details: 'Navigation, sidebar search, MDX, tags, i18n, and static builds are ready from day one.'
+      icon: "B",
+      title: "Batteries included",
+      details:
+        "Navigation, sidebar search, MDX, tags, i18n, and static builds are ready from day one.",
     },
     {
-      icon: 'D',
-      title: 'Delightful DX',
-      details: 'Markdown-first content, Vite dev speed, and editable Preact components for custom pages.'
-    }
+      icon: "D",
+      title: "Delightful DX",
+      details:
+        "Markdown-first content, Vite dev speed, and editable Preact components for custom pages.",
+    },
   ]}
 />

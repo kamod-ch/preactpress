@@ -1,34 +1,38 @@
-import type { FunctionalComponent } from 'preact'
-import type { Hero as HeroConfig, ThemeableImage } from '../../shared/pageChrome.js'
+import type { FunctionalComponent } from "preact";
+import type { Hero as HeroConfig, ThemeableImage } from "../../shared/pageChrome.js";
 
 interface HeroProps {
-  hero: HeroConfig
-  base: string
+  hero: HeroConfig;
+  base: string;
 }
 
 function withBase(base: string, link: string): string {
-  if (/^(?:[a-z]+:)?\/\//i.test(link) || /^(?:data|mailto|tel):/i.test(link) || link.startsWith('#')) {
-    return link
+  if (
+    /^(?:[a-z]+:)?\/\//i.test(link) ||
+    /^(?:data|mailto|tel):/i.test(link) ||
+    link.startsWith("#")
+  ) {
+    return link;
   }
-  const b = base === '/' ? '' : base.replace(/\/$/, '')
-  const l = link.startsWith('/') ? link : `/${link}`
-  return `${b}${l}`
+  const b = base === "/" ? "" : base.replace(/\/$/, "");
+  const l = link.startsWith("/") ? link : `/${link}`;
+  return `${b}${l}`;
 }
 
 function renderImage(image: ThemeableImage | undefined, base: string) {
-  if (!image) return null
-  if (typeof image === 'string') {
-    return <img src={withBase(base, image)} alt="" />
+  if (!image) return null;
+  if (typeof image === "string") {
+    return <img src={withBase(base, image)} alt="" />;
   }
-  if ('src' in image) {
-    return <img src={withBase(base, image.src)} alt={image.alt ?? ''} />
+  if ("src" in image) {
+    return <img src={withBase(base, image.src)} alt={image.alt ?? ""} />;
   }
   return (
     <picture>
       <source media="(prefers-color-scheme: dark)" srcSet={withBase(base, image.dark)} />
-      <img src={withBase(base, image.light)} alt={image.alt ?? ''} />
+      <img src={withBase(base, image.light)} alt={image.alt ?? ""} />
     </picture>
-  )
+  );
 }
 
 const Hero: FunctionalComponent<HeroProps> = ({ hero, base }) => (
@@ -55,6 +59,6 @@ const Hero: FunctionalComponent<HeroProps> = ({ hero, base }) => (
     </div>
     {hero.image ? <div class="pp-home-hero-image">{renderImage(hero.image, base)}</div> : null}
   </section>
-)
+);
 
-export default Hero
+export default Hero;

@@ -1,26 +1,26 @@
-import type { FunctionalComponent } from 'preact'
-import type { ArticlePost } from '@kamod-ch/preactpress/shared'
+import type { FunctionalComponent } from "preact";
+import type { ArticlePost } from "@kamod-ch/preactpress/shared";
 
 export interface TeaserItem {
-  href: string
-  kicker: string
-  title: string
-  dek: string
-  readTime?: string
+  href: string;
+  kicker: string;
+  title: string;
+  dek: string;
+  readTime?: string;
 }
 
 export interface TeaserGridProps {
-  items: TeaserItem[]
+  items: TeaserItem[];
 }
 
 export function articlesToTeasers(posts: ArticlePost[]): TeaserItem[] {
   return posts.map((post) => ({
     href: post.route,
-    kicker: post.category?.name ?? 'Artikel',
+    kicker: post.category?.name ?? "Artikel",
     title: post.title,
-    dek: post.description ?? '',
-    readTime: post.readTime
-  }))
+    dek: post.description ?? "",
+    readTime: post.readTime,
+  }));
 }
 
 const TeaserGrid: FunctionalComponent<TeaserGridProps> = ({ items }) => (
@@ -34,6 +34,6 @@ const TeaserGrid: FunctionalComponent<TeaserGridProps> = ({ items }) => (
       </a>
     ))}
   </div>
-)
+);
 
-export default TeaserGrid
+export default TeaserGrid;

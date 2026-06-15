@@ -10,23 +10,23 @@ Configuration lives in `.preactpress/config.ts` at your site root.
 ```ts
 export default {
   site: {
-    title: 'My docs',
-    description: 'Short site summary for SEO',
-    base: '/',
-    url: 'https://example.com',
-    titleTemplate: ':title | :siteTitle'
-  }
-}
+    title: "My docs",
+    description: "Short site summary for SEO",
+    base: "/",
+    url: "https://example.com",
+    titleTemplate: ":title | :siteTitle",
+  },
+};
 ```
 
 Set `site.url` before production so canonical URLs, `sitemap.xml`, Open Graph, and `hreflang` alternates resolve correctly.
 
 ## Content directory
 
-| Option | Purpose |
-| --- | --- |
-| `srcDir` | Folder with `.md` / `.mdx` pages (default `.`) |
-| `srcExclude` | Glob patterns for non-page Markdown, e.g. `['**/README.md']` |
+| Option           | Purpose                                                           |
+| ---------------- | ----------------------------------------------------------------- |
+| `srcDir`         | Folder with `.md` / `.mdx` pages (default `.`)                    |
+| `srcExclude`     | Glob patterns for non-page Markdown, e.g. `['**/README.md']`      |
 | `lastUpdatedGit` | Use git commit time for “last updated” (falls back to file mtime) |
 
 ## Theme without custom code
@@ -96,9 +96,9 @@ themeConfig: {
 ```ts
 themeConfig: {
   socialLinks: [
-    { icon: 'github', link: 'https://github.com/your-org/your-repo' },
-    { icon: { svg: '<svg ...></svg>' }, link: 'https://example.com', ariaLabel: 'Company site' }
-  ]
+    { icon: "github", link: "https://github.com/kamod-ch/preactpress" },
+    { icon: { svg: "<svg ...></svg>" }, link: "https://example.com", ariaLabel: "Company site" },
+  ];
 }
 ```
 
@@ -140,25 +140,25 @@ async buildEnd({ site, pages }) {
 Export a factory to load nav or sidebar from an API at config time:
 
 ```ts
-import { defineConfig } from '@kamod-ch/preactpress/config'
+import { defineConfig } from "@kamod-ch/preactpress/config";
 
 export default defineConfig(async () => ({
-  site: { title: 'My docs', description: 'Docs from CMS' },
+  site: { title: "My docs", description: "Docs from CMS" },
   themeConfig: {
     nav: await fetchNav(),
-    sidebar: await fetchSidebar()
-  }
-}))
+    sidebar: await fetchSidebar(),
+  },
+}));
 ```
 
 ## Page frontmatter
 
-| Field | Purpose |
-| --- | --- |
-| `title` / `description` | Page title and SEO summary |
-| `titleTemplate` | Override site template; `false` uses the raw page title |
-| `head` | Extra `<meta>` / `<link>` / `<script>` tags for this page only |
-| `draft: true` | Excluded from routes, search, and sitemap |
+| Field                   | Purpose                                                        |
+| ----------------------- | -------------------------------------------------------------- |
+| `title` / `description` | Page title and SEO summary                                     |
+| `titleTemplate`         | Override site template; `false` uses the raw page title        |
+| `head`                  | Extra `<meta>` / `<link>` / `<script>` tags for this page only |
+| `draft: true`           | Excluded from routes, search, and sitemap                      |
 
 Example per-page head:
 

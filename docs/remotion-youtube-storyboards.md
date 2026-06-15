@@ -11,6 +11,7 @@ Alternative Storyboards für den Starter, damit PreactPress-Videos je nach Anlas
 **Use case:** neues Release, neues Projekt oder öffentliche Produktvorstellung.
 
 ### Ablauf
+
 1. **Hook (0–3s)**
    - große Headline
    - PreactPress-Wordmark
@@ -27,6 +28,7 @@ Alternative Storyboards für den Starter, damit PreactPress-Videos je nach Anlas
    - GitHub / npm / Docs Hinweis
 
 ### Message
+
 > Ship modern docs with Preact, MDX and a lightweight stack.
 
 ---
@@ -36,6 +38,7 @@ Alternative Storyboards für den Starter, damit PreactPress-Videos je nach Anlas
 **Use case:** Einstiegsvideo für neue Nutzer.
 
 ### Ablauf
+
 1. **Intro (0–2s)**
    - PreactPress-Logo
    - „Build your docs site in minutes“
@@ -52,6 +55,7 @@ Alternative Storyboards für den Starter, damit PreactPress-Videos je nach Anlas
    - Static hosting logos oder simple deployment badges
 
 ### Message
+
 > Go from empty folder to production-ready docs in a few commands.
 
 ---
@@ -61,6 +65,7 @@ Alternative Storyboards für den Starter, damit PreactPress-Videos je nach Anlas
 **Use case:** Release Notes, neue Features, Social Clips.
 
 ### Ablauf
+
 1. **Release card (0–2s)**
    - Versionnummer
    - kurzer Release-Titel
@@ -73,6 +78,7 @@ Alternative Storyboards für den Starter, damit PreactPress-Videos je nach Anlas
    - Link zu Release Notes
 
 ### Message
+
 > Here’s what changed, why it matters and how to upgrade.
 
 ---
@@ -82,6 +88,7 @@ Alternative Storyboards für den Starter, damit PreactPress-Videos je nach Anlas
 **Use case:** einzelnes Feature vertiefen, z. B. Search, i18n, custom themes, MDX components.
 
 ### Ablauf
+
 1. **Feature title (0–3s)**
    - Fokus auf ein Thema
 2. **Before / after (3–7s)**
@@ -93,6 +100,7 @@ Alternative Storyboards für den Starter, damit PreactPress-Videos je nach Anlas
    - docs link / starter link / repo
 
 ### Message
+
 > One feature, one problem, one clean outcome.
 
 ---

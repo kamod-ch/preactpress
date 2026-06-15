@@ -1,7 +1,7 @@
 // #region greet
 export function greet(name: string) {
-  return `Hello, ${name}!`
+  return `Hello, ${name}!`;
 }
 // #endregion greet
 
-export const unused = true
+export const unused = true;

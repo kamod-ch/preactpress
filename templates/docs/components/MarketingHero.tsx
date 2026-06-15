@@ -1,16 +1,16 @@
 /** @jsx h */
-import { h } from 'preact'
+import { h } from "preact";
 
 const actions = [
-  { text: 'Get started', href: 'guide/getting-started', theme: 'brand' },
-  { text: 'View demo', href: '#interactive-demo', theme: 'alt' },
+  { text: "Get started", href: "/guide/getting-started", theme: "brand" },
+  { text: "View demo", href: "#interactive-demo", theme: "alt" },
   {
-    text: 'GitHub',
-    href: 'https://github.com/kamod-ch/preactpress',
-    theme: 'ghost',
-    external: true
-  }
-]
+    text: "GitHub",
+    href: "https://github.com/kamod-ch/preactpress",
+    theme: "ghost",
+    external: true,
+  },
+];
 
 export default function MarketingHero() {
   return (
@@ -27,8 +27,8 @@ export default function MarketingHero() {
               class={`pp-mkt-button pp-mkt-button-${action.theme}`}
               href={action.href}
               key={action.text}
-              rel={action.external ? 'noopener noreferrer' : undefined}
-              target={action.external ? '_blank' : undefined}
+              rel={action.external ? "noopener noreferrer" : undefined}
+              target={action.external ? "_blank" : undefined}
             >
               {action.text}
             </a>
@@ -59,5 +59,5 @@ export default function MarketingHero() {
         <strong>Static docs</strong>
       </div>
     </section>
-  )
+  );
 }

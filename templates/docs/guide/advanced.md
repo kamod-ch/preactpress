@@ -8,12 +8,12 @@ description: Build hooks, data loaders, dynamic routes, MPA mode, and incrementa
 Export an async factory when navigation or metadata comes from another system.
 
 ```ts
-import { defineConfig } from '@kamod-ch/preactpress/config'
+import { defineConfig } from "@kamod-ch/preactpress/config";
 
 export default defineConfig(async () => ({
-  site: { title: 'CMS docs', description: 'Generated navigation' },
-  themeConfig: { sidebar: await loadSidebar() }
-}))
+  site: { title: "CMS docs", description: "Generated navigation" },
+  themeConfig: { sidebar: await loadSidebar() },
+}));
 ```
 
 ## Build hooks

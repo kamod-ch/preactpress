@@ -1,29 +1,29 @@
 /** @jsx h */
-import { h } from 'preact'
-import CopyableCommand from './CopyableCommand.tsx'
+import { h } from "preact";
+import CopyableCommand from "./CopyableCommand.tsx";
 
 const templates = [
   {
-    name: 'Documentation',
-    description: 'The full reference starter used for this public demo.',
-    command: 'pnpm dlx @kamod-ch/preactpress init my-docs --template docs'
+    name: "Documentation",
+    description: "The full reference starter used for this public demo.",
+    command: "pnpm dlx @kamod-ch/preactpress init my-docs --template docs",
   },
   {
-    name: 'Product + Docs',
-    description: 'A polished product landing page with a complete documentation area.',
-    command: 'pnpm dlx @kamod-ch/preactpress init my-site --template hono'
+    name: "Product + Docs",
+    description: "A polished product landing page with a complete documentation area.",
+    command: "pnpm dlx @kamod-ch/preactpress init my-site --template hono",
   },
   {
-    name: 'Magazine',
-    description: 'A custom editorial theme for articles, tags and content-heavy sites.',
-    command: 'pnpm dlx @kamod-ch/preactpress init my-mag --template magazine'
+    name: "Magazine",
+    description: "A custom editorial theme for articles, tags and content-heavy sites.",
+    command: "pnpm dlx @kamod-ch/preactpress init my-mag --template magazine",
   },
   {
-    name: 'Minimal',
-    description: 'A small starter with a home page, an about page and one guide.',
-    command: 'pnpm dlx @kamod-ch/preactpress init my-docs'
-  }
-]
+    name: "Minimal",
+    description: "A small starter with a home page, an about page and one guide.",
+    command: "pnpm dlx @kamod-ch/preactpress init my-docs",
+  },
+];
 
 export default function TemplateGallery() {
   return (
@@ -42,5 +42,5 @@ export default function TemplateGallery() {
         ))}
       </div>
     </section>
-  )
+  );
 }

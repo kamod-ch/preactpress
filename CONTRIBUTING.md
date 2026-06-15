@@ -10,9 +10,9 @@ This repo publishes `@kamod-ch/preactpress` on npm. Add `@kamod-ch/preactpress` 
 
 From the **package root** (`preactpress/`), two build concepts apply:
 
-| Command | What it builds |
-| --- | --- |
-| `pnpm run build` | Compiles the **CLI** TypeScript sources to `dist/` (`tsc`). Does **not** build a content site. |
+| Command                              | What it builds                                                                                                                                 |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm run build`                     | Compiles the **CLI** TypeScript sources to `dist/` (`tsc`). Does **not** build a content site.                                                 |
 | `pnpm exec preactpress build [root]` | Runs the **static site generator** for a site (default: current directory). Writes HTML + assets to `outDir` (e.g. `templates/default/dist/`). |
 
 After changing CLI or client code, run `pnpm run build` before `pnpm run dev` or `node ./bin/preactpress.mjs …` so `dist/` is up to date. On `pnpm install`, the `prepare` script builds `dist/` automatically — you only need a manual build after editing sources.
@@ -23,9 +23,9 @@ From this directory: `pnpm install`, `pnpm run build`, then `./bin/preactpress.m
 
 These scripts target the bundled minimal starter without passing a path each time:
 
-| Script | What it does |
-| --- | --- |
-| `pnpm run dev` | **Dev** server for `./templates/default` — Vite + SSR, HMR |
+| Script             | What it does                                                    |
+| ------------------ | --------------------------------------------------------------- |
+| `pnpm run dev`     | **Dev** server for `./templates/default` — Vite + SSR, HMR      |
 | `pnpm run preview` | **Production** build + static preview for `./templates/default` |
 
 Typical workflows:
@@ -89,10 +89,25 @@ npm pack --dry-run
 
 Tag-driven releases are automated via `.github/workflows/publish.yml` when you push a `v*` tag (for example `v1.0.1`). Set the `NPM_TOKEN` repository secret first.
 
+## Lint and format
+
+PreactPress uses [oxlint](https://oxc.rs/docs/guide/usage/linter) and [oxfmt](https://oxc.rs/docs/guide/usage/formatter) (not ESLint/Prettier).
+
+```bash
+pnpm run lint        # oxlint
+pnpm run lint:fix    # oxlint with auto-fix
+pnpm run fmt         # format the repo
+pnpm run fmt:check   # verify formatting (CI)
+```
+
+Configuration lives in `.oxlintrc.json` and `.oxfmtrc.json` at the package root. Scope includes `src/`, `tests/`, and `templates/`.
+
 ## Tests
 
 ```bash
-pnpm test
+pnpm test              # Vitest unit/integration tests
+pnpm run test:coverage # Vitest with coverage thresholds
+pnpm run test:browser  # Playwright mobile drawer/search checks
 ```
 
-Runs Vitest against the CLI and build pipeline.
+Vitest covers the CLI, build pipeline, Markdown processing, and shared helpers. Playwright builds and previews the docs starter, then verifies the default theme's mobile drawer focus behavior and local search.
