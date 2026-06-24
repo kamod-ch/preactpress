@@ -12,14 +12,14 @@
     "vite"
   ],
   "homepage": "https://kamod-ch.github.io/preactpress/",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/preactpress/issues"
+  },
   "license": "MIT",
   "author": "Klaus Zahiragic <watzak>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/preactpress.git"
-  },
-  "bugs": {
-    "url": "https://github.com/kamod-ch/preactpress/issues"
   },
   "bin": {
     "preactpress": "./bin/preactpress.mjs"
