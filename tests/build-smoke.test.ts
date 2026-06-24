@@ -39,6 +39,11 @@ describe("build smoke", () => {
       expect(guide).toContain('aria-controls="pp-mobile-drawer"');
       expect(guide).toContain('id="pp-mobile-drawer"');
       expect(guide).toContain('aria-label="Close menu"');
+      const themeScript = await fs.readFile(
+        path.join(root, "dist", "preactpress-theme.js"),
+        "utf8",
+      );
+      expect(themeScript).toContain("classList.toggle('dark'");
       expect(notFound).toContain("404");
       await expect(fs.access(path.join(root, "dist", "favicon.svg"))).resolves.toBeUndefined();
       await expect(fs.access(path.join(root, "dist", "favicon.png"))).resolves.toBeUndefined();
@@ -48,6 +53,8 @@ describe("build smoke", () => {
       const assets = await fs.readdir(path.join(root, "dist", "assets"));
       const mainJs = assets.find((file) => file.startsWith("main-") && file.endsWith(".js"));
       expect(mainJs).toBeTruthy();
+      const mainSize = (await fs.stat(path.join(root, "dist", "assets", mainJs!))).size;
+      expect(mainSize).toBeLessThan(100_000);
     } finally {
       await fs.rm(root, { recursive: true, force: true });
     }
@@ -153,6 +160,8 @@ describe("build smoke", () => {
       const assets = await fs.readdir(path.join(root, "dist", "assets"));
       const mainJs = assets.find((file) => file.startsWith("main-") && file.endsWith(".js"));
       expect(mainJs).toBeTruthy();
+      const mainSize = (await fs.stat(path.join(root, "dist", "assets", mainJs!))).size;
+      expect(mainSize).toBeLessThan(120_000);
       const mainBundle = await fs.readFile(path.join(root, "dist", "assets", mainJs!), "utf8");
       expect(mainBundle).not.toContain("Use blockquotes for callouts");
     } finally {

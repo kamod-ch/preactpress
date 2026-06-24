@@ -87,7 +87,7 @@ Verify the tarball before the first release:
 npm pack --dry-run
 ```
 
-Tag-driven releases are automated via `.github/workflows/publish.yml` when you push a `v*` tag (for example `v1.0.1`). Set the `NPM_TOKEN` repository secret first.
+Tag-driven releases are automated via `.github/workflows/publish.yml` when you push a `v*` tag (for example `v1.0.1`). Set the `NPM_TOKEN` repository secret first. The publish workflow runs the same gates as CI (`pnpm run verify`: format check, lint, build, coverage tests, template checks, browser tests, and tarball smoke test) before `npm publish`.
 
 ## Lint and format
 

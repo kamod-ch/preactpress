@@ -31,14 +31,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build package
-        run: pnpm run build
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
 
-      - name: Run tests
-        run: pnpm test
-
-      - name: Verify package tarball
-        run: pnpm run pack:dry-run
+      - name: Verify release (same gates as CI)
+        run: pnpm run verify
 
       - name: Publish to npm
         run: npm publish --provenance --access public

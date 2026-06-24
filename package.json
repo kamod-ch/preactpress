@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/preactpress",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vite and Preact powered static site generator",
   "keywords": [
     "markdown",
@@ -13,7 +13,7 @@
   ],
   "homepage": "https://kamod-ch.github.io/preactpress/",
   "license": "MIT",
-  "author": "Klaus Zahiragic <watzak@users.noreply.github.com>",
+  "author": "Klaus Zahiragic <watzak>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/preactpress.git"
@@ -62,7 +62,7 @@
     "fmt": "oxfmt .",
     "fmt:check": "oxfmt --check .",
     "pack:dry-run": "npm pack --dry-run",
-    "verify": "pnpm run fmt && pnpm run lint && pnpm run build && pnpm run test:coverage && pnpm run check:templates && pnpm run test:browser && pnpm run pack:dry-run",
+    "verify": "pnpm run fmt:check && pnpm run lint && pnpm run build && pnpm run test:coverage && pnpm run check:templates && pnpm run test:browser && pnpm run pack:dry-run",
     "prepack": "pnpm run build",
     "preactpress": "node ./bin/preactpress.mjs",
     "dev": "node ./bin/preactpress.mjs dev templates/default",

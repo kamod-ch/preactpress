@@ -102,14 +102,33 @@ export function toggleStoredTheme(): void {
 
 export function useStoredThemeSync(): void {
   useEffect(() => {
-    function onStorage(event: StorageEvent): void {
-      if (event.key !== PREACTPRESS_THEME_STORAGE_KEY) return;
-      const value = event.newValue;
+    function syncTheme(event?: StorageEvent): void {
+      if (event && event.key !== PREACTPRESS_THEME_STORAGE_KEY) return;
+      const value =
+        event?.newValue ??
+        (() => {
+          try {
+            return localStorage.getItem(PREACTPRESS_THEME_STORAGE_KEY);
+          } catch {
+            return null;
+          }
+        })();
       applyTheme(value === "light" || value === "dark" ? value : null);
     }
 
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    function onSystemThemeChange(): void {
+      if (readStoredTheme() !== null) return;
+      applyTheme(null);
+    }
+
+    syncTheme();
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    media.addEventListener("change", onSystemThemeChange);
+    window.addEventListener("storage", syncTheme);
+    return () => {
+      media.removeEventListener("change", onSystemThemeChange);
+      window.removeEventListener("storage", syncTheme);
+    };
   }, []);
 }
 
