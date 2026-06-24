@@ -79,6 +79,8 @@
     "check:magazine": "node ./bin/preactpress.mjs check templates/magazine",
     "build:magazine": "node ./bin/preactpress.mjs build templates/magazine",
     "check:templates": "node ./scripts/check-all-templates.mjs",
+    "sync:template-lockfiles": "node ./scripts/sync-template-lockfiles.mjs",
+    "check:template-lockfiles": "node ./scripts/sync-template-lockfiles.mjs --check",
     "dev:templates": "node ./scripts/dev-all-templates.mjs",
     "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
   },

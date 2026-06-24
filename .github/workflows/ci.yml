@@ -36,6 +36,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check bundled template lockfiles
+        if: github.event_name == 'pull_request'
+        run: pnpm run check:template-lockfiles
+
       - name: Build package
         run: pnpm run build
 
