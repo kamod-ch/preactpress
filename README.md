@@ -73,7 +73,7 @@ You get a production-ready docs site with:
 - built-in search, SEO defaults, sitemap, feeds, and static output
 - a default docs theme you can use immediately or replace later
 
-![Docs theme built with PreactPress](.github/assets/docs-hero.png)
+![Docs theme built with PreactPress](https://raw.githubusercontent.com/kamod-ch/preactpress/main/.github/assets/docs-hero.png)
 
 ## Why PreactPress?
 
@@ -111,7 +111,7 @@ Pair with **[Kamod UI](https://ui.kamod.ch/)** for Preact + Tailwind components 
 Browse the [live demo](https://kamod-ch.github.io/preactpress/) for the `docs` template, or run `pnpm run dev:docs` from the package root while contributing.
 
 <p align="center">
-  <img src=".github/assets/docs-mobile.png" alt="PreactPress docs theme on mobile" width="320" />
+  <img src="https://raw.githubusercontent.com/kamod-ch/preactpress/main/.github/assets/docs-mobile.png" alt="PreactPress docs theme on mobile" width="320" />
 </p>
 
 ## Examples

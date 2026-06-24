@@ -18,6 +18,9 @@
     "type": "git",
     "url": "git+https://github.com/kamod-ch/preactpress.git"
   },
+  "bugs": {
+    "url": "https://github.com/kamod-ch/preactpress/issues"
+  },
   "bin": {
     "preactpress": "./bin/preactpress.mjs"
   },
@@ -62,8 +65,12 @@
     "fmt": "oxfmt .",
     "fmt:check": "oxfmt --check .",
     "pack:dry-run": "npm pack --dry-run",
+    "release": "node ./scripts/release.mjs patch",
+    "release:minor": "node ./scripts/release.mjs minor",
+    "release:major": "node ./scripts/release.mjs major",
+    "release:dry": "node ./scripts/release.mjs patch --dry",
+    "release:check": "npm pack && tar -tf kamod-ch-preactpress-*.tgz",
     "verify": "pnpm run fmt:check && pnpm run lint && pnpm run build && pnpm run test:coverage && pnpm run check:templates && pnpm run test:browser && pnpm run pack:dry-run",
-    "prepack": "pnpm run build",
     "preactpress": "node ./bin/preactpress.mjs",
     "dev": "node ./bin/preactpress.mjs dev templates/default",
     "dev:default": "node ./bin/preactpress.mjs dev templates/default",
