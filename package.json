@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/preactpress",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Vite and Preact powered static site generator",
   "keywords": [
     "markdown",
