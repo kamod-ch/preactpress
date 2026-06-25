@@ -30,7 +30,9 @@
     "dist",
     "src/client",
     "src/shared",
-    "templates"
+    "templates",
+    "!templates/**/node_modules",
+    "!templates/**/dist"
   ],
   "type": "module",
   "exports": {
