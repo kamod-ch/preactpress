@@ -1,46 +1,153 @@
 import { execSync } from "node:child_process";
+import { readFileSync, unlinkSync } from "node:fs";
+import pc from "picocolors";
 
-const bump = process.argv[2] ?? "patch";
-const dryRun = process.argv.includes("--dry");
+const [, , bumpArg, ...flags] = process.argv;
+const bump = bumpArg ?? "patch";
+const dryRun = flags.includes("--dry");
 const allowed = new Set(["patch", "minor", "major"]);
 
-if (!allowed.has(bump)) {
-  console.error(`Invalid release type: ${bump}`);
-  console.error("Use one of: patch, minor, major");
+function label(type, color) {
+  return pc.bold(color(`[{${type}}]`));
+}
+
+function info(message) {
+  console.log(`${label("INFO", pc.blue)} ${message}`);
+}
+
+function ok(message) {
+  console.log(`${label("OK", pc.green)} ${message}`);
+}
+
+function warn(message) {
+  console.warn(`${label("WARN", pc.yellow)} ${message}`);
+}
+
+function errorLog(message) {
+  console.error(`${label("ERROR", pc.red)} ${pc.red(message)}`);
+}
+
+function fail(message, error) {
+  console.error();
+  errorLog(message);
+
+  if (error) {
+    const detail = error?.stderr?.toString?.().trim() || error?.message || String(error);
+    if (detail) errorLog(detail);
+  }
+
   process.exit(1);
 }
 
 function run(command, options = {}) {
-  console.log(`\n$ ${command}`);
-  execSync(command, { stdio: "inherit", ...options });
+  console.log(`\n${label("INFO", pc.blue)} ${pc.cyan("$")} ${pc.cyan(command)}`);
+
+  try {
+    return execSync(command, {
+      stdio: "inherit",
+      encoding: "utf8",
+      ...options,
+    });
+  } catch (error) {
+    fail(`command failed: ${command}`, error);
+  }
 }
 
-function output(command) {
-  return execSync(command, { encoding: "utf8" }).trim();
+function output(command, options = {}) {
+  try {
+    return execSync(command, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      ...options,
+    }).trim();
+  } catch (error) {
+    fail(`command failed: ${command}`, error);
+  }
 }
 
-const branch = output("git branch --show-current");
-if (branch !== "main") {
-  console.error(`Release blocked: current branch is "${branch}", expected "main".`);
-  process.exit(1);
+function getPackageJson() {
+  try {
+    return JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+  } catch (error) {
+    fail("could not read package.json", error);
+  }
 }
 
-const status = output("git status --porcelain");
-if (status) {
-  console.error("Release blocked: working tree is not clean.");
-  process.exit(1);
+function assertNpmLogin() {
+  const username = output("npm whoami");
+  if (!username) fail("npm login required. Run: npm login");
+  ok(`Logged in to npm as: ${pc.bold(username)}`);
 }
 
-run("npm whoami");
-run("pnpm install");
-run("pnpm run verify");
+function packAndInspect() {
+  const packOutput = output("npm pack --json");
 
-if (dryRun) {
-  run("npm pack");
-  run("tar -tf kamod-ch-preactpress-*.tgz");
-  process.exit(0);
+  let packed;
+  try {
+    [packed] = JSON.parse(packOutput);
+  } catch (error) {
+    fail("could not parse npm pack output", error);
+  }
+
+  const filename = packed?.filename;
+  if (!filename) fail("npm pack did not return a tarball filename");
+
+  run(`tar -tf ${JSON.stringify(filename)}`);
+
+  try {
+    unlinkSync(filename);
+  } catch (error) {
+    warn(`could not remove ${pc.bold(filename)}`);
+  }
 }
 
-run(`npm version ${bump}`);
-run("npm publish --access public");
-run("git push --follow-tags");
+try {
+  if (!allowed.has(bump)) {
+    fail(`invalid release type: ${bump}. Use one of: patch, minor, major`);
+  }
+
+  const pkg = getPackageJson();
+  info(
+    `Preparing release for ${pc.magenta(`${pkg.name}@${pkg.version}`)}${dryRun ? pc.yellow(" (dry run)") : ""}`,
+  );
+
+  const branch = output("git branch --show-current");
+  if (branch !== "main") {
+    fail(`current branch is \"${branch}\", expected \"main\"`);
+  }
+
+  const status = output("git status --porcelain");
+  if (status) {
+    fail("working tree is not clean");
+  }
+
+  assertNpmLogin();
+
+  run("pnpm install --frozen-lockfile");
+  ok("Dependencies installed.");
+
+  run("pnpm run verify");
+  ok("Verification passed.");
+
+  if (dryRun) {
+    packAndInspect();
+    ok("Package tarball created and inspected.");
+    console.log();
+    ok("Dry run completed successfully.");
+    process.exit(0);
+  }
+
+  run(`npm version ${bump}`);
+  ok(`Version bumped with ${pc.bold(bump)}.`);
+
+  run("npm publish --access public");
+  ok("Package published to npm.");
+
+  run("git push --follow-tags");
+  ok("Git commits and tags pushed.");
+
+  console.log();
+  ok("Release completed successfully.");
+} catch (error) {
+  fail("unexpected error", error);
+}
