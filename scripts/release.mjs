@@ -65,6 +65,49 @@ function output(command, options = {}) {
   }
 }
 
+function extractJsonPayload(text) {
+  const start = text.search(/[\[{]/);
+  if (start < 0) throw new Error("no JSON payload found");
+
+  const stack = [];
+  let inString = false;
+  let escaped = false;
+
+  for (let index = start; index < text.length; index += 1) {
+    const char = text[index];
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (char === "\\") {
+        escaped = true;
+      } else if (char === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === '"') {
+      inString = true;
+      continue;
+    }
+
+    if (char === "{" || char === "[") {
+      stack.push(char);
+      continue;
+    }
+
+    if (char === "}" || char === "]") {
+      const expected = char === "}" ? "{" : "[";
+      const actual = stack.pop();
+      if (actual !== expected) throw new Error("invalid JSON payload");
+      if (stack.length === 0) return text.slice(start, index + 1);
+    }
+  }
+
+  throw new Error("unterminated JSON payload");
+}
+
 function getPackageJson() {
   try {
     return JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
@@ -84,8 +127,7 @@ function packAndInspect() {
 
   let packed;
   try {
-    const jsonStart = packOutput.lastIndexOf("[\n");
-    const jsonText = jsonStart >= 0 ? packOutput.slice(jsonStart) : packOutput;
+    const jsonText = extractJsonPayload(packOutput);
     [packed] = JSON.parse(jsonText);
   } catch (error) {
     fail("could not parse npm pack output", error);
