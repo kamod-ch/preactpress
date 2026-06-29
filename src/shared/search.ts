@@ -1,7 +1,4 @@
-import {
-  saveScrollPositionBeforeNavigation,
-  skipNextScrollRestore,
-} from "./scrollRestoration.js";
+import { saveScrollPositionBeforeNavigation, skipNextScrollRestore } from "./scrollRestoration.js";
 
 export type SearchProvider = "local" | "algolia";
 
