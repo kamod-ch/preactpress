@@ -66,28 +66,29 @@ A small inline script in the head restores `data-theme` from `localStorage` befo
 
 ## Publishing to npm
 
-To release the **CLI/tool** itself (not a content site), from the `preactpress` package directory:
+Releases are published **locally only** (no GitHub Actions publish workflow). From the `preactpress` package directory on branch `main` with a clean working tree:
 
 ```bash
-pnpm install          # runs prepare → build (compiles TypeScript to dist/)
-pnpm test
-npm publish           # runs prepack → build automatically before pack
+pnpm run release:dry    # optional: verify + pack tarball without bumping or publishing
+pnpm run release        # patch bump, verify, npm publish, push tag
+# pnpm run release:minor / release:major for other semver bumps
 ```
+
+The release script runs the same gates as CI (`pnpm run verify`: format check, lint, build, coverage tests, template checks, browser tests, and tarball smoke test), bumps the version, publishes to npm, and pushes the git tag.
 
 Requirements:
 
 - Node 20+
-- npm account with access to the `@kamod-ch` organization
+- logged in to npm (`npm login`) with access to the `@kamod-ch` organization
 - `publishConfig.access` set to `public` in `package.json` (scoped packages default to private)
 - the `files` field in `package.json` (includes `dist`, `bin`, `templates`, etc.)
 
 Verify the tarball before the first release:
 
 ```bash
-npm pack --dry-run
+pnpm run release:dry
+# or: npm pack --dry-run
 ```
-
-Tag-driven releases are automated via `.github/workflows/publish.yml` when you push a `v*` tag (for example `v1.0.1`). Set the `NPM_TOKEN` repository secret first. The publish workflow runs the same gates as CI (`pnpm run verify`: format check, lint, build, coverage tests, template checks, browser tests, and tarball smoke test) before `npm publish`.
 
 ## Lint and format
 
