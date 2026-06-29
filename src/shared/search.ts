@@ -1,3 +1,8 @@
+import {
+  saveScrollPositionBeforeNavigation,
+  skipNextScrollRestore,
+} from "./scrollRestoration.js";
+
 export type SearchProvider = "local" | "algolia";
 
 export interface LocalSearchConfig {
@@ -99,7 +104,9 @@ export function navigateDocSearchResult(itemUrl: string, base: string): void {
     window.location.assign(href);
     return;
   }
+  saveScrollPositionBeforeNavigation();
   window.history.pushState({}, "", href);
+  skipNextScrollRestore();
   window.dispatchEvent(new PopStateEvent("popstate"));
-  window.scrollTo({ top: 0 });
+  window.scrollTo({ top: 0, behavior: "auto" });
 }

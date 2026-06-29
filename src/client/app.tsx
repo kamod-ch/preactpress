@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import Layout from "virtual:preactpress-layout";
 import { pagesMeta, routes } from "virtual:preactpress-pages";
 import { i18n, mpa, site, themeConfig } from "virtual:preactpress-site";
@@ -6,7 +6,13 @@ import type { PageView } from "./types.js";
 import type { ResolvedLocale } from "../node/siteConfig.js";
 import { usePageHead } from "./usePageHead.js";
 import { normalizeRoute, routeFromPathname } from "../shared/route.js";
-import { loadPage, prefetchPage, seedPage } from "./loadPage.js";
+import {
+  consumeScrollRestoreOnPopstate,
+  restoreScrollPositionAfterLayout,
+  saveScrollPositionBeforeNavigation,
+  setupScrollRestoration,
+} from "../shared/scrollRestoration.js";
+import { getCachedPage, loadPage, prefetchPage, seedPage } from "./loadPage.js";
 import { setupViewportPrefetch } from "./prefetchLinks.js";
 import {
   localeFromRoute,
@@ -55,6 +61,7 @@ function loadingPage(route: string): PageView {
 export function App({ routePath, initialPage }: { routePath: string; initialPage?: PageView }) {
   const [currentRoute, setCurrentRoute] = useState(() => normalizeRoute(routePath));
   const [page, setPage] = useState<PageView>(() => initialPage ?? loadingPage(routePath));
+  const pendingScrollRestore = useRef(false);
   const availableRoutes = new Set(routes);
   const activeLocale = localeFromRoute(currentRoute, i18n);
   const activeSite = siteForRoute(site, currentRoute, i18n);
@@ -66,10 +73,17 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
 
   useEffect(() => {
     let cancelled = false;
-    setPage(loadingPage(currentRoute));
+    const cached = getCachedPage(currentRoute);
+    if (!cached) setPage(loadingPage(currentRoute));
     void loadPage(currentRoute, site.base)
       .then((loaded) => {
-        if (!cancelled) setPage(loaded);
+        if (!cancelled) {
+          setPage(loaded);
+          if (pendingScrollRestore.current) {
+            pendingScrollRestore.current = false;
+            restoreScrollPositionAfterLayout();
+          }
+        }
       })
       .catch(() => {
         if (!cancelled) {
@@ -95,7 +109,13 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
       return () => stopViewportPrefetch();
     }
 
-    const onPopState = () => setCurrentRoute(routeFromLocation());
+    const stopScrollRestoration = setupScrollRestoration();
+    const onPopState = () => {
+      if (consumeScrollRestoreOnPopstate()) {
+        pendingScrollRestore.current = true;
+      }
+      setCurrentRoute(routeFromLocation());
+    };
     const onClick = (event: MouseEvent) => {
       if (
         event.defaultPrevented ||
@@ -117,9 +137,10 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
         return;
       }
       event.preventDefault();
+      saveScrollPositionBeforeNavigation();
       window.history.pushState({}, "", url);
       setCurrentRoute(route);
-      window.scrollTo({ top: 0 });
+      window.scrollTo({ top: 0, behavior: "auto" });
     };
     const onMouseEnter = (event: MouseEvent) => {
       const link = anchorFromEvent(event);
@@ -131,6 +152,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
     document.addEventListener("click", onClick);
     document.addEventListener("mouseenter", onMouseEnter, true);
     return () => {
+      stopScrollRestoration();
       stopViewportPrefetch();
       window.removeEventListener("popstate", onPopState);
       document.removeEventListener("click", onClick);

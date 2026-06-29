@@ -23,6 +23,10 @@ export function seedPage(route: string, page: PageView | undefined): void {
   if (page) cache.set(route, page);
 }
 
+export function getCachedPage(route: string): PageView | undefined {
+  return cache.get(route);
+}
+
 async function loadMarkdownPage(route: string, base: string): Promise<PageView> {
   const meta = pagesMeta[route];
   const url = import.meta.env.DEV
