@@ -80,11 +80,13 @@ function assertNpmLogin() {
 }
 
 function packAndInspect() {
-  const packOutput = output("npm pack --json");
+  const packOutput = output("npm pack --json --ignore-scripts");
 
   let packed;
   try {
-    [packed] = JSON.parse(packOutput);
+    const jsonStart = packOutput.lastIndexOf("[\n");
+    const jsonText = jsonStart >= 0 ? packOutput.slice(jsonStart) : packOutput;
+    [packed] = JSON.parse(jsonText);
   } catch (error) {
     fail("could not parse npm pack output", error);
   }
