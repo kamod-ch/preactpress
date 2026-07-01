@@ -79,6 +79,7 @@ export default defineConfig({
               { text: "Interactive MDX", link: "/interactive" },
               { text: "Preact Signals", link: "/examples/preact-signals" },
               { text: "Mermaid diagrams", link: "/examples/mermaid" },
+              { text: "RSS / Atom feed", link: "/examples/rss" },
               { text: "Algolia DocSearch", link: "/examples/algolia-docsearch" },
               { text: "Content loader", link: "/examples/content-loader" },
               { text: "Dynamic routes", link: "/examples/dynamic-routes" },
