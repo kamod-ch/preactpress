@@ -23,7 +23,7 @@ import {
 import { expandMarkdownIncludes } from "./markdownInclude.js";
 import { expandSnippetImports } from "./markdownSnippets.js";
 import { normalizeRoute } from "../shared/route.js";
-import { escapeHtml } from "../shared/escapeHtml.js";
+import { escapeAttr, escapeHtml } from "../shared/escapeHtml.js";
 
 let highlighter: Highlighter | undefined;
 
@@ -72,7 +72,7 @@ const CODE_TRANSFORMERS = [
 export async function getHighlighter(): Promise<Highlighter> {
   if (!highlighter) {
     highlighter = await createHighlighter({
-      themes: ["github-light", "github-dark"],
+      themes: ["vitesse-light", "vitesse-dark"],
       langs: ["plaintext"],
     });
   }
@@ -127,20 +127,41 @@ async function preloadFenceLanguages(content: string, hi: Highlighter): Promise<
   }
 }
 
+const COPY_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-1v1a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3h1V7Zm2 1h3a3 3 0 0 1 3 3v3h1a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v1Zm-3 2a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1H7Z"/></svg>`;
+const CHECK_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.55 16.2 5.8 12.45a1 1 0 0 0-1.42 1.42l4.46 4.46a1 1 0 0 0 1.42 0L20.03 8.56a1 1 0 1 0-1.42-1.42L9.55 16.2Z"/></svg>`;
+
+function codeBlockCopyButton(): string {
+  return `<button class="pp-code-copy" type="button" aria-label="Copy code" data-copied-label="Copied" data-copy-icon="${escapeAttr(COPY_ICON)}" data-check-icon="${escapeAttr(CHECK_ICON)}"><span class="pp-code-copy-icon" aria-hidden="true">${COPY_ICON}</span></button>`;
+}
+
+function codeBlockContainer(preHtml: string, langRaw: string): string {
+  const lang = langRaw || "plaintext";
+  const langBadge =
+    lang === "plaintext"
+      ? ""
+      : `<div class="pp-code-lang" aria-hidden="true">${escapeHtml(lang)}</div>`;
+  return `<div class="pp-code-block" data-language="${escapeAttr(lang)}">${langBadge}${codeBlockCopyButton()}${preHtml}</div>`;
+}
+
 function highlightFenceSync(hi: Highlighter, langRaw: string, code: string, metaRaw = ""): string {
   const lang = resolveShikiLang(langRaw);
+  const displayCode = code.endsWith("\n") ? code : `${code}\n`;
   try {
-    return hi.codeToHtml(code, {
+    const preHtml = hi.codeToHtml(displayCode, {
       lang: lang as BundledLanguage,
       themes: {
-        light: "github-light",
-        dark: "github-dark",
+        light: "vitesse-light",
+        dark: "vitesse-dark",
       },
       meta: metaRaw ? { __raw: metaRaw } : undefined,
       transformers: CODE_TRANSFORMERS,
     });
+    return codeBlockContainer(preHtml, langRaw);
   } catch {
-    return `<pre class="shiki"><code>${escapeHtml(code)}</code></pre>`;
+    return codeBlockContainer(
+      `<pre class="shiki"><code>${escapeHtml(displayCode)}</code></pre>`,
+      langRaw,
+    );
   }
 }
 

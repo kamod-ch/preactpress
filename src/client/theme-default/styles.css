@@ -759,14 +759,167 @@ body::selection {
   margin: 16px 0;
 }
 
+.pp-doc-content .pp-code-block {
+  position: relative;
+  margin: 1.25rem 0;
+  border: 1px solid color-mix(in srgb, var(--pp-border) 82%, transparent);
+  border-radius: 14px;
+  background: var(--pp-code-bg);
+  box-shadow:
+    0 14px 34px color-mix(in srgb, #000 8%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 45%, transparent);
+  overflow: hidden;
+}
+
 .pp-doc-content pre {
-  padding: 16px;
-  border-radius: 8px;
+  padding: 16px 18px;
+  border-radius: 0;
   overflow: auto;
-  border: 1px solid var(--pp-border);
+  border: 0;
   background: var(--pp-code-bg);
   color: var(--pp-code-text);
-  line-height: 1.55;
+  line-height: 1.38;
+}
+
+.pp-doc-content .pp-code-block pre {
+  margin: 0;
+  max-height: min(68vh, 720px);
+  padding-top: 2.7rem;
+  padding-right: 3.75rem;
+  line-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--pp-muted) 40%, transparent) transparent;
+}
+
+.pp-doc-content .pp-code-block .shiki.shiki-themes.vitesse-light.vitesse-dark {
+  padding-bottom: 1rem;
+}
+
+.pp-doc-content .pp-code-block pre code {
+  display: block;
+  min-width: max-content;
+  font-size: 0.9rem;
+  line-height: 1.32;
+  tab-size: 2;
+}
+
+.pp-doc-content .pp-code-block .line {
+  display: block;
+  line-height: 0;
+  counter-increment: pp-code-line;
+}
+
+.pp-doc-content .pp-code-block code {
+  counter-reset: pp-code-line;
+}
+
+.pp-doc-content .pp-code-block .line::before {
+  content: counter(pp-code-line);
+  display: inline-block;
+  width: 2rem;
+  margin-right: 1rem;
+  color: color-mix(in srgb, var(--pp-muted) 42%, transparent);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  user-select: none;
+}
+
+.pp-doc-content .pp-code-block[data-language="plaintext"] pre {
+  padding-top: 18px;
+}
+
+.pp-doc-content .pp-code-lang {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  z-index: 2;
+  max-width: calc(100% - 4.75rem);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--pp-border) 72%, transparent);
+  border-radius: 999px;
+  padding: 0.18rem 0.55rem;
+  background: color-mix(in srgb, var(--pp-bg) 72%, transparent);
+  color: var(--pp-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(12px);
+}
+
+.pp-doc-content .shiki,
+.pp-doc-content .shiki span {
+  color: var(--shiki-light, var(--pp-code-text)) !important;
+  background-color: var(--shiki-light-bg, var(--pp-code-bg)) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .pp-doc-content .shiki,
+  :root:not([data-theme]) .pp-doc-content .shiki span {
+    color: var(--shiki-dark, var(--pp-code-text)) !important;
+    background-color: var(--shiki-dark-bg, var(--pp-code-bg)) !important;
+  }
+}
+
+:root[data-theme="dark"] .pp-doc-content .shiki,
+:root[data-theme="dark"] .pp-doc-content .shiki span {
+  color: var(--shiki-dark, var(--pp-code-text)) !important;
+  background-color: var(--shiki-dark-bg, var(--pp-code-bg)) !important;
+}
+
+.pp-doc-content .pp-code-copy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--pp-border) 72%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--pp-bg) 72%, transparent);
+  color: var(--pp-muted);
+  opacity: 0;
+  transform: translateY(-3px) scale(0.96);
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.pp-doc-content .pp-code-block:hover .pp-code-copy,
+.pp-doc-content .pp-code-copy:focus-visible,
+.pp-doc-content .pp-code-copy.copied {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.pp-doc-content .pp-code-copy:hover,
+.pp-doc-content .pp-code-copy.copied {
+  color: var(--pp-accent);
+  border-color: color-mix(in srgb, var(--pp-accent) 44%, var(--pp-border));
+  background: color-mix(in srgb, var(--pp-bg) 88%, var(--pp-accent) 12%);
+}
+
+.pp-doc-content .pp-code-copy svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+
+.pp-doc-content.pp-code-wrap .pp-code-block pre code,
+.pp-doc-content .pp-code-block.pp-code-wrap pre code {
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .pp-doc-content :not(pre) > code {
@@ -970,9 +1123,11 @@ body::selection {
   display: block;
 }
 
-.pp-doc-content .pp-code-group-block .shiki {
+.pp-doc-content .pp-code-group-block .pp-code-block {
   margin: 0;
+  border: 0;
   border-radius: 0;
+  box-shadow: none;
 }
 
 .pp-doc-content table {

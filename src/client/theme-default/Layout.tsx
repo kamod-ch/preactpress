@@ -151,6 +151,49 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   }, [routePath]);
 
   useEffect(() => {
+    const copyText = async (text: string) => {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "-9999px";
+      document.body.append(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    };
+
+    const onClick = (event: MouseEvent) => {
+      const target = event.target;
+      const candidate = target instanceof Element ? target.closest(".pp-code-copy") : null;
+      if (!(candidate instanceof HTMLButtonElement)) return;
+      const button = candidate;
+      const code = button.closest(".pp-code-block")?.querySelector("code")?.textContent ?? "";
+      if (!code) return;
+
+      event.preventDefault();
+      void copyText(code).then(() => {
+        const icon = button.querySelector(".pp-code-copy-icon");
+        if (icon && button.dataset.checkIcon) icon.innerHTML = button.dataset.checkIcon;
+        button.classList.add("copied");
+        button.setAttribute("aria-label", button.dataset.copiedLabel ?? "Copied");
+        window.setTimeout(() => {
+          if (icon && button.dataset.copyIcon) icon.innerHTML = button.dataset.copyIcon;
+          button.classList.remove("copied");
+          button.setAttribute("aria-label", "Copy code");
+        }, 2000);
+      });
+    };
+
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
+  useEffect(() => {
     if (!mobileMenuOpen) return;
 
     const previousOverflow = document.body.style.overflow;

@@ -36,7 +36,12 @@ const answer = 42
     expect(page.headings).toEqual([{ id: "start-here", text: "Start Here", level: 2 }]);
     expect(page.html).toContain('id="start-here"');
     expect(page.html).toContain('href="#start-here"');
+    expect(page.html).toContain('class="pp-code-block"');
+    expect(page.html).toContain('data-language="ts"');
+    expect(page.html).toContain('class="pp-code-lang"');
+    expect(page.html).toContain('class="pp-code-copy"');
     expect(page.html).toContain("const answer = 42");
+    expect(page.html).toContain("const answer = 42\n");
   });
 
   it("escapes raw HTML by default and allows it when configured", async () => {
