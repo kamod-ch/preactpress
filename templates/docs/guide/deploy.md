@@ -97,6 +97,8 @@ For most static hosts, use these settings:
 | Cloudflare Pages   | `pnpm run build` | `dist`           |
 | Render Static Site | `pnpm run build` | `dist`           |
 
+See the [Cloudflare Pages deployment guide](/examples/cloudflare-pages) for dashboard settings, environment variables, Wrangler deployment, and custom domain notes.
+
 Install command:
 
 ```bash

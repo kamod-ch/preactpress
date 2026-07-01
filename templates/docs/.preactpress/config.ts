@@ -84,6 +84,7 @@ export default defineConfig({
               { text: "Content loader", link: "/examples/content-loader" },
               { text: "Dynamic routes", link: "/examples/dynamic-routes" },
               { text: "Custom theme", link: "/examples/custom-theme" },
+              { text: "Cloudflare Pages", link: "/examples/cloudflare-pages" },
               { text: "Static assets", link: "/examples/static-assets" },
             ],
           },
