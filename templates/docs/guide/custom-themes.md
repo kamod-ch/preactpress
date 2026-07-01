@@ -36,4 +36,4 @@ export default Layout;
 
 Theme authors are responsible for navigation, responsive behavior, focus management, search UI, and rendering Markdown versus MDX pages. Helpers for routes, page head data, tags, slugs, and theme state are exported from `@kamod-ch/preactpress/client` and `@kamod-ch/preactpress/shared`.
 
-The `magazine` and `hono` init templates are complete custom-theme examples.
+See the [custom theme example](/examples/custom-theme) for a copy-pasteable minimal theme. The `magazine` and `hono` init templates are complete custom-theme examples.

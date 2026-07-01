@@ -80,6 +80,7 @@ export default defineConfig({
               { text: "Algolia DocSearch", link: "/examples/algolia-docsearch" },
               { text: "Content loader", link: "/examples/content-loader" },
               { text: "Dynamic routes", link: "/examples/dynamic-routes" },
+              { text: "Custom theme", link: "/examples/custom-theme" },
               { text: "Static assets", link: "/examples/static-assets" },
             ],
           },
