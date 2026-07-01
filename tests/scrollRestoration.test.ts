@@ -27,17 +27,24 @@ describe("scrollRestoration", () => {
   let scrollY = 0;
   let history: ReturnType<typeof createHistory>;
   let scrollTo: ReturnType<typeof vi.fn>;
+  let listeners: Record<string, EventListenerOrEventListenerObject[]>;
 
   beforeEach(() => {
     scrollY = 0;
     history = createHistory({});
     scrollTo = vi.fn();
+    listeners = {};
     vi.stubGlobal("window", {
       scrollY,
       history,
       scrollTo,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
+      addEventListener: vi.fn((type: string, listener: EventListenerOrEventListenerObject) => {
+        listeners[type] ??= [];
+        listeners[type].push(listener);
+      }),
+      removeEventListener: vi.fn((type: string, listener: EventListenerOrEventListenerObject) => {
+        listeners[type] = (listeners[type] ?? []).filter((item) => item !== listener);
+      }),
     });
     Object.defineProperty(globalThis.window, "scrollY", {
       configurable: true,
@@ -62,6 +69,15 @@ describe("scrollRestoration", () => {
     scrollY = 420;
     persistScrollPosition();
     expect(history.state?.[SCROLL_STATE_KEY]).toBe(420);
+  });
+
+  test("setupScrollRestoration persists scroll changes immediately", () => {
+    const cleanup = setupScrollRestoration();
+    scrollY = 512;
+    const listener = listeners.scroll[0];
+    if (typeof listener === "function") listener(new Event("scroll"));
+    expect(history.state?.[SCROLL_STATE_KEY]).toBe(512);
+    cleanup();
   });
 
   test("saveScrollPositionBeforeNavigation persists current scroll position", () => {

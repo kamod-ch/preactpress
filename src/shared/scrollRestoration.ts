@@ -9,15 +9,14 @@ export function setupScrollRestoration(): () => void {
     window.history.scrollRestoration = "manual";
   }
 
-  let timeout: ReturnType<typeof setTimeout> | undefined;
   const onScroll = () => {
-    clearTimeout(timeout);
-    timeout = setTimeout(persistScrollPosition, 150);
+    persistScrollPosition();
   };
   window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("pagehide", persistScrollPosition);
   return () => {
     window.removeEventListener("scroll", onScroll);
-    clearTimeout(timeout);
+    window.removeEventListener("pagehide", persistScrollPosition);
   };
 }
 
@@ -44,17 +43,49 @@ export function restoreScrollPosition(): void {
   window.scrollTo({ top: readScrollPositionFromHistory(), left: 0, behavior: "auto" });
 }
 
-export function restoreScrollPositionAfterLayout(): void {
+export async function restoreScrollPositionAfterLayout(): Promise<void> {
+  await scrollAfterLayout(readScrollPositionFromHistory());
+}
+
+export async function scrollToTopAfterLayout(): Promise<void> {
+  await scrollAfterLayout(0);
+}
+
+async function scrollAfterLayout(top: number): Promise<void> {
   if (typeof window === "undefined") return;
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      const html = document.documentElement;
-      const previous = html.style.scrollBehavior;
-      html.style.scrollBehavior = "auto";
-      restoreScrollPosition();
-      html.style.scrollBehavior = previous;
-    });
-  });
+  await nextAnimationFrame();
+  await nextAnimationFrame();
+  await waitForImagesToSettle();
+  await nextAnimationFrame();
+
+  const html = document.documentElement;
+  const previous = html.style.scrollBehavior;
+  html.style.scrollBehavior = "auto";
+  window.scrollTo({ top, left: 0, behavior: "auto" });
+  html.style.scrollBehavior = previous;
+}
+
+function nextAnimationFrame(): Promise<void> {
+  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+}
+
+async function waitForImagesToSettle(timeoutMs = 1500): Promise<void> {
+  if (typeof document === "undefined") return;
+  const images = Array.from(document.images).filter((image) => !image.complete);
+  if (images.length === 0) return;
+
+  await Promise.race([
+    Promise.allSettled(
+      images.map(
+        (image) =>
+          new Promise<void>((resolve) => {
+            image.addEventListener("load", () => resolve(), { once: true });
+            image.addEventListener("error", () => resolve(), { once: true });
+          }),
+      ),
+    ),
+    new Promise<void>((resolve) => setTimeout(resolve, timeoutMs)),
+  ]);
 }
 
 export function skipNextScrollRestore(): void {

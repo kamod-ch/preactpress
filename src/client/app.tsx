@@ -10,6 +10,7 @@ import {
   consumeScrollRestoreOnPopstate,
   restoreScrollPositionAfterLayout,
   saveScrollPositionBeforeNavigation,
+  scrollToTopAfterLayout,
   setupScrollRestoration,
 } from "../shared/scrollRestoration.js";
 import { getCachedPage, loadPage, prefetchPage, seedPage } from "./loadPage.js";
@@ -62,6 +63,9 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
   const [currentRoute, setCurrentRoute] = useState(() => normalizeRoute(routePath));
   const [page, setPage] = useState<PageView>(() => initialPage ?? loadingPage(routePath));
   const pendingScrollRestore = useRef(false);
+  const pendingScrollTop = useRef(false);
+  const [scrollRestoreNonce, setScrollRestoreNonce] = useState(0);
+  const [scrollTopNonce, setScrollTopNonce] = useState(0);
   const availableRoutes = new Set(routes);
   const activeLocale = localeFromRoute(currentRoute, i18n);
   const activeSite = siteForRoute(site, currentRoute, i18n);
@@ -81,7 +85,10 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
           setPage(loaded);
           if (pendingScrollRestore.current) {
             pendingScrollRestore.current = false;
-            restoreScrollPositionAfterLayout();
+            setScrollRestoreNonce((nonce) => nonce + 1);
+          } else if (pendingScrollTop.current) {
+            pendingScrollTop.current = false;
+            setScrollTopNonce((nonce) => nonce + 1);
           }
         }
       })
@@ -95,12 +102,29 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
             meta: {},
             headings: [],
           });
+          if (pendingScrollRestore.current) {
+            pendingScrollRestore.current = false;
+            setScrollRestoreNonce((nonce) => nonce + 1);
+          } else if (pendingScrollTop.current) {
+            pendingScrollTop.current = false;
+            setScrollTopNonce((nonce) => nonce + 1);
+          }
         }
       });
     return () => {
       cancelled = true;
     };
   }, [activeSite.description, currentRoute]);
+
+  useEffect(() => {
+    if (scrollRestoreNonce === 0) return;
+    void restoreScrollPositionAfterLayout();
+  }, [scrollRestoreNonce]);
+
+  useEffect(() => {
+    if (scrollTopNonce === 0) return;
+    void scrollToTopAfterLayout();
+  }, [scrollTopNonce]);
 
   useEffect(() => {
     const prefetch = (route: string) => prefetchPage(route, site.base);
@@ -138,9 +162,10 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
       }
       event.preventDefault();
       saveScrollPositionBeforeNavigation();
+      pendingScrollTop.current = true;
       window.history.pushState({}, "", url);
       setCurrentRoute(route);
-      window.scrollTo({ top: 0, behavior: "auto" });
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     };
     const onMouseEnter = (event: MouseEvent) => {
       const link = anchorFromEvent(event);
@@ -162,7 +187,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
 
   useEffect(() => {
     if (currentRoute !== normalizeRoute(routePath)) {
-      document.getElementById("content")?.focus();
+      document.getElementById("content")?.focus({ preventScroll: true });
     }
   }, [currentRoute, routePath]);
 
