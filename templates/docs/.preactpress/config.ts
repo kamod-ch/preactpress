@@ -77,6 +77,7 @@ export default defineConfig({
             items: [
               { text: "Markdown examples", link: "/markdown-examples" },
               { text: "Interactive MDX", link: "/interactive" },
+              { text: "Mermaid diagrams", link: "/examples/mermaid" },
               { text: "Algolia DocSearch", link: "/examples/algolia-docsearch" },
               { text: "Content loader", link: "/examples/content-loader" },
               { text: "Dynamic routes", link: "/examples/dynamic-routes" },

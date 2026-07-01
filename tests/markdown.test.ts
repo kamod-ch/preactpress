@@ -89,6 +89,18 @@ Expandable content here.
     expect(page.html).toContain("Be careful");
   });
 
+  it("renders mermaid fences as client-renderable diagram blocks", async () => {
+    const page = await renderMarkdown(`\`\`\`mermaid
+graph TD
+  A[Markdown] --> B[PreactPress]
+\`\`\``);
+
+    expect(page.html).toContain('class="pp-mermaid"');
+    expect(page.html).toContain("graph TD");
+    expect(page.html).toContain("A[Markdown] --&gt; B[PreactPress]");
+    expect(page.html).not.toContain('class="pp-code-block"');
+  });
+
   it("highlights code lines from fence meta and inline notation", async () => {
     const metaPage = await renderMarkdown(`\`\`\`js{2}
 const one = 1

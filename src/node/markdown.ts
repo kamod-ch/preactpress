@@ -145,6 +145,11 @@ function codeBlockContainer(preHtml: string, langRaw: string): string {
 
 function highlightFenceSync(hi: Highlighter, langRaw: string, code: string, metaRaw = ""): string {
   const lang = resolveShikiLang(langRaw);
+  if (lang === "mermaid") {
+    const source = code.trim();
+    return `<div class="pp-mermaid" data-mermaid-source="${escapeAttr(source)}">${escapeHtml(source)}</div>`;
+  }
+
   const displayCode = code.endsWith("\n") ? code : `${code}\n`;
   try {
     const preHtml = hi.codeToHtml(displayCode, {

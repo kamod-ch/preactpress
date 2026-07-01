@@ -759,6 +759,27 @@ body::selection {
   margin: 16px 0;
 }
 
+.pp-doc-content .pp-mermaid {
+  margin: 1.25rem 0;
+  padding: 1.25rem;
+  overflow: auto;
+  border: 1px solid color-mix(in srgb, var(--pp-border) 82%, transparent);
+  border-radius: 14px;
+  background: var(--pp-code-bg);
+  color: var(--pp-code-text);
+  text-align: center;
+}
+
+.pp-doc-content .pp-mermaid[data-mermaid-error="true"] {
+  text-align: left;
+  white-space: pre;
+}
+
+.pp-doc-content .pp-mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
 .pp-doc-content .pp-code-block {
   position: relative;
   margin: 1.25rem 0;

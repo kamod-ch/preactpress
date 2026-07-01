@@ -7,7 +7,7 @@ Use `.md` for content that does not need browser-side components. Use `.mdx` whe
 
 ## Markdown
 
-Markdown pages support frontmatter, heading anchors, syntax highlighting, tables, containers, GFM alerts, code groups, file includes, snippet imports, emoji, optional MathJax, and `[[toc]]`.
+Markdown pages support frontmatter, heading anchors, syntax highlighting, Mermaid diagrams, tables, containers, GFM alerts, code groups, file includes, snippet imports, emoji, optional MathJax, and `[[toc]]`.
 
 ```md
 ---

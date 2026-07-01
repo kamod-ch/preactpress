@@ -23,6 +23,16 @@ export function greet(name: string) {
 
 Inline code like `themeConfig.outline` uses the same theme tokens as code blocks.
 
+## Mermaid diagrams
+
+Use a `mermaid` fenced code block to render diagrams in Markdown and MDX pages:
+
+```mermaid
+graph TD
+  A[Markdown] --> B[PreactPress]
+  B --> C[Static HTML]
+```
+
 ## Snippet import
 
 Reuse source files instead of duplicating code:

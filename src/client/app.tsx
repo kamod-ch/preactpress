@@ -14,6 +14,7 @@ import {
   setupScrollRestoration,
 } from "../shared/scrollRestoration.js";
 import { getCachedPage, loadPage, prefetchPage, seedPage } from "./loadPage.js";
+import { renderMermaidDiagrams } from "./mermaid.js";
 import { setupViewportPrefetch } from "./prefetchLinks.js";
 import {
   localeFromRoute,
@@ -184,6 +185,10 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
       document.removeEventListener("mouseenter", onMouseEnter, true);
     };
   }, [currentRoute, mpa]);
+
+  useEffect(() => {
+    void renderMermaidDiagrams();
+  }, [currentRoute, page]);
 
   useEffect(() => {
     if (currentRoute !== normalizeRoute(routePath)) {
