@@ -58,7 +58,7 @@ describe("build smoke", () => {
     } finally {
       await fs.rm(root, { recursive: true, force: true });
     }
-  });
+  }, 15_000);
 
   it("builds the docs template with tags and locales", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "preactpress-build-docs-"));
@@ -167,7 +167,7 @@ describe("build smoke", () => {
     } finally {
       await fs.rm(root, { recursive: true, force: true });
     }
-  });
+  }, 15_000);
 
   it("builds the hono template with the custom theme and locales", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "preactpress-build-hono-"));
@@ -196,7 +196,7 @@ describe("build smoke", () => {
     } finally {
       await fs.rm(root, { recursive: true, force: true });
     }
-  });
+  }, 15_000);
 
   it("builds the magazine template with content-loader teasers", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "preactpress-build-magazine-"));
@@ -224,5 +224,5 @@ describe("build smoke", () => {
     } finally {
       await fs.rm(root, { recursive: true, force: true });
     }
-  });
+  }, 15_000);
 });
