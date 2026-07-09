@@ -216,4 +216,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for package development and [ROADMAP.md
 
 ## License
 
-MIT.
+Built by Klaus Zahiragic | Kamod GmbH
+
+[Website](https://www.kamod.ch) ·
+[LinkedIn](https://www.linkedin.com/in/klauszahiragic/)
