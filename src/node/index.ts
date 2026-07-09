@@ -10,6 +10,7 @@ export { preactPressPlugin, mdFileToRoute, listMarkdownRoutes } from "./plugin.j
 export type {
   BuildConfig,
   BuildEndContext,
+  FaviconConfig,
   HeadTag,
   SiteConfig,
   TransformHtmlContext,

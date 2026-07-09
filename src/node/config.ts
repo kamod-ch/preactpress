@@ -4,7 +4,7 @@ import { createLogger, loadConfigFromFile, normalizePath, type ConfigEnv } from 
 import type { SiteConfig, UserConfig } from "./siteConfig.js";
 import { resolveConfigDir, resolveConfigPath } from "./paths.js";
 import { DEFAULT_THEME_LAYOUT, PACKAGE_ROOT } from "./packageRoot.js";
-import { defaultFaviconHead, hasFaviconHead } from "./favicon.js";
+import { resolveFaviconHead } from "./favicon.js";
 import { resolveLocales } from "../shared/locale.js";
 import { ensurePreactpressLinked } from "./init.js";
 
@@ -101,6 +101,8 @@ export async function resolveConfig(
   const themePath = user.theme ?? DEFAULT_THEME_LAYOUT;
   const theme = resolveThemeLayout(root, configDir, themePath);
 
+  const userHead = user.head ?? [];
+
   const baseConfig: SiteConfig = {
     root,
     srcDir,
@@ -118,9 +120,11 @@ export async function resolveConfig(
     themeConfig: user.themeConfig ?? {},
     i18n: resolveLocales(user.locales, site, user.themeConfig ?? {}),
     markdown,
+    favicon: user.favicon,
+    userHead,
     head: [
-      ...(hasFaviconHead(user.head ?? []) ? [] : defaultFaviconHead(site.base)),
-      ...(user.head ?? []),
+      ...resolveFaviconHead({ base: site.base, favicon: user.favicon, userHead }),
+      ...userHead,
     ],
     transformHead: user.transformHead,
     transformPageData: user.transformPageData,
@@ -144,14 +148,6 @@ export function normalizeBase(base: string): string {
   return base;
 }
 
-const DEFAULT_FAVICON_FILES = new Set(["favicon.svg", "favicon.png", "favicon-32.png"]);
-
-function isDefaultFaviconHeadTag(tag: import("./siteConfig.js").HeadTag): boolean {
-  if (tag[0] !== "link" || typeof tag[1].href !== "string") return false;
-  const name = path.posix.basename(tag[1].href);
-  return DEFAULT_FAVICON_FILES.has(name);
-}
-
 /** Apply a CLI or runtime base override across site, locales, and default favicon head tags. */
 export function applySiteBaseOverride(config: SiteConfig, base: string): void {
   const normalized = normalizeBase(base);
@@ -161,8 +157,10 @@ export function applySiteBaseOverride(config: SiteConfig, base: string): void {
       locale.site.base = normalized;
     }
   }
-  const userHead = config.head.filter((tag) => !isDefaultFaviconHeadTag(tag));
-  config.head = [...(hasFaviconHead(userHead) ? [] : defaultFaviconHead(normalized)), ...userHead];
+  config.head = [
+    ...resolveFaviconHead({ base: normalized, favicon: config.favicon, userHead: config.userHead }),
+    ...config.userHead,
+  ];
 }
 
 function normalizeSiteUrl(url: string): string {

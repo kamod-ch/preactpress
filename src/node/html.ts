@@ -104,6 +104,14 @@ export function renderStylesheetLinks(hrefs: string[]): string {
   return hrefs.map((href) => `<link rel="stylesheet" href="${escapeHtml(href)}">`).join("\n    ");
 }
 
+function removeFaviconLinks(head: ReturnType<typeof parseHtml>): void {
+  head
+    .querySelectorAll(
+      'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"], link[rel="mask-icon"], link[rel="manifest"]',
+    )
+    .forEach((el) => el.remove());
+}
+
 export async function collectHeadTags(opts: {
   site: SiteConfig;
   route: string;
@@ -316,6 +324,7 @@ export async function injectDevPageDocument(
     if (titleEl) titleEl.set_content(escapeHtml(title));
     else head.insertAdjacentHTML("beforeend", `    <title>${escapeHtml(title)}</title>\n`);
     head.querySelectorAll('meta[name="description"]').forEach((el) => el.remove());
+    removeFaviconLinks(head);
     if (headInject) head.insertAdjacentHTML("beforeend", `    ${headInject}\n`);
   }
 

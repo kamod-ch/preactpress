@@ -119,6 +119,39 @@ export default defineConfig(async () => ({
     });
   });
 
+  it("resolves favicon convenience config", async () => {
+    const root = await makeSite(`export default {
+      site: { title: 'Docs', base: 'docs/' },
+      favicon: { svg: '/brand/favicon.svg', png32: '/brand/favicon-32.png', apple: 'https://cdn.example/apple.png' }
+    }`);
+
+    const config = await resolveConfig(root);
+    expect(config.head).toEqual([
+      ["link", { rel: "icon", href: "/docs/brand/favicon.svg", type: "image/svg+xml" }],
+      [
+        "link",
+        {
+          rel: "icon",
+          href: "/docs/brand/favicon-32.png",
+          type: "image/png",
+          sizes: "32x32",
+        },
+      ],
+      ["link", { rel: "apple-touch-icon", href: "https://cdn.example/apple.png" }],
+    ]);
+  });
+
+  it("lets explicit head favicons override default and convenience favicons", async () => {
+    const root = await makeSite(`export default {
+      site: { title: 'Docs', base: 'docs/' },
+      favicon: '/brand/favicon.svg',
+      head: [['link', { rel: 'icon', href: '/custom.ico' }]]
+    }`);
+
+    const config = await resolveConfig(root);
+    expect(config.head).toEqual([["link", { rel: "icon", href: "/custom.ico" }]]);
+  });
+
   it("applies CLI base overrides to locales and default favicon head tags", async () => {
     const root = await makeSite(`export default {
       site: { title: 'Docs', description: 'English docs' },

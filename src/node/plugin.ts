@@ -253,8 +253,9 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
     enforce: "pre",
     transformIndexHtml(html) {
       if (!html.includes("</head>")) return html;
+      const faviconTags = faviconHtmlTags(site.head);
       const tags = [
-        faviconHtmlTags(site.site.base),
+        ...(faviconTags ? [faviconTags] : []),
         `<script src="${site.site.base === "/" ? "" : site.site.base}/${PREACTPRESS_THEME_SCRIPT}"></script>`,
       ];
       const inject =
@@ -266,7 +267,9 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
     },
     configureServer(server) {
       server.middlewares.use(createDevSsrMiddleware(site, server));
-      server.middlewares.use(createFaviconMiddleware(site.site.base));
+      server.middlewares.use(
+        createFaviconMiddleware(site.site.base, path.join(site.srcDir, "public")),
+      );
       server.middlewares.use((req, res, next) => {
         const pathname = req.url?.split("?")[0] ?? "";
         const base = site.site.base === "/" ? "" : site.site.base;

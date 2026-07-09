@@ -105,6 +105,25 @@ export type HeadTag =
   | ["link", Record<string, string | boolean | undefined>]
   | ["script", Record<string, string | boolean | undefined>, string?];
 
+export interface FaviconConfig {
+  /** SVG favicon URL. */
+  svg?: string;
+  /** PNG favicon URL, usually a large fallback icon. */
+  png?: string;
+  /** 32×32 PNG favicon URL. */
+  png32?: string;
+  /** ICO favicon URL. */
+  ico?: string;
+  /** Apple touch icon URL. */
+  apple?: string;
+  /** Web app manifest URL. */
+  manifest?: string;
+  /** Safari pinned tab mask icon URL. */
+  maskIcon?: string;
+  /** Safari pinned tab mask icon color. */
+  maskIconColor?: string;
+}
+
 export interface BuildConfig {
   sitemap?: boolean;
   robots?: boolean;
@@ -178,6 +197,11 @@ export interface UserConfig {
   themeConfig?: ThemeConfig;
   locales?: Record<string, LocaleConfig>;
   markdown?: MarkdownConfig;
+  /**
+   * Convenience favicon config. Use a string for one icon, an object for common variants,
+   * `false` to disable built-in favicon tags, or `head` for full manual control.
+   */
+  favicon?: string | FaviconConfig | false;
   head?: HeadTag[];
   transformHead?: (ctx: {
     route: string;
@@ -216,6 +240,8 @@ export interface SiteConfig {
   themeConfig: ThemeConfig;
   i18n?: ResolvedI18n;
   markdown: Required<MarkdownConfig>;
+  favicon?: UserConfig["favicon"];
+  userHead: HeadTag[];
   head: HeadTag[];
   transformHead?: UserConfig["transformHead"];
   transformPageData?: UserConfig["transformPageData"];

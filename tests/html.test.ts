@@ -45,6 +45,26 @@ describe("html head rendering", () => {
     expect(out).toContain('<div id="app"><p>Hi</p></div>');
   });
 
+  it("replaces template favicon links in dev html with configured head favicons", async () => {
+    const out = await injectDevPageDocument(
+      '<!doctype html><html><head><title>Old</title><link rel="icon" href="/favicon.svg"><link rel="apple-touch-icon" href="/favicon.png"></head><body><div id="app"></div></body></html>',
+      {
+        site: {
+          ...site,
+          head: [["link", { rel: "icon", href: "/brand/favicon.svg", type: "image/svg+xml" }]],
+        },
+        body: "<p>Hi</p>",
+        title: "New",
+        description: "Desc",
+        route: "/",
+      },
+    );
+
+    expect(out).not.toContain('href="/favicon.svg"');
+    expect(out).not.toContain('href="/favicon.png"');
+    expect(out).toContain('href="/brand/favicon.svg"');
+  });
+
   it("merges per-page head tags from frontmatter", async () => {
     const head = await collectHeadTags({
       site,

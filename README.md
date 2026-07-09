@@ -182,6 +182,22 @@ export default {
 
 Every Markdown or MDX file below `srcDir` becomes a route unless it matches `srcExclude`.
 
+## Favicons
+
+By default PreactPress serves built-in `favicon.svg`, `favicon-32.png`, and `favicon.png` files. To override them without config, place files with the same names in `src/public/`. For custom names, use either the convenience `favicon` option:
+
+```ts
+export default {
+  favicon: {
+    svg: "/brand/favicon.svg",
+    png32: "/brand/favicon-32.png",
+    apple: "/brand/apple-touch-icon.png",
+  },
+};
+```
+
+or provide explicit `head` link tags for full control. Explicit favicon tags in `head` disable the built-in favicon tags.
+
 ## Documentation
 
 The canonical, runnable documentation lives in [`templates/docs`](./templates/docs). It covers authoring, routing, i18n, the default theme, all configuration options, CLI validation, deployment, hooks, data loaders, dynamic routes, and custom themes.
