@@ -12,6 +12,8 @@ export type {
   BuildEndContext,
   FaviconConfig,
   HeadTag,
+  PageReadyConfig,
+  ResolvedPageReadyConfig,
   SiteConfig,
   TransformHtmlContext,
   TransformPageDataContext,

@@ -1,5 +1,5 @@
 import type { UserConfig } from "./siteConfig.js";
-export type { FaviconConfig, HeadTag, UserConfig } from "./siteConfig.js";
+export type { FaviconConfig, HeadTag, PageReadyConfig, UserConfig } from "./siteConfig.js";
 
 export type UserConfigExport = UserConfig | (() => UserConfig | Promise<UserConfig>);
 

@@ -130,6 +130,37 @@ export interface BuildConfig {
   feed?: boolean | { limit?: number };
 }
 
+/**
+ * Controls the built-in page-ready preloader injected into HTML documents.
+ * Set to `false` to disable. Omit for the default spinner overlay.
+ */
+export interface PageReadyConfig {
+  /**
+   * Custom preloader markup. Provide a full element with `id="pp-preloader"`,
+   * or inner HTML only (wrapped automatically in the default overlay shell).
+   */
+  preloader?: string;
+  /** Milliseconds before the page is revealed regardless of CSS state. Default `5000`. */
+  fallbackMs?: number;
+  /**
+   * CSS custom property that must be set on `:root` before reveal.
+   * Use `false` to skip the probe (stylesheet links only). Default `--pp-bg`.
+   */
+  probe?: string | false;
+  /** Head stylesheet count must be stable for this many frames. Default `4`. */
+  stableFrames?: number;
+  /** Maximum animation frames to wait before reveal. Default `300`. */
+  maxFrames?: number;
+}
+
+export interface ResolvedPageReadyConfig {
+  preloader: string;
+  fallbackMs: number;
+  probe: string | false;
+  stableFrames: number;
+  maxFrames: number;
+}
+
 export type IgnoreDeadLinks =
   | boolean
   | string[]
@@ -219,6 +250,8 @@ export interface UserConfig {
   transformHtml?: (html: string, ctx: TransformHtmlContext) => string | Promise<string>;
   /** Called once after a production build finishes. */
   buildEnd?: (ctx: BuildEndContext) => void | Promise<void>;
+  /** Built-in preloader while CSS loads. `false` disables it. */
+  pageReady?: false | PageReadyConfig;
   build?: BuildConfig;
   vite?: import("vite").UserConfig;
 }
@@ -247,6 +280,7 @@ export interface SiteConfig {
   transformPageData?: UserConfig["transformPageData"];
   transformHtml?: UserConfig["transformHtml"];
   buildEnd?: UserConfig["buildEnd"];
+  pageReady: ResolvedPageReadyConfig | false;
   build: Required<BuildConfig>;
   vite: import("vite").UserConfig;
   logger: Logger;

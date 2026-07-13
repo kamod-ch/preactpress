@@ -6,6 +6,7 @@ import { canonicalUrl, publicUrl } from "../shared/url.js";
 import { escapeAttr, escapeHtml } from "../shared/escapeHtml.js";
 import type { PageView } from "../client/types.js";
 import { localizedRouteForLocale, localeFromRoute, siteForRoute } from "../shared/locale.js";
+import { injectPageReadyShell, renderStylesheetLinks as renderSharedStylesheetLinks } from "../shared/pageReady.js";
 
 export { publicUrl } from "../shared/url.js";
 export { escapeAttr, escapeHtml } from "../shared/escapeHtml.js";
@@ -16,6 +17,11 @@ export function absoluteUrl(site: SiteConfig, route: string): string {
 
 export function renderHeadTag(tag: HeadTag): string {
   const [name, attrs, content] = tag;
+  if (name === "link" && attrs.rel === "stylesheet" && typeof attrs.href === "string") {
+    return renderSharedStylesheetLinks([attrs.href], {
+      crossorigin: attrs.crossorigin === true || attrs.crossorigin === "anonymous",
+    });
+  }
   const renderedAttrs = Object.entries(attrs)
     .filter(([, value]) => value != null && value !== false)
     .map(([key, value]) => (value === true ? key : `${key}="${escapeAttr(String(value))}"`))
@@ -101,7 +107,7 @@ function buildAlternateHeadTags(site: SiteConfig, route: string): HeadTag[] {
 }
 
 export function renderStylesheetLinks(hrefs: string[]): string {
-  return hrefs.map((href) => `<link rel="stylesheet" href="${escapeHtml(href)}">`).join("\n    ");
+  return renderSharedStylesheetLinks(hrefs);
 }
 
 function removeFaviconLinks(head: ReturnType<typeof parseHtml>): void {
@@ -205,7 +211,8 @@ export async function pageHtml(opts: {
     ? ` data-preactpress-mpa="${pageData?.kind === "mdx" ? "mdx" : "markdown"}"`
     : "";
 
-  return `<!DOCTYPE html>
+  return injectPageReadyShell(
+    `<!DOCTYPE html>
 <html lang="${escapeAttr(activeSite.lang)}"${mpaAttr}>
   <head>
     <meta charset="UTF-8">
@@ -220,16 +227,16 @@ export async function pageHtml(opts: {
     <div id="app">${body}</div>${clientScript}
   </body>
 </html>
-`;
+`,
+    site.pageReady,
+  );
 }
 
 function renderProductionStylesheetLinks(mainCss: string[], base: string): string {
-  return mainCss
-    .map((c) => {
-      const href = publicUrl(base, `${c}`);
-      return `<link rel="stylesheet" crossorigin href="${escapeHtml(href)}">`;
-    })
-    .join("\n    ");
+  return renderSharedStylesheetLinks(
+    mainCss.map((c) => publicUrl(base, `${c}`)),
+    { crossorigin: true },
+  );
 }
 
 function resolveHeadImage(site: SiteConfig, image: string | undefined): string | undefined {
@@ -308,7 +315,7 @@ export async function injectDevPageDocument(
   });
   const devCssTags =
     devStylesheets?.length && !devStylesheets.every((href) => html.includes(href))
-      ? renderStylesheetLinks(devStylesheets.filter((href) => !html.includes(href)))
+      ? renderSharedStylesheetLinks(devStylesheets.filter((href) => !html.includes(href)))
       : "";
   const activeSite = siteForRoute(site.site, route, site.i18n);
   const lang = escapeAttr(activeSite.lang);
@@ -340,5 +347,5 @@ export async function injectDevPageDocument(
     app.set_content(body);
   }
 
-  return doc.toString();
+  return injectPageReadyShell(doc.toString(), site.pageReady);
 }

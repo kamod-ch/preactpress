@@ -34,6 +34,29 @@ export default defineConfig({
 | `head`            | Global meta, link, and script tuples                               |
 | `vite`            | User Vite configuration merged into the internal config            |
 | `build`           | Sitemap, robots, and feed output                                   |
+| `pageReady`       | Built-in loading overlay while CSS becomes ready; `false` disables |
+
+## Page-ready preloader
+
+PreactPress injects a small inline preloader into every HTML document so the first paint does not flash unstyled content. Customize or disable it in config instead of editing HTML with `transformHtml`.
+
+```ts
+export default defineConfig({
+  // Disable the built-in preloader entirely
+  pageReady: false,
+
+  // Or customize the overlay
+  pageReady: {
+    preloader: '<img src="/brand-mark.svg" alt="" width="48" height="48" />',
+    fallbackMs: 3000,
+    probe: "--pp-bg", // CSS variable that must be set before reveal
+  },
+});
+```
+
+`preloader` accepts either a full element with `id="pp-preloader"` or inner HTML only (wrapped automatically). The built-in spinner follows the default theme: it reacts to `data-theme`, the `dark` class, and `prefers-color-scheme`. Custom markup needs its own light/dark styles unless you reuse the `pp-preloader-spinner` class.
+
+`probe: false` skips the CSS-variable check and waits for stylesheet links only.
 
 ## Site metadata
 

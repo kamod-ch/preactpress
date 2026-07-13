@@ -152,6 +152,34 @@ export default defineConfig(async () => ({
     expect(config.head).toEqual([["link", { rel: "icon", href: "/custom.ico" }]]);
   });
 
+  it("resolves pageReady defaults and custom options", async () => {
+    const root = await makeSite(`export default {
+      site: { title: 'Docs', description: 'Docs' },
+      pageReady: {
+        preloader: '<div id="pp-preloader">Loading</div>',
+        fallbackMs: 1200,
+        probe: false
+      }
+    }`);
+    const config = await resolveConfig(root);
+    expect(config.pageReady).toMatchObject({
+      preloader: '<div id="pp-preloader">Loading</div>',
+      fallbackMs: 1200,
+      probe: false,
+      stableFrames: 4,
+      maxFrames: 300,
+    });
+  });
+
+  it("disables pageReady when false", async () => {
+    const root = await makeSite(`export default {
+      site: { title: 'Docs', description: 'Docs' },
+      pageReady: false
+    }`);
+    const config = await resolveConfig(root);
+    expect(config.pageReady).toBe(false);
+  });
+
   it("applies CLI base overrides to locales and default favicon head tags", async () => {
     const root = await makeSite(`export default {
       site: { title: 'Docs', description: 'English docs' },

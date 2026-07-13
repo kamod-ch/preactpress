@@ -21,6 +21,7 @@ export default defineConfig(async () => ({
 - `transformHead(ctx)` returns additional head tags.
 - `transformPageData(page, ctx)` changes page data before rendering.
 - `transformHtml(html, ctx)` changes the final HTML document.
+- `pageReady` customizes or disables the built-in loading overlay (see [Configuration](/guide/configuration#page-ready-preloader)).
 - `buildEnd(ctx)` runs after production output is complete.
 
 Hooks may be asynchronous. Keep output deterministic so incremental builds and CI remain reproducible.

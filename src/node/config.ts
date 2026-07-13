@@ -2,6 +2,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { createLogger, loadConfigFromFile, normalizePath, type ConfigEnv } from "vite";
 import type { SiteConfig, UserConfig } from "./siteConfig.js";
+import { resolvePageReadyConfig } from "../shared/pageReady.js";
 import { resolveConfigDir, resolveConfigPath } from "./paths.js";
 import { DEFAULT_THEME_LAYOUT, PACKAGE_ROOT } from "./packageRoot.js";
 import { resolveFaviconHead } from "./favicon.js";
@@ -130,6 +131,7 @@ export async function resolveConfig(
     transformPageData: user.transformPageData,
     transformHtml: user.transformHtml,
     buildEnd: user.buildEnd,
+    pageReady: resolvePageReadyConfig(user.pageReady),
     build: {
       sitemap: user.build?.sitemap ?? true,
       robots: user.build?.robots ?? true,
