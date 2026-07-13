@@ -6,7 +6,10 @@ import { canonicalUrl, publicUrl } from "../shared/url.js";
 import { escapeAttr, escapeHtml } from "../shared/escapeHtml.js";
 import type { PageView } from "../client/types.js";
 import { localizedRouteForLocale, localeFromRoute, siteForRoute } from "../shared/locale.js";
-import { injectPageReadyShell, renderStylesheetLinks as renderSharedStylesheetLinks } from "../shared/pageReady.js";
+import {
+  injectPageReadyShell,
+  renderStylesheetLinks as renderSharedStylesheetLinks,
+} from "../shared/pageReady.js";
 
 export { publicUrl } from "../shared/url.js";
 export { escapeAttr, escapeHtml } from "../shared/escapeHtml.js";

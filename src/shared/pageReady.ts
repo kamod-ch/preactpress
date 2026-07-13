@@ -215,7 +215,10 @@ export function renderStylesheetLink(href: string, opts: { crossorigin?: boolean
   return `<link rel="stylesheet" href="${safeHref}"${cross}>`;
 }
 
-export function renderStylesheetLinks(hrefs: string[], opts: { crossorigin?: boolean } = {}): string {
+export function renderStylesheetLinks(
+  hrefs: string[],
+  opts: { crossorigin?: boolean } = {},
+): string {
   return hrefs.map((href) => renderStylesheetLink(href, opts)).join("\n    ");
 }
 

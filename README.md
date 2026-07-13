@@ -101,12 +101,12 @@ Pair with **[Kamod UI](https://ui.kamod.ch/)** for Preact + Tailwind components 
 
 ## Starter templates
 
-| Template   | Use case                                              | Scaffold                                                         |
-| ---------- | ----------------------------------------------------- | ---------------------------------------------------------------- |
-| `default`  | Minimal / quick start — smallest docs site            | `pnpm dlx @kamod-ch/preactpress init my-site`                    |
-| `docs`     | Full documentation starter (canonical reference)      | `pnpm dlx @kamod-ch/preactpress init my-docs --template docs`    |
-| `magazine` | Custom editorial theme with article teasers and tags  | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine` |
-| `hono`     | Product landing + docs with a custom Preact theme     | `pnpm dlx @kamod-ch/preactpress init my-site --template hono`    |
+| Template   | Use case                                             | Scaffold                                                         |
+| ---------- | ---------------------------------------------------- | ---------------------------------------------------------------- |
+| `default`  | Minimal / quick start — smallest docs site           | `pnpm dlx @kamod-ch/preactpress init my-site`                    |
+| `docs`     | Full documentation starter (canonical reference)     | `pnpm dlx @kamod-ch/preactpress init my-docs --template docs`    |
+| `magazine` | Custom editorial theme with article teasers and tags | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine` |
+| `hono`     | Product landing + docs with a custom Preact theme    | `pnpm dlx @kamod-ch/preactpress init my-site --template hono`    |
 
 Browse the [live demo](https://kamod-ch.github.io/preactpress/) for the `docs` template, compare starters in the [template gallery](https://kamod-ch.github.io/preactpress/guide/templates/), or run `pnpm run dev:docs` from the package root while contributing.
 

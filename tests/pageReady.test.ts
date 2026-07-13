@@ -42,8 +42,7 @@ describe("resolvePageReadyConfig", () => {
   });
 
   it("passes through a full preloader element", () => {
-    const custom =
-      '<div id="pp-preloader" style="position:fixed;inset:0">Brand</div>';
+    const custom = '<div id="pp-preloader" style="position:fixed;inset:0">Brand</div>';
     const config = resolvePageReadyConfig({ preloader: custom });
     expect(config && config.preloader).toBe(custom);
   });
@@ -107,7 +106,7 @@ describe("injectPageReadyShell", () => {
     const out = injectPageReadyShell(html);
 
     expect(out).toContain("--pp-preloader-bg");
-    expect(out).toContain(":root[data-theme=\"dark\"]");
+    expect(out).toContain(':root[data-theme="dark"]');
     expect(out).toContain("html.dark");
     expect(out).toContain("prefers-color-scheme: dark");
     expect(out).toContain('class="pp-preloader-spinner"');

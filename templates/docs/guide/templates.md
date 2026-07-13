@@ -11,12 +11,12 @@ See the [template gallery on the home page](/#templates-title) for screenshots a
 
 ## Which template should I use?
 
-| Template | CLI name | Theme | Best for | Notable extras |
-| -------- | -------- | ----- | -------- | -------------- |
-| Documentation | `docs` | Default docs theme | Full product or library docs (this site) | Guides, examples, search, EN/DE locales |
-| Product + Docs | `hono` | Custom Preact theme | Product marketing page plus a docs area | Landing layout, focused guide subset, i18n demo |
-| Magazine | `magazine` | Custom editorial theme | Articles, tags, content-heavy sites | Teaser grid, tag pages, content loader |
-| Minimal | `default` (omit `--template`) | Default docs theme | Trying PreactPress quickly | Smallest file tree |
+| Template       | CLI name                      | Theme                  | Best for                                 | Notable extras                                  |
+| -------------- | ----------------------------- | ---------------------- | ---------------------------------------- | ----------------------------------------------- |
+| Documentation  | `docs`                        | Default docs theme     | Full product or library docs (this site) | Guides, examples, search, EN/DE locales         |
+| Product + Docs | `hono`                        | Custom Preact theme    | Product marketing page plus a docs area  | Landing layout, focused guide subset, i18n demo |
+| Magazine       | `magazine`                    | Custom editorial theme | Articles, tags, content-heavy sites      | Teaser grid, tag pages, content loader          |
+| Minimal        | `default` (omit `--template`) | Default docs theme     | Trying PreactPress quickly               | Smallest file tree                              |
 
 ## Scaffold commands
 
