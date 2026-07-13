@@ -50,6 +50,7 @@ export default defineConfig({
               { text: "Overview", link: "/" },
               { text: "What is PreactPress?", link: "/guide/what-is-preactpress" },
               { text: "Getting started", link: "/guide/getting-started" },
+              { text: "Starter templates", link: "/guide/templates" },
               { text: "First five minutes", link: "/guide/first-five-minutes" },
             ],
           },

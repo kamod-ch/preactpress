@@ -16,6 +16,8 @@ Run commands from the site root or pass a root path as the final argument.
 | `preactpress build [root]`                   | Emit static production files                        |
 | `preactpress preview [root]`                 | Serve `outDir` locally                              |
 
+See [Starter templates](/guide/templates) for a comparison of the four official init starters.
+
 ## Recommended workflow
 
 ```bash

@@ -678,6 +678,11 @@ a.pp-mkt-panel-label:focus-visible {
   font-size: 1.04rem;
 }
 
+.pp-mkt-section-link {
+  color: var(--pp-accent);
+  font-weight: 650;
+}
+
 .pp-mkt-demo-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr);
@@ -798,10 +803,75 @@ a.pp-mkt-card:focus-visible {
   letter-spacing: 0.08em;
 }
 
+.pp-mkt-section-link {
+  color: var(--pp-accent);
+  font-weight: 650;
+}
+
 .pp-mkt-template {
   display: grid;
-  align-content: space-between;
-  min-height: 250px;
+  grid-template-rows: auto 1fr auto;
+  align-content: stretch;
+  gap: 0;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.pp-mkt-template-preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  background: color-mix(in srgb, var(--pp-code-bg) 70%, var(--pp-bg));
+  border-bottom: 1px solid var(--pp-border);
+}
+
+.pp-mkt-template-body {
+  padding: 18px 22px 0;
+}
+
+.pp-mkt-template-tag {
+  margin: 0 0 8px;
+  color: var(--pp-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pp-mkt-template-highlights {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--pp-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.pp-mkt-template-highlights li {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.pp-mkt-template-highlights li + li {
+  margin-top: 6px;
+}
+
+.pp-mkt-template-highlights li::before {
+  content: "";
+  position: absolute;
+  top: 0.55em;
+  left: 0;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: var(--pp-accent);
+}
+
+.pp-mkt-template .pp-mkt-copyable {
+  margin: 16px 22px 22px;
 }
 
 .pp-mkt-copyable {

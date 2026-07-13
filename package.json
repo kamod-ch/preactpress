@@ -91,6 +91,7 @@
     "sync:template-lockfiles": "node ./scripts/sync-template-lockfiles.mjs",
     "check:template-lockfiles": "node ./scripts/sync-template-lockfiles.mjs --check",
     "dev:templates": "node ./scripts/dev-all-templates.mjs",
+    "capture:template-previews": "node ./scripts/capture-template-previews.mjs",
     "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
   },
   "dependencies": {
@@ -123,6 +124,7 @@
     "@vitest/coverage-v8": "^4.1.9",
     "oxfmt": "^0.54.0",
     "oxlint": "^1.69.0",
+    "sharp": "^0.34.5",
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   },

@@ -44,6 +44,8 @@ Open **http://localhost:5173** to see the starter site.
 > **Note**
 > `preactpress init` copies the built-in starter template and writes `@kamod-ch/preactpress` to `devDependencies`. You do not need to install PreactPress separately before running the initializer.
 
+Not sure which starter to use? Compare the four official options on [Starter templates](/guide/templates).
+
 ## File structure
 
 After initialization, the project looks like this:

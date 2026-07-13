@@ -36,7 +36,7 @@
     "locale": "de",
     "title": "Befehle",
     "description": "PreactPress-CLI für Entwicklung und Produktions-Builds",
-    "excerpt": "Die PreactPress-CLI wird im Site-Root ausgeführt (Ordner mit .preactpress/config.ts ). Entwicklung # pnpm exec preactpress dev Startet Vite mit SSR, Hot…",
+    "excerpt": "Die PreactPress-CLI wird im Site-Root ausgeführt (Ordner mit .preactpress/config.ts ). Entwicklung # bash pnpm exec preactpress dev Startet Vite mit SSR,…",
     "tags": []
   },
   {
@@ -44,7 +44,7 @@
     "locale": "de",
     "title": "Konfiguration",
     "description": "Site-Config, Theme-Optionen und häufige Frontmatter-Felder",
-    "excerpt": "Die Konfiguration liegt in .preactpress/config.ts im Site-Root. Site-Metadaten # export default { site: { title: \"Meine Docs\" , description:…",
+    "excerpt": "Die Konfiguration liegt in .preactpress/config.ts im Site-Root. Site-Metadaten # ts export default { site : { title : \" Meine Docs \" , description : \"…",
     "tags": []
   },
   {
@@ -108,7 +108,7 @@
     "locale": "de",
     "title": "Markdown-Beispiele",
     "description": "Häufige Authoring-Snippets",
-    "excerpt": "Code # export function greet ( name : string ) { return `Hallo, ${ name }!` } Einzelne Zeilen kannst du per Fence-Meta ( {2} ) oder Inline-Notation…",
+    "excerpt": "Code # ts export function greet ( name : string ) { return ` Hallo, ${ name } ! ` } Einzelne Zeilen kannst du per Fence-Meta ( {2} ) oder Inline-Notation…",
     "tags": [
       "markdown"
     ]
@@ -134,7 +134,7 @@
     "locale": "root",
     "title": "Commands",
     "description": "PreactPress CLI reference for local development and production builds",
-    "excerpt": "PreactPress ships a small CLI. Run commands from your site root (where .preactpress/config.ts lives). Development # pnpm exec preactpress dev Starts Vite…",
+    "excerpt": "PreactPress ships a small CLI. Run commands from your site root (where .preactpress/config.ts lives). Development # bash pnpm exec preactpress dev Starts…",
     "tags": []
   },
   {
@@ -142,7 +142,7 @@
     "locale": "root",
     "title": "Configuration",
     "description": "Site config, theme options, and common frontmatter fields",
-    "excerpt": "Configuration lives in .preactpress/config.ts at your site root. Site metadata # export default { site: { title: \"My docs\" , description: \"Short site…",
+    "excerpt": "Configuration lives in .preactpress/config.ts at your site root. Site metadata # ts export default { site : { title : \" My docs \" , description : \" Short…",
     "tags": []
   },
   {
@@ -206,7 +206,7 @@
     "locale": "root",
     "title": "Markdown examples",
     "description": "Common authoring snippets",
-    "excerpt": "Code # export function greet ( name : string ) { return `Hello, ${ name }!` } Highlight a single line with fence meta ( {2} ) or inline notation: export…",
+    "excerpt": "Code # ts export function greet ( name : string ) { return ` Hello, ${ name } ! ` } Highlight a single line with fence meta ( {2} ) or inline notation: ts…",
     "tags": [
       "markdown"
     ]

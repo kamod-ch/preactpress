@@ -1,1 +1,1 @@
-(function(){try{var k="preactpress-theme";var m=localStorage.getItem(k);if(m==='light'||m==='dark')document.documentElement.setAttribute('data-theme',m);}catch(e){}})();
+(function(){try{var k="preactpress-theme";var m=localStorage.getItem(k);var r=document.documentElement;if(m==='light'||m==='dark'){r.setAttribute('data-theme',m);r.classList.toggle('dark',m==='dark');}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){r.classList.add('dark');}}catch(e){}})();
