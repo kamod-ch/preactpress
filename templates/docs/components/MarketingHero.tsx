@@ -12,6 +12,12 @@ const actions = [
   },
 ];
 
+const workflowLabels = [
+  { text: "Markdown", href: "https://www.markdownguide.org/tools/github-pages/" },
+  { text: "MDX", href: "https://mdxjs.com/" },
+  { text: "Preact", href: "https://preactjs.com/" },
+];
+
 export default function MarketingHero() {
   return (
     <section class="pp-mkt-hero" aria-labelledby="preactpress-hero-title">
@@ -36,9 +42,17 @@ export default function MarketingHero() {
         </div>
       </div>
       <div class="pp-mkt-hero-panel" aria-label="PreactPress workflow">
-        <span class="pp-mkt-panel-label">Markdown</span>
-        <span class="pp-mkt-panel-label">MDX</span>
-        <span class="pp-mkt-panel-label">Preact</span>
+        {workflowLabels.map((label) => (
+          <a
+            class="pp-mkt-panel-label"
+            href={label.href}
+            key={label.text}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {label.text}
+          </a>
+        ))}
         <span class="pp-mkt-panel-arrow" aria-hidden="true">
           <svg
             class="pp-mkt-panel-arrow-icon"

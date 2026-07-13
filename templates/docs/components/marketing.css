@@ -162,6 +162,26 @@
   font-weight: 800;
 }
 
+a.pp-mkt-panel-label {
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+a.pp-mkt-panel-label:hover {
+  border-color: var(--pp-accent);
+  color: var(--pp-accent);
+  transform: translateY(-1px);
+}
+
+a.pp-mkt-panel-label:focus-visible {
+  outline: 3px solid var(--pp-focus);
+  outline-offset: 3px;
+}
+
 .pp-mkt-panel-plus,
 .pp-mkt-panel-arrow {
   color: var(--pp-accent);

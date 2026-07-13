@@ -13,14 +13,19 @@ const references = [
     href: "https://ui.kamod.ch/",
   },
   {
+    name: "Kamod Icons",
+    description: "A lightweight, tree-shakeable SVG icon library for Preact apps.",
+    href: "https://github.com/kamod-ch/kamod-icons",
+  },
+  {
     name: "Kamod Hooks",
     description: "A Preact hooks library with documentation built around the same tooling stack.",
     href: "https://github.com/kamod-ch/kamod-hooks",
   },
   {
-    name: "Hono starter template",
-    description: "A product-and-docs starter shipped with PreactPress.",
-    href: "https://github.com/kamod-ch/preactpress/tree/main/templates/hono",
+    name: "Syncding",
+    description: "Secure file sync and snapshot recovery between your devices and servers.",
+    href: "https://www.syncding.com/",
   },
   {
     name: "More Kamod projects",
