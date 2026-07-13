@@ -6,10 +6,12 @@ test.describe("default theme accessibility", () => {
   });
 
   test("skip link focuses main content", async ({ page }) => {
+    await page.waitForFunction(() => document.documentElement.classList.contains("pp-ready"));
+
     const skip = page.locator(".pp-skip-link");
-    await skip.focus();
+    await page.keyboard.press("Tab");
     await expect(skip).toBeFocused();
-    await skip.click();
+    await page.keyboard.press("Enter");
     await expect(page.locator("#content")).toBeFocused();
   });
 
