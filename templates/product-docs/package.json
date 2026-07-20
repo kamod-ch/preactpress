@@ -1,0 +1,15 @@
+{
+  "name": "preactpress-product-docs-starter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "preactpress dev",
+    "check": "preactpress check",
+    "build": "preactpress build",
+    "preview": "preactpress preview"
+  },
+  "devDependencies": {
+    "@kamod-ch/preactpress": "file:../..",
+    "typescript": "^6.0.3"
+  }
+}

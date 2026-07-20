@@ -29,11 +29,24 @@ const VIRTUAL_SITE = "\0virtual:preactpress-site";
 export { mdFileToRoute };
 
 export async function listMarkdownRoutes(site: SiteConfig): Promise<string[]> {
-  const files = (await scanContentFiles(site))
-    .filter((file) => !isDraftPage(readMarkdownMetadata(file.file).meta))
-    .map((file) => file.route);
-  const dynamicRoutes = (await resolveDynamicRoutes(site)).map((entry) => entry.route);
-  const routeSet = new Set([...files, ...dynamicRoutes]);
+  const published = (await scanContentFiles(site)).filter(
+    (file) => !isDraftPage(readMarkdownMetadata(file.file).meta),
+  );
+  const routeToFile = new Map<string, ContentFile>(
+    published.map((file) => [file.route, file]),
+  );
+  for (const entry of await resolveDynamicRoutes(site)) {
+    routeToFile.set(entry.route, {
+      route: entry.route,
+      file: entry.templateFile,
+      kind: entry.kind,
+    });
+  }
+  const rewrites = site.rewrites ?? {};
+  if (Object.keys(rewrites).length > 0) {
+    applyRouteRewrites(routeToFile, rewrites);
+  }
+  const routeSet = new Set(routeToFile.keys());
   const tagRoutes = await listTagIndexRoutes(site, routeSet);
   return [...routeSet, ...tagRoutes].sort();
 }

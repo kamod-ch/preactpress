@@ -3,7 +3,7 @@ import { h } from "preact";
 import CopyableCommand from "./CopyableCommand.tsx";
 
 type TemplateCard = {
-  id: "docs" | "hono" | "magazine" | "default";
+  id: string;
   name: string;
   useCase: string;
   description: string;
@@ -24,9 +24,59 @@ const templates: TemplateCard[] = [
     previewSrc: "/templates/docs.webp",
   },
   {
+    id: "blog",
+    name: "Blog",
+    useCase: "Technical blog",
+    description:
+      "Editorial starter with RSS, tags, authors, reading time, and a content-loader home page.",
+    highlights: ["RSS + sitemap", "Tag + author pages", "Custom editorial theme"],
+    command: "pnpm dlx @kamod-ch/preactpress init my-blog --template blog",
+    previewSrc: "/templates/blog.webp",
+  },
+  {
+    id: "product-docs",
+    name: "Product docs",
+    useCase: "Library / SDK",
+    description:
+      "Product and developer-library documentation with guides, concepts, FAQ, and changelog.",
+    highlights: ["Default docs theme", "Edit on GitHub", "Callouts + code samples"],
+    command: "pnpm dlx @kamod-ch/preactpress init my-product --template product-docs",
+    previewSrc: "/templates/product-docs.webp",
+  },
+  {
+    id: "api-docs",
+    name: "API reference",
+    useCase: "JS/TS API",
+    description:
+      "Scannable API pages with MDX components for signatures, parameters, and type definitions.",
+    highlights: ["ApiSignature components", "Deep-link headings", "Ready for TypeDoc later"],
+    command: "pnpm dlx @kamod-ch/preactpress init my-api --template api-docs",
+    previewSrc: "/templates/api-docs.webp",
+  },
+  {
+    id: "saas-docs",
+    name: "SaaS docs",
+    useCase: "Product + admin",
+    description:
+      "Landing page plus onboarding, billing, roles, integrations, API, and troubleshooting.",
+    highlights: ["Custom product theme", "Step-by-step guides", "Admin role hints"],
+    command: "pnpm dlx @kamod-ch/preactpress init my-saas --template saas-docs",
+    previewSrc: "/templates/saas-docs.webp",
+  },
+  {
+    id: "knowledge-base",
+    name: "Knowledge base",
+    useCase: "Help center",
+    description:
+      "Support-focused help center with search-first home, categories, and contact CTAs.",
+    highlights: ["Search-first UX", "Category hubs", "Separate from dev docs"],
+    command: "pnpm dlx @kamod-ch/preactpress init my-help --template knowledge-base",
+    previewSrc: "/templates/knowledge-base.webp",
+  },
+  {
     id: "hono",
     name: "Product + Docs",
-    useCase: "Product + docs",
+    useCase: "Marketing + docs",
     description:
       "A polished marketing landing page paired with a focused documentation area and custom theme.",
     highlights: ["Custom Preact theme", "Product landing + docs", "Built-in i18n demo"],
@@ -73,7 +123,7 @@ export default function TemplateGallery() {
           </a>
         </p>
       </div>
-      <div class="pp-mkt-card-grid pp-mkt-card-grid-four">
+      <div class="pp-mkt-card-grid pp-mkt-card-grid-starters">
         {templates.map((template) => (
           <article class="pp-mkt-card pp-mkt-template" key={template.id}>
             <img

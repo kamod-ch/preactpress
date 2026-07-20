@@ -5,24 +5,46 @@ description: Compare the built-in PreactPress init templates and choose the righ
 
 # Starter templates
 
-PreactPress ships four official starters. Use `preactpress init` (or `pnpm dlx @kamod-ch/preactpress init`) and optionally `--template <name>` to scaffold one.
+PreactPress ships **nine** official starters. Use `preactpress init` (or `pnpm dlx @kamod-ch/preactpress init`) and optionally `--template <name>` to scaffold one.
 
 See the [template gallery on the home page](/#templates-title) for screenshots and copyable commands.
 
+> Start with documentation, a technical blog, an API reference, SaaS docs, or a complete knowledge base—all powered by PreactPress.
+
 ## Which template should I use?
 
-| Template       | CLI name                      | Theme                  | Best for                                 | Notable extras                                  |
-| -------------- | ----------------------------- | ---------------------- | ---------------------------------------- | ----------------------------------------------- |
-| Documentation  | `docs`                        | Default docs theme     | Full product or library docs (this site) | Guides, examples, search, EN/DE locales         |
-| Product + Docs | `hono`                        | Custom Preact theme    | Product marketing page plus a docs area  | Landing layout, focused guide subset, i18n demo |
-| Magazine       | `magazine`                    | Custom editorial theme | Articles, tags, content-heavy sites      | Teaser grid, tag pages, content loader          |
-| Minimal        | `default` (omit `--template`) | Default docs theme     | Trying PreactPress quickly               | Smallest file tree                              |
+| Template           | CLI name                      | Theme            | Best for                        | Notable extras                              |
+| ------------------ | ----------------------------- | ---------------- | ------------------------------- | ------------------------------------------- |
+| Documentation      | `docs`                        | Default          | Full framework docs (this site) | Guides, examples, EN/DE locales             |
+| **Blog**           | `blog`                        | Custom editorial | Technical blogs and changelogs  | RSS, tags, authors, reading time            |
+| **Product docs**   | `product-docs`                | Default          | SDK / library documentation     | Concepts, FAQ, changelog, edit link         |
+| **API reference**  | `api-docs`                    | Default          | JavaScript/TypeScript APIs      | ApiSignature, ParameterTable MDX components |
+| **SaaS docs**      | `saas-docs`                   | Custom product   | SaaS onboarding and admin docs  | Landing + docs, role hints, integrations    |
+| **Knowledge base** | `knowledge-base`              | Default          | Help centers and support        | Search-first home, categories, contact CTA  |
+| Product + Docs     | `hono`                        | Custom           | Marketing site + docs area      | Landing layout, i18n demo                   |
+| Magazine           | `magazine`                    | Custom editorial | Editorial / magazine layouts    | Teaser grid, German demo content            |
+| Minimal            | `default` (omit `--template`) | Default          | Quick trials                    | Smallest file tree                          |
 
 ## Scaffold commands
 
 ```bash
 # Documentation (canonical reference starter)
 pnpm dlx @kamod-ch/preactpress init my-docs --template docs
+
+# Technical blog with RSS
+pnpm dlx @kamod-ch/preactpress init my-blog --template blog
+
+# Product / library documentation
+pnpm dlx @kamod-ch/preactpress init my-product --template product-docs
+
+# API reference
+pnpm dlx @kamod-ch/preactpress init my-api --template api-docs
+
+# SaaS product documentation
+pnpm dlx @kamod-ch/preactpress init my-saas --template saas-docs
+
+# Help center / knowledge base
+pnpm dlx @kamod-ch/preactpress init my-help --template knowledge-base
 
 # Product landing + docs
 pnpm dlx @kamod-ch/preactpress init my-site --template hono
@@ -42,16 +64,30 @@ pnpm install
 pnpm run dev
 ```
 
-## How they differ
+## Build and deploy
 
-- **Documentation** is the largest starter and the public demo. Prefer it when you want the full guide surface, examples, and default theme features out of the box.
-- **Product + Docs** shows how far a custom theme can go for a marketing site while keeping a documentation section. Use it as a theme reference more than as the canonical API docs source.
-- **Magazine** focuses on editorial patterns: article teasers, tags, and a content-loader driven home page.
-- **Minimal** is the default `init` target. Start here if you want the fewest files and will grow the site yourself.
+Every starter includes `pnpm run build` and `pnpm run preview`. Set `site.url` in `.preactpress/config.ts` before enabling sitemap, robots, or RSS (`build.feed` on the blog starter).
+
+## Customization
+
+| Area                     | Where to edit                                                                   |
+| ------------------------ | ------------------------------------------------------------------------------- |
+| Site title & description | `site` in `.preactpress/config.ts`                                              |
+| Navigation & sidebar     | `themeConfig.nav` / `themeConfig.sidebar`                                       |
+| Colors & layout          | Default theme CSS variables (`--pp-*`) or custom theme in `.preactpress/theme/` |
+| Branding assets          | `public/` and `themeConfig.logo`                                                |
+
+## Comparison highlights
+
+- **Blog** — RSS feed, tag index, author listing, content-loader teasers, optional TOC on long posts.
+- **Product docs** — hierarchical sidebar, version label in nav, troubleshooting and migration guides.
+- **API docs** — reusable MDX components (`ApiSignature`, `ParameterTable`, `TypeDefinition`) decoupled from sample API names.
+- **SaaS docs** — product landing with multiple entry paths; step lists and screenshot placeholders.
+- **Knowledge base** — help-center tone, popular searches, link-out to developer docs.
 
 ## Related
 
 - [Getting started](/guide/getting-started)
 - [CLI and validation](/guide/commands)
 - [Custom themes](/guide/custom-themes)
-- [Custom theme example](/examples/custom-theme)
+- [RSS / Atom feed](/examples/rss)

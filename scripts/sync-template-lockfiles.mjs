@@ -3,7 +3,17 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const templates = ["default", "docs", "hono", "magazine"];
+const templates = [
+  "default",
+  "docs",
+  "hono",
+  "magazine",
+  "blog",
+  "product-docs",
+  "api-docs",
+  "saas-docs",
+  "knowledge-base",
+];
 const check = process.argv.includes("--check");
 
 for (const template of templates) {

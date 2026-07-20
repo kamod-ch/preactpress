@@ -101,12 +101,19 @@ Pair with **[Kamod UI](https://ui.kamod.ch/)** for Preact + Tailwind components 
 
 ## Starter templates
 
-| Template   | Use case                                             | Scaffold                                                         |
-| ---------- | ---------------------------------------------------- | ---------------------------------------------------------------- |
-| `default`  | Minimal / quick start — smallest docs site           | `pnpm dlx @kamod-ch/preactpress init my-site`                    |
-| `docs`     | Full documentation starter (canonical reference)     | `pnpm dlx @kamod-ch/preactpress init my-docs --template docs`    |
-| `magazine` | Custom editorial theme with article teasers and tags | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine` |
-| `hono`     | Product landing + docs with a custom Preact theme    | `pnpm dlx @kamod-ch/preactpress init my-site --template hono`    |
+| Template | Use case | Scaffold |
+| -------- | -------- | -------- |
+| `default` | Minimal / quick start | `pnpm dlx @kamod-ch/preactpress init my-site` |
+| `docs` | Full documentation (canonical reference) | `pnpm dlx @kamod-ch/preactpress init my-docs --template docs` |
+| `blog` | Technical blog with RSS, tags, and authors | `pnpm dlx @kamod-ch/preactpress init my-blog --template blog` |
+| `product-docs` | Product or library documentation | `pnpm dlx @kamod-ch/preactpress init my-product --template product-docs` |
+| `api-docs` | JavaScript/TypeScript API reference | `pnpm dlx @kamod-ch/preactpress init my-api --template api-docs` |
+| `saas-docs` | SaaS onboarding and admin documentation | `pnpm dlx @kamod-ch/preactpress init my-saas --template saas-docs` |
+| `knowledge-base` | Help center and support articles | `pnpm dlx @kamod-ch/preactpress init my-help --template knowledge-base` |
+| `magazine` | Custom editorial theme (demo) | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine` |
+| `hono` | Product landing + docs (demo) | `pnpm dlx @kamod-ch/preactpress init my-site --template hono` |
+
+Start with documentation, a technical blog, an API reference, SaaS docs, or a complete knowledge base—all powered by PreactPress.
 
 Browse the [live demo](https://kamod-ch.github.io/preactpress/) for the `docs` template, compare starters in the [template gallery](https://kamod-ch.github.io/preactpress/guide/templates/), or run `pnpm run dev:docs` from the package root while contributing.
 

@@ -25,7 +25,8 @@ export default function MarketingHero() {
         <p class="pp-mkt-eyebrow">PreactPress</p>
         <h1 id="preactpress-hero-title">The documentation framework for Preact</h1>
         <p class="pp-mkt-hero-lead">
-          Build fast documentation, blogs and product sites with Markdown, MDX, Preact and Vite.
+          Start with documentation, a technical blog, an API reference, SaaS docs, or a complete
+          knowledge base—all powered by PreactPress.
         </p>
         <div class="pp-mkt-actions">
           {actions.map((action) => (

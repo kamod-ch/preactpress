@@ -157,4 +157,30 @@ describe("init", () => {
       await fs.rm(root, { recursive: true, force: true });
     }
   });
+
+  it("scaffolds the documentation-focused starters", async () => {
+    const cases: Array<{
+      template: "blog" | "product-docs" | "api-docs" | "saas-docs" | "knowledge-base";
+      marker: string;
+    }> = [
+      { template: "blog", marker: "posts/introducing-preactpress.md" },
+      { template: "product-docs", marker: "getting-started.md" },
+      { template: "api-docs", marker: "functions/create-client.mdx" },
+      { template: "saas-docs", marker: "docs/welcome.md" },
+      { template: "knowledge-base", marker: "getting-started/welcome.md" },
+    ];
+    for (const { template, marker } of cases) {
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), `preactpress-init-${template}-`));
+      try {
+        const result = await init(root, { template });
+        expect(result.template).toBe(template);
+        await expect(fs.access(path.join(root, marker))).resolves.toBeUndefined();
+        await expect(
+          fs.access(path.join(root, ".preactpress", "config.ts")),
+        ).resolves.toBeUndefined();
+      } finally {
+        await fs.rm(root, { recursive: true, force: true });
+      }
+    }
+  });
 });

@@ -98,4 +98,22 @@ describe("mdFileToRoute", () => {
       await fs.rm(root, { recursive: true, force: true });
     }
   });
+
+  it("includes rewrite alias routes for static builds", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "preactpress-rewrite-routes-"));
+    try {
+      await fs.mkdir(path.join(root, "entries"), { recursive: true });
+      await fs.writeFile(path.join(root, "index.md"), "# Home\n", "utf8");
+      await fs.writeFile(path.join(root, "entries", "demo.md"), "# Demo\n", "utf8");
+
+      await expect(
+        listMarkdownRoutes({
+          srcDir: root,
+          rewrites: { "/demo": "/entries/demo" },
+        } as SiteConfig),
+      ).resolves.toEqual(["/", "/demo", "/entries/demo"]);
+    } finally {
+      await fs.rm(root, { recursive: true, force: true });
+    }
+  });
 });

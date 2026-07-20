@@ -9,7 +9,17 @@ export interface InitResult {
   template: InitTemplateName;
 }
 
-export const INIT_TEMPLATES = ["default", "docs", "magazine", "hono"] as const;
+export const INIT_TEMPLATES = [
+  "default",
+  "docs",
+  "magazine",
+  "hono",
+  "blog",
+  "product-docs",
+  "api-docs",
+  "saas-docs",
+  "knowledge-base",
+] as const;
 export type InitTemplateName = (typeof INIT_TEMPLATES)[number];
 
 export interface InitOptions {
@@ -22,6 +32,11 @@ const TEMPLATE_DIRS: Record<InitTemplateName, string> = {
   docs: path.join("templates", "docs"),
   magazine: path.join("templates", "magazine"),
   hono: path.join("templates", "hono"),
+  blog: path.join("templates", "blog"),
+  "product-docs": path.join("templates", "product-docs"),
+  "api-docs": path.join("templates", "api-docs"),
+  "saas-docs": path.join("templates", "saas-docs"),
+  "knowledge-base": path.join("templates", "knowledge-base"),
 };
 
 function shouldCopyTemplateEntry(rel: string): boolean {

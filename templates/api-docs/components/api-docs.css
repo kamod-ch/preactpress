@@ -1,0 +1,50 @@
+.pp-api-signature {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--pp-border);
+  border-radius: 8px;
+  background: var(--pp-code-bg);
+}
+.pp-api-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.pp-api-sig {
+  margin: 0.5rem 0 0;
+  overflow-x: auto;
+}
+.pp-api-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  background: var(--pp-border);
+  margin: 0 0 0.5rem;
+}
+.pp-api-table-wrap {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+.pp-api-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.pp-api-table th,
+.pp-api-table td {
+  border: 1px solid var(--pp-border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+.pp-api-type figcaption,
+.pp-api-example figcaption {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.pp-api-deprecated {
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #e6a700;
+  background: var(--pp-sidebar-bg);
+  margin: 1rem 0;
+}

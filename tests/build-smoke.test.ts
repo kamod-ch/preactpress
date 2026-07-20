@@ -225,4 +225,82 @@ describe("build smoke", () => {
       await fs.rm(root, { recursive: true, force: true });
     }
   }, 15_000);
+
+  it("builds the documentation-focused starters", async () => {
+    const cases: Array<{
+      template: "blog" | "product-docs" | "api-docs" | "saas-docs" | "knowledge-base";
+      assert: (root: string) => Promise<void>;
+    }> = [
+      {
+        template: "blog",
+        assert: async (root) => {
+          const index = await fs.readFile(path.join(root, "dist", "index.html"), "utf8");
+          const feed = await fs.readFile(path.join(root, "dist", "feed.xml"), "utf8");
+          expect(index).toContain("PreactPress Blog");
+          expect(feed).toContain("Introducing PreactPress");
+          await expect(
+            fs.access(path.join(root, "dist", "preactpress-search.json")),
+          ).resolves.toBeUndefined();
+        },
+      },
+      {
+        template: "product-docs",
+        assert: async (root) => {
+          const page = await fs.readFile(
+            path.join(root, "dist", "getting-started", "index.html"),
+            "utf8",
+          );
+          expect(page).toContain("Getting started");
+          expect(page).toContain('class="pp-sidebar"');
+        },
+      },
+      {
+        template: "api-docs",
+        assert: async (root) => {
+          const page = await fs.readFile(
+            path.join(root, "dist", "functions", "create-client", "index.html"),
+            "utf8",
+          );
+          expect(page).toContain("createClient");
+          expect(page).toContain("pp-api-signature");
+        },
+      },
+      {
+        template: "saas-docs",
+        assert: async (root) => {
+          const index = await fs.readFile(path.join(root, "dist", "index.html"), "utf8");
+          const doc = await fs.readFile(
+            path.join(root, "dist", "docs", "quickstart", "index.html"),
+            "utf8",
+          );
+          expect(index).toContain("SaaS documentation starter");
+          expect(doc).toContain("Quickstart");
+        },
+      },
+      {
+        template: "knowledge-base",
+        assert: async (root) => {
+          const index = await fs.readFile(path.join(root, "dist", "index.html"), "utf8");
+          const search = JSON.parse(
+            await fs.readFile(path.join(root, "dist", "preactpress-search.json"), "utf8"),
+          ) as Array<{ route: string }>;
+          expect(index).toContain("Acme Help Center");
+          expect(search.some((entry) => entry.route === "/troubleshooting/login-issues")).toBe(
+            true,
+          );
+        },
+      },
+    ];
+
+    for (const { template, assert } of cases) {
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), `preactpress-build-${template}-`));
+      try {
+        await init(root, { template });
+        await build(root);
+        await assert(root);
+      } finally {
+        await fs.rm(root, { recursive: true, force: true });
+      }
+    }
+  }, 60_000);
 });

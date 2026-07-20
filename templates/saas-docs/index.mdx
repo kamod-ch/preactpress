@@ -1,0 +1,65 @@
+---
+title: Acme — workspace platform for modern teams
+description: SaaS documentation starter with product landing, step-by-step guides, and developer references.
+---
+
+import FeatureGrid from "./.preactpress/theme/FeatureGrid.tsx";
+import Hero from "./.preactpress/theme/Hero.tsx";
+
+<Hero
+  eyebrow="SaaS documentation starter"
+  title="Ship product docs your customers actually use."
+  subtitle="Onboarding guides, admin workflows, API references, and support paths — built with PreactPress and ready to customize for your product."
+  actions={[
+    { text: "Complete setup", link: "/docs/quickstart", theme: "brand" },
+    { text: "Invite your team", link: "/docs/team-members", theme: "alt" },
+    { text: "Connect an integration", link: "/docs/integrations", theme: "alt" },
+  ]}
+  code={`curl -X POST https://api.acme.dev/v1/workspaces \\
+  -H "Authorization: Bearer $ACME_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"name":"Engineering","plan":"pro"}'`}
+/>
+
+<FeatureGrid
+  features={[
+    {
+      icon: "1",
+      title: "Finish setup",
+      details: "Quickstart walks new admins through workspace creation and first integration.",
+    },
+    {
+      icon: "2",
+      title: "Invite teammates",
+      details: "Role-based docs explain what admins vs members can configure.",
+    },
+    {
+      icon: "3",
+      title: "Connect tools",
+      details: "Integration guides with copy-paste credentials and webhook examples.",
+    },
+    {
+      icon: "4",
+      title: "Use the API",
+      details: "Developer section links to REST endpoints and event payloads.",
+    },
+    {
+      icon: "?",
+      title: "Solve problems",
+      details: "Troubleshooting hub with support CTA when docs are not enough.",
+    },
+  ]}
+/>
+
+## Choose your path
+
+| I want to…           | Start here                               |
+| -------------------- | ---------------------------------------- |
+| Set up my workspace  | [Quickstart](/docs/quickstart)           |
+| Manage billing       | [Billing](/docs/billing)                 |
+| Build an integration | [API](/docs/api)                         |
+| Fix an issue         | [Troubleshooting](/docs/troubleshooting) |
+
+::: info For admins
+Sections marked **Admin only** require workspace administrator permissions.
+:::

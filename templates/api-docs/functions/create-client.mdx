@@ -1,0 +1,59 @@
+---
+title: createClient
+layout: doc
+---
+
+import ApiSignature from "../components/ApiSignature.tsx";
+import ParameterTable from "../components/ParameterTable.tsx";
+import TypeDefinition from "../components/TypeDefinition.tsx";
+import CodeExample from "../components/CodeExample.tsx";
+import "../components/api-docs.css";
+
+# createClient
+
+Creates an authenticated Acme API client.
+
+<ApiSignature name="createClient" signature="createClient(options: ClientOptions): Client" />
+
+## Parameters
+
+<ParameterTable
+  params={[
+    {
+      name: "apiKey",
+      type: "string",
+      required: true,
+      description: "Secret API key from the Acme dashboard.",
+    },
+    {
+      name: "baseUrl",
+      type: "string",
+      description: "Override the API base URL.",
+      default: "https://api.acme.dev",
+    },
+    { name: "timeout", type: "number", description: "Request timeout in ms.", default: "30000" },
+  ]}
+/>
+
+## Returns
+
+`Client` — an object with resource namespaces (`users`, `projects`, `webhooks`).
+
+## Example
+
+<CodeExample lang="ts" title="Basic usage" code={`import { createClient } from "@acme/client";
+
+const client = createClient({ apiKey: process.env.ACME_API_KEY! });
+await client.ping();`} />
+
+## Errors
+
+| Code              | Status | When                            |
+| ----------------- | ------ | ------------------------------- |
+| `invalid_api_key` | 401    | API key is missing or revoked   |
+| `rate_limited`    | 429    | Too many requests in the window |
+
+## See also
+
+- [`Client.ping`](/functions/client-ping)
+- [`ClientOptions`](/types/client-options)
