@@ -6,6 +6,12 @@ This project follows semantic versioning for the published `@kamod-ch/preactpres
 
 ## Unreleased
 
+## [2.2.1] - 2026-07-20
+
+### Fixed
+
+- `listMarkdownRoutes` now applies configured route rewrites so static builds and route checks include alias paths (for example canonical library URLs).
+
 ## [1.0.1] - 2026-06-24
 
 ### Added
