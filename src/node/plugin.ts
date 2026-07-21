@@ -32,9 +32,7 @@ export async function listMarkdownRoutes(site: SiteConfig): Promise<string[]> {
   const published = (await scanContentFiles(site)).filter(
     (file) => !isDraftPage(readMarkdownMetadata(file.file).meta),
   );
-  const routeToFile = new Map<string, ContentFile>(
-    published.map((file) => [file.route, file]),
-  );
+  const routeToFile = new Map<string, ContentFile>(published.map((file) => [file.route, file]));
   for (const entry of await resolveDynamicRoutes(site)) {
     routeToFile.set(entry.route, {
       route: entry.route,
