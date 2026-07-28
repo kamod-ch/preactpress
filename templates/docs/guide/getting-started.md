@@ -13,7 +13,7 @@ You need:
 
 | Requirement     | Version                                         |
 | --------------- | ----------------------------------------------- |
-| Node.js         | 20 or higher                                    |
+| Node.js         | 20 or higher (20, 22, 24 tested in CI)          |
 | Package manager | pnpm recommended; npm, yarn, and bun also work  |
 | Editor          | Any editor with Markdown and TypeScript support |
 
@@ -44,7 +44,7 @@ Open **http://localhost:5173** to see the starter site.
 > **Note**
 > `preactpress init` copies the built-in starter template and writes `@kamod-ch/preactpress` to `devDependencies`. You do not need to install PreactPress separately before running the initializer.
 
-Not sure which starter to use? Compare the four official options on [Starter templates](/guide/templates).
+Not sure which starter to use? Compare all eleven official options on [Starter templates](/guide/templates).
 
 ## File structure
 

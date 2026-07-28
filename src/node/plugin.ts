@@ -2,7 +2,7 @@ import { resolveFileLastUpdated } from "./lastUpdated.js";
 import path from "node:path";
 import type { Plugin, ViteDevServer } from "vite";
 import type { SiteConfig } from "./siteConfig.js";
-import { readMarkdownFile, readMarkdownMetadata } from "./markdown.js";
+import { readMarkdownDraftMeta, readMarkdownMetadata, renderMarkdown } from "./markdown.js";
 import { siteConfigToClientJson } from "./config.js";
 import { PREACTPRESS_THEME_BOOT_SCRIPT, PREACTPRESS_THEME_SCRIPT } from "../shared/theme.js";
 import { createFaviconMiddleware, faviconHtmlTags } from "./favicon.js";
@@ -10,27 +10,29 @@ import { createDevSsrMiddleware } from "./devSsr.js";
 import {
   CONTENT_EXTENSIONS,
   mdFileToRoute,
+  scanAllContentFiles,
   scanContentFiles,
   type ContentFile,
   type ContentKind,
 } from "./content.js";
 import { resolveDynamicRoutes, type DynamicRouteEntry } from "./dynamicRoutes.js";
 import { resolvePageDataMap } from "./pageDataLoaders.js";
-import { renderMarkdown } from "./markdown.js";
 import { collectTagIndexPages, renderTagIndexHtml, listTagIndexRoutes } from "./tagIndex.js";
 import { resolvePageTags } from "../shared/tags.js";
 import { isDraftPage, pageImageFromMeta, pageTypeFromMeta } from "../shared/pageMeta.js";
 import { localeFromRoute } from "../shared/locale.js";
 import { applyRouteRewrites } from "../shared/rewrites.js";
+import { applyPluginsExtendRoutes, collectPluginClientModules } from "./pluginRuntime.js";
 
 const VIRTUAL_LAYOUT = "\0virtual:preactpress-layout";
 const VIRTUAL_PAGES = "\0virtual:preactpress-pages";
 const VIRTUAL_SITE = "\0virtual:preactpress-site";
+const VIRTUAL_CLIENT = "\0virtual:preactpress-client-plugins";
 export { mdFileToRoute };
 
 export async function listMarkdownRoutes(site: SiteConfig): Promise<string[]> {
-  const published = (await scanContentFiles(site)).filter(
-    (file) => !isDraftPage(readMarkdownMetadata(file.file).meta),
+  const published = (await scanAllContentFiles(site)).filter(
+    (file) => !isDraftPage(readMarkdownDraftMeta(file.file)),
   );
   const routeToFile = new Map<string, ContentFile>(published.map((file) => [file.route, file]));
   for (const entry of await resolveDynamicRoutes(site)) {
@@ -46,7 +48,24 @@ export async function listMarkdownRoutes(site: SiteConfig): Promise<string[]> {
   }
   const routeSet = new Set(routeToFile.keys());
   const tagRoutes = await listTagIndexRoutes(site, routeSet);
-  return [...routeSet, ...tagRoutes].sort();
+  const baseRoutes = [...routeSet, ...tagRoutes].map((route) => {
+    const file = routeToFile.get(route);
+    return {
+      route,
+      file: file?.file ?? route,
+      kind: file?.kind ?? ("markdown" as const),
+    };
+  });
+  const extended = await applyPluginsExtendRoutes(site, baseRoutes, {
+    command: "build",
+    mode: "production",
+  });
+  for (const entry of extended) {
+    if (!routeToFile.has(entry.route)) {
+      routeToFile.set(entry.route, entry);
+    }
+  }
+  return [...new Set([...routeToFile.keys(), ...tagRoutes])].sort();
 }
 
 export function preactPressPlugin(site: SiteConfig): Plugin {
@@ -59,8 +78,8 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
   async function scan(): Promise<void> {
     routeToFile.clear();
     dynamicRoutes.clear();
-    for (const file of await scanContentFiles(site)) {
-      if (isDraftPage(readMarkdownMetadata(file.file).meta)) continue;
+    for (const file of await scanAllContentFiles(site)) {
+      if (isDraftPage(readMarkdownDraftMeta(file.file))) continue;
       routeToFile.set(file.route, file);
     }
     for (const entry of await resolveDynamicRoutes(site)) {
@@ -97,6 +116,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         meta: Record<string, unknown>;
         kind: ContentKind;
         html: string;
+        markdown?: string;
         title?: string;
         description?: string;
         tags?: string[];
@@ -113,7 +133,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
     const metaEntries: string[] = [];
     let mdxIndex = 0;
     for (const [route, file] of routeToFile) {
-      const relativePath = path.relative(site.srcDir, file.file).split(path.sep).join("/");
+      const relativePath = path.relative(site.root, file.file).split(path.sep).join("/");
       const lastUpdated = await resolveFileLastUpdated(file.file, site);
       if (file.kind === "mdx") {
         const r = readMarkdownMetadata(file.file);
@@ -145,17 +165,11 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         continue;
       }
 
-      const r = await readMarkdownFile(file.file, {
-        ...site.markdown,
-        route,
-        routes,
-        localePrefix: localeFromRoute(route, site.i18n)?.prefix,
-        srcDir: site.srcDir,
-      });
+      const r = readMarkdownMetadata(file.file);
       entries[route] = {
         kind: "markdown",
         meta: attachPageData(route, r.meta),
-        html: r.html,
+        html: "",
         title: r.title,
         description: r.description,
         tags: resolvePageTags(r.meta),
@@ -169,6 +183,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         `${JSON.stringify(route)}: ${JSON.stringify({
           ...entries[route],
           html: undefined,
+          markdown: undefined,
         })}`,
       );
     }
@@ -179,6 +194,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         routes,
         localePrefix: localeFromRoute(route, site.i18n)?.prefix,
         srcDir: site.srcDir,
+        site,
       });
       const meta = attachPageData(route, {
         ...r.meta,
@@ -189,6 +205,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         kind: "markdown",
         meta,
         html: r.html,
+        markdown: r.markdown,
         title: r.title,
         description: r.description,
         tags: resolvePageTags(r.meta),
@@ -202,6 +219,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         `${JSON.stringify(route)}: ${JSON.stringify({
           ...entries[route],
           html: undefined,
+          markdown: undefined,
         })}`,
       );
     }
@@ -277,7 +295,14 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       await scan();
     },
     configureServer(server) {
-      server.middlewares.use(createDevSsrMiddleware(site, server));
+      server.middlewares.use(
+        createDevSsrMiddleware(
+          site,
+          server,
+          (route) => routeToFile.get(route),
+          () => [...routeToFile.keys()].sort(),
+        ),
+      );
       server.middlewares.use(
         createFaviconMiddleware(site.site.base, path.join(site.srcDir, "public")),
       );
@@ -306,6 +331,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       if (id === "virtual:preactpress-layout") return VIRTUAL_LAYOUT;
       if (id === "virtual:preactpress-pages") return VIRTUAL_PAGES;
       if (id === "virtual:preactpress-site") return VIRTUAL_SITE;
+      if (id === "virtual:preactpress-client-plugins") return VIRTUAL_CLIENT;
       return undefined;
     },
     async load(id, options) {
@@ -317,8 +343,12 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
           site: SiteConfig["site"];
           themeConfig: SiteConfig["themeConfig"];
           i18n: SiteConfig["i18n"];
+          versions: SiteConfig["versions"];
+          workspaces: SiteConfig["workspaces"];
+          mpa?: boolean;
+          ai?: SiteConfig["ai"] extends false ? false : { copyMarkdown: boolean } | false;
         };
-        return `export const site = ${JSON.stringify(data.site)};\nexport const themeConfig = ${JSON.stringify(data.themeConfig)};\nexport const i18n = ${JSON.stringify(data.i18n)};\nexport const mpa = ${JSON.stringify(Boolean((data as { mpa?: boolean }).mpa))};\n`;
+        return `export const site = ${JSON.stringify(data.site)};\nexport const themeConfig = ${JSON.stringify(data.themeConfig)};\nexport const i18n = ${JSON.stringify(data.i18n)};\nexport const versions = ${JSON.stringify(data.versions)};\nexport const workspaces = ${JSON.stringify(data.workspaces)};\nexport const mpa = ${JSON.stringify(Boolean(data.mpa))};\nexport const ai = ${JSON.stringify(data.ai ?? false)};\n`;
       }
       if (id === VIRTUAL_PAGES) {
         if (options?.ssr) {
@@ -327,6 +357,19 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         }
         if (!clientPagesModule) clientPagesModule = await buildPagesModule(false);
         return clientPagesModule;
+      }
+      if (id === VIRTUAL_CLIENT) {
+        const modules = collectPluginClientModules(site.plugins ?? []);
+        const imports = modules
+          .map((entry, index) => `import * as clientPlugin${index} from ${JSON.stringify(entry.client)};`)
+          .join("\n");
+        const entries = modules
+          .map(
+            (entry, index) =>
+              `{ name: ${JSON.stringify(entry.name)}, enhance: clientPlugin${index}.enhanceContent ?? clientPlugin${index}.default }`,
+          )
+          .join(",\n  ");
+        return `${imports}\nexport const clientPlugins = [\n  ${entries}\n];\n`;
       }
       return undefined;
     },

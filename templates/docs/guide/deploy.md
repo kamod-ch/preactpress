@@ -96,8 +96,7 @@ For most static hosts, use these settings:
 | Vercel             | `pnpm run build` | `dist`           |
 | Cloudflare Pages   | `pnpm run build` | `dist`           |
 | Render Static Site | `pnpm run build` | `dist`           |
-
-See the [Cloudflare Pages deployment guide](/examples/cloudflare-pages) for dashboard settings, environment variables, Wrangler deployment, and custom domain notes.
+| S3 / R2 / MinIO    | `pnpm run build` | `dist` (upload)  |
 
 Install command:
 
@@ -106,6 +105,18 @@ pnpm install
 ```
 
 Node version: **20 or higher**.
+
+### Platform guides
+
+| Host | Guide |
+| ---- | ----- |
+| GitHub Actions (CI + Pages) | [GitHub Actions](/examples/github-actions) |
+| GitHub Pages | [GitHub Pages](#github-pages) (below) |
+| Cloudflare Pages | [Cloudflare Pages](/examples/cloudflare-pages) |
+| Netlify | [Netlify](/examples/netlify) |
+| Vercel | [Vercel](/examples/vercel) |
+| S3-compatible storage | [S3-compatible hosts](/examples/s3-deploy) |
+| VPS / shared hosting | [Own server](/examples/own-server) |
 
 ## GitHub Pages
 
@@ -120,57 +131,28 @@ export default {
 };
 ```
 
-Then deploy the `dist/` directory.
+Build with the matching base path:
 
-A minimal GitHub Actions workflow can look like this:
-
-```yaml
-name: Deploy PreactPress site to Pages
-
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - uses: actions/configure-pages@v5
-      - run: pnpm install
-      - run: pnpm run check
-      - run: pnpm run build
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+```bash
+pnpm exec preactpress build --base /my-repo/
 ```
 
-In your repository settings, set Pages source to **GitHub Actions**.
+Then deploy the `dist/` directory.
+
+### Official workflow template
+
+Copy [`examples/github-actions/pages.yml`](https://github.com/kamod-ch/preactpress/blob/main/examples/github-actions/pages.yml) into your repository as `.github/workflows/pages.yml`, or use the composite action:
+
+```yaml
+- uses: kamod-ch/preactpress/action@v2
+  with:
+    command: all
+    base: /${{ github.event.repository.name }}/
+```
+
+Set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**.
+
+See [GitHub Actions](/examples/github-actions) for pull request checks, Node.js matrices, and artifact upload patterns.
 
 ## Monorepos
 

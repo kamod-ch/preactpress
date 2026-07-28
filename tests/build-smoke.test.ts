@@ -303,4 +303,76 @@ describe("build smoke", () => {
       }
     }
   }, 60_000);
+
+  it("writes redirect outputs and excludes redirect routes from search", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "preactpress-build-redirects-"));
+    try {
+      await fs.mkdir(path.join(root, ".preactpress"), { recursive: true });
+      await fs.writeFile(
+        path.join(root, ".preactpress", "config.ts"),
+        `export default {
+          site: {
+            title: 'Redirect test',
+            description: 'Redirect test site',
+            url: 'https://example.com'
+          },
+          redirects: {
+            '/old-guide': '/guide/new-guide'
+          }
+        }`,
+        "utf8",
+      );
+      await fs.writeFile(
+        path.join(root, "index.md"),
+        `---
+title: Home
+description: Home page
+---
+# Home
+`,
+        "utf8",
+      );
+      await fs.mkdir(path.join(root, "guide"), { recursive: true });
+      await fs.writeFile(
+        path.join(root, "guide", "new-guide.md"),
+        `---
+title: New guide
+description: Updated guide
+---
+# New guide
+`,
+        "utf8",
+      );
+
+      await build(root);
+
+      const redirectHtml = await fs.readFile(
+        path.join(root, "dist", "old-guide", "index.html"),
+        "utf8",
+      );
+      const redirectsFile = await fs.readFile(path.join(root, "dist", "_redirects"), "utf8");
+      const metadata = JSON.parse(
+        await fs.readFile(path.join(root, "dist", "preactpress-redirects.json"), "utf8"),
+      ) as {
+        rules: Array<{ from: string; target: string }>;
+        adapters: { netlify: { file: string } };
+      };
+      const search = JSON.parse(
+        await fs.readFile(path.join(root, "dist", "preactpress-search.json"), "utf8"),
+      ) as Array<{ route: string }>;
+
+      expect(redirectHtml).toContain('rel="canonical" href="https://example.com/guide/new-guide/"');
+      expect(redirectHtml).toContain('name="robots" content="noindex"');
+      expect(redirectsFile).toBe("/old-guide  /guide/new-guide  301\n");
+      expect(metadata.rules[0]).toMatchObject({
+        from: "/old-guide",
+        target: "/guide/new-guide",
+      });
+      expect(metadata.adapters.netlify.file).toBe("_redirects");
+      expect(search.some((entry) => entry.route === "/old-guide")).toBe(false);
+      expect(search.some((entry) => entry.route === "/guide/new-guide")).toBe(true);
+    } finally {
+      await fs.rm(root, { recursive: true, force: true });
+    }
+  }, 15_000);
 });

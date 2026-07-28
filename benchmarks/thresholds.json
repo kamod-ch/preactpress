@@ -1,0 +1,21 @@
+{
+  "$schema": "./thresholds.schema.json",
+  "description": "Regression thresholds for CI. Values are relative (1.15 = +15% allowed vs baseline).",
+  "metrics": {
+    "coldBuildMs": { "relative": 1.2, "absoluteMaxMs": null },
+    "warmBuildMs": { "relative": 1.15, "absoluteMaxMs": null },
+    "devServerStartMs": { "relative": 1.2, "absoluteMaxMs": null },
+    "pageUpdateMs": { "relative": 1.25, "absoluteMaxMs": null },
+    "peakMemoryMb": { "relative": 1.15, "absoluteMaxMb": null },
+    "searchIndexBytes": { "relative": 1.1, "absoluteMaxBytes": null },
+    "sampleHtmlBytes": { "relative": 1.05, "absoluteMaxBytes": null },
+    "mainJsBytes": { "relative": 1.05, "absoluteMaxBytes": null },
+    "mainCssBytes": { "relative": 1.05, "absoluteMaxBytes": null },
+    "totalStaticBytes": { "relative": 1.15, "absoluteMaxBytes": null }
+  },
+  "perPageScaling": {
+    "coldBuildMs": { "relative": 1.25 },
+    "warmBuildMs": { "relative": 1.2 },
+    "searchIndexBytes": { "relative": 1.15 }
+  }
+}

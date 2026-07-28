@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import Layout from "virtual:preactpress-layout";
 import { pagesMeta, routes } from "virtual:preactpress-pages";
-import { i18n, mpa, site, themeConfig } from "virtual:preactpress-site";
+import { i18n, mpa, site, themeConfig, versions, workspaces, ai } from "virtual:preactpress-site";
 import type { PageView } from "./types.js";
 import type { ResolvedLocale } from "../node/siteConfig.js";
 import { usePageHead } from "./usePageHead.js";
@@ -14,14 +14,24 @@ import {
   setupScrollRestoration,
 } from "../shared/scrollRestoration.js";
 import { getCachedPage, loadPage, prefetchPage, seedPage } from "./loadPage.js";
-import { renderMermaidDiagrams } from "./mermaid.js";
+import { runClientPlugins } from "./clientPlugins.js";
 import { setupViewportPrefetch } from "./prefetchLinks.js";
 import {
   localeFromRoute,
   localizedRouteForLocale,
   siteForRoute,
-  themeConfigForRoute,
 } from "../shared/locale.js";
+import {
+  localizedRouteForVersion,
+  themeConfigForRouteWithVersions,
+  versionFromRoute,
+} from "../shared/version.js";
+import {
+  localizedRouteForWorkspace,
+  themeConfigForRouteWithWorkspaces,
+  workspaceFromRoute,
+} from "../shared/workspace.js";
+import type { ResolvedVersion, ResolvedWorkspace } from "../node/siteConfig.js";
 
 function routeFromLocation(): string {
   return routeFromPathname(window.location.pathname, site.base);
@@ -69,8 +79,16 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
   const [scrollTopNonce, setScrollTopNonce] = useState(0);
   const availableRoutes = new Set(routes);
   const activeLocale = localeFromRoute(currentRoute, i18n);
+  const activeVersion = versionFromRoute(currentRoute, versions, i18n);
+  const activeWorkspace = workspaceFromRoute(currentRoute, workspaces, i18n, versions);
   const activeSite = siteForRoute(site, currentRoute, i18n);
-  const activeThemeConfig = themeConfigForRoute(themeConfig, currentRoute, i18n);
+  const activeThemeConfig = themeConfigForRouteWithWorkspaces(
+    themeConfigForRouteWithVersions(themeConfig, currentRoute, i18n, versions),
+    currentRoute,
+    i18n,
+    versions,
+    workspaces,
+  );
 
   useEffect(() => {
     if (initialPage) seedPage(normalizeRoute(routePath), initialPage);
@@ -187,7 +205,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
   }, [currentRoute, mpa]);
 
   useEffect(() => {
-    void renderMermaidDiagrams();
+    void runClientPlugins();
   }, [currentRoute, page]);
 
   useEffect(() => {
@@ -199,6 +217,7 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
   usePageHead({
     site,
     i18n,
+    versions,
     routes: availableRoutes,
     route: currentRoute,
     page:
@@ -232,11 +251,42 @@ export function App({ routePath, initialPage }: { routePath: string; initialPage
       themeConfig={activeThemeConfig}
       routePath={currentRoute}
       page={page}
+      ai={ai}
       i18n={i18n}
       locale={activeLocale}
       locales={i18n?.locales}
       localizeRoute={(locale: ResolvedLocale) =>
         localizedRouteForLocale(currentRoute, locale, i18n, availableRoutes)
+      }
+      versions={versions?.enabled ? versions : undefined}
+      version={activeVersion}
+      localizeVersion={(target: ResolvedVersion) =>
+        localizedRouteForVersion(currentRoute, target, versions, i18n, availableRoutes)
+      }
+      workspaces={workspaces?.enabled ? workspaces : undefined}
+      workspace={activeWorkspace}
+      localizeWorkspace={(target: ResolvedWorkspace) =>
+        localizedRouteForWorkspace(
+          currentRoute,
+          target,
+          workspaces,
+          versions,
+          i18n,
+          availableRoutes,
+        )
+      }
+      archivedBanner={
+        activeVersion && !activeVersion.isCurrent && versions?.enabled
+          ? versions.labels.archivedBanner
+              .replaceAll("{version}", activeVersion.value)
+              .replaceAll("{label}", activeVersion.label)
+              .replaceAll("{current}", versions.current)
+              .replaceAll(
+                "{currentLabel}",
+                versions.versions.find((entry) => entry.isCurrent && !entry.isAlias)?.label ??
+                  versions.current,
+              )
+          : undefined
       }
     />
   );

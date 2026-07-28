@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { applyTransformHtml, applyTransformPageData, invokeBuildEnd } from "../src/node/hooks.js";
+import { resolveRegisteredPlugins } from "../src/node/pluginRuntime.js";
 import type { SiteConfig } from "../src/node/siteConfig.js";
 import type { PageView } from "../src/client/types.js";
 
@@ -23,15 +24,22 @@ const markdownPage = (html: string): PageView => ({
   headings: [],
 });
 
+function siteWithHooks(hooks: Partial<SiteConfig>): SiteConfig {
+  return {
+    ...baseSite,
+    ...hooks,
+    plugins: resolveRegisteredPlugins(hooks as SiteConfig),
+  };
+}
+
 describe("hooks", () => {
   it("applies transformPageData before render", async () => {
-    const site = {
-      ...baseSite,
+    const site = siteWithHooks({
       transformPageData(page) {
         if (page.kind !== "markdown") return page;
         return { ...page, title: "Transformed", html: "<p>Updated</p>" };
       },
-    } as SiteConfig;
+    });
 
     const page = await applyTransformPageData(site, "/guide", markdownPage("<p>Original</p>"));
     expect(page.title).toBe("Transformed");
@@ -39,12 +47,11 @@ describe("hooks", () => {
   });
 
   it("keeps the original page when transformPageData returns void", async () => {
-    const site = {
-      ...baseSite,
+    const site = siteWithHooks({
       transformPageData() {
         return undefined;
       },
-    } as SiteConfig;
+    });
 
     const original = markdownPage("<p>Original</p>");
     const page = await applyTransformPageData(site, "/", original);
@@ -54,7 +61,8 @@ describe("hooks", () => {
   it("applies transformHtml to the final document", async () => {
     const site = {
       ...baseSite,
-      transformHtml(html, { route }) {
+      plugins: [],
+      transformHtml(html: string, { route }: { route: string }) {
         return html.replace("</body>", `<!-- route:${route} --></body>`);
       },
     } as SiteConfig;
@@ -65,12 +73,11 @@ describe("hooks", () => {
 
   it("invokes buildEnd with rendered pages", async () => {
     const seen: Array<{ route: string; page: PageView }> = [];
-    const site = {
-      ...baseSite,
+    const site = siteWithHooks({
       buildEnd({ pages }) {
         seen.push(...pages);
       },
-    } as SiteConfig;
+    });
 
     const pages = [{ route: "/", page: markdownPage("<p>Home</p>") }];
     await invokeBuildEnd(site, pages);

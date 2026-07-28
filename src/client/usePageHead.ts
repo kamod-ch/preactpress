@@ -1,5 +1,5 @@
 import { useEffect } from "preact/hooks";
-import type { ResolvedI18n, SiteData } from "../node/siteConfig.js";
+import type { ResolvedI18n, ResolvedVersions, SiteData } from "../node/siteConfig.js";
 import {
   resolvePageHeadMeta,
   titleTemplateFromMeta,
@@ -9,6 +9,7 @@ import { headTagsFromMeta } from "../shared/pageHead.js";
 import type { HeadTag } from "../node/siteConfig.js";
 import { canonicalUrl, publicUrl } from "../shared/url.js";
 import { localizedRouteForLocale, siteForRoute } from "../shared/locale.js";
+import { canonicalRouteForPage } from "../shared/version.js";
 
 function upsertMeta(selector: "name" | "property", key: string, content: string): void {
   if (!content) return;
@@ -115,11 +116,12 @@ function resolveMetaImage(site: SiteData, image: string | undefined): string | u
 export function usePageHead(opts: {
   site: SiteData;
   i18n?: ResolvedI18n;
+  versions?: ResolvedVersions;
   routes?: ReadonlySet<string>;
   route: string;
   page: PageMetaInput | undefined;
 }): void {
-  const { site, i18n, routes, route, page } = opts;
+  const { site, i18n, versions, routes, route, page } = opts;
   const activeSite = siteForRoute(site, route, i18n);
   const pageTitle = page?.title;
   const pageDescription = page?.description;
@@ -181,7 +183,11 @@ export function usePageHead(opts: {
       removeMeta("name", "twitter:image");
     }
 
-    const canonical = canonicalUrl({ url: activeSite.url, base: activeSite.base, route });
+    const canonicalRoute =
+      routes && versions?.enabled
+        ? canonicalRouteForPage(route, routes, i18n, versions)
+        : route;
+    const canonical = canonicalUrl({ url: activeSite.url, base: activeSite.base, route: canonicalRoute });
     if (canonical) {
       upsertMeta("property", "og:url", canonical);
       upsertCanonical(canonical);
@@ -198,6 +204,7 @@ export function usePageHead(opts: {
   }, [
     activeSite,
     i18n,
+    versions,
     route,
     routes,
     pageTitle,

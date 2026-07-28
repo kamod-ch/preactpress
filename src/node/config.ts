@@ -1,13 +1,20 @@
 import path from "node:path";
 import fs from "node:fs";
-import { createLogger, loadConfigFromFile, normalizePath, type ConfigEnv } from "vite";
-import type { SiteConfig, UserConfig } from "./siteConfig.js";
-import { resolvePageReadyConfig } from "../shared/pageReady.js";
+import { createLogger, loadConfigFromFile, type ConfigEnv } from "vite";
+import type { ResolvedConfig, UserConfig } from "./siteConfig.js";
 import { resolveConfigDir, resolveConfigPath } from "./paths.js";
-import { DEFAULT_THEME_LAYOUT, PACKAGE_ROOT } from "./packageRoot.js";
+import { PACKAGE_ROOT } from "./packageRoot.js";
 import { resolveFaviconHead } from "./favicon.js";
-import { resolveLocales } from "../shared/locale.js";
 import { ensurePreactpressLinked } from "./init.js";
+import { scanAllContentFiles } from "./content.js";
+import { resolveRedirectsConfig } from "./redirects.js";
+import {
+  applyPluginsConfig,
+  applyPluginsConfigResolved,
+  normalizePlugins,
+} from "./pluginRuntime.js";
+import { normalizeBase, resolveSiteConfig } from "./resolveSiteConfig.js";
+import { clientAiExportsConfig } from "./configDefaults.js";
 
 function fileExists(p: string): boolean {
   try {
@@ -29,14 +36,6 @@ function sameProjectRoot(a: string, b: string): boolean {
   }
 }
 
-function resolveThemeLayout(root: string, configDir: string, theme: string): string {
-  const abs = path.isAbsolute(theme) ? theme : path.resolve(configDir, theme);
-  if (!fileExists(abs)) {
-    throw new Error(`preactpress: theme Layout not found: ${abs}`);
-  }
-  return normalizePath(abs);
-}
-
 export async function resolveUserConfig(root: string, env: ConfigEnv): Promise<UserConfig> {
   const configPath = resolveConfigPath(root);
   if (!fileExists(configPath)) {
@@ -44,7 +43,7 @@ export async function resolveUserConfig(root: string, env: ConfigEnv): Promise<U
     const inToolPackage = sameProjectRoot(resolvedRoot, PACKAGE_ROOT);
     const hint = inToolPackage
       ? "You are in the preactpress package (CLI sources), not a content site. From this folder run `pnpm run dev` to start the bundled `templates/default/` site, or `pnpm run preactpress -- init <dir>` to scaffold a new site elsewhere."
-      : 'Run "preactpress init" to scaffold a site.';
+      : 'Run "preactpress init" to scaffold a new site.';
     throw new Error(`preactpress: missing config at ${configPath}. ${hint}`);
   }
 
@@ -72,86 +71,25 @@ export async function resolveConfig(
   rootArg?: string,
   command: ConfigEnv["command"] = "serve",
   mode: string = "development",
-): Promise<SiteConfig> {
+): Promise<ResolvedConfig> {
   const root = path.resolve(rootArg ?? process.cwd());
   const configDir = resolveConfigDir(root);
   const logger = createLogger();
-
   const user = await resolveUserConfig(root, { command, mode, isPreview: false });
-
-  const srcDir = normalizePath(path.resolve(root, user.srcDir ?? "."));
-  const outDir = normalizePath(path.resolve(root, user.outDir ?? "dist"));
-  const cacheDir = normalizePath(path.resolve(root, user.cacheDir ?? "node_modules/.preactpress"));
-
-  const site = {
-    title: user.site?.title ?? "PreactPress",
-    description: user.site?.description ?? "",
-    base: normalizeBase(user.site?.base ?? "/"),
-    lang: user.site?.lang ?? "en",
-    url: user.site?.url ? normalizeSiteUrl(user.site.url) : undefined,
-    titleTemplate: user.site?.titleTemplate,
-  };
-  const markdown = {
-    html: user.markdown?.html ?? false,
-    linkify: user.markdown?.linkify ?? true,
-    typographer: user.markdown?.typographer ?? true,
-    emoji: user.markdown?.emoji ?? false,
-    math: user.markdown?.math ?? false,
-  };
-
-  const themePath = user.theme ?? DEFAULT_THEME_LAYOUT;
-  const theme = resolveThemeLayout(root, configDir, themePath);
-
-  const userHead = user.head ?? [];
-
-  const baseConfig: SiteConfig = {
-    root,
-    srcDir,
-    srcExclude: user.srcExclude ?? [],
-    cleanUrls: user.cleanUrls ?? true,
-    rewrites: user.rewrites ?? {},
-    ignoreDeadLinks: user.ignoreDeadLinks,
-    mpa: user.mpa ?? false,
-    lastUpdatedGit: user.lastUpdatedGit ?? false,
-    configDir,
-    outDir,
-    cacheDir,
-    theme,
-    site,
-    themeConfig: user.themeConfig ?? {},
-    i18n: resolveLocales(user.locales, site, user.themeConfig ?? {}),
-    markdown,
-    favicon: user.favicon,
-    userHead,
-    head: [
-      ...resolveFaviconHead({ base: site.base, favicon: user.favicon, userHead }),
-      ...userHead,
-    ],
-    transformHead: user.transformHead,
-    transformPageData: user.transformPageData,
-    transformHtml: user.transformHtml,
-    buildEnd: user.buildEnd,
-    pageReady: resolvePageReadyConfig(user.pageReady),
-    build: {
-      sitemap: user.build?.sitemap ?? true,
-      robots: user.build?.robots ?? true,
-      feed: user.build?.feed ?? false,
-    },
-    vite: user.vite ?? {},
-    logger,
-  };
-
-  return baseConfig;
-}
-
-export function normalizeBase(base: string): string {
-  if (!base.startsWith("/")) base = "/" + base;
-  if (base !== "/" && base.endsWith("/")) base = base.replace(/\/+$/, "");
-  return base;
+  const mergedUser = await applyPluginsConfig(user, normalizePlugins(user.plugins));
+  const config = resolveSiteConfig(mergedUser, { root, configDir, logger }, []);
+  try {
+    const contentRoutes = (await scanAllContentFiles(config)).map((file) => file.route);
+    config.redirects = resolveRedirectsConfig(mergedUser.redirects, contentRoutes);
+  } catch {
+    // keep redirect defaults from initial resolve
+  }
+  await applyPluginsConfigResolved(config, config.plugins);
+  return config;
 }
 
 /** Apply a CLI or runtime base override across site, locales, and default favicon head tags. */
-export function applySiteBaseOverride(config: SiteConfig, base: string): void {
+export function applySiteBaseOverride(config: ResolvedConfig, base: string): void {
   const normalized = normalizeBase(base);
   config.site.base = normalized;
   if (config.i18n) {
@@ -165,22 +103,22 @@ export function applySiteBaseOverride(config: SiteConfig, base: string): void {
   ];
 }
 
-function normalizeSiteUrl(url: string): string {
-  return url.replace(/\/+$/, "");
-}
-
-export function siteConfigToClientJson(config: SiteConfig): string {
+export function siteConfigToClientJson(config: ResolvedConfig): string {
   return JSON.stringify({
     site: config.site,
     themeConfig: config.themeConfig,
     i18n: config.i18n,
+    versions: config.versions,
+    workspaces: config.workspaces,
     mpa: config.mpa,
+    ai: clientAiExportsConfig(config.ai),
   });
 }
 
 /** For SSR: re-resolve config with production mode. */
-export async function resolveConfigForBuild(root?: string): Promise<SiteConfig> {
+export async function resolveConfigForBuild(root?: string): Promise<ResolvedConfig> {
   return resolveConfig(root, "build", "production");
 }
 
+export { normalizeBase, resolveSiteConfig } from "./resolveSiteConfig.js";
 export { PACKAGE_ROOT };

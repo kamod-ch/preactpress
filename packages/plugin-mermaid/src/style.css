@@ -1,0 +1,51 @@
+.pp-doc-content .pp-mermaid {
+  margin: 1.25rem 0;
+  padding: 1.25rem;
+  overflow: auto;
+  border: 1px solid color-mix(in srgb, var(--pp-border, #d0d7de) 82%, transparent);
+  border-radius: 14px;
+  background: var(--pp-code-bg, #f6f8fa);
+  color: var(--pp-code-text, #24292f);
+  text-align: center;
+}
+
+.pp-doc-content .pp-mermaid-fallback,
+.pp-doc-content .pp-mermaid-noscript {
+  margin: 0;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  font-family: var(--pp-font-mono, ui-monospace, monospace);
+  font-size: 0.875rem;
+}
+
+.pp-doc-content .pp-mermaid[data-mermaid-error="true"] {
+  text-align: left;
+}
+
+.pp-doc-content .pp-mermaid-error {
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, #cf222e 12%, transparent);
+  color: inherit;
+}
+
+.pp-doc-content .pp-mermaid-error p {
+  margin: 0.35rem 0 0;
+}
+
+.pp-doc-content .pp-mermaid-source summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.pp-doc-content .pp-mermaid-source pre {
+  margin: 0.75rem 0 0;
+  white-space: pre-wrap;
+}
+
+.pp-doc-content .pp-mermaid svg {
+  max-width: 100%;
+  height: auto;
+}

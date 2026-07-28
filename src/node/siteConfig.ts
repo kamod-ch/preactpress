@@ -39,6 +39,10 @@ export interface ThemeLabels {
   lastUpdated?: string;
   onThisPage?: string;
   language?: string;
+  version?: string;
+  archivedBanner?: string;
+  copyPageMarkdown?: string;
+  copiedPageMarkdown?: string;
 }
 
 export interface OutlineItem {
@@ -178,8 +182,289 @@ export interface TransformHtmlContext {
 }
 
 export interface BuildEndContext {
-  site: SiteConfig;
+  site: ResolvedConfig;
   pages: Array<{ route: string; page: PageView }>;
+}
+
+/** Legacy documentation version entry keyed by identifier. */
+export interface VersionConfig {
+  label: string;
+  link?: string;
+  /** Optional content root relative to the site root. */
+  srcDir?: string;
+  themeConfig?: ThemeConfig;
+}
+
+export type VersionStatus = "current" | "archived" | "beta";
+
+export interface VersionItemConfig {
+  value: string;
+  label: string;
+  status?: VersionStatus;
+  link?: string;
+  /** Optional content root relative to the site root. */
+  srcDir?: string;
+  themeConfig?: ThemeConfig;
+}
+
+export interface VersionLabels {
+  switcher?: string;
+  current?: string;
+  archived?: string;
+  /** Supports `{version}`, `{label}`, `{current}`, `{currentLabel}`. */
+  archivedBanner?: string;
+}
+
+/** Structured documentation versioning config. */
+export interface VersionsConfig {
+  /** Version value served at unprefixed routes. Default: first item with `status: "current"`. */
+  current?: string;
+  /** Alias keys mapped to version values, e.g. `{ latest: "2.0" }`. */
+  aliases?: Record<string, string>;
+  /** Directory name for archived snapshots. Default `versions`. */
+  dir?: string;
+  /** Directory name for the current docs tree. Default `current`. */
+  currentDir?: string;
+  items: VersionItemConfig[];
+  labels?: VersionLabels;
+}
+
+export type UserVersionsConfig = Record<string, VersionConfig> | VersionsConfig;
+
+export interface ResolvedVersion {
+  key: string;
+  value: string;
+  label: string;
+  link: string;
+  prefix: string;
+  status: VersionStatus;
+  isCurrent: boolean;
+  isAlias: boolean;
+  srcDir: string;
+  themeConfig: ThemeConfig;
+}
+
+export interface ResolvedVersions {
+  enabled: boolean;
+  current: string;
+  defaultVersionKey: string;
+  dir: string;
+  currentDir: string;
+  labels: Required<VersionLabels>;
+  aliases: Record<string, string>;
+  versions: ResolvedVersion[];
+}
+
+export interface WorkspaceLinkConfig {
+  pattern: string;
+  text?: string;
+}
+
+export interface WorkspaceTypedocConfig {
+  entries: string[];
+  tsconfig?: string;
+  output?: string;
+}
+
+export interface WorkspaceItemConfig {
+  /** Display name shown in the workspace switcher. */
+  name: string;
+  /** URL slug and route prefix (e.g. `ui` → `/ui/...`). */
+  id: string;
+  /** Package root relative to the site root. */
+  root: string;
+  /** Docs directory relative to the package root. Default `./docs`. */
+  docs?: string;
+  /** Optional npm package name for auto-discovery matching. */
+  packageName?: string;
+  /** Override package version from package.json. */
+  version?: string;
+  description?: string;
+  /** Git repository URL override. */
+  repository?: string;
+  /** Source directory for source links. Default `src`. */
+  sourceDir?: string;
+  /** Path to CHANGELOG.md relative to package root. */
+  changelog?: string;
+  link?: string;
+  sidebar?: SidebarConfig;
+  themeConfig?: ThemeConfig;
+  editLink?: WorkspaceLinkConfig;
+  sourceLink?: WorkspaceLinkConfig;
+  typedoc?: WorkspaceTypedocConfig;
+}
+
+export interface WorkspaceLabels {
+  switcher?: string;
+  version?: string;
+}
+
+/** Monorepo documentation config for multiple packages in one site. */
+export interface WorkspacesConfig {
+  /** Workspace served when visiting unprefixed shared docs. */
+  default?: string;
+  /** Use package.json version labels when `package`; site versions when `project`. Default `project`. */
+  versionMode?: "project" | "package";
+  /** Match workspace entries against pnpm/npm/Yarn workspace packages. */
+  autoDiscover?: boolean;
+  labels?: WorkspaceLabels;
+  items: WorkspaceItemConfig[];
+}
+
+export interface ResolvedWorkspace {
+  id: string;
+  name: string;
+  prefix: string;
+  link: string;
+  packageRoot: string;
+  docsDir: string;
+  /** Site-root-relative path to the docs directory, with trailing slash. */
+  docsRelativePrefix: string;
+  packageName?: string;
+  packageVersion?: string;
+  description?: string;
+  repositoryUrl?: string;
+  changelogPath?: string;
+  editLink?: WorkspaceLinkConfig;
+  sourceLink?: WorkspaceLinkConfig;
+  typedoc?: WorkspaceTypedocConfig;
+  themeConfig: ThemeConfig;
+  dependencies: string[];
+}
+
+export interface ResolvedWorkspaces {
+  enabled: boolean;
+  defaultId: string;
+  versionMode: "project" | "package";
+  labels: Required<WorkspaceLabels>;
+  workspaces: ResolvedWorkspace[];
+}
+
+/**
+ * Plugin contract for extending PreactPress. See {@link ./pluginTypes.js} and the plugin guide.
+ */
+export type { PreactPressPlugin } from "./pluginTypes.js";
+
+/** TypeDoc integration options (reserved). Set to `false` to disable explicitly. */
+export interface ApiDocsConfig {
+  enabled?: boolean;
+  /** Path to a tsconfig file used for API reference generation. */
+  tsconfig?: string;
+  /** Output directory relative to `srcDir`. Default `api`. */
+  outDir?: string;
+}
+
+export interface ResolvedApiDocsConfig {
+  enabled: boolean;
+  tsconfig?: string;
+  outDir: string;
+}
+
+/** OpenAPI integration options (reserved). Set to `false` to disable explicitly. */
+export interface OpenApiConfig {
+  enabled?: boolean;
+  /** Path to an OpenAPI 3.x spec file. */
+  spec?: string;
+  /** Route prefix for generated API pages. Default `/api`. */
+  base?: string;
+}
+
+export interface ResolvedOpenApiConfig {
+  enabled: boolean;
+  spec?: string;
+  base: string;
+}
+
+/** AI-oriented export options. Set to `false` to disable explicitly. */
+export interface AiExportsConfig {
+  /** Write `llms.txt` during production builds. Default `true` when `ai` is set. */
+  llmsTxt?: boolean;
+  /** Write consolidated `llms-full.txt` (and optional bundles). Default `true` when `ai` is set. */
+  llmsFullTxt?: boolean;
+  /** Show a “Copy page as Markdown” control in the default theme. Default `true` when `ai` is set. */
+  copyMarkdown?: boolean;
+  /** Write `/api/context.json` for AI coding tools. Default `true` when `ai` is set. */
+  contextIndex?: boolean;
+  /** Write per-page `.md` files linked from `llms.txt`. Default `true` when `ai` is set. */
+  pageMarkdown?: boolean;
+  /** Route globs excluded from AI exports (e.g. `/tags/**`, `/404`). */
+  exclude?: string[];
+  /** Max bytes for `llms-full.txt` before splitting into numbered bundles. Default `1_500_000`. */
+  maxBundleBytes?: number;
+  /** Write a JSONL chunk export for retrieval workflows. Default `false`. */
+  chunks?: boolean;
+}
+
+export interface ResolvedAiExportsConfig {
+  llmsTxt: boolean;
+  llmsFullTxt: boolean;
+  copyMarkdown: boolean;
+  contextIndex: boolean;
+  pageMarkdown: boolean;
+  exclude: string[];
+  maxBundleBytes: number;
+  chunks: boolean;
+}
+
+/** Client-safe subset of AI export settings exposed to the default theme. */
+export interface ClientAiExportsConfig {
+  copyMarkdown: boolean;
+}
+
+/** HTTP redirect status codes supported for static outputs. */
+export type RedirectStatus = 301 | 302 | 307 | 308;
+
+export interface RedirectEntry {
+  from: string;
+  to: string;
+  status?: RedirectStatus;
+}
+
+export interface RedirectsOptions {
+  entries?: Record<string, string> | RedirectEntry[];
+  /** Emit static HTML redirect pages at each source route. Default `true`. */
+  generateHtmlFallbacks?: boolean;
+  /** Emit `_redirects` for Netlify and Cloudflare Pages. Default `true`. */
+  generateRedirectsFile?: boolean;
+}
+
+/**
+ * Redirect configuration.
+ * - Route map: `{ "/old": "/new" }`
+ * - Rule array: `[{ from, to, status }]`
+ * - Options object with `entries` and output flags
+ */
+export type RedirectsConfig = Record<string, string> | RedirectEntry[] | RedirectsOptions;
+
+export interface ResolvedRedirect {
+  from: string;
+  to: string;
+  status: RedirectStatus;
+  /** Final destination after resolving internal redirect chains. */
+  target: string;
+  /** Whether the destination is an external URL. */
+  external: boolean;
+}
+
+export interface ResolvedRedirects {
+  rules: ResolvedRedirect[];
+  generateHtmlFallbacks: boolean;
+  generateRedirectsFile: boolean;
+  /** Source routes excluded from search, sitemap, and orphan detection. */
+  fromRoutes: Set<string>;
+}
+
+/** Options for `preactpress check` (partially reserved for future plugin checks). */
+export interface CheckConfig {
+  /** Treat warnings as errors when running `preactpress check`. */
+  failOnWarnings?: boolean;
+  /** Run plugin-provided checks when the plugin runtime is available. Default `true`. */
+  plugins?: boolean;
+}
+
+export interface ResolvedCheckConfig {
+  failOnWarnings: boolean;
+  plugins: boolean;
 }
 
 export interface ResolvedLocale {
@@ -254,9 +539,26 @@ export interface UserConfig {
   pageReady?: false | PageReadyConfig;
   build?: BuildConfig;
   vite?: import("vite").UserConfig;
+  /** Documentation versioning (route map or structured config). */
+  versions?: UserVersionsConfig;
+  /** Monorepo workspace packages aggregated into one documentation site. */
+  workspaces?: WorkspacesConfig | WorkspaceItemConfig[];
+  /** Registered plugins executed during config resolution, dev, and build. */
+  plugins?: import("./pluginTypes.js").PreactPressPlugin[];
+  /** TypeDoc integration (reserved). Omit or set `false` to disable. */
+  apiDocs?: ApiDocsConfig | false;
+  /** OpenAPI integration (reserved). Omit or set `false` to disable. */
+  openapi?: OpenApiConfig | false;
+  /** AI export settings (reserved). Omit or set `false` to disable. */
+  ai?: AiExportsConfig | false;
+  /** HTTP redirects. Distinct from in-site route `rewrites`. */
+  redirects?: RedirectsConfig;
+  /** `preactpress check` behavior. */
+  check?: CheckConfig;
 }
 
-export interface SiteConfig {
+/** Fully resolved site configuration used by internal build and runtime modules. */
+export interface ResolvedConfig {
   root: string;
   srcDir: string;
   srcExclude: string[];
@@ -285,4 +587,15 @@ export interface SiteConfig {
   vite: import("vite").UserConfig;
   logger: Logger;
   routes?: string[];
+  versions: ResolvedVersions;
+  workspaces: ResolvedWorkspaces;
+  plugins: import("./pluginTypes.js").PreactPressPlugin[];
+  apiDocs: ResolvedApiDocsConfig | false;
+  openapi: ResolvedOpenApiConfig | false;
+  ai: ResolvedAiExportsConfig | false;
+  redirects: ResolvedRedirects;
+  check: ResolvedCheckConfig;
 }
+
+/** @deprecated Use {@link ResolvedConfig}. Kept for backward compatibility. */
+export type SiteConfig = ResolvedConfig;

@@ -6,7 +6,7 @@ tags:
   - markdown
 ---
 
-PreactPress renders Mermaid diagrams from fenced code blocks. Use the `mermaid` language name:
+PreactPress renders Mermaid diagrams when `@preactpress/plugin-mermaid` is enabled. Use the `mermaid` language name:
 
 ````md
 ```mermaid
@@ -50,4 +50,12 @@ stateDiagram-v2
   Published --> [*]
 ```
 
-Mermaid is loaded on the client only when a page contains a diagram.
+Mermaid is loaded on the client only when a page contains a diagram. Enable the plugin in `.preactpress/config.ts`:
+
+```ts
+import { mermaidPlugin } from "@preactpress/plugin-mermaid";
+
+export default defineConfig({
+  plugins: [mermaidPlugin()],
+});
+```

@@ -15,6 +15,7 @@ vi.mock("shiki", () => ({
 }));
 
 const { extractMarkdownMetadata, renderMarkdown } = await import("../src/node/markdown.js");
+const { createTestResolvedConfig } = await import("../src/node/pluginTestkit.js");
 const fixtureSnippet = path.join(import.meta.dirname, "fixtures/sample-snippet.ts");
 
 describe("renderMarkdown", () => {
@@ -89,15 +90,28 @@ Expandable content here.
     expect(page.html).toContain("Be careful");
   });
 
-  it("renders mermaid fences as client-renderable diagram blocks", async () => {
-    const page = await renderMarkdown(`\`\`\`mermaid
+  it("renders plugin fence overrides instead of default Shiki output", async () => {
+    const plugin = {
+      name: "test:mermaid",
+      transformFence(lang: string, code: string) {
+        if (lang === "mermaid") {
+          return `<figure class="pp-mermaid">${code.trim()}</figure>`;
+        }
+      },
+    };
+    const site = createTestResolvedConfig({ plugins: [plugin] });
+    const page = await renderMarkdown(
+      `\`\`\`mermaid
 graph TD
   A[Markdown] --> B[PreactPress]
-\`\`\``);
+\`\`\``,
+      "/index.md",
+      { site, route: "/" },
+    );
 
     expect(page.html).toContain('class="pp-mermaid"');
     expect(page.html).toContain("graph TD");
-    expect(page.html).toContain("A[Markdown] --&gt; B[PreactPress]");
+    expect(page.html).toContain("A[Markdown] --> B[PreactPress]");
     expect(page.html).not.toContain('class="pp-code-block"');
   });
 

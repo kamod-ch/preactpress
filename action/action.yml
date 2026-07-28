@@ -1,0 +1,130 @@
+name: PreactPress
+description: Install dependencies, cache packages, run preactpress check/build, and optionally upload artifacts.
+branding:
+  icon: book
+  color: blue
+
+inputs:
+  command:
+    description: >-
+      Step after install: install (deps only), check, build, or all (check then build).
+    required: false
+    default: all
+  node-version:
+    description: Node.js version
+    required: false
+    default: "22"
+  working-directory:
+    description: PreactPress site root (directory with package.json)
+    required: false
+    default: "."
+  package-manager:
+    description: Package manager — pnpm, npm, or yarn
+    required: false
+    default: pnpm
+  install-args:
+    description: Extra arguments passed to the install command
+    required: false
+    default: --frozen-lockfile
+  check-args:
+    description: Extra arguments passed to preactpress check
+    required: false
+    default: ""
+  build-args:
+    description: Extra arguments passed to preactpress build
+    required: false
+    default: ""
+  base:
+    description: Shortcut for preactpress build --base (GitHub Pages project sites)
+    required: false
+    default: ""
+  strict:
+    description: Pass --strict to preactpress check
+    required: false
+    default: "false"
+  upload-artifact:
+    description: Upload the build output directory as a workflow artifact
+    required: false
+    default: "false"
+  artifact-name:
+    description: Artifact name when upload-artifact is true
+    required: false
+    default: preactpress-dist
+  artifact-path:
+    description: Build output path relative to working-directory
+    required: false
+    default: dist
+
+outputs:
+  artifact-name:
+    description: Name of the uploaded artifact, if any
+    value: ${{ steps.upload.outputs.artifact-id && inputs.artifact-name || '' }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup pnpm
+      if: inputs.package-manager == 'pnpm'
+      uses: pnpm/action-setup@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: ${{ inputs.package-manager }}
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        set -euo pipefail
+        case "${{ inputs.package-manager }}" in
+          pnpm) pnpm install ${{ inputs.install-args }} ;;
+          npm) npm ci ${{ inputs.install-args }} ;;
+          yarn) yarn install --immutable ${{ inputs.install-args }} ;;
+          *)
+            echo "Unsupported package manager: ${{ inputs.package-manager }}" >&2
+            exit 1
+            ;;
+        esac
+
+    - name: preactpress check
+      if: inputs.command == 'check' || inputs.command == 'all'
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        set -euo pipefail
+        strict_flag=""
+        if [ "${{ inputs.strict }}" = "true" ]; then
+          strict_flag="--strict"
+        fi
+        case "${{ inputs.package-manager }}" in
+          pnpm) pnpm exec preactpress check . $strict_flag ${{ inputs.check-args }} ;;
+          npm) npx preactpress check . $strict_flag ${{ inputs.check-args }} ;;
+          yarn) yarn exec preactpress check . $strict_flag ${{ inputs.check-args }} ;;
+        esac
+
+    - name: preactpress build
+      if: inputs.command == 'build' || inputs.command == 'all'
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        set -euo pipefail
+        base_flag=""
+        if [ -n "${{ inputs.base }}" ]; then
+          base_flag="--base ${{ inputs.base }}"
+        fi
+        case "${{ inputs.package-manager }}" in
+          pnpm) pnpm exec preactpress build . $base_flag ${{ inputs.build-args }} ;;
+          npm) npx preactpress build . $base_flag ${{ inputs.build-args }} ;;
+          yarn) yarn exec preactpress build . $base_flag ${{ inputs.build-args }} ;;
+        esac
+
+    - name: Upload build artifact
+      id: upload
+      if: inputs.upload-artifact == 'true' && (inputs.command == 'build' || inputs.command == 'all')
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ inputs.working-directory == '.' && inputs.artifact-path || format('{0}/{1}', inputs.working-directory, inputs.artifact-path) }}
+        if-no-files-found: error

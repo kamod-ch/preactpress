@@ -6,6 +6,8 @@ import { canonicalUrl, publicUrl } from "../shared/url.js";
 import { escapeAttr, escapeHtml } from "../shared/escapeHtml.js";
 import type { PageView } from "../client/types.js";
 import { localizedRouteForLocale, localeFromRoute, siteForRoute } from "../shared/locale.js";
+import { canonicalRouteForPage } from "../shared/version.js";
+import { applyPluginsExtendHead } from "./pluginRuntime.js";
 import {
   injectPageReadyShell,
   renderStylesheetLinks as renderSharedStylesheetLinks,
@@ -55,7 +57,12 @@ export function buildDefaultHeadTags(opts: {
     pageType = "website",
     pageData,
   } = opts;
-  const canonical = absoluteUrl(site, route);
+  const routeSet = site.routes ? new Set(site.routes) : undefined;
+  const canonicalRoute =
+    routeSet && site.versions?.enabled
+      ? canonicalRouteForPage(route, routeSet, site.i18n, site.versions)
+      : route;
+  const canonical = absoluteUrl(site, canonicalRoute);
   const imageUrl = resolveHeadImage(site, image);
   const jsonLd = buildJsonLd({
     site,
@@ -134,7 +141,6 @@ export async function collectHeadTags(opts: {
 }): Promise<string> {
   const { site, route, title, description, tags = [], image, pageType, pageData } = opts;
   const pageHead = opts.pageHead ?? headTagsFromMeta(pageData?.meta);
-  const activeSite = siteForRoute(site.site, route, site.i18n);
   const defaultHead = buildDefaultHeadTags({
     site,
     route,
@@ -145,10 +151,10 @@ export async function collectHeadTags(opts: {
     pageType,
     pageData,
   });
-  const transformed = site.transformHead
-    ? await site.transformHead({ route, title, description, tags, site: activeSite })
+  const pluginHead = pageData
+    ? await applyPluginsExtendHead(site, route, pageData, { command: "build", mode: "production" })
     : [];
-  return [...defaultHead, ...site.head, ...pageHead, ...transformed]
+  return [...defaultHead, ...pluginHead, ...site.head, ...pageHead]
     .filter(
       (tag) =>
         tag[1] &&

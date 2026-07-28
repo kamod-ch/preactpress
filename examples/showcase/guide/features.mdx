@@ -1,0 +1,31 @@
+---
+title: Features
+description: Core PreactPress features demonstrated in this showcase
+---
+
+import { FeatureBadge } from "../components/FeatureBadge.tsx";
+
+# Features
+
+This page demonstrates MDX components, redirects, and validation.
+
+## Release features
+
+<FeatureBadge label="Plugin system" /> <FeatureBadge label="preactpress check" /> <FeatureBadge label="AI exports" />
+
+| Feature | Status in this project |
+| ------- | ---------------------- |
+| Redirect `/legacy` → here | Configured in `.preactpress/config.ts` |
+| `llms.txt` | Enabled via `ai` config |
+| Mermaid plugin | See [Diagrams](/guide/diagrams) |
+| Playground plugin | See [Playground](/guide/playground) |
+
+## Validation
+
+Run before deploy:
+
+```bash
+pnpm check --strict
+```
+
+`preactpress check` validates the redirect target, internal links, and navigation entries.

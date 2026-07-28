@@ -1,0 +1,14 @@
+{
+  "name": "plugin-mermaid-example-basic",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "preactpress dev .",
+    "build": "preactpress build .",
+    "check": "preactpress check ."
+  },
+  "devDependencies": {
+    "@kamod-ch/preactpress": "workspace:*",
+    "@preactpress/plugin-mermaid": "workspace:*"
+  }
+}

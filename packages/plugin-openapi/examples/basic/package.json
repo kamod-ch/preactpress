@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "preactpress-plugin-openapi-example",
+  "type": "module",
+  "scripts": {
+    "dev": "preactpress dev",
+    "build": "preactpress build"
+  },
+  "devDependencies": {
+    "@kamod-ch/preactpress": "workspace:*",
+    "@preactpress/plugin-openapi": "workspace:*"
+  }
+}

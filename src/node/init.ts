@@ -19,6 +19,8 @@ export const INIT_TEMPLATES = [
   "api-docs",
   "saas-docs",
   "knowledge-base",
+  "versions",
+  "monorepo",
 ] as const;
 export type InitTemplateName = (typeof INIT_TEMPLATES)[number];
 
@@ -37,6 +39,8 @@ const TEMPLATE_DIRS: Record<InitTemplateName, string> = {
   "api-docs": path.join("templates", "api-docs"),
   "saas-docs": path.join("templates", "saas-docs"),
   "knowledge-base": path.join("templates", "knowledge-base"),
+  versions: path.join("templates", "versions"),
+  monorepo: path.join("templates", "monorepo"),
 };
 
 function shouldCopyTemplateEntry(rel: string): boolean {
@@ -97,7 +101,7 @@ async function linkLocalPreactpress(targetRoot: string, packageName: string): Pr
   await linkPackage(targetRoot, packageName, PACKAGE_ROOT);
 }
 
-/** Ensure a local `file:` devDependency is linked when node_modules is missing (bundled templates). */
+/** Ensure local `file:` devDependencies are linked when node_modules is missing (bundled templates). */
 export async function ensurePreactpressLinked(siteRoot: string): Promise<void> {
   const pkgPath = path.join(siteRoot, "package.json");
   if (!(await fileExists(pkgPath))) return;
@@ -108,15 +112,46 @@ export async function ensurePreactpressLinked(siteRoot: string): Promise<void> {
     devDependencies?: Record<string, string>;
     dependencies?: Record<string, string>;
   };
-  const spec = pkg.devDependencies?.[packageName] ?? pkg.dependencies?.[packageName];
-  if (!spec?.startsWith("file:")) return;
 
-  const linkPath = packageInstallPath(path.join(siteRoot, "node_modules"), packageName);
-  if (await fileExists(path.join(linkPath, "package.json"))) return;
+  const linked = new Set<string>();
+  const specs = {
+    ...(pkg.dependencies ?? {}),
+    ...(pkg.devDependencies ?? {}),
+  };
 
-  const target = path.resolve(siteRoot, spec.slice("file:".length));
-  if (!(await fileExists(path.join(target, "package.json")))) return;
-  await linkPackage(siteRoot, packageName, target);
+  for (const [name, spec] of Object.entries(specs)) {
+    if (typeof spec !== "string" || !spec.startsWith("file:") || linked.has(name)) continue;
+
+    const linkPath = packageInstallPath(path.join(siteRoot, "node_modules"), name);
+    if (await fileExists(path.join(linkPath, "package.json"))) {
+      linked.add(name);
+      continue;
+    }
+
+    let target = path.resolve(siteRoot, spec.slice("file:".length));
+    if (!(await fileExists(path.join(target, "package.json"))) && name === packageName) {
+      target = PACKAGE_ROOT;
+    }
+    if (!(await fileExists(path.join(target, "package.json"))) && name === "@preactpress/plugin-mermaid") {
+      target = path.join(PACKAGE_ROOT, "packages", "plugin-mermaid");
+    }
+    if (!(await fileExists(path.join(target, "package.json"))) && name === "@preactpress/plugin-typedoc") {
+      target = path.join(PACKAGE_ROOT, "packages", "plugin-typedoc");
+    }
+    if (!(await fileExists(path.join(target, "package.json"))) && name === "@preactpress/plugin-playground") {
+      target = path.join(PACKAGE_ROOT, "packages", "plugin-playground");
+    }
+    if (!(await fileExists(path.join(target, "package.json"))) && name === "@preactpress/plugin-openapi") {
+      target = path.join(PACKAGE_ROOT, "packages", "plugin-openapi");
+    }
+    if (!(await fileExists(path.join(target, "package.json"))) && name === "@preactpress/plugin-changelog") {
+      target = path.join(PACKAGE_ROOT, "packages", "plugin-changelog");
+    }
+    if (!(await fileExists(path.join(target, "package.json")))) continue;
+
+    await linkPackage(siteRoot, name, target);
+    linked.add(name);
+  }
 }
 
 async function patchStarterPackageJson(
@@ -160,6 +195,7 @@ export async function init(targetRoot: string, options: InitOptions = {}): Promi
   const { name: packageName, version: preactpressVersion } = await readPreactpressPackage();
   await patchStarterPackageJson(resolvedRoot, packageName, preactpressVersion);
   await linkLocalPreactpress(resolvedRoot, packageName);
+  await ensurePreactpressLinked(resolvedRoot);
 
   return { root: resolvedRoot, preactpressVersion, template };
 }

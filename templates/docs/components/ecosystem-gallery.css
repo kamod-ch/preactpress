@@ -1,0 +1,270 @@
+.pp-eco-gallery {
+  margin: 28px 0 0;
+}
+
+.pp-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pp-eco-toolbar {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.pp-eco-search {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--pp-bg) 88%, var(--pp-sidebar-bg));
+  color: var(--pp-text);
+  padding: 0 14px;
+  font: inherit;
+}
+
+.pp-eco-search:focus-visible {
+  outline: 3px solid var(--pp-focus);
+  outline-offset: 2px;
+  border-color: var(--pp-accent);
+}
+
+.pp-eco-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pp-eco-filter-btn {
+  min-height: 36px;
+  border: 1px solid var(--pp-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pp-sidebar-bg) 72%, var(--pp-bg));
+  color: var(--pp-text);
+  padding: 0 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.pp-eco-filter-btn:hover {
+  border-color: var(--pp-border-strong);
+  color: var(--pp-accent);
+}
+
+.pp-eco-filter-btn:focus-visible {
+  outline: 3px solid var(--pp-focus);
+  outline-offset: 2px;
+}
+
+.pp-eco-filter-btn-active {
+  border-color: color-mix(in srgb, var(--pp-accent) 45%, var(--pp-border));
+  background: color-mix(in srgb, var(--pp-accent) 12%, var(--pp-bg));
+  color: var(--pp-accent);
+}
+
+.pp-eco-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pp-eco-tag-btn {
+  min-height: 30px;
+  border: 1px solid var(--pp-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pp-muted);
+  padding: 0 10px;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.pp-eco-tag-btn:hover {
+  border-color: var(--pp-accent);
+  color: var(--pp-accent);
+}
+
+.pp-eco-tag-btn:focus-visible {
+  outline: 3px solid var(--pp-focus);
+  outline-offset: 2px;
+}
+
+.pp-eco-tag-btn-active {
+  border-color: color-mix(in srgb, var(--pp-accent) 45%, var(--pp-border));
+  background: color-mix(in srgb, var(--pp-accent) 10%, var(--pp-bg));
+  color: var(--pp-accent);
+}
+
+.pp-eco-meta {
+  margin: 0 0 18px;
+  color: var(--pp-muted);
+  font-size: 0.92rem;
+}
+
+.pp-eco-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 16px;
+}
+
+.pp-eco-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 0;
+  border: 1px solid var(--pp-border);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--pp-sidebar-bg) 72%, var(--pp-bg));
+  overflow: hidden;
+}
+
+.pp-eco-card-body {
+  padding: 18px 20px 0;
+}
+
+.pp-eco-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.pp-eco-card-head h3 {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+
+.pp-eco-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border: 1px solid color-mix(in srgb, var(--pp-accent) 35%, var(--pp-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pp-accent) 10%, var(--pp-bg));
+  color: var(--pp-accent);
+  padding: 0 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pp-eco-type {
+  margin: 8px 0 0;
+  color: var(--pp-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pp-eco-card p {
+  margin: 10px 0 0;
+  color: var(--pp-muted);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.pp-eco-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-eco-card-tags li {
+  border: 1px solid var(--pp-border);
+  border-radius: 999px;
+  color: var(--pp-muted);
+  padding: 2px 8px;
+  font-size: 0.78rem;
+}
+
+.pp-eco-card-meta {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  color: var(--pp-muted);
+  font-size: 0.84rem;
+}
+
+.pp-eco-card-meta dt {
+  font-weight: 700;
+  color: var(--pp-text);
+}
+
+.pp-eco-card-meta dd {
+  margin: 2px 0 0;
+}
+
+.pp-eco-card-meta code {
+  color: var(--pp-text);
+  font-size: 0.82rem;
+}
+
+.pp-eco-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 20px 0;
+}
+
+.pp-eco-card-links a {
+  color: var(--pp-accent);
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.pp-eco-card .pp-mkt-copyable {
+  margin: 14px 20px 20px;
+}
+
+.pp-eco-empty {
+  grid-column: 1 / -1;
+  border: 1px dashed var(--pp-border);
+  border-radius: 18px;
+  padding: 28px 22px;
+  color: var(--pp-muted);
+  text-align: center;
+}
+
+.pp-eco-guidelines {
+  margin-top: clamp(48px, 7vw, 80px);
+  padding-top: 28px;
+  border-top: 1px solid var(--pp-border);
+}
+
+.pp-eco-guidelines h2 {
+  margin: 0 0 12px;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+}
+
+.pp-eco-guidelines ol {
+  margin: 16px 0 0;
+  padding-left: 1.25rem;
+  color: var(--pp-muted);
+}
+
+.pp-eco-guidelines li + li {
+  margin-top: 10px;
+}

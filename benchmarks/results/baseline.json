@@ -1,0 +1,45 @@
+{
+  "schema": "preactpress-benchmark/v1",
+  "environment": {
+    "nodeVersion": "v24.18.0",
+    "platform": "linux-x64",
+    "cpuModel": "13th Gen Intel(R) Core(TM) i7-13700H",
+    "cpuCount": 20,
+    "totalMemoryMb": 64036,
+    "gitCommit": "e01b168",
+    "gitBranch": "main",
+    "timestamp": "2026-07-28T08:43:12.520Z"
+  },
+  "results": [
+    {
+      "pageCount": 100,
+      "coldBuildMs": 608,
+      "warmBuildMs": 355,
+      "devServerStartMs": null,
+      "pageUpdateMs": null,
+      "peakMemoryMb": 491.39,
+      "searchIndexBytes": 34225,
+      "sampleHtmlBytes": 28286,
+      "mainJsBytes": 126079,
+      "mainCssBytes": 58005,
+      "totalStaticBytes": 4096728,
+      "lighthouse": {
+        "sampleHtmlBytes": 28286,
+        "mainJsBytes": 126079,
+        "mainCssBytes": 58005,
+        "scriptTags": 2,
+        "stylesheetTags": 1,
+        "totalBlockingEstimate": 126079,
+        "note": "Static analysis only — not a full Lighthouse run. Compare same fixture size only."
+      }
+    }
+  ],
+  "notes": [
+    "All timings measured on the same machine in one run — do not compare across machines.",
+    "Cold build clears .preactpress/cache and dist before building.",
+    "Warm build reuses cache from the preceding cold build for the same page count.",
+    "Lighthouse fields are static HTML/JS/CSS analysis, not Chrome Lighthouse scores.",
+    "Fixture content is seeded (0x707072657373) and generated programmatically.",
+    "CI baseline captured from local benchmark run on 2026-07-28."
+  ]
+}

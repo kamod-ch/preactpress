@@ -1,46 +1,49 @@
 # PreactPress roadmap
 
-PreactPress is a v1.x Vite and Preact static site generator. The current focus is keeping the public API dependable: clear documentation, accessible defaults, stable starter templates, and release processes that make behavior changes easy to track.
+PreactPress is a Vite and Preact documentation framework at **v2.x**. The current focus is dependable public APIs, complete documentation, official plugins, and release processes that make behavior changes easy to track.
 
-## Shipped in 1.0.x
+**Positioning:** PreactPress is the documentation framework for Preact libraries, APIs, and AI coding agents.
+
+## Shipped in 2.x
 
 - Markdown and MDX routing with development SSR and static builds
-- client navigation, prefetching, incremental builds, and optional MPA mode
-- default theme with nav, nested sidebars, outline, search, dark mode, tags, i18n, and responsive drawer navigation
-- local search and Algolia DocSearch
-- Markdown containers, alerts, highlighting, snippets, includes, code groups, TOC, emoji, and optional math
-- home/page/doc layouts, custom themes, content loaders, dynamic routes, and build hooks
-- canonical metadata, Open Graph, JSON-LD, sitemap, robots, and feeds
-- `preactpress check` validation and four init templates
-- canonical English documentation starter with a small German i18n demo
-- oxlint and oxfmt quality gates for source, tests, and bundled templates
+- Default docs theme with nav, sidebar, outline, search, dark mode, tags, i18n, and version switcher
+- **Plugin system** with typed hooks and six official plugins (mermaid, playground, typedoc, component-reference, openapi, changelog)
+- **`preactpress check`** — link, route, redirect, nav, locale, and config validation
+- **Documentation versioning** — `current/` + `versions/` layout and `preactpress version` CLI
+- **Redirect system** — validated redirects with HTML fallbacks and `_redirects` export
+- **AI exports** — `llms.txt`, `llms-full.txt`, per-page Markdown, `api/context.json`
+- Local search and Algolia DocSearch
+- Content collections, dynamic routes, custom themes, and build hooks
+- Eleven init templates including `versions` and `monorepo`
+- GitHub Actions composite action (`kamod-ch/preactpress/action@v2`)
+- Canonical English documentation with German i18n demo
+- Feature showcase at `examples/showcase/`
+- oxlint, oxfmt, Vitest, Playwright, and benchmark CI gates
 
 ## Next priorities
 
 ### Documentation quality
 
-- keep `templates/docs` synchronized with every public option and CLI behavior
-- add migration notes when public behavior changes
-- keep the hosted canonical docs aligned with the latest published release
+- Keep `templates/docs` synchronized with every public option and CLI behavior
+- Expand deployment and plugin examples from verified hosting configurations
+- Community plugin registry metadata
 
-### Accessibility and responsive UX
+### Performance
 
-- maintain keyboard and screen-reader coverage for navigation, search, dialogs, and content widgets
-- add automated browser coverage for mobile drawer focus behavior and viewport overflow
-- audit custom starter themes against the same baseline as the default theme
+- Enforce HTML/JS/CSS size budgets in CI from benchmark baselines
+- Profile warm builds for 1,000+ page sites
 
-### Release readiness
+### Ecosystem
 
-- define browser support and compatibility policy
-- add package tarball smoke tests and release automation
-- document versioning, changelog, and deprecation policy
-- add performance budgets for generated HTML, CSS, and client JavaScript
+- GitLab and Gitea providers for `@preactpress/plugin-changelog`
+- Pattern-based route rewrites
+- Additional changelog and API doc providers
 
-### Ecosystem and extensibility
+### Accessibility
 
-- stabilize data-loader and dynamic-route examples
-- document extension patterns before introducing a broader plugin API
-- expand real-world deployment examples based on verified hosting configurations
+- Maintain keyboard and screen-reader coverage for navigation, search, and dialogs
+- Automated browser coverage for mobile drawer focus behavior
 
 ## Non-goals for core
 
@@ -50,3 +53,11 @@ PreactPress is a v1.x Vite and Preact static site generator. The current focus i
 - specialized sponsor, team, or advertising components
 
 Complex product and editorial layouts remain the responsibility of custom Preact themes.
+
+## Release cadence
+
+- **Patch** — bug fixes, doc corrections
+- **Minor** — new plugins, features, templates (backward compatible)
+- **Major** — breaking API changes (deprecated aliases removed)
+
+See [CHANGELOG.md](./CHANGELOG.md), [UPGRADE.md](./UPGRADE.md), and [RELEASE-REPORT.md](./RELEASE-REPORT.md).

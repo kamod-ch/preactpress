@@ -1,3 +1,5 @@
+import "@preactpress/plugin-mermaid/style.css";
+
 let renderRun = 0;
 
 function isDarkTheme(): boolean {
@@ -10,7 +12,8 @@ function isDarkTheme(): boolean {
 
 function mermaidSourceFromElement(element: HTMLElement): string {
   if (element.dataset.mermaidSource) return element.dataset.mermaidSource;
-  return element.textContent ?? "";
+  const fallback = element.querySelector(".pp-mermaid-fallback code");
+  return fallback?.textContent ?? element.textContent ?? "";
 }
 
 function normalizeMermaidBlocks(): HTMLElement[] {
@@ -22,10 +25,17 @@ function normalizeMermaidBlocks(): HTMLElement[] {
     const pre = code.parentElement;
     if (!pre || pre.dataset.mermaidNormalized === "true") continue;
 
-    const block = document.createElement("div");
+    const block = document.createElement("figure");
     block.className = "pp-mermaid";
     block.dataset.mermaidSource = code.textContent ?? "";
-    block.textContent = code.textContent ?? "";
+    block.setAttribute("role", "figure");
+    block.setAttribute("aria-label", "Mermaid diagram");
+
+    const fallback = document.createElement("pre");
+    fallback.className = "pp-mermaid-fallback";
+    fallback.innerHTML = `<code>${code.textContent ?? ""}</code>`;
+    block.appendChild(fallback);
+
     pre.replaceWith(block);
     pre.dataset.mermaidNormalized = "true";
     blocks.push(block);
@@ -34,7 +44,31 @@ function normalizeMermaidBlocks(): HTMLElement[] {
   return blocks;
 }
 
-export async function renderMermaidDiagrams(): Promise<void> {
+function renderErrorMessage(block: HTMLElement, source: string, message: string): void {
+  block.dataset.mermaidError = "true";
+  block.dataset.mermaidRendered = "true";
+  block.innerHTML = [
+    `<div class="pp-mermaid-error" role="alert">`,
+    `<strong>Mermaid diagram could not be rendered.</strong>`,
+    `<p>${escapeHtml(message)}</p>`,
+    `</div>`,
+    `<details class="pp-mermaid-source">`,
+    `<summary>Show diagram source</summary>`,
+    `<pre><code>${escapeHtml(source)}</code></pre>`,
+    `</details>`,
+  ].join("");
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+/** Client-side progressive enhancement for Mermaid diagrams. */
+export async function enhanceContent(): Promise<void> {
   if (typeof document === "undefined") return;
 
   const blocks = normalizeMermaidBlocks().filter(
@@ -61,12 +95,18 @@ export async function renderMermaidDiagrams(): Promise<void> {
         const id = `pp-mermaid-${run}-${index}`;
         const { svg } = await mermaid.render(id, source);
         if (run !== renderRun) return;
+
         block.innerHTML = svg;
         block.dataset.mermaidRendered = "true";
         block.dataset.mermaidSource = source;
+        block.setAttribute("role", "img");
+        block.setAttribute("aria-label", "Mermaid diagram");
       } catch (error) {
-        block.dataset.mermaidError = "true";
-        block.textContent = source;
+        const message =
+          error instanceof Error && error.message.trim()
+            ? error.message.trim()
+            : "The diagram syntax is invalid or unsupported.";
+        renderErrorMessage(block, source, message);
         console.warn("Failed to render Mermaid diagram", error);
       }
     }),

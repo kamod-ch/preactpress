@@ -23,10 +23,12 @@ export default function MarketingHero() {
     <section class="pp-mkt-hero" aria-labelledby="preactpress-hero-title">
       <div class="pp-mkt-hero-copy">
         <p class="pp-mkt-eyebrow">PreactPress</p>
-        <h1 id="preactpress-hero-title">The documentation framework for Preact</h1>
+        <h1 id="preactpress-hero-title">
+          The documentation framework for Preact libraries, APIs, and AI coding agents
+        </h1>
         <p class="pp-mkt-hero-lead">
-          Start with documentation, a technical blog, an API reference, SaaS docs, or a complete
-          knowledge base—all powered by PreactPress.
+          Ship library docs with MDX, TypeDoc, live playgrounds, validation, and AI-ready exports
+          — all static, all Preact.
         </p>
         <div class="pp-mkt-actions">
           {actions.map((action) => (

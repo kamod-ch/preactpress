@@ -1,4 +1,5 @@
 export { contentChunkPath, encodeContentRoute } from "./contentChunk.js";
+export { pageMarkdownForCopy, serializablePageForClient } from "./aiMarkdown.js";
 export { escapeAttr, escapeHtml } from "./escapeHtml.js";
 export {
   PAGE_LAYOUTS,

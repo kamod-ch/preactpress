@@ -1,0 +1,14 @@
+{
+  "name": "@example/monorepo-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "preactpress dev",
+    "build": "preactpress build",
+    "check": "preactpress check"
+  },
+  "devDependencies": {
+    "@kamod-ch/preactpress": "file:../..",
+    "typescript": "^6.0.3"
+  }
+}

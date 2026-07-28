@@ -1,0 +1,55 @@
+{
+  "name": "@preactpress/plugin-playground",
+  "version": "0.1.0",
+  "description": "Live Preact code playground for PreactPress MDX",
+  "keywords": [
+    "playground",
+    "preact",
+    "preactpress",
+    "mdx",
+    "sandbox",
+    "plugin"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./mdx": {
+      "types": "./dist/mdx.d.ts",
+      "default": "./dist/mdx.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
+    },
+    "./style.css": "./src/style.css"
+  },
+  "files": [
+    "dist",
+    "src/style.css",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "pnpm run build",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "@kamod-ch/preactpress": ">=2.2.0",
+    "preact": ">=10.0.0"
+  },
+  "devDependencies": {
+    "@kamod-ch/preactpress": "workspace:*",
+    "@vitest/coverage-v8": "^4.1.9",
+    "preact": "^10.29.2",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

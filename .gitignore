@@ -14,4 +14,11 @@ proofshot-artifacts/
 coverage/
 playwright-report/
 test-results/
+benchmarks/fixtures/docs/
+benchmarks/fixtures/.preactpress/cache/
+benchmarks/fixtures/dist/
+benchmarks/fixtures/.benchmark-manifest.json
+benchmarks/results/*
+!benchmarks/results/.gitkeep
+!benchmarks/results/baseline.json
 TODO.md

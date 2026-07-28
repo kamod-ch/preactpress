@@ -24,6 +24,8 @@ import { expandMarkdownIncludes } from "./markdownInclude.js";
 import { expandSnippetImports } from "./markdownSnippets.js";
 import { normalizeRoute } from "../shared/route.js";
 import { escapeAttr, escapeHtml } from "../shared/escapeHtml.js";
+import { applyPluginsTransformMarkdown, applyPluginsTransformFence } from "./pluginRuntime.js";
+import type { ResolvedConfig } from "./siteConfig.js";
 
 let highlighter: Highlighter | undefined;
 
@@ -143,13 +145,18 @@ function codeBlockContainer(preHtml: string, langRaw: string): string {
   return `<div class="pp-code-block" data-language="${escapeAttr(lang)}">${langBadge}${codeBlockCopyButton()}${preHtml}</div>`;
 }
 
-function highlightFenceSync(hi: Highlighter, langRaw: string, code: string, metaRaw = ""): string {
-  const lang = resolveShikiLang(langRaw);
-  if (lang === "mermaid") {
-    const source = code.trim();
-    return `<div class="pp-mermaid" data-mermaid-source="${escapeAttr(source)}">${escapeHtml(source)}</div>`;
+function highlightFenceSync(
+  hi: Highlighter,
+  langRaw: string,
+  code: string,
+  metaRaw = "",
+  overrideHtml?: string,
+): string {
+  if (overrideHtml !== undefined) {
+    return overrideHtml;
   }
 
+  const lang = resolveShikiLang(langRaw);
   const displayCode = code.endsWith("\n") ? code : `${code}\n`;
   try {
     const preHtml = hi.codeToHtml(displayCode, {
@@ -173,6 +180,8 @@ function highlightFenceSync(hi: Highlighter, langRaw: string, code: string, meta
 export interface RenderedMarkdown {
   meta: Record<string, unknown>;
   html: string;
+  /** Processed markdown body (after includes/snippets, before HTML rendering). */
+  markdown: string;
   title?: string;
   description?: string;
   headings: OutlineItem[];
@@ -201,6 +210,8 @@ interface MarkdownRenderEnv {
   route?: string;
   knownRoutes?: Set<string>;
   localePrefix?: string;
+  fenceOverrides?: Map<number, string>;
+  fenceCounter?: number;
 }
 
 const markdownRenderers = new Map<string, MarkdownIt>();
@@ -245,7 +256,10 @@ function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownIt {
     const info = (token.info || "").trim();
     const { lang: langRaw, metaRaw } = parseFenceInfo(info);
     const code = token.content.replace(/\n$/, "");
-    return highlightFenceSync(renderEnv.highlighter, langRaw, code, metaRaw);
+    const fenceIndex = renderEnv.fenceCounter ?? 0;
+    renderEnv.fenceCounter = fenceIndex + 1;
+    const overrideHtml = renderEnv.fenceOverrides?.get(fenceIndex);
+    return highlightFenceSync(renderEnv.highlighter, langRaw, code, metaRaw, overrideHtml);
   };
 
   md.renderer.rules.heading_open = (tokens, idx, rendererOptions, env, self) => {
@@ -321,14 +335,25 @@ export async function renderMarkdown(
     routes?: Iterable<string>;
     localePrefix?: string;
     srcDir?: string;
+    site?: ResolvedConfig;
   } = {},
 ): Promise<RenderedMarkdown> {
-  const { data, content } = matter(raw);
+  const { data, content: rawContent } = matter(raw);
   const meta = normalizeMatterData(data);
   const config = { ...DEFAULT_MARKDOWN_CONFIG, ...options };
   const hi = await getHighlighter();
   const route = options.route ? normalizeRoute(options.route) : undefined;
   const knownRoutes = options.routes ? new Set([...options.routes].map(normalizeRoute)) : undefined;
+
+  let content = rawContent;
+  if (options.site && route && filePath) {
+    content = await applyPluginsTransformMarkdown(options.site, content, {
+      route,
+      file: filePath,
+      command: "build",
+      mode: "production",
+    });
+  }
 
   const snippetCtx = { srcDir: options.srcDir, filePath };
   const withIncludes = expandMarkdownIncludes(content, snippetCtx);
@@ -336,6 +361,10 @@ export async function renderMarkdown(
   const allHeadings = extractHeadingsFromContent(processed);
 
   await preloadFenceLanguages(processed, hi);
+  const fenceOverrides =
+    options.site && route && filePath
+      ? await resolvePluginFenceOverrides(processed, options.site, route, filePath)
+      : undefined;
   const md = getMarkdownRenderer(config);
   const html = md.render(processed, {
     highlighter: hi,
@@ -345,6 +374,8 @@ export async function renderMarkdown(
     route,
     knownRoutes,
     localePrefix: options.localePrefix,
+    fenceOverrides,
+    fenceCounter: 0,
   });
   const headings = extractHeadingsFromContent(processed).filter(
     (heading) => heading.level >= 2 && heading.level <= 3,
@@ -352,12 +383,67 @@ export async function renderMarkdown(
   const title = typeof meta.title === "string" ? meta.title : undefined;
   const description = typeof meta.description === "string" ? meta.description : undefined;
 
-  return { meta, html, title, description, headings };
+  return { meta, html, markdown: processed, title, description, headings };
+}
+
+async function resolvePluginFenceOverrides(
+  content: string,
+  site: ResolvedConfig,
+  route: string,
+  filePath: string,
+): Promise<Map<number, string>> {
+  const overrides = new Map<number, string>();
+  let fenceIndex = 0;
+  let inFence = false;
+  let fenceMarker = "";
+  let currentLang = "plaintext";
+  let currentMeta = "";
+  const currentCode: string[] = [];
+
+  for (const line of content.split(/\r?\n/)) {
+    const fence = line.match(/^ {0,3}(`{3,}|~{3,})(\S*)(.*)$/);
+    if (fence) {
+      const marker = fence[1][0];
+      if (!inFence) {
+        inFence = true;
+        fenceMarker = marker;
+        const info = parseFenceInfo(`${fence[2] ?? ""}${fence[3] ?? ""}`.trim());
+        currentLang = info.lang;
+        currentMeta = info.metaRaw;
+        currentCode.length = 0;
+      } else if (marker === fenceMarker) {
+        inFence = false;
+        const code = currentCode.join("\n").replace(/\n$/, "");
+        const html = await applyPluginsTransformFence(site, currentLang, code, currentMeta, {
+          route,
+          file: filePath,
+        });
+        if (html !== undefined) {
+          overrides.set(fenceIndex, html);
+        }
+        fenceIndex += 1;
+      }
+      continue;
+    }
+
+    if (inFence) {
+      currentCode.push(line);
+    }
+  }
+
+  return overrides;
 }
 
 export function readMarkdownMetadata(absPath: string): MarkdownMetadata {
   const raw = fs.readFileSync(absPath, "utf8");
   return extractMarkdownMetadata(raw);
+}
+
+/** Frontmatter only — skips heading extraction for draft scans at scale. */
+export function readMarkdownDraftMeta(absPath: string): Record<string, unknown> {
+  const raw = fs.readFileSync(absPath, "utf8");
+  const { data } = matter(raw);
+  return normalizeMatterData(data);
 }
 
 export function extractMarkdownMetadata(raw: string): MarkdownMetadata {
@@ -575,6 +661,7 @@ export function readMarkdownFile(
     routes?: Iterable<string>;
     localePrefix?: string;
     srcDir?: string;
+    site?: ResolvedConfig;
   },
 ): Promise<RenderedMarkdown> {
   const raw = fs.readFileSync(absPath, "utf8");

@@ -1,0 +1,12 @@
+{
+  "name": "preactpress-benchmark-fixture",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "preactpress dev",
+    "build": "preactpress build"
+  },
+  "devDependencies": {
+    "@kamod-ch/preactpress": "file:../.."
+  }
+}

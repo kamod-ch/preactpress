@@ -13,6 +13,8 @@ export interface ResolvedThemeLabels {
   lastUpdated: string;
   onThisPage: string;
   language: string;
+  copyPageMarkdown: string;
+  copiedPageMarkdown: string;
 }
 
 const EN_LABELS: ResolvedThemeLabels = {
@@ -28,6 +30,8 @@ const EN_LABELS: ResolvedThemeLabels = {
   lastUpdated: "Last updated",
   onThisPage: "On this page",
   language: "Language",
+  copyPageMarkdown: "Copy page as Markdown",
+  copiedPageMarkdown: "Copied Markdown",
 };
 
 const DE_LABELS: ResolvedThemeLabels = {
@@ -43,6 +47,8 @@ const DE_LABELS: ResolvedThemeLabels = {
   lastUpdated: "Zuletzt aktualisiert",
   onThisPage: "Auf dieser Seite",
   language: "Sprache",
+  copyPageMarkdown: "Seite als Markdown kopieren",
+  copiedPageMarkdown: "Markdown kopiert",
 };
 
 export function defaultLabelsForLang(lang: string): ResolvedThemeLabels {
@@ -68,5 +74,7 @@ export function resolveThemeLabels(
     lastUpdated: overrides.lastUpdated ?? defaults.lastUpdated,
     onThisPage: overrides.onThisPage ?? defaults.onThisPage,
     language: overrides.language ?? defaults.language,
+    copyPageMarkdown: overrides.copyPageMarkdown ?? defaults.copyPageMarkdown,
+    copiedPageMarkdown: overrides.copiedPageMarkdown ?? defaults.copiedPageMarkdown,
   };
 }

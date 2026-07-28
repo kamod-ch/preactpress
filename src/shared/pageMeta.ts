@@ -134,3 +134,12 @@ export function isPageLayout(value: unknown): value is PageLayout {
 export function isDraftPage(meta: Record<string, unknown>): boolean {
   return meta.draft === true;
 }
+
+/** When frontmatter scopes a page to specific versions, return whether it belongs to `versionValue`. */
+export function pageMatchesVersion(meta: Record<string, unknown>, versionValue: string): boolean {
+  const scoped = meta.versions ?? meta.version;
+  if (scoped === undefined) return true;
+  if (typeof scoped === "string") return scoped === versionValue;
+  if (Array.isArray(scoped)) return scoped.some((entry) => String(entry) === versionValue);
+  return true;
+}

@@ -5,46 +5,45 @@ description: Learn what PreactPress is and when to use it
 
 # What is PreactPress?
 
-PreactPress is a static site generator for fast, content-focused websites. You write pages in Markdown or MDX, configure navigation and theme options in `.preactpress/config.ts`, and PreactPress generates static HTML that can be deployed to any static host.
+**PreactPress is the documentation framework for Preact libraries, APIs, and AI coding agents.**
 
-It is built with [Vite](https://vite.dev/) and [Preact](https://preactjs.com/). The workflow is inspired by VitePress, but the component model is Preact instead of Vue.
+You write pages in Markdown or MDX, configure navigation in `.preactpress/config.ts`, and PreactPress generates static HTML for any static host. The stack is [Vite](https://vite.dev/) + [Preact](https://preactjs.com/) — inspired by VitePress, but Preact and MDX instead of Vue.
 
 ## Use cases
 
-### Documentation
+### Library and API documentation
 
-PreactPress ships with a small default theme for technical documentation. It includes navigation, sidebar groups, outline links, search, last-updated metadata, and Markdown rendering out of the box.
+Document Preact component libraries, npm packages, and REST APIs with official plugins:
 
-Use it when your docs live naturally as files:
+| Need | Plugin |
+| ---- | ------ |
+| TypeScript API reference | `@preactpress/plugin-typedoc` |
+| OpenAPI / REST docs | `@preactpress/plugin-openapi` |
+| Component prop tables | `@preactpress/plugin-component-reference` |
+| Release notes | `@preactpress/plugin-changelog` |
 
-```text
-index.md
-guide/getting-started.md
-guide/routing.md
-reference/api.md
-```
+### Interactive guides
 
-Every Markdown or MDX file becomes a page, so documentation grows by adding files and linking them from the sidebar.
+Embed live Preact examples with `@preactpress/plugin-playground` and Mermaid diagrams with `@preactpress/plugin-mermaid`.
 
-### Blogs, portfolios, and marketing sites
+### AI coding agents
 
-PreactPress can also power blogs, portfolios, and small marketing sites. Markdown handles content, MDX brings in interactive Preact components, and custom themes let you replace the default documentation shell.
+Enable `ai` exports to publish `llms.txt`, `llms-full.txt`, and `api/context.json` so tools like Cursor and Claude Code can index your docs. See [AI-ready documentation](/guide/ai-coding-tools).
 
-The separate `preactpress-examples` project includes a custom-theme example that shows a magazine-style layout with article teasers and tag pages.
+### Multi-version docs
+
+Maintain current and archived documentation with the version switcher. See [Documentation versioning](/guide/versioning).
 
 ## Developer experience
 
-PreactPress focuses on keeping content work simple:
-
-| Feature              | What it gives you                                                  |
-| -------------------- | ------------------------------------------------------------------ |
-| Vite dev server      | Fast startup and hot updates while editing content                 |
-| Markdown frontmatter | Page titles, descriptions, tags, draft status, and social metadata |
-| MDX                  | Preact components inside content pages                             |
-| Default theme        | Nav, sidebar, outline, search, footer, locale switcher             |
-| `preactpress check`  | Config, route, and link validation before release                  |
-
-For regular content, use `.md`. When a page needs interactivity, use `.mdx` and import a Preact component:
+| Feature | What it gives you |
+| ------- | ----------------- |
+| Vite dev server | Fast startup and hot updates while editing content |
+| Markdown frontmatter | Titles, descriptions, tags, drafts, and social metadata |
+| MDX | Preact components inside content pages |
+| Default theme | Nav, sidebar, outline, search, footer, locale switcher |
+| `preactpress check` | Config, route, link, redirect, and nav validation before release |
+| Plugin system | Typed hooks for build, config, MDX, and validation |
 
 ```mdx
 import Counter from "./components/Counter.tsx";
@@ -56,32 +55,29 @@ import Counter from "./components/Counter.tsx";
 
 ## Performance
 
-PreactPress produces static HTML for every route during the production build. The first visit receives HTML that already contains the page content, which is good for loading speed and SEO.
+PreactPress produces static HTML for every route during the production build. After hydration, client-side navigation loads Markdown bodies as small JSON payloads from `preactpress-content/*.json`.
 
-After hydration, client-side navigation takes over. Markdown pages are loaded as small JSON payloads from `preactpress-content/*.json`, so large sites do not need to ship every Markdown body in the initial JavaScript bundle.
+| Output | Purpose |
+| ------ | ------- |
+| `index.html`, `*/index.html` | One HTML file per route |
+| `assets/*` | Hashed JavaScript and CSS from Vite |
+| `preactpress-search.json` | Search data for the default theme |
+| `llms.txt` / `llms-full.txt` | AI agent exports (when enabled) |
+| `_redirects` | HTTP redirects for static hosts |
 
-The production output is static files only:
+## How does PreactPress compare?
 
-| Output                       | Purpose                             |
-| ---------------------------- | ----------------------------------- |
-| `index.html`, `*/index.html` | One HTML file per route             |
-| `assets/*`                   | Hashed JavaScript and CSS from Vite |
-| `preactpress-search.json`    | Search data for the default theme   |
-| `preactpress-content/*.json` | Lazy-loaded Markdown page payloads  |
-| `404.html`                   | Not-found page                      |
+See the full [Comparison](/guide/comparison) against VitePress, Docusaurus, and Starlight.
 
-## What about VitePress?
+**Choose PreactPress** when you document Preact libraries or APIs and want validation, plugins, and AI-ready exports in one framework.
 
-If you know VitePress, PreactPress should feel familiar: both use Vite, file-based Markdown routing, a default docs theme, and static output.
-
-The main difference is the UI stack. VitePress uses Vue. PreactPress uses Preact and MDX, so interactive content and custom themes are written as Preact components.
-
-PreactPress is also static-only in production. You build the site once, upload the output directory, and serve it from Netlify, Vercel, Cloudflare Pages, GitHub Pages, S3, Nginx, or another static host.
+**Choose VitePress** when you are committed to Vue.
 
 ## Next steps
 
-| Page                                      | Why                                                      |
-| ----------------------------------------- | -------------------------------------------------------- |
+| Page | Why |
+| ---- | --- |
 | [Getting Started](/guide/getting-started) | Install PreactPress and understand the starter structure |
-| [Routing](/guide/routing)                 | Learn how files become URLs                              |
-| [Deploy](/guide/deploy)                   | Build and publish a static site                          |
+| [Plugins](/guide/plugins) | Extend with official plugins |
+| [Showcase](https://github.com/kamod-ch/preactpress/tree/main/examples/showcase) | Runnable feature demo |
+| [Deploy](/guide/deploy) | Build and publish a static site |

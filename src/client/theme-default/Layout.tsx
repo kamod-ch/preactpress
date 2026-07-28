@@ -6,6 +6,7 @@ import { filterHeadingsForOutline, resolvePageChrome } from "../../shared/pageCh
 import { resolvePageHeadMeta, titleTemplateFromMeta } from "../../shared/pageMeta.js";
 import { flattenSidebarLeafItems, resolveSidebarForRoute } from "../../shared/sidebar.js";
 import { resolveThemeLabels } from "../../shared/themeLabels.js";
+import { pageMarkdownForCopy } from "../../shared/aiMarkdown.js";
 import {
   algoliaOptionsFromSearch,
   isAlgoliaSearchEnabled,
@@ -22,15 +23,43 @@ import NavLinks from "./NavLinks.js";
 import SidebarNav from "./SidebarNav.js";
 import SocialLinks from "./SocialLinks.js";
 import ThemeToggle from "./ThemeToggle.js";
+import VersionSwitcher from "./VersionSwitcher.js";
+import WorkspaceSwitcher from "./WorkspaceSwitcher.js";
+import { switcherVersions } from "../../shared/version.js";
+import { editLinkForPage, switcherWorkspaces } from "../../shared/workspace.js";
 import "./styles.css";
+
+async function copyTextToClipboard(text: string): Promise<void> {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.top = "-9999px";
+  document.body.append(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
+}
 
 const Layout: FunctionalComponent<LayoutProps> = ({
   site,
   themeConfig,
   routePath,
   page,
+  ai,
   i18n,
   locale,
+  versions,
+  version,
+  localizeVersion,
+  archivedBanner,
+  workspaces,
+  workspace,
+  localizeWorkspace,
 }) => {
   const { title } = resolvePageHeadMeta(
     page
@@ -53,12 +82,27 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   const [query, setQuery] = useState("");
   const [activeHeading, setActiveHeading] = useState<string | undefined>();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [copyMarkdownState, setCopyMarkdownState] = useState<"idle" | "copied">("idle");
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
-  const activeSidebar = resolveSidebarForRoute(themeConfig.sidebar, routePath, i18n);
+  const activeSidebar = resolveSidebarForRoute(
+    themeConfig.sidebar,
+    routePath,
+    i18n,
+    versions,
+    workspaces,
+  );
   const sidebarItems = activeSidebar.flatMap((group) => flattenSidebarLeafItems(group.items));
   const normalizedQuery = query.trim().toLowerCase();
-  const searchResults = useSiteSearch(site.base, query, locale?.key);
+  const searchResults = useSiteSearch(
+    site.base,
+    query,
+    locale?.key,
+    version?.value,
+    workspace?.id,
+  );
+  const switcherItems = versions ? switcherVersions(versions) : [];
+  const workspaceItems = workspaces ? switcherWorkspaces(workspaces) : [];
   const visibleSidebar = useMemo(() => {
     if (!normalizedQuery || searchResults.length > 0) return activeSidebar;
     const filterItems = (items: (typeof activeSidebar)[0]["items"]): typeof items => {
@@ -104,9 +148,18 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       }),
     [routePath, MdxComponent],
   );
+  const docsRelativePath =
+    workspace && page?.relativePath?.startsWith(workspace.docsRelativePrefix)
+      ? page.relativePath.slice(workspace.docsRelativePrefix.length)
+      : page?.relativePath;
+  const editPattern = workspace?.editLink?.pattern ?? themeConfig.editLink?.pattern;
   const editHref =
-    chrome.showEditLink && themeConfig.editLink && page?.relativePath
-      ? themeConfig.editLink.pattern.replace(/:path/g, page.relativePath)
+    chrome.showEditLink && editPattern && docsRelativePath
+      ? editLinkForPage(editPattern, docsRelativePath)
+      : undefined;
+  const sourceHref =
+    workspace?.sourceLink?.pattern && docsRelativePath
+      ? editLinkForPage(workspace.sourceLink.pattern, docsRelativePath.replace(/\.mdx?$/, ".ts"))
       : undefined;
   const lastUpdated = page?.lastUpdated
     ? new Date(page.lastUpdated).toLocaleDateString(site.lang, {
@@ -115,6 +168,8 @@ const Layout: FunctionalComponent<LayoutProps> = ({
         day: "numeric",
       })
     : undefined;
+  const copyMarkdownEnabled = ai !== false && ai?.copyMarkdown === true;
+  const pageMarkdown = page ? pageMarkdownForCopy(page) : undefined;
   const showPageHeader = !(chrome.isHome && chrome.hero);
   const articleClass = classNames("pp-doc", `pp-doc-${chrome.layout}`, chrome.pageClass);
   const contentClass = chrome.markdownStyles ? "pp-doc-content" : "pp-doc-content-plain";
@@ -148,25 +203,10 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   useEffect(() => {
     setQuery("");
     setMobileMenuOpen(false);
+    setCopyMarkdownState("idle");
   }, [routePath]);
 
   useEffect(() => {
-    const copyText = async (text: string) => {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text);
-        return;
-      }
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
-      textarea.setAttribute("readonly", "");
-      textarea.style.position = "fixed";
-      textarea.style.top = "-9999px";
-      document.body.append(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      textarea.remove();
-    };
-
     const onClick = (event: MouseEvent) => {
       const target = event.target;
       const candidate = target instanceof Element ? target.closest(".pp-code-copy") : null;
@@ -176,7 +216,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       if (!code) return;
 
       event.preventDefault();
-      void copyText(code).then(() => {
+      void copyTextToClipboard(code).then(() => {
         const icon = button.querySelector(".pp-code-copy-icon");
         if (icon && button.dataset.checkIcon) icon.innerHTML = button.dataset.checkIcon;
         button.classList.add("copied");
@@ -192,6 +232,14 @@ const Layout: FunctionalComponent<LayoutProps> = ({
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
   }, []);
+
+  const onCopyPageMarkdown = () => {
+    if (!pageMarkdown) return;
+    void copyTextToClipboard(pageMarkdown).then(() => {
+      setCopyMarkdownState("copied");
+      window.setTimeout(() => setCopyMarkdownState("idle"), 2000);
+    });
+  };
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -295,6 +343,24 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               {algoliaSearch && algoliaOptions ? (
                 <AlgoliaSearch options={algoliaOptions} base={site.base} />
               ) : null}
+              {workspaces && localizeWorkspace ? (
+                <WorkspaceSwitcher
+                  base={site.base}
+                  label={workspaces.labels.switcher}
+                  current={workspace}
+                  workspaces={workspaceItems}
+                  localizeWorkspace={localizeWorkspace}
+                />
+              ) : null}
+              {versions && localizeVersion ? (
+                <VersionSwitcher
+                  base={site.base}
+                  label={versions.labels.switcher}
+                  current={version}
+                  versions={switcherItems}
+                  localizeVersion={localizeVersion}
+                />
+              ) : null}
               <ThemeToggle />
               <button
                 ref={menuButtonRef}
@@ -389,6 +455,11 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               </div>
             ) : null}
           </aside>
+        </div>
+      ) : null}
+      {archivedBanner ? (
+        <div class="pp-version-banner" role="status">
+          {archivedBanner}
         </div>
       ) : null}
       <div class={`pp-body pp-body-${chrome.layout}`}>
@@ -487,15 +558,35 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 ) : null}
               </nav>
             ) : null}
-            {(chrome.showLastUpdated && lastUpdated) || editHref ? (
+            {(chrome.showLastUpdated && lastUpdated) ||
+            editHref ||
+            sourceHref ||
+            (copyMarkdownEnabled && pageMarkdown) ? (
               <footer class="pp-doc-meta">
                 {chrome.showLastUpdated && lastUpdated ? (
                   <span>
                     {labels.lastUpdated} {lastUpdated}
                   </span>
                 ) : null}
+                {copyMarkdownEnabled && pageMarkdown ? (
+                  <button
+                    type="button"
+                    class="pp-copy-markdown"
+                    aria-live="polite"
+                    onClick={onCopyPageMarkdown}
+                  >
+                    {copyMarkdownState === "copied"
+                      ? labels.copiedPageMarkdown
+                      : labels.copyPageMarkdown}
+                  </button>
+                ) : null}
                 {editHref ? (
-                  <a href={editHref}>{themeConfig.editLink?.text ?? "Edit this page"}</a>
+                  <a href={editHref}>
+                    {workspace?.editLink?.text ?? themeConfig.editLink?.text ?? "Edit this page"}
+                  </a>
+                ) : null}
+                {sourceHref ? (
+                  <a href={sourceHref}>{workspace?.sourceLink?.text ?? "View source"}</a>
                 ) : null}
               </footer>
             ) : null}
