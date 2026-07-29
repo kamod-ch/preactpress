@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { build } from "../src/node/build.js";
+import { check } from "../src/node/check.js";
 import { resolveConfig } from "../src/node/config.js";
 import { scanAllContentFiles } from "../src/node/content.js";
 import { runVersionCommand } from "../src/node/versionCommand.js";
@@ -38,6 +39,15 @@ describe("versions", () => {
     expect(routes).toContain("/versions/1.0");
     expect(routes).toContain("/de/versions/1.0");
     expect(routes).not.toContain("/current/guide/getting-started");
+  });
+
+  it("check resolves routes from versioned content trees", async () => {
+    const root = path.join(PACKAGE_ROOT, "templates/versions");
+    const result = await check(root);
+    expect(result.errors).toEqual([]);
+    expect(result.routes).toContain("/");
+    expect(result.routes).toContain("/guide/getting-started");
+    expect(result.routes).toContain("/de");
   });
 
   it("composes locale and version prefixes consistently", async () => {

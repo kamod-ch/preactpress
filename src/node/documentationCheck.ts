@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
 import { resolveConfig } from "./config.js";
-import { fileHrefToRoute, scanContentFiles, type ContentFile } from "./content.js";
+import { fileHrefToRoute, scanAllContentFiles, type ContentFile } from "./content.js";
 import { resolveDynamicRoutes } from "./dynamicRoutes.js";
 import { extractHeadingsFromContent } from "./markdownHeadings.js";
 import { readMarkdownMetadata } from "./markdown.js";
@@ -76,7 +76,7 @@ export async function check(root?: string, options: CheckOptions = {}): Promise<
 
   let files: ContentFile[] = [];
   try {
-    files = await scanContentFiles(site);
+    files = await scanAllContentFiles(site);
   } catch (err) {
     pushError(errors, "duplicate-slug", err instanceof Error ? err.message : String(err));
   }
