@@ -5,6 +5,8 @@ template/dist/
 
 /dist
 
+packages/*/dist/
+
 templates/*/dist/
 
 # Temporary and generated artifacts

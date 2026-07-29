@@ -1,1 +1,0 @@
-{"version":3,"file":"ComponentReferenceView.d.ts","sourceRoot":"","sources":["../../src/render/ComponentReferenceView.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,cAAc,EAAiB,MAAM,mBAAmB,CAAC;AAwCvE,wBAAgB,UAAU,CAAC,EAAE,KAAK,EAAE,EAAE;IAAE,KAAK,EAAE,cAAc,CAAA;CAAE,gCAqB9D;AAED,wBAAgB,sBAAsB,CAAC,EAAE,KAAK,EAAE,EAAE;IAAE,KAAK,EAAE,cAAc,CAAA;CAAE,gCA4B1E"}

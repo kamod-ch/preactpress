@@ -1,1 +1,0 @@
-{"version":3,"file":"rss.d.ts","sourceRoot":"","sources":["../../src/render/rss.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,iBAAiB,EAAoB,MAAM,mBAAmB,CAAC;AA4B7E,MAAM,WAAW,oBAAoB;IACnC,OAAO,EAAE,MAAM,CAAC;IAChB,SAAS,EAAE,MAAM,CAAC;IAClB,KAAK,CAAC,EAAE,MAAM,CAAC;CAChB;AAED,wBAAgB,uBAAuB,CACrC,QAAQ,EAAE,iBAAiB,EAC3B,OAAO,EAAE,oBAAoB,GAC5B,MAAM,CAoCR"}

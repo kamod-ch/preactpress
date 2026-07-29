@@ -1,6 +1,7 @@
 {
   "ignorePatterns": [
     "dist/**",
+    "packages/*/dist/**",
     "node_modules/**",
     "coverage/**",
     "playwright-report/**",
