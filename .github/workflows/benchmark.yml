@@ -1,0 +1,67 @@
+name: Benchmark
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "src/**"
+      - "benchmarks/**"
+      - "bin/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/benchmark.yml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "src/**"
+      - "benchmarks/**"
+      - "bin/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/benchmark.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: benchmark-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    name: Performance benchmark (100 pages)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build package
+        run: pnpm run build
+
+      - name: Run benchmark
+        run: node benchmarks/scripts/run-benchmark.mjs --ci --skip-dev --output benchmarks/results/ci-latest.json
+
+      - name: Compare against baseline
+        run: node benchmarks/scripts/compare-results.mjs benchmarks/results/ci-latest.json benchmarks/results/baseline.ci.json
+
+      - name: Upload benchmark artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            benchmarks/results/ci-latest.json
+            benchmarks/results/ci-latest.md
+            benchmarks/results/ci-latest.compare.json

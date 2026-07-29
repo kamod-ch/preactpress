@@ -1,5 +1,6 @@
 ---
 title: useAcmeClient
+description: Access the shared Acme client from Preact components.
 layout: doc
 ---
 

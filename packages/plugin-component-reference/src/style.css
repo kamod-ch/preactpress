@@ -1,0 +1,56 @@
+.pp-component-reference {
+  margin: 1.5rem 0;
+}
+
+.pp-component-reference h3 {
+  margin-bottom: 0.5rem;
+}
+
+.pp-component-description {
+  margin: 0.5rem 0 1rem;
+}
+
+.pp-component-source {
+  font-size: 0.875rem;
+  margin: 0 0 1rem;
+}
+
+.pp-table-wrap {
+  overflow-x: auto;
+}
+
+.pp-component-props {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.pp-component-props th,
+.pp-component-props td {
+  border: 1px solid color-mix(in srgb, var(--pp-border, #d0d7de) 82%, transparent);
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.pp-component-props th {
+  background: var(--pp-code-bg, #f6f8fa);
+}
+
+.pp-component-props code {
+  font-size: 0.8125rem;
+}
+
+.pp-component-reference-error {
+  color: #cf222e;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, #cf222e 10%, transparent);
+}
+
+.pp-component-example {
+  overflow-x: auto;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: var(--pp-code-bg, #f6f8fa);
+}

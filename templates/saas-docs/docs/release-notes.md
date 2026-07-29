@@ -1,5 +1,6 @@
 ---
 title: Release notes
+description: Product changelog and version history for Acme.
 layout: doc
 ---
 

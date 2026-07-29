@@ -6,6 +6,10 @@ import {
   type ContentItem,
   type ContentLoader,
 } from "./createContentLoader.js";
+import { isCollectionLoader } from "./collections/loadCollection.js";
+import { runCollectionLoader } from "./collections/loadEntries.js";
+import { resolveCollectionRegistry } from "./collections/registry.js";
+import { closeSiteModuleLoaders } from "./loadSiteModuleExports.js";
 import { mdFileToRoute } from "./content.js";
 import { readMarkdownMetadata } from "./markdown.js";
 import { loadSiteModule } from "./loadSiteModule.js";
@@ -67,16 +71,29 @@ export async function resolvePageDataMap(site: SiteConfig): Promise<Map<string, 
     ignore: ["**/node_modules/**", "**/.preactpress/**", ...(site.srcExclude ?? [])],
   });
   const map = new Map<string, unknown>();
+  const registry = await resolveCollectionRegistry(site);
 
-  for (const dataFile of dataFiles.sort()) {
-    const route = dataFileToRoute(site.srcDir, dataFile);
-    const loader = await loadSiteModule<unknown>(dataFile, site.root);
-    if (!isContentLoader(loader)) {
+  try {
+    for (const dataFile of dataFiles.sort()) {
+      const route = dataFileToRoute(site.srcDir, dataFile);
+      const loader = await loadSiteModule<unknown>(dataFile, site.root);
+
+      if (isCollectionLoader(loader)) {
+        map.set(route, await runCollectionLoader(loader, site, registry));
+        continue;
+      }
+
+      if (isContentLoader(loader)) {
+        map.set(route, await runContentLoader(loader, site));
+        continue;
+      }
+
       throw new Error(
-        `preactpress: ${path.relative(site.srcDir, dataFile)} must default-export createContentLoader(...)`,
+        `preactpress: ${path.relative(site.srcDir, dataFile)} must default-export createContentLoader(...) or loadCollection(...)`,
       );
     }
-    map.set(route, await runContentLoader(loader, site));
+  } finally {
+    await closeSiteModuleLoaders();
   }
 
   return map;

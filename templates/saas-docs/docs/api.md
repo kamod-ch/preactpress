@@ -1,5 +1,6 @@
 ---
 title: API
+description: REST API authentication and endpoint documentation overview.
 layout: doc
 ---
 

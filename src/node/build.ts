@@ -8,6 +8,8 @@ import type { SiteConfig } from "./siteConfig.js";
 import { absoluteUrl, escapeHtml, pageHtml } from "./html.js";
 import { PACKAGE_ROOT } from "./packageRoot.js";
 import { preactPressMdxPlugin } from "./mdx.js";
+import { scanAllContentFiles } from "./content.js";
+import { hydrateRoutePage } from "./pageHydration.js";
 import { listMarkdownRoutes, preactPressPlugin } from "./plugin.js";
 import { resolvePreactEsm } from "./resolveDeps.js";
 import { copyFavicons } from "./favicon.js";
@@ -26,7 +28,17 @@ import {
 } from "./buildCache.js";
 import { writeAtomFeed } from "./feed.js";
 import { localeFromRoute, localizedRouteForLocale } from "../shared/locale.js";
+import {
+  localizedRouteForVersion,
+  versionFromRoute,
+  canonicalRouteForPage,
+} from "../shared/version.js";
+import { workspaceFromRoute } from "../shared/workspace.js";
+import { serializablePageForClient } from "../shared/aiMarkdown.js";
 import { applyTransformHtml, applyTransformPageData, invokeBuildEnd } from "./hooks.js";
+import { invokePluginsBuildStart } from "./pluginRuntime.js";
+import { writeRedirectOutputs } from "./redirectOutputs.js";
+import { redirectFromRoutes } from "./redirects.js";
 
 export { publicUrl } from "./html.js";
 
@@ -198,16 +210,29 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
 
   const routes = await listMarkdownRoutes(site);
   site.routes = routes;
+  const routeToFile = new Map((await scanAllContentFiles(site)).map((file) => [file.route, file]));
+  await invokePluginsBuildStart(site, { command: "build", mode: "production" });
   const requiredRoots = site.i18n ? site.i18n.locales.map((locale) => locale.prefix || "/") : ["/"];
+  if (site.versions.enabled) {
+    for (const version of site.versions.versions.filter(
+      (entry) => !entry.isAlias && entry.prefix,
+    )) {
+      requiredRoots.push(version.prefix);
+    }
+  }
   const missingRoot = requiredRoots.find((route) => !routes.includes(route));
   if (missingRoot) {
-    throw new Error("preactpress: add an index.md or index.mdx at the site root");
+    const hint = site.versions.enabled
+      ? `preactpress: missing index page for route ${missingRoot} (check current/ and versions/*/)`
+      : "preactpress: add an index.md or index.mdx at the site root";
+    throw new Error(hint);
   }
 
   const previousCache = await readBuildCache(site.cacheDir);
   const nextCache: BuildCache = { routes: {} };
   const renderedPages = await mapConcurrent(routes, 12, async (route) => {
-    const page = await applyTransformPageData(site, route, mod.resolveRoutePage(route));
+    let page = await applyTransformPageData(site, route, mod.resolveRoutePage(route));
+    page = await hydrateRoutePage(site, route, page, routeToFile.get(route), routes);
     const result = mod.renderFromPage(route, page);
     const html = await applyTransformHtml(
       site,
@@ -242,7 +267,12 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
     return { route, page: result.page };
   });
 
-  const notFoundPage = await applyTransformPageData(site, "/404", mod.resolveRoutePage("/404"));
+  const notFoundBase = mod.resolveRoutePage("/404");
+  const notFoundPage = await applyTransformPageData(
+    site,
+    "/404",
+    await hydrateRoutePage(site, "/404", notFoundBase, routeToFile.get("/404"), routes),
+  );
   const notFound = mod.renderFromPage("/404", notFoundPage);
   await writeRouteArtifacts({
     site,
@@ -272,10 +302,19 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
     nextCache,
   });
 
-  await removeStaleRouteOutputs(site.outDir, previousCache, new Set([...routes, "/404"]));
+  await writeRedirectOutputs({ site, previousCache, nextCache });
+
+  const activeRoutes = new Set([
+    ...routes,
+    "/404",
+    ...site.redirects.rules.map((rule) => rule.from),
+  ]);
+  await removeStaleRouteOutputs(site.outDir, previousCache, activeRoutes);
   await writeBuildCache(site.cacheDir, nextCache);
-  await writeSearchIndex(site, renderedPages);
-  if (site.site.url && site.build.sitemap) await writeSitemap(site, renderedPages);
+  await writeSearchIndex(site, renderedPages, redirectFromRoutes(site.redirects));
+  if (site.site.url && site.build.sitemap) {
+    await writeSitemap(site, renderedPages, redirectFromRoutes(site.redirects));
+  }
   if (site.site.url && site.build.robots) await writeRobots(site);
   if (site.site.url && site.build.feed) {
     await writeAtomFeed(
@@ -328,7 +367,7 @@ async function writeRouteArtifacts(opts: {
   const hash = hashContent({
     route: opts.route,
     html: opts.html,
-    page: serializablePage(opts.page),
+    page: serializablePage(opts.page, opts.site),
     contentPath: opts.contentPath,
   });
   const previous = opts.previousCache.routes[opts.route];
@@ -343,7 +382,11 @@ async function writeRouteArtifacts(opts: {
     await fs.writeFile(htmlFile, opts.html, "utf8");
     if (contentFile && opts.page.kind === "markdown") {
       await fs.mkdir(path.dirname(contentFile), { recursive: true });
-      await fs.writeFile(contentFile, JSON.stringify(opts.page, null, 2), "utf8");
+      await fs.writeFile(
+        contentFile,
+        JSON.stringify(serializablePage(opts.page, opts.site)),
+        "utf8",
+      );
     }
   }
 
@@ -355,36 +398,58 @@ async function writeRouteArtifacts(opts: {
   };
 }
 
-function serializablePage(page: PageView): unknown {
-  if (page.kind === "markdown") return page;
-  const { Component: _Component, ...rest } = page;
-  return rest;
+function serializablePage(page: PageView, site: SiteConfig): unknown {
+  const includeMarkdown = site.ai !== false && site.ai.copyMarkdown;
+  return serializablePageForClient(page, includeMarkdown);
 }
 
 async function writeSitemap(
   site: SiteConfig,
   pages: Array<{ route: string; page: PageView }>,
+  excludedRoutes: Set<string> = new Set(),
 ): Promise<void> {
   const routeSet = new Set(pages.map((page) => page.route));
   const urls = pages
+    .filter(({ route }) => !excludedRoutes.has(route))
     .map(({ route, page }) => {
+      const canonicalRoute = site.versions.enabled
+        ? canonicalRouteForPage(route, routeSet, site.i18n, site.versions)
+        : route;
       const lastmod = page.lastUpdated
         ? `<lastmod>${escapeHtml(page.lastUpdated.slice(0, 10))}</lastmod>`
         : "";
-      const alternates = site.i18n
+      const localeAlternates = site.i18n
         ? site.i18n.locales
             .map((locale) => localizedRouteForLocale(route, locale, site.i18n, routeSet))
             .filter((target) => routeSet.has(target))
             .map((target) => {
               const locale = localeFromRoute(target, site.i18n);
+              const canonicalTarget = site.versions.enabled
+                ? canonicalRouteForPage(target, routeSet, site.i18n, site.versions)
+                : target;
               return locale
-                ? `<xhtml:link rel="alternate" hreflang="${escapeHtml(locale.lang)}" href="${escapeHtml(absoluteUrl(site, target))}" />`
+                ? `<xhtml:link rel="alternate" hreflang="${escapeHtml(locale.lang)}" href="${escapeHtml(absoluteUrl(site, canonicalTarget))}" />`
                 : "";
             })
             .filter(Boolean)
             .join("")
         : "";
-      return `  <url><loc>${escapeHtml(absoluteUrl(site, route))}</loc>${lastmod}${alternates}</url>`;
+      const versionAlternates = site.versions.enabled
+        ? site.versions.versions
+            .filter((version) => !version.isAlias)
+            .map((version) =>
+              localizedRouteForVersion(route, version, site.versions, site.i18n, routeSet),
+            )
+            .filter((target) => routeSet.has(target))
+            .map((target) => {
+              const version = versionFromRoute(target, site.versions, site.i18n);
+              return version
+                ? `<xhtml:link rel="alternate" hreflang="version-${escapeHtml(version.value)}" href="${escapeHtml(absoluteUrl(site, target))}" />`
+                : "";
+            })
+            .join("")
+        : "";
+      return `  <url><loc>${escapeHtml(absoluteUrl(site, canonicalRoute))}</loc>${lastmod}${localeAlternates}${versionAlternates}</url>`;
     })
     .join("\n");
   await fs.writeFile(
@@ -405,18 +470,23 @@ async function writeRobots(site: SiteConfig): Promise<void> {
 async function writeSearchIndex(
   site: SiteConfig,
   pages: Array<{ route: string; page: PageView }>,
+  excludedRoutes: Set<string> = new Set(),
 ): Promise<void> {
-  const entries = pages.map(({ route, page }) => ({
-    route,
-    locale: localeFromRoute(route, site.i18n)?.key,
-    title: page.title,
-    description: page.description,
-    excerpt: page.kind === "markdown" ? excerptFromHtml(page.html) : page.description,
-    tags: page.tags ?? [],
-  }));
+  const entries = pages
+    .filter(({ route }) => !excludedRoutes.has(route))
+    .map(({ route, page }) => ({
+      route,
+      locale: localeFromRoute(route, site.i18n)?.key,
+      version: versionFromRoute(route, site.versions, site.i18n)?.value,
+      workspace: workspaceFromRoute(route, site.workspaces, site.i18n, site.versions)?.id,
+      title: page.title,
+      description: page.description,
+      excerpt: page.kind === "markdown" ? excerptFromHtml(page.html) : page.description,
+      tags: page.tags ?? [],
+    }));
   await fs.writeFile(
     path.join(site.outDir, "preactpress-search.json"),
-    JSON.stringify(entries, null, 2),
+    JSON.stringify(entries),
     "utf8",
   );
 }

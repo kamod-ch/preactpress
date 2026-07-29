@@ -1,0 +1,115 @@
+{
+  "sourceHash": "be0c22ed0e818a8d75ebff4e4179e0f57f0baf115b958383f93a22d2b2f29d6c",
+  "generatedAt": "2026-07-28T07:41:54.465Z",
+  "manifest": {
+    "version": 1,
+    "generatedAt": "2026-07-28T07:41:54.465Z",
+    "sourceHash": "be0c22ed0e818a8d75ebff4e4179e0f57f0baf115b958383f93a22d2b2f29d6c",
+    "source": "github:kamod-ch/preactpress",
+    "provider": "github",
+    "repository": "kamod-ch/preactpress",
+    "baseRoute": "/changelog",
+    "outputDir": "changelog",
+    "releases": [
+      {
+        "version": "2.2.1",
+        "slug": "2-2-1",
+        "route": "/changelog/2-2-1",
+        "date": "2026-07-20T10:00:00Z",
+        "title": "2.2.1",
+        "description": "### Fixed",
+        "sections": [
+          {
+            "kind": "fix",
+            "title": "Fixed",
+            "items": [
+              {
+                "text": "Route rewrite support ([#142](https://github.com/kamod-ch/preactpress/pull/142)) by @devuser",
+                "issue": 142,
+                "author": "devuser"
+              }
+            ]
+          },
+          {
+            "kind": "feature",
+            "title": "Added",
+            "items": [
+              {
+                "text": "Changelog plugin integration"
+              }
+            ]
+          }
+        ],
+        "contributors": ["devuser", "maintainer"],
+        "sourceUrl": "https://github.com/kamod-ch/preactpress/releases/tag/v2.2.1",
+        "prerelease": false,
+        "draft": false
+      },
+      {
+        "version": "2.2.0",
+        "slug": "2-2-0",
+        "route": "/changelog/2-2-0",
+        "date": "2026-06-01T08:30:00Z",
+        "title": "2.2.0",
+        "description": "### Breaking Changes",
+        "sections": [
+          {
+            "kind": "breaking",
+            "title": "Breaking Changes",
+            "items": [
+              {
+                "text": "Removed deprecated `legacy` namespace. [Migration guide](https://example.com/docs/migrate-2.2)"
+              }
+            ]
+          },
+          {
+            "kind": "feature",
+            "title": "Added",
+            "items": [
+              {
+                "text": "Plugin system"
+              }
+            ]
+          },
+          {
+            "kind": "fix",
+            "title": "Fixed",
+            "items": [
+              {
+                "text": "Retry logic for 503 responses"
+              }
+            ]
+          }
+        ],
+        "contributors": ["maintainer"],
+        "sourceUrl": "https://github.com/kamod-ch/preactpress/releases/tag/v2.2.0",
+        "migrationGuideUrl": "https://example.com/docs/migrate-2.2",
+        "prerelease": false,
+        "draft": false
+      },
+      {
+        "version": "2.3.0-beta.1",
+        "slug": "2-3-0-beta-1",
+        "route": "/changelog/2-3-0-beta-1",
+        "date": "2026-07-25T12:00:00Z",
+        "title": "2.3.0-beta.1",
+        "description": "### Added",
+        "sections": [
+          {
+            "kind": "feature",
+            "title": "Added",
+            "items": [
+              {
+                "text": "Experimental RSS feed hooks"
+              }
+            ]
+          }
+        ],
+        "contributors": ["beta-tester"],
+        "sourceUrl": "https://github.com/kamod-ch/preactpress/releases/tag/v2.3.0-beta.1",
+        "prerelease": true,
+        "draft": false
+      }
+    ]
+  }
+}

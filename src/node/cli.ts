@@ -30,10 +30,13 @@ function printUsage(): void {
       "  dev       Start Vite dev server",
       "  build     Production build (SSR + static)",
       "  preview   Serve the production build",
-      "  check     Validate config, routes, nav/sidebar, and local links",
+      "  check     Validate documentation quality, links, metadata, and config",
+      "  workspaces  Run check or build across monorepo documentation sites",
+      "  version   Snapshot current docs into versions/<value>",
       "  init      Scaffold .preactpress + starter files in [root] or cwd",
+      "  migrate   Migrate from another docs framework (vitepress, …)",
       "            Use --template for starters: docs, blog, product-docs, api-docs,",
-      "            saas-docs, knowledge-base, magazine, or hono",
+      "            saas-docs, knowledge-base, magazine, hono, or versions",
       "",
       c.dim("In this repo (package root, no site):"),
       "  pnpm run dev           Dev server for the bundled ./templates/default site",
@@ -46,6 +49,12 @@ function printUsage(): void {
       "  --base <p>   Override configured site.base",
       "  --template <name>  Starter: default, docs, blog, product-docs, api-docs,",
       "                     saas-docs, knowledge-base, magazine, or hono",
+      "  --format <fmt>     check output format: human (default) or json",
+      "  --strict           Treat check warnings as errors",
+      "  --external         Verify external http(s) links during check",
+      "  --output <path>    Write check JSON report to a file",
+      "  --label <text>     Label for preactpress version snapshots",
+      "  --dry-run          Preview preactpress version snapshot without writing files",
       "  -h, --help   Show this help",
       "",
     ].join("\n"),
@@ -101,6 +110,34 @@ async function main(): Promise<void> {
   const cmd = first ?? "dev";
   const root = resolveRootArg(cmd, positionalRoot());
 
+  if (cmd === "migrate") {
+    const adapter = argv._[1] ? String(argv._[1]) : undefined;
+    if (!adapter || adapter === "help" || argv.help || argv.h) {
+      const { printMigrateUsage } = await import("./migrateCommand.js");
+      printMigrateUsage();
+      if (!adapter || adapter === "help") return;
+      process.exitCode = 1;
+      return;
+    }
+    const formatArg = argv.format ? String(argv.format) : "human";
+    if (formatArg !== "human" && formatArg !== "json") {
+      logError(`Unknown migrate format "${formatArg}". Use human or json.`);
+      process.exitCode = 1;
+      return;
+    }
+    const { runMigrateCommand } = await import("./migrateCommand.js");
+    const exitCode = await runMigrateCommand({
+      adapter,
+      source: argv.source ? String(argv.source) : undefined,
+      output: argv.output ? String(argv.output) : undefined,
+      dryRun: Boolean(argv["dry-run"] ?? argv.dryRun),
+      format: formatArg,
+      report: argv.report ? String(argv.report) : undefined,
+    });
+    if (exitCode !== 0) process.exitCode = exitCode;
+    return;
+  }
+
   if (cmd === "init") {
     const dir = root ? path.resolve(root) : process.cwd();
     const { init } = await import("./init.js");
@@ -141,11 +178,51 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (cmd === "version") {
+    const versionValue = argv._[1] ? String(argv._[1]) : undefined;
+    if (!versionValue) {
+      logError('Usage: preactpress version <value> [--label "Label"] [--dry-run]');
+      process.exitCode = 1;
+      return;
+    }
+    const { runVersionCommand } = await import("./versionCommand.js");
+    const exitCode = await runVersionCommand(root, {
+      value: versionValue,
+      label: argv.label ? String(argv.label) : undefined,
+      dryRun: Boolean(argv["dry-run"] ?? argv.dryRun),
+    });
+    if (exitCode !== 0) process.exitCode = exitCode;
+    return;
+  }
+
+  if (cmd === "workspaces") {
+    const sub = argv._[1] ? String(argv._[1]) : undefined;
+    if (sub !== "check" && sub !== "build") {
+      logError("Usage: preactpress workspaces check|build [root]");
+      process.exitCode = 1;
+      return;
+    }
+    const { runWorkspacesCommand } = await import("./workspacesCommand.js");
+    const exitCode = await runWorkspacesCommand({ command: sub, root });
+    if (exitCode !== 0) process.exitCode = exitCode;
+    return;
+  }
+
   if (cmd === "check") {
-    const { check, printCheckResult } = await import("./check.js");
-    const result = await check(root);
-    printCheckResult(result);
-    if (result.issues.some((issue) => issue.level === "error")) process.exitCode = 1;
+    const { runCheckCommand } = await import("./checkOutput.js");
+    const formatArg = argv.format ? String(argv.format) : "human";
+    if (formatArg !== "human" && formatArg !== "json") {
+      logError(`Unknown check format "${formatArg}". Use human or json.`);
+      process.exitCode = 1;
+      return;
+    }
+    const exitCode = await runCheckCommand(root, {
+      strict: Boolean(argv.strict),
+      external: Boolean(argv.external),
+      format: formatArg,
+      output: argv.output ? String(argv.output) : undefined,
+    });
+    if (exitCode !== 0) process.exitCode = exitCode;
     return;
   }
 
@@ -164,7 +241,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  logError(`Unknown command "${cmd}". Try dev, build, preview, check, or init.`);
+  logError(`Unknown command "${cmd}". Try dev, build, preview, check, version, migrate, or init.`);
   process.exitCode = 1;
 }
 

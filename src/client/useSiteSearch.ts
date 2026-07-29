@@ -4,13 +4,21 @@ import { publicUrl } from "../shared/url.js";
 export interface SearchEntry {
   route: string;
   locale?: string;
+  version?: string;
+  workspace?: string;
   title?: string;
   description?: string;
   excerpt?: string;
   tags?: string[];
 }
 
-export function useSiteSearch(base: string, query: string, locale?: string): SearchEntry[] {
+export function useSiteSearch(
+  base: string,
+  query: string,
+  locale?: string,
+  version?: string,
+  workspace?: string,
+): SearchEntry[] {
   const [entries, setEntries] = useState<SearchEntry[]>([]);
 
   useEffect(() => {
@@ -33,12 +41,14 @@ export function useSiteSearch(base: string, query: string, locale?: string): Sea
     if (!needle) return [];
     return entries
       .filter((entry) => !locale || entry.locale === locale)
+      .filter((entry) => !version || entry.version === version)
+      .filter((entry) => !workspace || entry.workspace === workspace)
       .map((entry) => ({ entry, score: scoreEntry(entry, needle) }))
       .filter(({ score }) => score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 8)
       .map(({ entry }) => entry);
-  }, [entries, locale, query]);
+  }, [entries, locale, version, workspace, query]);
 }
 
 function scoreEntry(entry: SearchEntry, query: string): number {

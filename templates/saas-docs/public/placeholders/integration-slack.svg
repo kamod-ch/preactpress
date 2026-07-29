@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="Screenshot placeholder: Slack integration wizard">
+  <rect width="800" height="450" fill="#f3f4f6"/>
+  <rect x="120" y="48" width="560" height="354" rx="12" fill="#ffffff" stroke="#d1d5db"/>
+  <rect x="160" y="96" width="160" height="160" rx="12" fill="#4a154b"/>
+  <rect x="352" y="104" width="280" height="28" rx="4" fill="#e5e7eb"/>
+  <rect x="352" y="152" width="240" height="16" rx="3" fill="#f3f4f6"/>
+  <rect x="352" y="184" width="200" height="16" rx="3" fill="#f3f4f6"/>
+  <rect x="352" y="240" width="120" height="40" rx="8" fill="#2563eb"/>
+  <text x="400" y="320" text-anchor="middle" fill="#6b7280" font-family="system-ui,sans-serif" font-size="16">Slack integration wizard (replace with product screenshot)</text>
+</svg>

@@ -1,0 +1,52 @@
+{
+  "name": "@preactpress/plugin-component-reference",
+  "version": "0.1.0",
+  "description": "Preact component props reference for PreactPress",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src/style.css",
+    "README.md"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/types/index.js"
+    },
+    "./mdx": {
+      "types": "./dist/mdx.d.ts",
+      "default": "./dist/mdx.js"
+    },
+    "./style.css": "./src/style.css"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "pnpm run build",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "@kamod-ch/preactpress": "workspace:*",
+    "@preactpress/plugin-typedoc": "workspace:*",
+    "@types/node": "^25.9.2",
+    "preact": "^10.29.2",
+    "vitest": "^4.1.9"
+  },
+  "peerDependencies": {
+    "@kamod-ch/preactpress": ">=2.2.0",
+    "preact": ">=10.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

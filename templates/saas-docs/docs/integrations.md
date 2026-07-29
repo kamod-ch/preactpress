@@ -1,5 +1,6 @@
 ---
 title: Integrations
+description: Connect Slack, GitHub, and third-party tools via OAuth or API keys.
 layout: doc
 ---
 

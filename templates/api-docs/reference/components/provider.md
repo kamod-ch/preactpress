@@ -1,5 +1,6 @@
 ---
 title: AcmeProvider
+description: Preact context provider that shares an Acme client with child components.
 layout: doc
 ---
 

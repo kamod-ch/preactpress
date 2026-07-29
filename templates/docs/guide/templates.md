@@ -13,17 +13,17 @@ See the [template gallery on the home page](/#templates-title) for screenshots a
 
 ## Which template should I use?
 
-| Template           | CLI name                      | Theme            | Best for                        | Notable extras                              |
-| ------------------ | ----------------------------- | ---------------- | ------------------------------- | ------------------------------------------- |
-| Documentation      | `docs`                        | Default          | Full framework docs (this site) | Guides, examples, EN/DE locales             |
-| **Blog**           | `blog`                        | Custom editorial | Technical blogs and changelogs  | RSS, tags, authors, reading time            |
-| **Product docs**   | `product-docs`                | Default          | SDK / library documentation     | Concepts, FAQ, changelog, edit link         |
-| **API reference**  | `api-docs`                    | Default          | JavaScript/TypeScript APIs      | ApiSignature, ParameterTable MDX components |
-| **SaaS docs**      | `saas-docs`                   | Custom product   | SaaS onboarding and admin docs  | Landing + docs, role hints, integrations    |
-| **Knowledge base** | `knowledge-base`              | Default          | Help centers and support        | Search-first home, categories, contact CTA  |
-| Product + Docs     | `hono`                        | Custom           | Marketing site + docs area      | Landing layout, i18n demo                   |
-| Magazine           | `magazine`                    | Custom editorial | Editorial / magazine layouts    | Teaser grid, German demo content            |
-| Minimal            | `default` (omit `--template`) | Default          | Quick trials                    | Smallest file tree                          |
+| Template           | CLI name                      | Theme            | Best for                        | Notable extras                                   |
+| ------------------ | ----------------------------- | ---------------- | ------------------------------- | ------------------------------------------------ |
+| Documentation      | `docs`                        | Default          | Full framework docs (this site) | Guides, examples, EN/DE locales                  |
+| **Blog**           | `blog`                        | Custom editorial | Technical blogs and changelogs  | RSS, tags, authors, reading time                 |
+| **Product docs**   | `product-docs`                | Default          | SDK / library documentation     | Concepts, FAQ, changelog, edit link              |
+| **API reference**  | `api-docs`                    | Custom Protocol  | REST + TypeScript SDK hybrid    | Protocol theme, OpenAPI plugin, ApiSignature MDX |
+| **SaaS docs**      | `saas-docs`                   | Custom product   | SaaS onboarding and admin docs  | Landing + docs, role hints, integrations         |
+| **Knowledge base** | `knowledge-base`              | Default          | Help centers and support        | Search-first home, categories, contact CTA       |
+| Product + Docs     | `hono`                        | Custom           | Marketing site + docs area      | Landing layout, i18n demo                        |
+| Magazine           | `magazine`                    | Custom editorial | Editorial / magazine layouts    | Teaser grid, German demo content                 |
+| Minimal            | `default` (omit `--template`) | Default          | Quick trials                    | Smallest file tree                               |
 
 ## Scaffold commands
 
@@ -81,7 +81,7 @@ Every starter includes `pnpm run build` and `pnpm run preview`. Set `site.url` i
 
 - **Blog** — RSS feed, tag index, author listing, content-loader teasers, optional TOC on long posts.
 - **Product docs** — hierarchical sidebar, version label in nav, troubleshooting and migration guides.
-- **API docs** — reusable MDX components (`ApiSignature`, `ParameterTable`, `TypeDefinition`) decoupled from sample API names.
+- **API docs** — Protocol-style custom theme; OpenAPI-generated REST resources plus SDK MDX helpers (`ApiSignature`, `ParameterTable`, `HttpMethodBadge`, `EndpointLine`).
 - **SaaS docs** — product landing with multiple entry paths; step lists and screenshot placeholders.
 - **Knowledge base** — help-center tone, popular searches, link-out to developer docs.
 

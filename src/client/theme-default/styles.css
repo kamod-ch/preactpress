@@ -180,6 +180,81 @@ body::selection {
   gap: 12px;
 }
 
+.pp-version-switcher,
+.pp-workspace-switcher {
+  position: relative;
+}
+
+.pp-version-switcher > summary,
+.pp-workspace-switcher > summary {
+  list-style: none;
+  cursor: pointer;
+  border: 1px solid var(--pp-border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  color: var(--pp-text);
+  background: var(--pp-surface);
+}
+
+.pp-version-switcher > summary::-webkit-details-marker,
+.pp-workspace-switcher > summary::-webkit-details-marker {
+  display: none;
+}
+
+.pp-version-menu,
+.pp-workspace-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 180px;
+  padding: 8px;
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  background: var(--pp-surface);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--pp-text) 12%, transparent);
+  z-index: 20;
+  display: grid;
+  gap: 4px;
+}
+
+.pp-version-menu a,
+.pp-workspace-menu a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--pp-text);
+}
+
+.pp-version-menu a:hover,
+.pp-version-menu a.active,
+.pp-workspace-menu a:hover,
+.pp-workspace-menu a.active {
+  background: color-mix(in srgb, var(--pp-accent) 12%, transparent);
+  color: var(--pp-accent);
+}
+
+.pp-version-badge,
+.pp-workspace-badge {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--pp-muted);
+}
+
+.pp-version-banner {
+  padding: 10px 16px;
+  text-align: center;
+  background: color-mix(in srgb, var(--pp-accent) 12%, var(--pp-surface));
+  border-bottom: 1px solid var(--pp-border);
+  color: var(--pp-text);
+  font-size: 0.9375rem;
+}
+
 .pp-social-links {
   display: flex;
   align-items: center;
@@ -759,27 +834,6 @@ body::selection {
   margin: 16px 0;
 }
 
-.pp-doc-content .pp-mermaid {
-  margin: 1.25rem 0;
-  padding: 1.25rem;
-  overflow: auto;
-  border: 1px solid color-mix(in srgb, var(--pp-border) 82%, transparent);
-  border-radius: 14px;
-  background: var(--pp-code-bg);
-  color: var(--pp-code-text);
-  text-align: center;
-}
-
-.pp-doc-content .pp-mermaid[data-mermaid-error="true"] {
-  text-align: left;
-  white-space: pre;
-}
-
-.pp-doc-content .pp-mermaid svg {
-  max-width: 100%;
-  height: auto;
-}
-
 .pp-doc-content .pp-code-block {
   position: relative;
   margin: 1.25rem 0;
@@ -1242,6 +1296,22 @@ body::selection {
 
 .pp-doc-meta a {
   color: var(--pp-accent);
+}
+
+.pp-copy-markdown {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--pp-accent);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.pp-copy-markdown:hover,
+.pp-copy-markdown:focus-visible {
+  color: color-mix(in srgb, var(--pp-accent) 82%, var(--pp-text));
 }
 
 .pp-outline {

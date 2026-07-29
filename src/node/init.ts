@@ -19,6 +19,8 @@ export const INIT_TEMPLATES = [
   "api-docs",
   "saas-docs",
   "knowledge-base",
+  "versions",
+  "monorepo",
 ] as const;
 export type InitTemplateName = (typeof INIT_TEMPLATES)[number];
 
@@ -37,6 +39,8 @@ const TEMPLATE_DIRS: Record<InitTemplateName, string> = {
   "api-docs": path.join("templates", "api-docs"),
   "saas-docs": path.join("templates", "saas-docs"),
   "knowledge-base": path.join("templates", "knowledge-base"),
+  versions: path.join("templates", "versions"),
+  monorepo: path.join("templates", "monorepo"),
 };
 
 function shouldCopyTemplateEntry(rel: string): boolean {
@@ -63,6 +67,11 @@ async function fileExists(p: string): Promise<boolean> {
   }
 }
 
+interface WorkspacePackage {
+  version: string;
+  dir: string;
+}
+
 async function readPreactpressPackage(): Promise<{ name: string; version: string }> {
   const pkgPath = path.join(PACKAGE_ROOT, "package.json");
   const raw = await fs.readFile(pkgPath, "utf8");
@@ -70,6 +79,47 @@ async function readPreactpressPackage(): Promise<{ name: string; version: string
   if (!pkg.name) throw new Error("preactpress: missing name in package.json");
   if (!pkg.version) throw new Error("preactpress: missing version in package.json");
   return { name: pkg.name, version: pkg.version };
+}
+
+async function readWorkspacePackages(): Promise<Map<string, WorkspacePackage>> {
+  const packagesDir = path.join(PACKAGE_ROOT, "packages");
+  const packages = new Map<string, WorkspacePackage>();
+
+  let entries: Array<{ name: string; isDirectory(): boolean }>;
+  try {
+    entries = await fs.readdir(packagesDir, { withFileTypes: true });
+  } catch {
+    return packages;
+  }
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const dir = path.join(packagesDir, entry.name);
+    const pkgPath = path.join(dir, "package.json");
+    if (!(await fileExists(pkgPath))) continue;
+
+    const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8")) as {
+      name?: string;
+      version?: string;
+    };
+    if (!pkg.name || !pkg.version) continue;
+    packages.set(pkg.name, { version: pkg.version, dir });
+  }
+
+  return packages;
+}
+
+async function resolveWorkspacePackageDir(
+  packageName: string,
+  siteRoot: string,
+  spec: string,
+  preactpressPackageName: string,
+  workspace: Map<string, WorkspacePackage>,
+): Promise<string | undefined> {
+  const fromSpec = path.resolve(siteRoot, spec.slice("file:".length));
+  if (await fileExists(path.join(fromSpec, "package.json"))) return fromSpec;
+  if (packageName === preactpressPackageName) return PACKAGE_ROOT;
+  return workspace.get(packageName)?.dir;
 }
 
 async function linkPackage(targetRoot: string, packageName: string, target: string): Promise<void> {
@@ -97,26 +147,78 @@ async function linkLocalPreactpress(targetRoot: string, packageName: string): Pr
   await linkPackage(targetRoot, packageName, PACKAGE_ROOT);
 }
 
-/** Ensure a local `file:` devDependency is linked when node_modules is missing (bundled templates). */
+/** Link monorepo packages into node_modules when installs are skipped (bundled templates, CI smoke tests). */
 export async function ensurePreactpressLinked(siteRoot: string): Promise<void> {
   const pkgPath = path.join(siteRoot, "package.json");
   if (!(await fileExists(pkgPath))) return;
 
-  const { name: packageName } = await readPreactpressPackage();
+  const { name: preactpressPackageName } = await readPreactpressPackage();
+  const workspace = await readWorkspacePackages();
   const raw = await fs.readFile(pkgPath, "utf8");
   const pkg = JSON.parse(raw) as {
     devDependencies?: Record<string, string>;
     dependencies?: Record<string, string>;
   };
-  const spec = pkg.devDependencies?.[packageName] ?? pkg.dependencies?.[packageName];
-  if (!spec?.startsWith("file:")) return;
 
-  const linkPath = packageInstallPath(path.join(siteRoot, "node_modules"), packageName);
-  if (await fileExists(path.join(linkPath, "package.json"))) return;
+  const linked = new Set<string>();
+  const specs = {
+    ...(pkg.dependencies ?? {}),
+    ...(pkg.devDependencies ?? {}),
+  };
 
-  const target = path.resolve(siteRoot, spec.slice("file:".length));
-  if (!(await fileExists(path.join(target, "package.json")))) return;
-  await linkPackage(siteRoot, packageName, target);
+  for (const [name, spec] of Object.entries(specs)) {
+    if (typeof spec !== "string" || linked.has(name)) continue;
+
+    const linkPath = packageInstallPath(path.join(siteRoot, "node_modules"), name);
+    if (await fileExists(path.join(linkPath, "package.json"))) {
+      linked.add(name);
+      continue;
+    }
+
+    let target: string | undefined;
+    if (spec.startsWith("file:")) {
+      target = await resolveWorkspacePackageDir(
+        name,
+        siteRoot,
+        spec,
+        preactpressPackageName,
+        workspace,
+      );
+    } else if (name === preactpressPackageName) {
+      target = PACKAGE_ROOT;
+    } else if (workspace.has(name)) {
+      target = workspace.get(name)?.dir;
+    }
+
+    if (!target || !(await fileExists(path.join(target, "package.json")))) continue;
+
+    await linkPackage(siteRoot, name, target);
+    linked.add(name);
+  }
+}
+
+function patchFileDependencies(
+  deps: Record<string, string> | undefined,
+  packageName: string,
+  preactpressVersion: string,
+  workspace: Map<string, WorkspacePackage>,
+): void {
+  if (!deps) return;
+
+  for (const [name, spec] of Object.entries(deps)) {
+    if (typeof spec !== "string" || !spec.startsWith("file:")) continue;
+
+    if (name === packageName || name === "preactpress") {
+      delete deps.preactpress;
+      deps[packageName] = `^${preactpressVersion}`;
+      continue;
+    }
+
+    const workspacePackage = workspace.get(name);
+    if (workspacePackage) {
+      deps[name] = `^${workspacePackage.version}`;
+    }
+  }
 }
 
 async function patchStarterPackageJson(
@@ -124,14 +226,20 @@ async function patchStarterPackageJson(
   packageName: string,
   preactpressVersion: string,
 ): Promise<void> {
+  const workspace = await readWorkspacePackages();
   const pkgPath = path.join(targetRoot, "package.json");
   const raw = await fs.readFile(pkgPath, "utf8");
   const pkg = JSON.parse(raw) as {
     devDependencies?: Record<string, string>;
+    dependencies?: Record<string, string>;
   };
+
   pkg.devDependencies = pkg.devDependencies ?? {};
   delete pkg.devDependencies.preactpress;
   pkg.devDependencies[packageName] = `^${preactpressVersion}`;
+  patchFileDependencies(pkg.devDependencies, packageName, preactpressVersion, workspace);
+  patchFileDependencies(pkg.dependencies, packageName, preactpressVersion, workspace);
+
   await fs.writeFile(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 }
 
@@ -160,6 +268,7 @@ export async function init(targetRoot: string, options: InitOptions = {}): Promi
   const { name: packageName, version: preactpressVersion } = await readPreactpressPackage();
   await patchStarterPackageJson(resolvedRoot, packageName, preactpressVersion);
   await linkLocalPreactpress(resolvedRoot, packageName);
+  await ensurePreactpressLinked(resolvedRoot);
 
   return { root: resolvedRoot, preactpressVersion, template };
 }

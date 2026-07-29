@@ -51,6 +51,18 @@
     "./shared": {
       "types": "./dist/shared/index.d.ts",
       "default": "./dist/shared/index.js"
+    },
+    "./plugins": {
+      "types": "./dist/node/plugins/index.d.ts",
+      "default": "./dist/node/plugins/index.js"
+    },
+    "./plugin-testkit": {
+      "types": "./dist/node/pluginTestkit.d.ts",
+      "default": "./dist/node/pluginTestkit.js"
+    },
+    "./content": {
+      "types": "./dist/node/collections/index.d.ts",
+      "default": "./dist/node/collections/index.js"
     }
   },
   "publishConfig": {
@@ -71,6 +83,8 @@
     "release:minor": "node ./scripts/release.mjs minor",
     "release:major": "node ./scripts/release.mjs major",
     "release:dry": "node ./scripts/release.mjs patch --dry",
+    "release:plugins": "node ./scripts/release-plugins.mjs",
+    "release:plugins:dry": "node ./scripts/release-plugins.mjs --dry",
     "release:check": "npm pack && tar -tf kamod-ch-preactpress-*.tgz",
     "verify": "pnpm run fmt:check && pnpm run lint && pnpm run build && pnpm run test:coverage && pnpm run check:templates && pnpm run test:browser && pnpm run pack:dry-run",
     "preactpress": "node ./bin/preactpress.mjs",
@@ -80,6 +94,9 @@
     "build:default": "node ./bin/preactpress.mjs build templates/default",
     "dev:docs": "node ./bin/preactpress.mjs dev templates/docs",
     "check:docs": "node ./bin/preactpress.mjs check templates/docs",
+    "check:showcase": "node ./bin/preactpress.mjs check examples/showcase",
+    "dev:showcase": "node ./bin/preactpress.mjs dev examples/showcase",
+    "build:showcase": "node ./bin/preactpress.mjs build examples/showcase",
     "build:docs": "node ./bin/preactpress.mjs build templates/docs",
     "dev:hono": "node ./bin/preactpress.mjs dev templates/hono",
     "check:hono": "node ./bin/preactpress.mjs check templates/hono",
@@ -102,9 +119,15 @@
     "dev:knowledge-base": "node ./bin/preactpress.mjs dev templates/knowledge-base",
     "check:knowledge-base": "node ./bin/preactpress.mjs check templates/knowledge-base",
     "build:knowledge-base": "node ./bin/preactpress.mjs build templates/knowledge-base",
+    "dev:versions": "node ./bin/preactpress.mjs dev templates/versions",
+    "check:versions": "node ./bin/preactpress.mjs check templates/versions",
+    "build:versions": "node ./bin/preactpress.mjs build templates/versions",
     "check:templates": "node ./scripts/check-all-templates.mjs",
     "sync:template-lockfiles": "node ./scripts/sync-template-lockfiles.mjs",
     "check:template-lockfiles": "node ./scripts/sync-template-lockfiles.mjs --check",
+    "benchmark": "node ./benchmarks/scripts/run-benchmark.mjs",
+    "benchmark:ci": "node ./benchmarks/scripts/run-benchmark.mjs --ci --skip-dev",
+    "benchmark:generate": "node ./benchmarks/scripts/generate-fixture.mjs",
     "dev:templates": "node ./scripts/dev-all-templates.mjs",
     "capture:template-previews": "node ./scripts/capture-template-previews.mjs",
     "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
@@ -119,7 +142,6 @@
     "markdown-it": "^14.2.0",
     "markdown-it-emoji": "^3.0.0",
     "markdown-it-mathjax3": "^5.2.0",
-    "mermaid": "^11.16.0",
     "minimist": "^1.2.8",
     "node-html-parser": "^7.1.0",
     "picocolors": "^1.1.1",
@@ -129,7 +151,8 @@
     "shiki": "^4.2.0",
     "sirv": "^3.0.2",
     "tinyglobby": "^0.2.17",
-    "vite": "^8.0.16"
+    "vite": "^8.0.16",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",

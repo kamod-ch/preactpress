@@ -1,0 +1,27 @@
+---
+title: Playground
+description: Live Preact sandbox via @preactpress/plugin-playground
+---
+
+import { Playground } from "@preactpress/plugin-playground/mdx";
+
+# Live Preact playground
+
+Edit the code below — it runs in an isolated sandbox.
+
+<Playground
+  code={`
+import { useState } from 'preact/hooks'
+
+export default function Demo() {
+  const [count, setCount] = useState(0)
+
+return (
+
+<button onClick={() => setCount(c => c + 1)}>
+PreactPress count: {count}
+</button>
+)
+}
+`}
+/>

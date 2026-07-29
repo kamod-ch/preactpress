@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="Screenshot placeholder: Acme dashboard with API keys panel">
+  <rect width="800" height="450" fill="#f3f4f6"/>
+  <rect x="32" y="32" width="736" height="386" rx="12" fill="#ffffff" stroke="#d1d5db"/>
+  <rect x="56" y="72" width="200" height="24" rx="4" fill="#e5e7eb"/>
+  <rect x="56" y="120" width="688" height="48" rx="6" fill="#eef2ff" stroke="#c7d2fe"/>
+  <rect x="72" y="136" width="420" height="16" rx="3" fill="#c7d2fe"/>
+  <rect x="56" y="192" width="688" height="180" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="400" y="290" text-anchor="middle" fill="#6b7280" font-family="system-ui,sans-serif" font-size="16">API keys panel (replace with product screenshot)</text>
+</svg>

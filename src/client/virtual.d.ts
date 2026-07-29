@@ -93,6 +93,9 @@ declare module "virtual:preactpress-site" {
     lastUpdated?: boolean;
   };
   export const i18n: import("../node/siteConfig.js").ResolvedI18n | undefined;
+  export const versions: import("../node/siteConfig.js").ResolvedVersions;
+  export const workspaces: import("../node/siteConfig.js").ResolvedWorkspaces;
+  export const ai: import("../node/siteConfig.js").ClientAiExportsConfig | false;
 }
 
 declare module "virtual:preactpress-layout" {
@@ -100,4 +103,11 @@ declare module "virtual:preactpress-layout" {
   import type { LayoutProps } from "./types.js";
   const Layout: FunctionalComponent<LayoutProps>;
   export default Layout;
+}
+
+declare module "virtual:preactpress-client-plugins" {
+  export const clientPlugins: Array<{
+    name: string;
+    enhance?: () => void | Promise<void>;
+  }>;
 }

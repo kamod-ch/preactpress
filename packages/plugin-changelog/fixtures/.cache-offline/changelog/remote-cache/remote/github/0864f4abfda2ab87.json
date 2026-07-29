@@ -1,0 +1,43 @@
+{
+  "sourceHash": "releases:kamod-ch/preactpress",
+  "etag": "\"fixture-etag\"",
+  "payload": [
+    {
+      "tag_name": "v2.2.1",
+      "name": "2.2.1",
+      "body": "### Fixed\n\n- Route rewrite support ([#142](https://github.com/kamod-ch/preactpress/pull/142)) by @devuser\n\n### Added\n\n- Changelog plugin integration",
+      "draft": false,
+      "prerelease": false,
+      "published_at": "2026-07-20T10:00:00Z",
+      "html_url": "https://github.com/kamod-ch/preactpress/releases/tag/v2.2.1",
+      "author": {
+        "login": "maintainer"
+      }
+    },
+    {
+      "tag_name": "v2.2.0",
+      "name": "2.2.0",
+      "body": "### Breaking Changes\n\n- Removed deprecated `legacy` namespace. [Migration guide](https://example.com/docs/migrate-2.2)\n\n### Added\n\n- Plugin system\n\n### Fixed\n\n- Retry logic for 503 responses",
+      "draft": false,
+      "prerelease": false,
+      "published_at": "2026-06-01T08:30:00Z",
+      "html_url": "https://github.com/kamod-ch/preactpress/releases/tag/v2.2.0",
+      "author": {
+        "login": "maintainer"
+      }
+    },
+    {
+      "tag_name": "v2.3.0-beta.1",
+      "name": "2.3.0-beta.1",
+      "body": "### Added\n\n- Experimental RSS feed hooks",
+      "draft": false,
+      "prerelease": true,
+      "published_at": "2026-07-25T12:00:00Z",
+      "html_url": "https://github.com/kamod-ch/preactpress/releases/tag/v2.3.0-beta.1",
+      "author": {
+        "login": "beta-tester"
+      }
+    }
+  ],
+  "fetchedAt": "2026-07-28T07:42:06.212Z"
+}

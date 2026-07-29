@@ -1,0 +1,52 @@
+{
+  "name": "@preactpress/plugin-typedoc",
+  "version": "0.1.0",
+  "description": "Official TypeDoc API reference plugin for PreactPress",
+  "keywords": [
+    "api",
+    "plugin",
+    "preactpress",
+    "typedoc",
+    "typescript"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/types/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "pnpm run build",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "typedoc": "^0.28.0"
+  },
+  "devDependencies": {
+    "@kamod-ch/preactpress": "workspace:*",
+    "@vitest/coverage-v8": "^4.1.9",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
+  },
+  "peerDependencies": {
+    "@kamod-ch/preactpress": ">=2.2.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

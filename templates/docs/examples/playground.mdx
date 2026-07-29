@@ -1,0 +1,108 @@
+---
+title: Live Preact Playground
+description: Interactive MDX playground for editable Preact examples
+---
+
+import { Playground } from "@preactpress/plugin-playground/mdx";
+
+# Live Preact Playground
+
+The `@preactpress/plugin-playground` package adds a live code editor with an isolated Preact preview to MDX pages.
+
+## Basic counter
+
+<Playground
+  code={`
+import { useState } from 'preact/hooks'
+
+export default function Demo() {
+  const [count, setCount] = useState(0)
+
+return (
+
+<button onClick={() => setCount(count + 1)}>
+Count: {count}
+</button>
+)
+}
+`}
+/>
+
+## Multi-file example
+
+<Playground
+  files={{
+    '/App.tsx': `import { Greeting } from './components.tsx'
+
+export default function App() {
+  return (
+    <main>
+      <Greeting name="PreactPress" />
+    </main>
+  )
+}`,
+    '/components.tsx': `export function Greeting({ name }: { name: string }) {
+  return <h2>Hello, {name}!</h2>
+}`,
+  }}
+  entry="/App.tsx"
+/>
+
+## Read-only preview
+
+<Playground
+  readOnly
+  previewTheme="dark"
+  previewWidth="mobile"
+  code={`
+export default function Badge() {
+  return <span style={{ padding: '0.25rem 0.5rem', borderRadius: '999px', background: '#646cff', color: '#fff' }}>Read only</span>
+}
+`}
+  stackBlitz={false}
+/>
+
+## Features
+
+- Live preview in an isolated sandbox iframe
+- Editable TypeScript/TSX source with reset and copy actions
+- Dark and light preview themes
+- Desktop, tablet, and mobile preview widths
+- Read-only mode for embedded demos
+- Optional StackBlitz export
+- Multi-file virtual modules with relative imports
+- Configurable dependency allowlist via plugin options
+- SSR-safe static code fallback when JavaScript is disabled
+- Errors are contained inside the playground and do not break the docs page
+
+## Setup
+
+```ts
+import { defineConfig } from "@kamod-ch/preactpress/config";
+import { playgroundPlugin } from "@preactpress/plugin-playground";
+
+export default defineConfig({
+  plugins: [
+    playgroundPlugin({
+      workspacePackages: {
+        "@kamod/ui": "https://esm.sh/@example/ui",
+      },
+    }),
+  ],
+});
+```
+
+When the plugin is enabled, MDX files can use `<Playground />` without a manual import.
+
+For custom themes, register the component globally:
+
+```tsx
+import { createPlaygroundComponents } from "@preactpress/plugin-playground/mdx";
+
+const mdxComponents = {
+  ...createMdxHeadingComponents({
+    /* ... */
+  }),
+  ...createPlaygroundComponents(),
+};
+```

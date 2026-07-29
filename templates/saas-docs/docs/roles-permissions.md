@@ -1,5 +1,6 @@
 ---
 title: Roles and permissions
+description: Admin, Member, and Viewer role capabilities in Acme.
 layout: doc
 ---
 

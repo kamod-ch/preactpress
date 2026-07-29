@@ -6,50 +6,41 @@
   </picture>
 </p>
 
-The documentation framework for Preact projects.
+**PreactPress is the documentation framework for Preact libraries, APIs, and AI coding agents.**
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@kamod-ch/preactpress"><img src="https://img.shields.io/npm/v/@kamod-ch/preactpress" alt="npm version" /></a>
+  <a href="https://github.com/kamod-ch/preactpress/actions/workflows/ci.yml"><img src="https://img.shields.io/npm/v/@kamod-ch/preactpress?label=node%2020%2C22%2C24" alt="Node support" /></a>
   <a href="https://github.com/kamod-ch/preactpress/actions/workflows/ci.yml"><img src="https://github.com/kamod-ch/preactpress/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://github.com/kamod-ch/preactpress/stargazers"><img src="https://img.shields.io/github/stars/kamod-ch/preactpress?style=social" alt="GitHub stars" /></a>
   <a href="https://github.com/kamod-ch/preactpress/blob/main/LICENSE"><img src="https://img.shields.io/github/license/kamod-ch/preactpress" alt="license" /></a>
 </p>
 
-**[Live demo](https://kamod-ch.github.io/preactpress/)** · **[Docs starter](./templates/docs)** · **[npm](https://www.npmjs.com/package/@kamod-ch/preactpress)** · **[GitHub](https://github.com/kamod-ch/preactpress)** · **[Issues](https://github.com/kamod-ch/preactpress/issues)**
+**[Live demo](https://kamod-ch.github.io/preactpress/)** · **[Docs starter](./templates/docs)** · **[Showcase](./examples/showcase/)** · **[npm](https://www.npmjs.com/package/@kamod-ch/preactpress)** · **[GitHub](https://github.com/kamod-ch/preactpress)**
 
 > If PreactPress saves you time, **[star the repo](https://github.com/kamod-ch/preactpress)** — it helps others discover the project.
 
-## PreactPress in 30 seconds
+## Key features
 
-**PreactPress** is a documentation framework for teams who want **VitePress-style docs**, but built with **Preact + MDX** instead of Vue.
+| Feature                       | What you get                                                           |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| **Preact + MDX**              | VitePress-style docs with Preact components, not Vue                   |
+| **Plugin system**             | Typed hooks for build, config, MDX, and validation                     |
+| **`preactpress check`**       | CI-ready validation for links, routes, nav, redirects, and i18n        |
+| **Documentation versioning**  | Version switcher, archived snapshots, scoped search                    |
+| **Redirect system**           | HTTP redirects with HTML fallbacks and `_redirects` export             |
+| **TypeDoc integration**       | `@preactpress/plugin-typedoc` for API reference pages                  |
+| **Component props reference** | `@preactpress/plugin-component-reference` for MDX prop tables          |
+| **Live Preact playground**    | `@preactpress/plugin-playground` with sandboxed MDX demos              |
+| **AI-ready exports**          | `llms.txt`, `llms-full.txt`, per-page Markdown, and `api/context.json` |
+| **Static output**             | Deploy `dist/` to any static host — no runtime server                  |
 
-It is for you if you want to:
+## Quick start
 
-- ship product docs, guides, knowledge bases, or marketing-adjacent content
-- author mostly in Markdown/MDX, but still embed interactive Preact components
-- deploy static output to any host without a complex runtime
-- keep the stack small and close to the Preact ecosystem
-
-It is probably **not** for you if you want:
-
-- Vue-first docs tooling → use **VitePress**
-- React-first docs tooling and a bigger plugin ecosystem → use **Docusaurus**
-- a broader content/site framework with islands and many rendering models → use **Astro**
-
-## Why not VitePress, Docusaurus, or Astro?
-
-| Tool           | Choose it when                                                             | Why choose PreactPress instead                                                                 |
-| -------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| **VitePress**  | You are happy with Vue and want the reference docs DX in that ecosystem    | You want the same docs workflow, but with **Preact components and MDX**                        |
-| **Docusaurus** | You want React, versioning-heavy docs, and its mature plugin ecosystem     | You want a **smaller runtime** and a more lightweight **Preact-first** stack                   |
-| **Astro**      | You are building a broader content site and want islands across frameworks | You want a **focused docs framework** with a built-in docs theme, not a general site framework |
-
-## Start in 30 seconds
-
-Requirements: Node 20+.
+Requirements: **Node.js 20+** (tested on 20, 22, and 24).
 
 ```bash
-pnpm dlx @kamod-ch/preactpress init my-docs
+pnpm dlx @kamod-ch/preactpress init my-docs --template docs
 cd my-docs
 pnpm install
 pnpm dev
@@ -57,122 +48,39 @@ pnpm dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
-Want the full reference starter instead?
+Validate before release:
 
 ```bash
-pnpm dlx @kamod-ch/preactpress init my-docs --template docs
-cd my-docs && pnpm install && pnpm dev
+pnpm check
+pnpm build
 ```
 
-## What does the result look like?
+## Live demo
 
-You get a production-ready docs site with:
+The canonical documentation site is built from [`templates/docs`](./templates/docs) and published at **[kamod-ch.github.io/preactpress](https://kamod-ch.github.io/preactpress/)**.
 
-- responsive navigation, sidebar, outline, and dark mode
-- Markdown/MDX pages with Preact components
-- built-in search, SEO defaults, sitemap, feeds, and static output
-- a default docs theme you can use immediately or replace later
+It demonstrates the default theme, local search, Mermaid diagrams, live playgrounds, AI exports, and a small German i18n demo.
 
-![Docs theme built with PreactPress](https://raw.githubusercontent.com/kamod-ch/preactpress/main/.github/assets/docs-hero.png)
+## Code example
 
-## Why PreactPress?
-
-Many static site generators are tied to React, Vue, or a heavy runtime. PreactPress targets a smaller stack:
-
-- **Preact-first** — tiny runtime and familiar patterns if you already use React-like APIs.
-- **VitePress-like DX** — file-based Markdown routes, docs theme, sidebar, outline, and search out of the box.
-- **MDX + Preact** — interactive content and custom themes are Preact components, not Vue SFCs.
-- **Static by default** — build once, deploy `dist/` to any static host.
-
-Pair with **[Kamod UI](https://ui.kamod.ch/)** for Preact + Tailwind components inside MDX pages.
-
-## When to use PreactPress
-
-|            | PreactPress                                          | VitePress               | Astro                         |
-| ---------- | ---------------------------------------------------- | ----------------------- | ----------------------------- |
-| UI stack   | Preact + MDX                                         | Vue                     | Framework-agnostic islands    |
-| Docs theme | Built-in default                                     | Built-in default        | Add-on / DIY                  |
-| Runtime    | Small Preact bundle                                  | Vue hydration           | Varies by integration         |
-| Best for   | Preact teams, VitePress-like docs, MDX interactivity | Vue documentation sites | Multi-framework content sites |
-
-**Choose PreactPress when** you want VitePress-style documentation workflows with **Preact and MDX**, static output, and a theme you can replace with your own Preact layout.
-
-**Choose something else when** you need Vue (VitePress), React-only ecosystems, or Astro's multi-framework island model.
-
-## Starter templates
-
-| Template         | Use case                                   | Scaffold                                                                 |
-| ---------------- | ------------------------------------------ | ------------------------------------------------------------------------ |
-| `default`        | Minimal / quick start                      | `pnpm dlx @kamod-ch/preactpress init my-site`                            |
-| `docs`           | Full documentation (canonical reference)   | `pnpm dlx @kamod-ch/preactpress init my-docs --template docs`            |
-| `blog`           | Technical blog with RSS, tags, and authors | `pnpm dlx @kamod-ch/preactpress init my-blog --template blog`            |
-| `product-docs`   | Product or library documentation           | `pnpm dlx @kamod-ch/preactpress init my-product --template product-docs` |
-| `api-docs`       | JavaScript/TypeScript API reference        | `pnpm dlx @kamod-ch/preactpress init my-api --template api-docs`         |
-| `saas-docs`      | SaaS onboarding and admin documentation    | `pnpm dlx @kamod-ch/preactpress init my-saas --template saas-docs`       |
-| `knowledge-base` | Help center and support articles           | `pnpm dlx @kamod-ch/preactpress init my-help --template knowledge-base`  |
-| `magazine`       | Custom editorial theme (demo)              | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine`         |
-| `hono`           | Product landing + docs (demo)              | `pnpm dlx @kamod-ch/preactpress init my-site --template hono`            |
-
-Start with documentation, a technical blog, an API reference, SaaS docs, or a complete knowledge base—all powered by PreactPress.
-
-Browse the [live demo](https://kamod-ch.github.io/preactpress/) for the `docs` template, compare starters in the [template gallery](https://kamod-ch.github.io/preactpress/guide/templates/), or run `pnpm run dev:docs` from the package root while contributing.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/kamod-ch/preactpress/main/.github/assets/docs-mobile.png" alt="PreactPress docs theme on mobile" width="320" />
-</p>
-
-## Examples
-
-The package focuses on the PreactPress CLI, theme, and init templates. Extra example work lives under [`examples/`](./examples), including the ready-to-edit [Remotion YouTube starter](./examples/remotion-youtube-starter).
-
-## Features
-
-### Authoring
-
-- file-based `.md` and `.mdx` routing
-- frontmatter for titles, descriptions, tags, drafts, and layout chrome
-- Preact components in MDX
-- syntax highlighting, containers, alerts, code groups, includes, snippets, emoji, and optional math
-
-### Theme and navigation
-
-- default theme with responsive nav, sidebar, outline, search, dark mode, tags, and i18n
-- home, page, and doc layouts with hero and feature grids
-- local search or Algolia DocSearch
-- custom themes via Preact layout components
-
-### SEO and deploy
-
-- sitemap, robots, feeds, canonical URLs, Open Graph, and JSON-LD
-- static HTML for every route; lazy-loaded Markdown payloads after hydration
-- deploy to Netlify, Vercel, Cloudflare Pages, GitHub Pages, S3, or any static host
-
-### Developer experience
-
-- development SSR and static production output
-- route rewrites, dynamic routes, content loaders, build hooks, and MPA mode
-- `preactpress check` for routes, links, navigation, locales, and drafts
-
-## Commands
-
-| Command                      | Purpose                    |
-| ---------------------------- | -------------------------- |
-| `preactpress init [dir]`     | Scaffold a site            |
-| `preactpress dev [root]`     | Start development          |
-| `preactpress check [root]`   | Validate before release    |
-| `preactpress build [root]`   | Generate static output     |
-| `preactpress preview [root]` | Preview the generated site |
-
-Pass `--base /my-repo/` when building for a GitHub Pages project site.
-
-## Minimal configuration
+Minimal `.preactpress/config.ts`:
 
 ```ts
-export default {
+import { defineConfig } from "@kamod-ch/preactpress/config";
+import { playgroundPlugin } from "@preactpress/plugin-playground";
+
+export default defineConfig({
   site: {
-    title: "My docs",
-    description: "Product documentation",
-    url: "https://example.com",
+    title: "My library",
+    description: "API and component documentation",
+    url: "https://docs.example.com",
+  },
+  plugins: [playgroundPlugin()],
+  ai: {
+    llmsTxt: true,
+    llmsFullTxt: true,
+    copyMarkdown: true,
+    contextIndex: true,
   },
   themeConfig: {
     search: true,
@@ -184,46 +92,140 @@ export default {
       },
     ],
   },
-};
+});
 ```
 
-Every Markdown or MDX file below `srcDir` becomes a route unless it matches `srcExclude`.
+Interactive MDX page:
 
-## Favicons
+```mdx
+import Counter from "./components/Counter.tsx";
 
-By default PreactPress serves built-in `favicon.svg`, `favicon-32.png`, and `favicon.png` files. To override them without config, place files with the same names in `src/public/`. For custom names, use either the convenience `favicon` option:
+## Demo
+
+<Counter initial={3} />
+```
+
+## Why PreactPress?
+
+Many documentation tools assume Vue or React. PreactPress targets teams who already ship Preact libraries and want a smaller runtime with familiar JSX patterns.
+
+- **Preact-first** — tiny bundle, React-like APIs, MDX components are Preact components.
+- **VitePress-like DX** — file-based Markdown routes, sidebar, outline, search, and dark mode out of the box.
+- **Library docs, not just guides** — TypeDoc, OpenAPI, component prop tables, and changelog plugins ship as first-class extensions.
+- **AI agent ready** — static `llms.txt` / `llms-full.txt` exports help Cursor, Claude Code, and similar tools index your docs.
+- **Static by default** — build once, deploy anywhere.
+
+Pair with **[Kamod UI](https://ui.kamod.ch/)** for Preact + Tailwind components inside MDX pages.
+
+## Comparison
+
+|                         | PreactPress                             | VitePress              | Docusaurus                         | Starlight               |
+| ----------------------- | --------------------------------------- | ---------------------- | ---------------------------------- | ----------------------- |
+| UI stack                | Preact + MDX                            | Vue                    | React                              | Astro                   |
+| Docs theme              | Built-in                                | Built-in               | Built-in                           | Built-in                |
+| Runtime size            | Small Preact bundle                     | Vue hydration          | React + router                     | Varies                  |
+| TypeScript API docs     | `@preactpress/plugin-typedoc`           | Manual / plugins       | TypeDoc plugin                     | Manual                  |
+| Live code playground    | `@preactpress/plugin-playground`        | Custom                 | `@docusaurus/theme-live-codeblock` | Custom                  |
+| AI exports (`llms.txt`) | Built-in                                | Community plugins      | Community plugins                  | Community plugins       |
+| Doc validation CLI      | `preactpress check`                     | `vitepress build` only | `docusaurus build` only            | Astro build only        |
+| Best for                | Preact libraries, APIs, AI-indexed docs | Vue documentation      | Large React doc portals            | Multi-framework content |
+
+**Choose PreactPress** when you document Preact libraries or APIs and want VitePress-style workflows with MDX, plugins, validation, and AI-ready exports.
+
+**Choose something else** when you need Vue (VitePress), a mature React plugin ecosystem (Docusaurus), or Astro's multi-framework island model (Starlight).
+
+See the full [comparison guide](https://kamod-ch.github.io/preactpress/guide/comparison/) on the docs site.
+
+## Templates
+
+| Template         | Use case                                 | Scaffold                                                                 |
+| ---------------- | ---------------------------------------- | ------------------------------------------------------------------------ |
+| `default`        | Minimal quick start                      | `pnpm dlx @kamod-ch/preactpress init my-site`                            |
+| `docs`           | Full documentation (canonical reference) | `pnpm dlx @kamod-ch/preactpress init my-docs --template docs`            |
+| `blog`           | Technical blog with RSS, tags, authors   | `pnpm dlx @kamod-ch/preactpress init my-blog --template blog`            |
+| `product-docs`   | Product or library documentation         | `pnpm dlx @kamod-ch/preactpress init my-product --template product-docs` |
+| `api-docs`       | JavaScript/TypeScript API reference      | `pnpm dlx @kamod-ch/preactpress init my-api --template api-docs`         |
+| `saas-docs`      | SaaS onboarding and admin docs           | `pnpm dlx @kamod-ch/preactpress init my-saas --template saas-docs`       |
+| `knowledge-base` | Help center and support articles         | `pnpm dlx @kamod-ch/preactpress init my-help --template knowledge-base`  |
+| `versions`       | Multi-version documentation              | `pnpm dlx @kamod-ch/preactpress init my-versions --template versions`    |
+| `monorepo`       | Docs inside a pnpm workspace             | `pnpm dlx @kamod-ch/preactpress init my-monorepo --template monorepo`    |
+| `magazine`       | Custom editorial theme (demo)            | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine`         |
+| `hono`           | Product landing + docs (demo)            | `pnpm dlx @kamod-ch/preactpress init my-site --template hono`            |
+
+Browse the [template gallery](https://kamod-ch.github.io/preactpress/guide/templates/) or run `pnpm run dev:docs` from the package root while contributing.
+
+## Plugins
+
+Official plugins live under [`packages/`](./packages/) and are documented on the site:
+
+| Plugin                                    | Purpose                                             |
+| ----------------------------------------- | --------------------------------------------------- |
+| `@preactpress/plugin-mermaid`             | Mermaid diagrams in Markdown                        |
+| `@preactpress/plugin-playground`          | Live Preact sandboxes in MDX                        |
+| `@preactpress/plugin-typedoc`             | TypeScript API reference from TypeDoc               |
+| `@preactpress/plugin-component-reference` | Component prop tables in MDX                        |
+| `@preactpress/plugin-openapi`             | REST API docs from OpenAPI 3.x                      |
+| `@preactpress/plugin-changelog`           | Changelog pages from GitHub Releases or local files |
+
+Register plugins in `.preactpress/config.ts`:
 
 ```ts
-export default {
-  favicon: {
-    svg: "/brand/favicon.svg",
-    png32: "/brand/favicon-32.png",
-    apple: "/brand/apple-touch-icon.png",
-  },
-};
+import { defineConfig } from "@kamod-ch/preactpress/config";
+import { mermaidPlugin } from "@preactpress/plugin-mermaid";
+import { typedocPlugin } from "@preactpress/plugin-typedoc";
+
+export default defineConfig({
+  plugins: [mermaidPlugin(), typedocPlugin({ tsconfig: "tsconfig.json", outDir: "api" })],
+});
 ```
 
-or provide explicit `head` link tags for full control. Explicit favicon tags in `head` disable the built-in favicon tags.
+See [Plugins](https://kamod-ch.github.io/preactpress/guide/plugins/) and the [ecosystem gallery](https://kamod-ch.github.io/preactpress/guide/ecosystem/).
 
-## Documentation
+## Deployment
 
-The canonical, runnable documentation lives in [`templates/docs`](./templates/docs). It covers authoring, routing, i18n, the default theme, all configuration options, CLI validation, deployment, hooks, data loaders, dynamic routes, and custom themes.
-
-Use these package scripts while contributing:
+PreactPress emits static HTML, assets, search index, and optional AI exports. Deploy the `dist/` folder to any static host.
 
 ```bash
+preactpress build
+# For GitHub Pages project sites:
+preactpress build --base /my-repo/
+```
+
+Supported patterns are documented for [Netlify](https://kamod-ch.github.io/preactpress/examples/netlify/), [Vercel](https://kamod-ch.github.io/preactpress/examples/vercel/), [Cloudflare Pages](https://kamod-ch.github.io/preactpress/examples/cloudflare-pages/), [GitHub Actions](https://kamod-ch.github.io/preactpress/examples/github-actions/), and [S3-compatible hosts](https://kamod-ch.github.io/preactpress/examples/s3-deploy/).
+
+Official CI support: [`kamod-ch/preactpress/action@v2`](./action/README.md).
+
+## Roadmap
+
+Current priorities:
+
+- Keep `templates/docs` synchronized with every public option and CLI behavior
+- Expand real-world deployment and plugin examples
+- Performance budgets for generated HTML, CSS, and client JavaScript
+- Additional changelog providers (GitLab, Gitea)
+
+Non-goals for core: production Node server runtime, Vue SFC support, full VitePress theme clone.
+
+See [ROADMAP.md](./ROADMAP.md) and [RELEASE-REPORT.md](./RELEASE-REPORT.md) for the full release status.
+
+## Contributing
+
+Development scripts:
+
+```bash
+pnpm install
 pnpm run build
 pnpm test
 pnpm run dev:docs
 pnpm run check:docs
 pnpm run build:docs
+pnpm run verify    # fmt, lint, build, coverage, templates, browser, pack
 ```
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for package development and [ROADMAP.md](./ROADMAP.md) for current priorities.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for package development. Upgrade from a previous release with [UPGRADE.md](./UPGRADE.md).
 
 ## License
 
 Built by Klaus Zahiragic | Kamod GmbH
 
-[Website](https://www.kamod.ch) ·
-[LinkedIn](https://www.linkedin.com/in/klauszahiragic/)
+[Website](https://www.kamod.ch) · [LinkedIn](https://www.linkedin.com/in/klauszahiragic/)

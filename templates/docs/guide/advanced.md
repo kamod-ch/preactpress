@@ -30,6 +30,8 @@ Hooks may be asynchronous. Keep output deterministic so incremental builds and C
 
 Import `createContentLoader` from `@kamod-ch/preactpress/config` in a `*.data.ts` module to collect and transform content metadata at build time. Loader results are available to the associated page module.
 
+For typed frontmatter, schema validation, and cross-collection references, use [content collections](/guide/content-collections) via `@kamod-ch/preactpress/content`.
+
 ## Dynamic routes
 
 A route such as `products/[slug].mdx` can provide `products/[slug].paths.ts`. The paths module returns the parameter values that PreactPress must render during the static build.

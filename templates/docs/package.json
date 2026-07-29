@@ -10,6 +10,8 @@
   },
   "devDependencies": {
     "@kamod-ch/preactpress": "file:../..",
+    "@preactpress/plugin-mermaid": "file:../../packages/plugin-mermaid",
+    "@preactpress/plugin-playground": "file:../../packages/plugin-playground",
     "typescript": "^6.0.3"
   }
 }

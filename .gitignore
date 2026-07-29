@@ -5,6 +5,8 @@ template/dist/
 
 /dist
 
+packages/*/dist/
+
 templates/*/dist/
 
 # Temporary and generated artifacts
@@ -14,4 +16,14 @@ proofshot-artifacts/
 coverage/
 playwright-report/
 test-results/
+benchmarks/fixtures/docs/
+benchmarks/fixtures/.preactpress/cache/
+benchmarks/fixtures/dist/
+benchmarks/fixtures/.benchmark-manifest.json
+benchmarks/results/*
+!benchmarks/results/.gitkeep
+!benchmarks/results/baseline.json
+!benchmarks/results/baseline.ci.json
 TODO.md
+
+/docs

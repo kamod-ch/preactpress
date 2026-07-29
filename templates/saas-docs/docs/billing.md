@@ -1,5 +1,6 @@
 ---
 title: Billing
+description: View invoices, change plans, and manage workspace subscriptions.
 layout: doc
 ---
 

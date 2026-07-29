@@ -1,0 +1,17 @@
+{
+  "name": "preactpress-showcase",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node ../../bin/preactpress.mjs dev",
+    "check": "node ../../bin/preactpress.mjs check",
+    "build": "node ../../bin/preactpress.mjs build",
+    "preview": "node ../../bin/preactpress.mjs preview"
+  },
+  "devDependencies": {
+    "@kamod-ch/preactpress": "workspace:*",
+    "@preactpress/plugin-mermaid": "workspace:*",
+    "@preactpress/plugin-playground": "workspace:*",
+    "typescript": "^6.0.3"
+  }
+}

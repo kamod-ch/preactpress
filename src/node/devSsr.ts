@@ -9,6 +9,9 @@ import { applyTransformHtml, applyTransformPageData } from "./hooks.js";
 import { PACKAGE_ROOT } from "./packageRoot.js";
 import type { SiteConfig } from "./siteConfig.js";
 import type { PageView } from "../client/types.js";
+import { serializablePageForClient } from "../shared/aiMarkdown.js";
+import type { ContentFile } from "./content.js";
+import { hydrateRoutePage } from "./pageHydration.js";
 
 function ssrEntry(): string {
   return path.join(PACKAGE_ROOT, "src/client/entry-ssr.tsx");
@@ -24,7 +27,12 @@ export function isDocumentRequest(url: string): boolean {
   return true;
 }
 
-export function createDevSsrMiddleware(site: SiteConfig, server: ViteDevServer) {
+export function createDevSsrMiddleware(
+  site: SiteConfig,
+  server: ViteDevServer,
+  getRouteFile: (route: string) => ContentFile | undefined,
+  getRoutes: () => string[],
+) {
   const indexPath = path.join(site.srcDir, "index.html");
   const ssrId = ssrEntry();
   const cache = {
@@ -57,16 +65,23 @@ export function createDevSsrMiddleware(site: SiteConfig, server: ViteDevServer) 
         const mod = (await server.ssrLoadModule(ssrId)) as {
           resolveRoutePage: (routePath: string) => PageView;
         };
-        const page = await applyTransformPageData(site, route, mod.resolveRoutePage(route));
+        const resolved = mod.resolveRoutePage(route);
+        const page = await applyTransformPageData(
+          site,
+          route,
+          await hydrateRoutePage(site, route, resolved, getRouteFile(route), getRoutes()),
+        );
+        const payload =
+          page.kind === "markdown"
+            ? serializablePageForClient(page, site.ai !== false && site.ai.copyMarkdown)
+            : { ...page, Component: undefined };
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json; charset=utf-8");
         if (req.method === "HEAD") {
           res.end();
           return;
         }
-        res.end(
-          JSON.stringify(page.kind === "markdown" ? page : { ...page, Component: undefined }),
-        );
+        res.end(JSON.stringify(payload));
         return;
       } catch (err) {
         site.logger.warn(
@@ -98,7 +113,12 @@ export function createDevSsrMiddleware(site: SiteConfig, server: ViteDevServer) 
           page: PageView;
         };
       };
-      const page = await applyTransformPageData(site, route, mod.resolveRoutePage(route));
+      const resolved = mod.resolveRoutePage(route);
+      const page = await applyTransformPageData(
+        site,
+        route,
+        await hydrateRoutePage(site, route, resolved, getRouteFile(route), getRoutes()),
+      );
       const {
         body,
         title,

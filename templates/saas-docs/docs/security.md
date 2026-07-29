@@ -1,5 +1,6 @@
 ---
 title: Security
+description: Encryption, two-factor authentication, and compliance overview for Acme.
 layout: doc
 ---
 

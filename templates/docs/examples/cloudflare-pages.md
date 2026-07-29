@@ -112,6 +112,8 @@ export default defineConfig({
 
 This keeps canonical URLs, Open Graph metadata, `sitemap.xml`, `robots.txt`, and feeds correct.
 
+See also [Deploy](/guide/deploy), [GitHub Actions](/examples/github-actions), and [Netlify](/examples/netlify).
+
 ## Cache notes
 
 Cloudflare can cache hashed files under `assets/` aggressively because their filenames change when content changes. Avoid immutable caching for HTML, `preactpress-search.json`, and `preactpress-content/*.json`.

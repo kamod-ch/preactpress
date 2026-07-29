@@ -1,0 +1,28 @@
+---
+title: Contacts (example)
+description: Example REST endpoint documentation using Protocol MDX components.
+layout: doc
+---
+
+import EndpointLine from "../components/EndpointLine.tsx";
+import StatusCodeTable from "../components/StatusCodeTable.tsx";
+import "../components/api-docs.css";
+
+# Contacts (example)
+
+Illustrative page showing how to document a REST operation with Protocol MDX helpers. Prefer the generated [Contacts resource](/resources/tags/contacts) for the live OpenAPI pages.
+
+## List contacts
+
+<EndpointLine method="GET" path="/v1/contacts" />
+
+Returns a paginated list of contacts visible to the authenticated workspace.
+
+## Responses
+
+<StatusCodeTable
+  statuses={[
+    { status: 200, description: "Paginated contact list" },
+    { status: 401, description: "Missing or invalid API key" },
+  ]}
+/>

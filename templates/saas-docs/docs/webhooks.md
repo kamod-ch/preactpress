@@ -1,5 +1,6 @@
 ---
 title: Webhooks
+description: Register HTTPS endpoints and verify webhook event signatures.
 layout: doc
 ---
 

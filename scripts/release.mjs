@@ -187,6 +187,11 @@ try {
   run("npm publish --access public");
   ok("Package published to npm.");
 
+  if (flags.includes("--with-plugins")) {
+    run(`node ./scripts/release-plugins.mjs${bump ? ` ${bump}` : ""}`);
+    ok("Official plugins published to npm.");
+  }
+
   run("git push --follow-tags");
   ok("Git commits and tags pushed.");
 
