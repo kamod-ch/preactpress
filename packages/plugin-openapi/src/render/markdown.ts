@@ -19,11 +19,13 @@ function yamlEscape(value: string): string {
   return value.replace(/"/g, '\\"');
 }
 
-function frontmatter(title: string, description?: string, tags: string[] = ["api", "openapi"]): string {
+function frontmatter(title: string, description?: string, _tags: string[] = []): string {
   const lines = [`title: "${yamlEscape(title)}"`];
-  if (description) lines.push(`description: "${yamlEscape(description.slice(0, 160))}"`);
-  lines.push("tags:");
-  for (const tag of tags) lines.push(`  - ${tag}`);
+  if (description) {
+    lines.push(`description: "${yamlEscape(description.slice(0, 160).replace(/\n/g, " "))}"`);
+  } else {
+    lines.push(`description: "${yamlEscape(`${title} API reference`)}"`);
+  }
   return `---\n${lines.join("\n")}\n---\n\n`;
 }
 
@@ -180,14 +182,13 @@ function renderOverviewPage(manifest: OpenApiManifest): string {
 
   const tagLines = manifest.tags.map((tag) => {
     const route = joinRoute(manifest.baseRoute, "tags", tag.slug);
-    return `- [${tag.name}](${route.replace(manifest.baseRoute, ".")})${tag.description ? ` — ${tag.description}` : ""}`;
+    return `- [${tag.name}](${route})${tag.description ? ` — ${tag.description}` : ""}`;
   });
 
   const operationLines = Object.values(manifest.operations)
     .sort((a, b) => `${a.method} ${a.path}`.localeCompare(`${b.method} ${b.path}`))
     .map((operation) => {
-      const rel = operation.route.replace(manifest.baseRoute, ".");
-      return `- [\`${operation.method.toUpperCase()}\` ${operation.path}](${rel})${operation.summary ? ` — ${operation.summary}` : ""}`;
+      return `- [\`${operation.method.toUpperCase()}\` ${operation.path}](${operation.route})${operation.summary ? ` — ${operation.summary}` : ""}`;
     });
 
   return [
@@ -225,8 +226,7 @@ function renderTagPage(manifest: OpenApiManifest, tagSlug: string): string {
   const lines = operations
     .sort((a, b) => `${a.method} ${a.path}`.localeCompare(`${b.method} ${b.path}`))
     .map((operation) => {
-      const rel = operation.route.replace(manifest.baseRoute, ".");
-      return `- [\`${operation.method.toUpperCase()}\` ${operation.path}](${rel})${operation.summary ? ` — ${operation.summary}` : ""}`;
+      return `- [\`${operation.method.toUpperCase()}\` ${operation.path}](${operation.route})${operation.summary ? ` — ${operation.summary}` : ""}`;
     });
 
   return [
@@ -245,8 +245,7 @@ function renderSchemasIndex(manifest: OpenApiManifest): string {
   const lines = Object.values(manifest.schemas)
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((schema) => {
-      const rel = schema.route.replace(manifest.baseRoute, ".");
-      return `- [${schema.name}](${rel})${schema.description ? ` — ${schema.description}` : ""}`;
+      return `- [${schema.name}](${schema.route})${schema.description ? ` — ${schema.description}` : ""}`;
     });
 
   return [

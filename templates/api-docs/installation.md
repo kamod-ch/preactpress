@@ -1,5 +1,6 @@
 ---
 title: Installation
+description: Install the Acme TypeScript client package.
 layout: doc
 ---
 

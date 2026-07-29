@@ -89,12 +89,13 @@ function cloneUserConfigForPlugins(user: UserConfig): UserConfig {
 export async function applyPluginsConfig(
   user: UserConfig,
   plugins: PreactPressPlugin[],
+  root: string = process.cwd(),
 ): Promise<UserConfig> {
   let current = user;
   for (const plugin of plugins) {
     if (!plugin.config) continue;
     const next = await runHook(plugin, "config", () =>
-      plugin.config!(cloneUserConfigForPlugins(current)),
+      plugin.config!(cloneUserConfigForPlugins(current), { root }),
     );
     if (next !== undefined) {
       const vitePlugins = [...(current.vite?.plugins ?? []), ...(next.vite?.plugins ?? [])];

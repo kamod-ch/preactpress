@@ -76,7 +76,7 @@ export async function resolveConfig(
   const configDir = resolveConfigDir(root);
   const logger = createLogger();
   const user = await resolveUserConfig(root, { command, mode, isPreview: false });
-  const mergedUser = await applyPluginsConfig(user, normalizePlugins(user.plugins));
+  const mergedUser = await applyPluginsConfig(user, normalizePlugins(user.plugins), root);
   const config = resolveSiteConfig(mergedUser, { root, configDir, logger }, []);
   try {
     const contentRoutes = (await scanAllContentFiles(config)).map((file) => file.route);

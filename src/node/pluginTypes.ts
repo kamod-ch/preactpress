@@ -49,7 +49,10 @@ export interface PreactPressPlugin {
   name: string;
   enforce?: "pre" | "post";
 
-  config?(config: UserConfig): UserConfig | void | Promise<UserConfig | void>;
+  config?(
+    config: UserConfig,
+    env?: { root: string },
+  ): UserConfig | void | Promise<UserConfig | void>;
 
   configResolved?(config: ResolvedConfig): void | Promise<void>;
 

@@ -156,12 +156,13 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "API reference",
     package: "template:api-docs",
     type: "starter",
-    description: "Scannable API pages with MDX components for signatures, parameters, and types.",
+    description:
+      "Protocol-style REST + TypeScript SDK hybrid with OpenAPI-generated resources and MDX API components.",
     repository: `${repo}/tree/main/templates/api-docs`,
     documentation: docs("templates"),
     author: "PreactPress",
     official: true,
-    tags: ["api", "typescript", "reference"],
+    tags: ["api", "openapi", "typescript", "reference"],
     preactpressVersion: ">=2.0.0",
   },
   {

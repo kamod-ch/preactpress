@@ -1,5 +1,6 @@
 ---
 title: Client.ping
+description: Health-check the Acme API with Client.ping.
 layout: doc
 ---
 

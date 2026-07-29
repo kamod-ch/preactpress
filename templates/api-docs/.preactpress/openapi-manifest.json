@@ -1,0 +1,1049 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-28T11:58:19.180Z",
+  "sourceHash": "42f81d4ba711856b6a4b73322b39da89f6bd05c0378fc228888e8800a4198921",
+  "source": "openapi/acme.yaml",
+  "baseRoute": "/resources",
+  "outputDir": "resources",
+  "info": {
+    "title": "Acme Messaging API",
+    "description": "REST API for contacts, conversations, messages, groups, and attachments.\nAuthenticate with a bearer API key from the Acme dashboard.\n",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.acme.dev/v1",
+      "description": "Production"
+    },
+    {
+      "url": "https://staging-api.acme.dev/v1",
+      "description": "Staging"
+    }
+  ],
+  "securitySchemes": {
+    "bearerAuth": {
+      "id": "bearerAuth",
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "API key"
+    }
+  },
+  "tags": [
+    {
+      "name": "Attachments",
+      "description": "Upload and download file attachments",
+      "slug": "attachments"
+    },
+    {
+      "name": "Contacts",
+      "description": "Manage people and organizations in your workspace",
+      "slug": "contacts"
+    },
+    {
+      "name": "Conversations",
+      "description": "Threaded conversations between contacts and agents",
+      "slug": "conversations"
+    },
+    {
+      "name": "Groups",
+      "description": "Organize contacts into reusable groups",
+      "slug": "groups"
+    },
+    {
+      "name": "Messages",
+      "description": "Send and retrieve messages within conversations",
+      "slug": "messages"
+    }
+  ],
+  "operations": {
+    "listContacts": {
+      "id": "listContacts",
+      "operationId": "listContacts",
+      "slug": "list-contacts",
+      "route": "/resources/operations/list-contacts",
+      "method": "get",
+      "path": "/contacts",
+      "summary": "List contacts",
+      "description": "Returns a paginated list of contacts visible to the authenticated workspace.",
+      "tags": [
+        "Contacts"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [
+        {
+          "name": "q",
+          "in": "query",
+          "description": "Full-text search across name and email",
+          "required": false,
+          "schema": "string"
+        }
+      ],
+      "responses": [
+        {
+          "status": "200",
+          "description": "Paginated contact list",
+          "contentType": "application/json",
+          "schema": "ContactListResponse"
+        },
+        {
+          "status": "401"
+        }
+      ]
+    },
+    "createContact": {
+      "id": "createContact",
+      "operationId": "createContact",
+      "slug": "create-contact",
+      "route": "/resources/operations/create-contact",
+      "method": "post",
+      "path": "/contacts",
+      "summary": "Create a contact",
+      "tags": [
+        "Contacts"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "contentType": "application/json",
+        "schema": "CreateContactRequest"
+      },
+      "responses": [
+        {
+          "status": "201",
+          "description": "Contact created",
+          "contentType": "application/json",
+          "schema": "Contact"
+        },
+        {
+          "status": "400"
+        },
+        {
+          "status": "401"
+        }
+      ]
+    },
+    "getContact": {
+      "id": "getContact",
+      "operationId": "getContact",
+      "slug": "get-contact",
+      "route": "/resources/operations/get-contact",
+      "method": "get",
+      "path": "/contacts/{contactId}",
+      "summary": "Get contact by ID",
+      "tags": [
+        "Contacts"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "responses": [
+        {
+          "status": "200",
+          "description": "Contact details",
+          "contentType": "application/json",
+          "schema": "Contact"
+        },
+        {
+          "status": "404"
+        }
+      ]
+    },
+    "listConversations": {
+      "id": "listConversations",
+      "operationId": "listConversations",
+      "slug": "list-conversations",
+      "route": "/resources/operations/list-conversations",
+      "method": "get",
+      "path": "/conversations",
+      "summary": "List conversations",
+      "tags": [
+        "Conversations"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "responses": [
+        {
+          "status": "200",
+          "description": "Paginated conversation list",
+          "contentType": "application/json",
+          "schema": "ConversationListResponse"
+        },
+        {
+          "status": "401"
+        }
+      ]
+    },
+    "createConversation": {
+      "id": "createConversation",
+      "operationId": "createConversation",
+      "slug": "create-conversation",
+      "route": "/resources/operations/create-conversation",
+      "method": "post",
+      "path": "/conversations",
+      "summary": "Start a conversation",
+      "tags": [
+        "Conversations"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "contentType": "application/json",
+        "schema": "CreateConversationRequest"
+      },
+      "responses": [
+        {
+          "status": "201",
+          "description": "Conversation created",
+          "contentType": "application/json",
+          "schema": "Conversation"
+        }
+      ]
+    },
+    "getConversation": {
+      "id": "getConversation",
+      "operationId": "getConversation",
+      "slug": "get-conversation",
+      "route": "/resources/operations/get-conversation",
+      "method": "get",
+      "path": "/conversations/{conversationId}",
+      "summary": "Get conversation by ID",
+      "tags": [
+        "Conversations"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "responses": [
+        {
+          "status": "200",
+          "description": "Conversation details",
+          "contentType": "application/json",
+          "schema": "Conversation"
+        },
+        {
+          "status": "404"
+        }
+      ]
+    },
+    "listMessages": {
+      "id": "listMessages",
+      "operationId": "listMessages",
+      "slug": "list-messages",
+      "route": "/resources/operations/list-messages",
+      "method": "get",
+      "path": "/messages",
+      "summary": "List messages",
+      "tags": [
+        "Messages"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [
+        {
+          "name": "conversation_id",
+          "in": "query",
+          "required": true,
+          "schema": "string"
+        }
+      ],
+      "responses": [
+        {
+          "status": "200",
+          "description": "Paginated message list",
+          "contentType": "application/json",
+          "schema": "MessageListResponse"
+        }
+      ]
+    },
+    "createMessage": {
+      "id": "createMessage",
+      "operationId": "createMessage",
+      "slug": "create-message",
+      "route": "/resources/operations/create-message",
+      "method": "post",
+      "path": "/messages",
+      "summary": "Send a message",
+      "tags": [
+        "Messages"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "contentType": "application/json",
+        "schema": "CreateMessageRequest"
+      },
+      "responses": [
+        {
+          "status": "201",
+          "description": "Message created",
+          "contentType": "application/json",
+          "schema": "Message"
+        }
+      ]
+    },
+    "listGroups": {
+      "id": "listGroups",
+      "operationId": "listGroups",
+      "slug": "list-groups",
+      "route": "/resources/operations/list-groups",
+      "method": "get",
+      "path": "/groups",
+      "summary": "List groups",
+      "tags": [
+        "Groups"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "responses": [
+        {
+          "status": "200",
+          "description": "Paginated group list",
+          "contentType": "application/json",
+          "schema": "GroupListResponse"
+        }
+      ]
+    },
+    "createGroup": {
+      "id": "createGroup",
+      "operationId": "createGroup",
+      "slug": "create-group",
+      "route": "/resources/operations/create-group",
+      "method": "post",
+      "path": "/groups",
+      "summary": "Create a group",
+      "tags": [
+        "Groups"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "contentType": "application/json",
+        "schema": "CreateGroupRequest"
+      },
+      "responses": [
+        {
+          "status": "201",
+          "description": "Group created",
+          "contentType": "application/json",
+          "schema": "Group"
+        }
+      ]
+    },
+    "uploadAttachment": {
+      "id": "uploadAttachment",
+      "operationId": "uploadAttachment",
+      "slug": "upload-attachment",
+      "route": "/resources/operations/upload-attachment",
+      "method": "post",
+      "path": "/attachments",
+      "summary": "Upload an attachment",
+      "tags": [
+        "Attachments"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "contentType": "multipart/form-data",
+        "schema": "object"
+      },
+      "responses": [
+        {
+          "status": "201",
+          "description": "Attachment uploaded",
+          "contentType": "application/json",
+          "schema": "Attachment"
+        }
+      ]
+    },
+    "getAttachment": {
+      "id": "getAttachment",
+      "operationId": "getAttachment",
+      "slug": "get-attachment",
+      "route": "/resources/operations/get-attachment",
+      "method": "get",
+      "path": "/attachments/{attachmentId}",
+      "summary": "Download an attachment",
+      "tags": [
+        "Attachments"
+      ],
+      "security": [
+        "bearerAuth"
+      ],
+      "parameters": [],
+      "responses": [
+        {
+          "status": "200",
+          "description": "Attachment binary",
+          "contentType": "application/octet-stream",
+          "schema": "string:binary"
+        },
+        {
+          "status": "404"
+        }
+      ]
+    }
+  },
+  "schemas": {
+    "Contact": {
+      "id": "Contact",
+      "name": "Contact",
+      "slug": "contact",
+      "route": "/resources/schemas/contact",
+      "type": "object",
+      "properties": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true,
+          "example": "ctc_01HXYZ"
+        },
+        {
+          "name": "email",
+          "type": "string:email",
+          "format": "email",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "type": "string:date-time",
+          "format": "date-time",
+          "required": false
+        }
+      ],
+      "required": [
+        "id",
+        "email",
+        "name"
+      ],
+      "tags": [
+        "schema",
+        "Contact",
+        "id",
+        "email",
+        "name"
+      ]
+    },
+    "CreateContactRequest": {
+      "id": "CreateContactRequest",
+      "name": "CreateContactRequest",
+      "slug": "create-contact-request",
+      "route": "/resources/schemas/create-contact-request",
+      "type": "object",
+      "properties": [
+        {
+          "name": "email",
+          "type": "string:email",
+          "format": "email",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "required": [
+        "email",
+        "name"
+      ],
+      "tags": [
+        "schema",
+        "CreateContactRequest",
+        "email",
+        "name"
+      ]
+    },
+    "ContactListResponse": {
+      "id": "ContactListResponse",
+      "name": "ContactListResponse",
+      "slug": "contact-list-response",
+      "route": "/resources/schemas/contact-list-response",
+      "type": "object",
+      "properties": [
+        {
+          "name": "data",
+          "type": "array<Contact>",
+          "required": false,
+          "items": "Contact"
+        },
+        {
+          "name": "page",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "total",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "required": [],
+      "tags": [
+        "schema",
+        "ContactListResponse"
+      ]
+    },
+    "Conversation": {
+      "id": "Conversation",
+      "name": "Conversation",
+      "slug": "conversation",
+      "route": "/resources/schemas/conversation",
+      "type": "object",
+      "properties": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "enum": [
+            "open",
+            "closed",
+            "pending"
+          ]
+        },
+        {
+          "name": "contact_id",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "required": [
+        "id",
+        "subject",
+        "status"
+      ],
+      "tags": [
+        "schema",
+        "Conversation",
+        "id",
+        "subject",
+        "status"
+      ]
+    },
+    "CreateConversationRequest": {
+      "id": "CreateConversationRequest",
+      "name": "CreateConversationRequest",
+      "slug": "create-conversation-request",
+      "route": "/resources/schemas/create-conversation-request",
+      "type": "object",
+      "properties": [
+        {
+          "name": "contact_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "required": [
+        "contact_id",
+        "subject"
+      ],
+      "tags": [
+        "schema",
+        "CreateConversationRequest",
+        "contact_id",
+        "subject"
+      ]
+    },
+    "ConversationListResponse": {
+      "id": "ConversationListResponse",
+      "name": "ConversationListResponse",
+      "slug": "conversation-list-response",
+      "route": "/resources/schemas/conversation-list-response",
+      "type": "object",
+      "properties": [
+        {
+          "name": "data",
+          "type": "array<Conversation>",
+          "required": false,
+          "items": "Conversation"
+        },
+        {
+          "name": "page",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "total",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "required": [],
+      "tags": [
+        "schema",
+        "ConversationListResponse"
+      ]
+    },
+    "Message": {
+      "id": "Message",
+      "name": "Message",
+      "slug": "message",
+      "route": "/resources/schemas/message",
+      "type": "object",
+      "properties": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "conversation_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "direction",
+          "type": "enum",
+          "required": false,
+          "enum": [
+            "inbound",
+            "outbound"
+          ]
+        }
+      ],
+      "required": [
+        "id",
+        "conversation_id",
+        "body"
+      ],
+      "tags": [
+        "schema",
+        "Message",
+        "id",
+        "conversation_id",
+        "body"
+      ]
+    },
+    "CreateMessageRequest": {
+      "id": "CreateMessageRequest",
+      "name": "CreateMessageRequest",
+      "slug": "create-message-request",
+      "route": "/resources/schemas/create-message-request",
+      "type": "object",
+      "properties": [
+        {
+          "name": "conversation_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "required": [
+        "conversation_id",
+        "body"
+      ],
+      "tags": [
+        "schema",
+        "CreateMessageRequest",
+        "conversation_id",
+        "body"
+      ]
+    },
+    "MessageListResponse": {
+      "id": "MessageListResponse",
+      "name": "MessageListResponse",
+      "slug": "message-list-response",
+      "route": "/resources/schemas/message-list-response",
+      "type": "object",
+      "properties": [
+        {
+          "name": "data",
+          "type": "array<Message>",
+          "required": false,
+          "items": "Message"
+        },
+        {
+          "name": "page",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "total",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "required": [],
+      "tags": [
+        "schema",
+        "MessageListResponse"
+      ]
+    },
+    "Group": {
+      "id": "Group",
+      "name": "Group",
+      "slug": "group",
+      "route": "/resources/schemas/group",
+      "type": "object",
+      "properties": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "member_count",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "required": [
+        "id",
+        "name"
+      ],
+      "tags": [
+        "schema",
+        "Group",
+        "id",
+        "name"
+      ]
+    },
+    "CreateGroupRequest": {
+      "id": "CreateGroupRequest",
+      "name": "CreateGroupRequest",
+      "slug": "create-group-request",
+      "route": "/resources/schemas/create-group-request",
+      "type": "object",
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "contact_ids",
+          "type": "array<string>",
+          "required": false,
+          "items": "string"
+        }
+      ],
+      "required": [
+        "name"
+      ],
+      "tags": [
+        "schema",
+        "CreateGroupRequest",
+        "name"
+      ]
+    },
+    "GroupListResponse": {
+      "id": "GroupListResponse",
+      "name": "GroupListResponse",
+      "slug": "group-list-response",
+      "route": "/resources/schemas/group-list-response",
+      "type": "object",
+      "properties": [
+        {
+          "name": "data",
+          "type": "array<Group>",
+          "required": false,
+          "items": "Group"
+        },
+        {
+          "name": "page",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "total",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "required": [],
+      "tags": [
+        "schema",
+        "GroupListResponse"
+      ]
+    },
+    "Attachment": {
+      "id": "Attachment",
+      "name": "Attachment",
+      "slug": "attachment",
+      "route": "/resources/schemas/attachment",
+      "type": "object",
+      "properties": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "filename",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "content_type",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "size",
+          "type": "integer",
+          "required": true
+        }
+      ],
+      "required": [
+        "id",
+        "filename",
+        "content_type",
+        "size"
+      ],
+      "tags": [
+        "schema",
+        "Attachment",
+        "id",
+        "filename",
+        "content_type",
+        "size"
+      ]
+    }
+  },
+  "tree": [
+    {
+      "id": "tag-attachments",
+      "text": "Attachments",
+      "link": "/resources/tags/attachments",
+      "items": [
+        {
+          "id": "getAttachment",
+          "text": "GET /attachments/{attachmentId}",
+          "link": "/resources/operations/get-attachment"
+        },
+        {
+          "id": "uploadAttachment",
+          "text": "POST /attachments",
+          "link": "/resources/operations/upload-attachment"
+        }
+      ]
+    },
+    {
+      "id": "tag-contacts",
+      "text": "Contacts",
+      "link": "/resources/tags/contacts",
+      "items": [
+        {
+          "id": "listContacts",
+          "text": "GET /contacts",
+          "link": "/resources/operations/list-contacts"
+        },
+        {
+          "id": "getContact",
+          "text": "GET /contacts/{contactId}",
+          "link": "/resources/operations/get-contact"
+        },
+        {
+          "id": "createContact",
+          "text": "POST /contacts",
+          "link": "/resources/operations/create-contact"
+        }
+      ]
+    },
+    {
+      "id": "tag-conversations",
+      "text": "Conversations",
+      "link": "/resources/tags/conversations",
+      "items": [
+        {
+          "id": "listConversations",
+          "text": "GET /conversations",
+          "link": "/resources/operations/list-conversations"
+        },
+        {
+          "id": "getConversation",
+          "text": "GET /conversations/{conversationId}",
+          "link": "/resources/operations/get-conversation"
+        },
+        {
+          "id": "createConversation",
+          "text": "POST /conversations",
+          "link": "/resources/operations/create-conversation"
+        }
+      ]
+    },
+    {
+      "id": "tag-groups",
+      "text": "Groups",
+      "link": "/resources/tags/groups",
+      "items": [
+        {
+          "id": "listGroups",
+          "text": "GET /groups",
+          "link": "/resources/operations/list-groups"
+        },
+        {
+          "id": "createGroup",
+          "text": "POST /groups",
+          "link": "/resources/operations/create-group"
+        }
+      ]
+    },
+    {
+      "id": "tag-messages",
+      "text": "Messages",
+      "link": "/resources/tags/messages",
+      "items": [
+        {
+          "id": "listMessages",
+          "text": "GET /messages",
+          "link": "/resources/operations/list-messages"
+        },
+        {
+          "id": "createMessage",
+          "text": "POST /messages",
+          "link": "/resources/operations/create-message"
+        }
+      ]
+    },
+    {
+      "id": "schemas",
+      "text": "Schemas",
+      "link": "/resources/schemas",
+      "items": [
+        {
+          "id": "Attachment",
+          "text": "Attachment",
+          "link": "/resources/schemas/attachment"
+        },
+        {
+          "id": "Contact",
+          "text": "Contact",
+          "link": "/resources/schemas/contact"
+        },
+        {
+          "id": "ContactListResponse",
+          "text": "ContactListResponse",
+          "link": "/resources/schemas/contact-list-response"
+        },
+        {
+          "id": "Conversation",
+          "text": "Conversation",
+          "link": "/resources/schemas/conversation"
+        },
+        {
+          "id": "ConversationListResponse",
+          "text": "ConversationListResponse",
+          "link": "/resources/schemas/conversation-list-response"
+        },
+        {
+          "id": "CreateContactRequest",
+          "text": "CreateContactRequest",
+          "link": "/resources/schemas/create-contact-request"
+        },
+        {
+          "id": "CreateConversationRequest",
+          "text": "CreateConversationRequest",
+          "link": "/resources/schemas/create-conversation-request"
+        },
+        {
+          "id": "CreateGroupRequest",
+          "text": "CreateGroupRequest",
+          "link": "/resources/schemas/create-group-request"
+        },
+        {
+          "id": "CreateMessageRequest",
+          "text": "CreateMessageRequest",
+          "link": "/resources/schemas/create-message-request"
+        },
+        {
+          "id": "Group",
+          "text": "Group",
+          "link": "/resources/schemas/group"
+        },
+        {
+          "id": "GroupListResponse",
+          "text": "GroupListResponse",
+          "link": "/resources/schemas/group-list-response"
+        },
+        {
+          "id": "Message",
+          "text": "Message",
+          "link": "/resources/schemas/message"
+        },
+        {
+          "id": "MessageListResponse",
+          "text": "MessageListResponse",
+          "link": "/resources/schemas/message-list-response"
+        }
+      ]
+    }
+  ]
+}

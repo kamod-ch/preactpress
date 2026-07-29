@@ -1,5 +1,6 @@
 ---
 title: users.list
+description: List users through the Acme TypeScript SDK.
 layout: doc
 ---
 

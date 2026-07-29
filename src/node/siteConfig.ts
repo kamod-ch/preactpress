@@ -73,6 +73,11 @@ export interface ThemeConfig {
     text?: string;
   };
   lastUpdated?: boolean;
+  /** Optional header CTA (e.g. Protocol-style “Sign in”). */
+  signInLink?: {
+    text: string;
+    link: string;
+  };
 }
 
 export interface LocaleConfig {

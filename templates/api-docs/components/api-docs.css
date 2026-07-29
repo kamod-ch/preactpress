@@ -1,50 +1,124 @@
 .pp-api-signature {
   margin: 1.5rem 0;
   padding: 1rem;
-  border: 1px solid var(--pp-border);
+  border: 1px solid var(--protocol-border, var(--pp-border, #27272a));
   border-radius: 8px;
-  background: var(--pp-code-bg);
+  background: var(--protocol-code-bg, var(--pp-code-bg, #0c0c0e));
 }
+
 .pp-api-name {
   font-size: 1.125rem;
   font-weight: 600;
+  color: var(--protocol-text, inherit);
 }
+
 .pp-api-sig {
   margin: 0.5rem 0 0;
   overflow-x: auto;
 }
+
 .pp-api-badge {
   display: inline-block;
   font-size: 0.75rem;
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
-  background: var(--pp-border);
+  background: var(--protocol-search-bg, var(--pp-border, #27272a));
   margin: 0 0 0.5rem;
 }
+
 .pp-api-table-wrap {
   overflow-x: auto;
   margin: 1rem 0;
 }
+
 .pp-api-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9375rem;
 }
+
 .pp-api-table th,
 .pp-api-table td {
-  border: 1px solid var(--pp-border);
+  border: 1px solid var(--protocol-border, var(--pp-border, #27272a));
   padding: 0.5rem 0.75rem;
   text-align: left;
   vertical-align: top;
 }
+
+.pp-api-table th {
+  background: var(--protocol-surface, transparent);
+  color: var(--protocol-text, inherit);
+}
+
 .pp-api-type figcaption,
 .pp-api-example figcaption {
   font-weight: 600;
   margin-bottom: 0.25rem;
+  color: var(--protocol-text, inherit);
 }
+
 .pp-api-deprecated {
   padding: 0.75rem 1rem;
   border-left: 4px solid #e6a700;
-  background: var(--pp-sidebar-bg);
+  background: var(--protocol-accent-soft, var(--pp-sidebar-bg, #18181b));
   margin: 1rem 0;
+}
+
+.pp-endpoint-line {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--protocol-border, #27272a);
+  border-radius: 0.75rem;
+  background: var(--protocol-code-bg, #0c0c0e);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.pp-endpoint-path {
+  font-size: 0.875rem;
+  color: var(--protocol-text, #fafafa);
+  background: transparent;
+  padding: 0;
+}
+
+.pp-http-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #052e1c;
+}
+
+.pp-http-get {
+  background: #34d399;
+}
+
+.pp-http-post {
+  background: #60a5fa;
+  color: #0c1b33;
+}
+
+.pp-http-put,
+.pp-http-patch {
+  background: #fbbf24;
+  color: #3b2a05;
+}
+
+.pp-http-delete {
+  background: #f87171;
+  color: #3b0a0a;
+}
+
+.pp-http-head,
+.pp-http-options,
+.pp-http-default {
+  background: #a1a1aa;
+  color: #18181b;
 }

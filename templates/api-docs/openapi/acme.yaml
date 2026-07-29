@@ -1,0 +1,470 @@
+openapi: 3.1.0
+info:
+  title: Acme Messaging API
+  description: |
+    REST API for contacts, conversations, messages, groups, and attachments.
+    Authenticate with a bearer API key from the Acme dashboard.
+  version: 1.0.0
+servers:
+  - url: https://api.acme.dev/v1
+    description: Production
+  - url: https://staging-api.acme.dev/v1
+    description: Staging
+tags:
+  - name: Contacts
+    description: Manage people and organizations in your workspace
+  - name: Conversations
+    description: Threaded conversations between contacts and agents
+  - name: Messages
+    description: Send and retrieve messages within conversations
+  - name: Groups
+    description: Organize contacts into reusable groups
+  - name: Attachments
+    description: Upload and download file attachments
+paths:
+  /contacts:
+    get:
+      operationId: listContacts
+      tags: [Contacts]
+      summary: List contacts
+      description: Returns a paginated list of contacts visible to the authenticated workspace.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - name: q
+          in: query
+          description: Full-text search across name and email
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paginated contact list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      operationId: createContact
+      tags: [Contacts]
+      summary: Create a contact
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContactRequest"
+      responses:
+        "201":
+          description: Contact created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /contacts/{contactId}:
+    get:
+      operationId: getContact
+      tags: [Contacts]
+      summary: Get contact by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ContactId"
+      responses:
+        "200":
+          description: Contact details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /conversations:
+    get:
+      operationId: listConversations
+      tags: [Conversations]
+      summary: List conversations
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Paginated conversation list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      operationId: createConversation
+      tags: [Conversations]
+      summary: Start a conversation
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateConversationRequest"
+      responses:
+        "201":
+          description: Conversation created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+  /conversations/{conversationId}:
+    get:
+      operationId: getConversation
+      tags: [Conversations]
+      summary: Get conversation by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ConversationId"
+      responses:
+        "200":
+          description: Conversation details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /messages:
+    get:
+      operationId: listMessages
+      tags: [Messages]
+      summary: List messages
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - name: conversation_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paginated message list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageListResponse"
+    post:
+      operationId: createMessage
+      tags: [Messages]
+      summary: Send a message
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMessageRequest"
+      responses:
+        "201":
+          description: Message created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+  /groups:
+    get:
+      operationId: listGroups
+      tags: [Groups]
+      summary: List groups
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Paginated group list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupListResponse"
+    post:
+      operationId: createGroup
+      tags: [Groups]
+      summary: Create a group
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGroupRequest"
+      responses:
+        "201":
+          description: Group created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+  /attachments:
+    post:
+      operationId: uploadAttachment
+      tags: [Attachments]
+      summary: Upload an attachment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                conversation_id:
+                  type: string
+      responses:
+        "201":
+          description: Attachment uploaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attachment"
+  /attachments/{attachmentId}:
+    get:
+      operationId: getAttachment
+      tags: [Attachments]
+      summary: Download an attachment
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AttachmentId"
+      responses:
+        "200":
+          description: Attachment binary
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API key
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Page number (1-based)
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    LimitParam:
+      name: limit
+      in: query
+      description: Page size
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    ContactId:
+      name: contactId
+      in: path
+      required: true
+      schema:
+        type: string
+    ConversationId:
+      name: conversationId
+      in: path
+      required: true
+      schema:
+        type: string
+    AttachmentId:
+      name: attachmentId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+    BadRequest:
+      description: Invalid request body
+    NotFound:
+      description: Resource not found
+  schemas:
+    Contact:
+      type: object
+      required: [id, email, name]
+      properties:
+        id:
+          type: string
+          example: ctc_01HXYZ
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    CreateContactRequest:
+      type: object
+      required: [email, name]
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+    ContactListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Contact"
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+    Conversation:
+      type: object
+      required: [id, subject, status]
+      properties:
+        id:
+          type: string
+        subject:
+          type: string
+        status:
+          type: string
+          enum: [open, closed, pending]
+        contact_id:
+          type: string
+    CreateConversationRequest:
+      type: object
+      required: [contact_id, subject]
+      properties:
+        contact_id:
+          type: string
+        subject:
+          type: string
+    ConversationListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Conversation"
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+    Message:
+      type: object
+      required: [id, conversation_id, body]
+      properties:
+        id:
+          type: string
+        conversation_id:
+          type: string
+        body:
+          type: string
+        direction:
+          type: string
+          enum: [inbound, outbound]
+    CreateMessageRequest:
+      type: object
+      required: [conversation_id, body]
+      properties:
+        conversation_id:
+          type: string
+        body:
+          type: string
+    MessageListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+    Group:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        member_count:
+          type: integer
+    CreateGroupRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        contact_ids:
+          type: array
+          items:
+            type: string
+    GroupListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Group"
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+    Attachment:
+      type: object
+      required: [id, filename, content_type, size]
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        content_type:
+          type: string
+        size:
+          type: integer

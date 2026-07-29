@@ -3,13 +3,14 @@ import { jsonBlock, renderCurlExample, renderJavaScriptExample, renderTypeScript
 function yamlEscape(value) {
     return value.replace(/"/g, '\\"');
 }
-function frontmatter(title, description, tags = ["api", "openapi"]) {
+function frontmatter(title, description, _tags = []) {
     const lines = [`title: "${yamlEscape(title)}"`];
-    if (description)
-        lines.push(`description: "${yamlEscape(description.slice(0, 160))}"`);
-    lines.push("tags:");
-    for (const tag of tags)
-        lines.push(`  - ${tag}`);
+    if (description) {
+        lines.push(`description: "${yamlEscape(description.slice(0, 160).replace(/\n/g, " "))}"`);
+    }
+    else {
+        lines.push(`description: "${yamlEscape(`${title} API reference`)}"`);
+    }
     return `---\n${lines.join("\n")}\n---\n\n`;
 }
 function renderParameterTable(params, route) {
@@ -155,13 +156,12 @@ function renderOverviewPage(manifest) {
         : ["- _No servers declared in the specification._"];
     const tagLines = manifest.tags.map((tag) => {
         const route = joinRoute(manifest.baseRoute, "tags", tag.slug);
-        return `- [${tag.name}](${route.replace(manifest.baseRoute, ".")})${tag.description ? ` — ${tag.description}` : ""}`;
+        return `- [${tag.name}](${route})${tag.description ? ` — ${tag.description}` : ""}`;
     });
     const operationLines = Object.values(manifest.operations)
         .sort((a, b) => `${a.method} ${a.path}`.localeCompare(`${b.method} ${b.path}`))
         .map((operation) => {
-        const rel = operation.route.replace(manifest.baseRoute, ".");
-        return `- [\`${operation.method.toUpperCase()}\` ${operation.path}](${rel})${operation.summary ? ` — ${operation.summary}` : ""}`;
+        return `- [\`${operation.method.toUpperCase()}\` ${operation.path}](${operation.route})${operation.summary ? ` — ${operation.summary}` : ""}`;
     });
     return [
         frontmatter("API Overview", manifest.info.description ?? `${manifest.info.title} OpenAPI reference`),
@@ -194,8 +194,7 @@ function renderTagPage(manifest, tagSlug) {
     const lines = operations
         .sort((a, b) => `${a.method} ${a.path}`.localeCompare(`${b.method} ${b.path}`))
         .map((operation) => {
-        const rel = operation.route.replace(manifest.baseRoute, ".");
-        return `- [\`${operation.method.toUpperCase()}\` ${operation.path}](${rel})${operation.summary ? ` — ${operation.summary}` : ""}`;
+        return `- [\`${operation.method.toUpperCase()}\` ${operation.path}](${operation.route})${operation.summary ? ` — ${operation.summary}` : ""}`;
     });
     return [
         frontmatter(tag.name, tag.description, ["api", "openapi", "tag", tag.name]),
@@ -212,8 +211,7 @@ function renderSchemasIndex(manifest) {
     const lines = Object.values(manifest.schemas)
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((schema) => {
-        const rel = schema.route.replace(manifest.baseRoute, ".");
-        return `- [${schema.name}](${rel})${schema.description ? ` — ${schema.description}` : ""}`;
+        return `- [${schema.name}](${schema.route})${schema.description ? ` — ${schema.description}` : ""}`;
     });
     return [
         frontmatter("Schemas", "OpenAPI component schemas"),

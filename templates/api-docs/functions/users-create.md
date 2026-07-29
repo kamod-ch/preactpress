@@ -1,5 +1,6 @@
 ---
 title: users.create
+description: Create a user through the Acme TypeScript SDK.
 layout: doc
 ---
 

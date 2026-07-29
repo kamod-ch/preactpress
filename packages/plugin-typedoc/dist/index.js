@@ -32,8 +32,8 @@ export function typedocPlugin(options) {
     return {
         name: "preactpress:typedoc",
         enforce: "pre",
-        async config(config) {
-            const root = process.cwd();
+        async config(config, env) {
+            const root = env?.root ?? process.cwd();
             const srcDir = path.resolve(root, config.srcDir ?? ".");
             const cacheDir = path.resolve(root, config.cacheDir ?? "node_modules/.preactpress");
             const configDir = path.resolve(root, ".preactpress");
