@@ -76,6 +76,17 @@ pnpm run release        # patch bump, verify, npm publish, push tag
 
 The release script runs the same gates as CI (`pnpm run verify`: format check, lint, build, coverage tests, template checks, browser tests, and tarball smoke test), bumps the version, publishes to npm, and pushes the git tag.
 
+To publish official plugins (`@preactpress/plugin-*`) alongside a core release:
+
+```bash
+pnpm run release:minor -- --with-plugins   # core + all plugins
+pnpm run release:plugins                   # plugins only (first publish at current versions)
+pnpm run release:plugins:dry               # pack smoke test for all plugins
+pnpm run release:plugins patch             # bump all plugin patch versions, then publish
+```
+
+Plugin packages publish in dependency order (`plugin-typedoc` first). Run `release:plugins` once before or after the core release when shipping plugin templates (`docs`, `api-docs`) to npm users.
+
 Requirements:
 
 - Node 20+

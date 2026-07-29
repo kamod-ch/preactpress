@@ -39,5 +39,8 @@
     "preact": "^10.29.2",
     "vitest": "^4.1.9"
   },
-  "engines": { "node": ">=20" }
+  "engines": { "node": ">=20" },
+  "publishConfig": {
+    "access": "public"
+  }
 }

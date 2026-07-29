@@ -83,6 +83,8 @@
     "release:minor": "node ./scripts/release.mjs minor",
     "release:major": "node ./scripts/release.mjs major",
     "release:dry": "node ./scripts/release.mjs patch --dry",
+    "release:plugins": "node ./scripts/release-plugins.mjs",
+    "release:plugins:dry": "node ./scripts/release-plugins.mjs --dry",
     "release:check": "npm pack && tar -tf kamod-ch-preactpress-*.tgz",
     "verify": "pnpm run fmt:check && pnpm run lint && pnpm run build && pnpm run test:coverage && pnpm run check:templates && pnpm run test:browser && pnpm run pack:dry-run",
     "preactpress": "node ./bin/preactpress.mjs",
