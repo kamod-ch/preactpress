@@ -87,6 +87,16 @@ describe("init", () => {
       expect(Object.values(pkg.devDependencies).some((spec) => spec.startsWith("file:"))).toBe(
         false,
       );
+      await expect(
+        fs.access(
+          path.join(root, "node_modules", "@preactpress", "plugin-mermaid", "package.json"),
+        ),
+      ).resolves.toBeUndefined();
+      await expect(
+        fs.access(
+          path.join(root, "node_modules", "@preactpress", "plugin-playground", "package.json"),
+        ),
+      ).resolves.toBeUndefined();
       expect(result.preactpressVersion).toBe(toolPkg.version);
       expect(result.root).toBe(root);
       expect(result.template).toBe("docs");

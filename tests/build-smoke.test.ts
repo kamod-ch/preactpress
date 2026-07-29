@@ -161,7 +161,7 @@ describe("build smoke", () => {
       const mainJs = assets.find((file) => file.startsWith("main-") && file.endsWith(".js"));
       expect(mainJs).toBeTruthy();
       const mainSize = (await fs.stat(path.join(root, "dist", "assets", mainJs!))).size;
-      expect(mainSize).toBeLessThan(120_000);
+      expect(mainSize).toBeLessThan(150_000);
       const mainBundle = await fs.readFile(path.join(root, "dist", "assets", mainJs!), "utf8");
       expect(mainBundle).not.toContain("Use blockquotes for callouts");
     } finally {

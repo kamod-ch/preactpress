@@ -147,7 +147,7 @@ async function linkLocalPreactpress(targetRoot: string, packageName: string): Pr
   await linkPackage(targetRoot, packageName, PACKAGE_ROOT);
 }
 
-/** Ensure local `file:` devDependencies are linked when node_modules is missing (bundled templates). */
+/** Link monorepo packages into node_modules when installs are skipped (bundled templates, CI smoke tests). */
 export async function ensurePreactpressLinked(siteRoot: string): Promise<void> {
   const pkgPath = path.join(siteRoot, "package.json");
   if (!(await fileExists(pkgPath))) return;
@@ -167,7 +167,7 @@ export async function ensurePreactpressLinked(siteRoot: string): Promise<void> {
   };
 
   for (const [name, spec] of Object.entries(specs)) {
-    if (typeof spec !== "string" || !spec.startsWith("file:") || linked.has(name)) continue;
+    if (typeof spec !== "string" || linked.has(name)) continue;
 
     const linkPath = packageInstallPath(path.join(siteRoot, "node_modules"), name);
     if (await fileExists(path.join(linkPath, "package.json"))) {
@@ -175,13 +175,21 @@ export async function ensurePreactpressLinked(siteRoot: string): Promise<void> {
       continue;
     }
 
-    const target = await resolveWorkspacePackageDir(
-      name,
-      siteRoot,
-      spec,
-      preactpressPackageName,
-      workspace,
-    );
+    let target: string | undefined;
+    if (spec.startsWith("file:")) {
+      target = await resolveWorkspacePackageDir(
+        name,
+        siteRoot,
+        spec,
+        preactpressPackageName,
+        workspace,
+      );
+    } else if (name === preactpressPackageName) {
+      target = PACKAGE_ROOT;
+    } else if (workspace.has(name)) {
+      target = workspace.get(name)?.dir;
+    }
+
     if (!target || !(await fileExists(path.join(target, "package.json")))) continue;
 
     await linkPackage(siteRoot, name, target);
