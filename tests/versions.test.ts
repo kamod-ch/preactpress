@@ -43,7 +43,9 @@ describe("versions", () => {
   it("composes locale and version prefixes consistently", async () => {
     const root = path.join(PACKAGE_ROOT, "templates/versions");
     const site = await resolveConfig(root, "build", "production");
-    const archived = site.versions.versions.find((entry) => entry.value === "1.0" && !entry.isAlias)!;
+    const archived = site.versions.versions.find(
+      (entry) => entry.value === "1.0" && !entry.isAlias,
+    )!;
     const locale = localeFromRoute("/de/", site.i18n)!;
     expect(composeVersionRoute("/guide/getting-started", locale, archived)).toBe(
       "/de/versions/1.0/guide/getting-started",
@@ -71,9 +73,9 @@ describe("versions", () => {
     expect(archived).toContain("pp-version-banner");
     expect(archived).toContain('rel="canonical"');
     expect(currentGuide).not.toContain("pp-version-banner");
-    expect(search.some((entry) => entry.route === "/guide/getting-started" && entry.version === "2.0")).toBe(
-      true,
-    );
+    expect(
+      search.some((entry) => entry.route === "/guide/getting-started" && entry.version === "2.0"),
+    ).toBe(true);
     expect(
       search.some(
         (entry) => entry.route === "/versions/1.0/guide/getting-started" && entry.version === "1.0",
@@ -90,7 +92,9 @@ describe("versions", () => {
       await expect(fs.access(path.join(root, "versions", "1.1.0"))).rejects.toThrow();
       const writeCode = await runVersionCommand(root, { value: "1.1.0", label: "1.1" });
       expect(writeCode).toBe(0);
-      await expect(fs.access(path.join(root, "versions", "1.1.0", "index.md"))).resolves.toBeUndefined();
+      await expect(
+        fs.access(path.join(root, "versions", "1.1.0", "index.md")),
+      ).resolves.toBeUndefined();
       const overwriteCode = await runVersionCommand(root, { value: "1.1.0", label: "1.1" });
       expect(overwriteCode).toBe(1);
     } finally {
@@ -103,9 +107,11 @@ describe("versions", () => {
     const site = await resolveConfig(root, "build", "production");
     const files = await scanAllContentFiles(site);
     const routes = new Set(files.map((file) => file.route));
-    const archived = site.versions.versions.find((entry) => entry.value === "1.0" && !entry.isAlias)!;
-    expect(localizedRouteForVersion("/api/overview", archived, site.versions, site.i18n, routes)).toBe(
-      "/versions/1.0",
-    );
+    const archived = site.versions.versions.find(
+      (entry) => entry.value === "1.0" && !entry.isAlias,
+    )!;
+    expect(
+      localizedRouteForVersion("/api/overview", archived, site.versions, site.i18n, routes),
+    ).toBe("/versions/1.0");
   });
 });

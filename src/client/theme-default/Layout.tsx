@@ -94,13 +94,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   );
   const sidebarItems = activeSidebar.flatMap((group) => flattenSidebarLeafItems(group.items));
   const normalizedQuery = query.trim().toLowerCase();
-  const searchResults = useSiteSearch(
-    site.base,
-    query,
-    locale?.key,
-    version?.value,
-    workspace?.id,
-  );
+  const searchResults = useSiteSearch(site.base, query, locale?.key, version?.value, workspace?.id);
   const switcherItems = versions ? switcherVersions(versions) : [];
   const workspaceItems = workspaces ? switcherWorkspaces(workspaces) : [];
   const visibleSidebar = useMemo(() => {

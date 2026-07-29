@@ -64,26 +64,26 @@ changelogPlugin({
 
 ## Generated pages
 
-| Page | Contents |
-| ---- | -------- |
-| Changelog overview | Release table, recent highlights |
-| Release pages | Version, date, breaking changes, features, fixes |
-| Contributors | Parsed from `@mentions` and GitHub release authors |
-| Migration links | Parsed from release bodies when authors include migration guide URLs |
+| Page               | Contents                                                             |
+| ------------------ | -------------------------------------------------------------------- |
+| Changelog overview | Release table, recent highlights                                     |
+| Release pages      | Version, date, breaking changes, features, fixes                     |
+| Contributors       | Parsed from `@mentions` and GitHub release authors                   |
+| Migration links    | Parsed from release bodies when authors include migration guide URLs |
 
 ## Options
 
-| Option | Default | Description |
-| ------ | ------- | ----------- |
-| `provider` | — | `local`, `github`, or `changesets` |
-| `repository` | — | GitHub `owner/name` (required for `github`) |
-| `local` | `CHANGELOG.md` | Path to Keep a Changelog file |
-| `route` | `/changelog` | URL prefix for generated pages |
-| `cache` | `true` | Cache manifests and remote payloads |
-| `offline` | `false` | Use cache only, no network (CI reproducibility) |
-| `changesets` | `false` | Merge pending Changesets |
-| `versionIntegration` | `false` | Routes under `/versions/{value}/changelog` |
-| `feed` | `true` | Atom feed at `{route}/feed.xml` |
+| Option               | Default        | Description                                     |
+| -------------------- | -------------- | ----------------------------------------------- |
+| `provider`           | —              | `local`, `github`, or `changesets`              |
+| `repository`         | —              | GitHub `owner/name` (required for `github`)     |
+| `local`              | `CHANGELOG.md` | Path to Keep a Changelog file                   |
+| `route`              | `/changelog`   | URL prefix for generated pages                  |
+| `cache`              | `true`         | Cache manifests and remote payloads             |
+| `offline`            | `false`        | Use cache only, no network (CI reproducibility) |
+| `changesets`         | `false`        | Merge pending Changesets                        |
+| `versionIntegration` | `false`        | Routes under `/versions/{value}/changelog`      |
+| `feed`               | `true`         | Atom feed at `{route}/feed.xml`                 |
 
 ## Version integration
 
@@ -108,8 +108,8 @@ Future providers (GitLab, Gitea, Forgejo) implement the `ChangelogProvider` inte
 
 ## Next steps
 
-| Page | Why |
-| ---- | --- |
-| [Plugins](/guide/plugins) | Plugin system overview |
-| [Versioning](/guide/versioning) | Multi-version docs |
+| Page                                       | Why                    |
+| ------------------------------------------ | ---------------------- |
+| [Plugins](/guide/plugins)                  | Plugin system overview |
+| [Versioning](/guide/versioning)            | Multi-version docs     |
 | [GitHub Actions](/examples/github-actions) | CI deployment patterns |

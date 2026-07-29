@@ -58,7 +58,7 @@ Edit `.preactpress/config.ts`:
 openapiPlugin({
   input: "./openapi/your-spec.yaml",
   route: "/resources",
-})
+});
 ```
 
 Then restart `pnpm run dev`. Generated pages land under `resources/`.

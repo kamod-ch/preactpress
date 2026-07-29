@@ -90,12 +90,11 @@ function renderOperationPage(manifest: OpenApiManifest, operation: OpenApiOperat
     : "";
 
   return [
-    frontmatter(`${operation.method.toUpperCase()} ${operation.path}`, operation.summary ?? operation.description, [
-      "api",
-      "openapi",
-      ...operation.tags,
-      operation.method,
-    ]),
+    frontmatter(
+      `${operation.method.toUpperCase()} ${operation.path}`,
+      operation.summary ?? operation.description,
+      ["api", "openapi", ...operation.tags, operation.method],
+    ),
     `# ${operation.method.toUpperCase()} ${operation.path}`,
     "",
     operation.summary ? `${operation.summary}\n` : "",
@@ -142,7 +141,8 @@ function renderOperationPage(manifest: OpenApiManifest, operation: OpenApiOperat
 function renderSchemaPage(manifest: OpenApiManifest, schema: OpenApiSchema): string {
   const rows = schema.properties.map((property) => {
     const required = property.required ? "Yes" : "No";
-    const example = property.example !== undefined ? `\`${JSON.stringify(property.example)}\`` : "—";
+    const example =
+      property.example !== undefined ? `\`${JSON.stringify(property.example)}\`` : "—";
     const ref =
       property.ref && manifest.schemas[property.ref]
         ? `[${property.ref}](${relativeHref(schema.route, manifest.schemas[property.ref].route)})`
@@ -177,7 +177,9 @@ function renderSchemaPage(manifest: OpenApiManifest, schema: OpenApiSchema): str
 
 function renderOverviewPage(manifest: OpenApiManifest): string {
   const serverLines = manifest.servers.length
-    ? manifest.servers.map((server) => `- \`${server.url}\`${server.description ? ` — ${server.description}` : ""}`)
+    ? manifest.servers.map(
+        (server) => `- \`${server.url}\`${server.description ? ` — ${server.description}` : ""}`,
+      )
     : ["- _No servers declared in the specification._"];
 
   const tagLines = manifest.tags.map((tag) => {
@@ -192,7 +194,10 @@ function renderOverviewPage(manifest: OpenApiManifest): string {
     });
 
   return [
-    frontmatter("API Overview", manifest.info.description ?? `${manifest.info.title} OpenAPI reference`),
+    frontmatter(
+      "API Overview",
+      manifest.info.description ?? `${manifest.info.title} OpenAPI reference`,
+    ),
     `# ${manifest.info.title}`,
     "",
     manifest.info.description ? `${manifest.info.description}\n` : "",
@@ -248,13 +253,9 @@ function renderSchemasIndex(manifest: OpenApiManifest): string {
       return `- [${schema.name}](${schema.route})${schema.description ? ` — ${schema.description}` : ""}`;
     });
 
-  return [
-    frontmatter("Schemas", "OpenAPI component schemas"),
-    "# Schemas",
-    "",
-    ...lines,
-    "",
-  ].join("\n");
+  return [frontmatter("Schemas", "OpenAPI component schemas"), "# Schemas", "", ...lines, ""].join(
+    "\n",
+  );
 }
 
 function routeToRelativePath(baseRoute: string, route: string, outputDir: string): string {
@@ -275,7 +276,11 @@ export function renderOpenApiPages(manifest: OpenApiManifest): ApiPage[] {
     },
     {
       route: joinRoute(manifest.baseRoute, "schemas"),
-      relativePath: routeToRelativePath(manifest.baseRoute, joinRoute(manifest.baseRoute, "schemas"), manifest.outputDir),
+      relativePath: routeToRelativePath(
+        manifest.baseRoute,
+        joinRoute(manifest.baseRoute, "schemas"),
+        manifest.outputDir,
+      ),
       markdown: renderSchemasIndex(manifest),
       title: "Schemas",
       description: "OpenAPI component schemas",

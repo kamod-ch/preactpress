@@ -11,9 +11,7 @@ function registerCollection(
   source: string,
 ): void {
   if (registry.has(name)) {
-    throw new Error(
-      `preactpress: Duplicate collection "${name}" registered in ${source}`,
-    );
+    throw new Error(`preactpress: Duplicate collection "${name}" registered in ${source}`);
   }
   registry.set(name, { ...value, name });
 }

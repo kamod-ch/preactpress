@@ -21,7 +21,9 @@ export function buildStackBlitzUrl(options: {
     dependencies: {
       preact: "^10.29.2",
       ...Object.fromEntries(
-        Object.entries(dependencies).filter(([name]) => name !== "preact" && name !== "preact/hooks"),
+        Object.entries(dependencies).filter(
+          ([name]) => name !== "preact" && name !== "preact/hooks",
+        ),
       ),
     },
   };

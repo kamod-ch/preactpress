@@ -11,10 +11,7 @@ export function pageMarkdownForCopy(page: PageView): string | undefined {
   return body;
 }
 
-export function serializablePageForClient(
-  page: PageView,
-  includeMarkdown: boolean,
-): unknown {
+export function serializablePageForClient(page: PageView, includeMarkdown: boolean): unknown {
   if (page.kind === "markdown") {
     if (!includeMarkdown && page.markdown !== undefined) {
       const { markdown: _markdown, ...rest } = page;

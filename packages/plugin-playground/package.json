@@ -3,14 +3,19 @@
   "version": "0.1.0",
   "description": "Live Preact code playground for PreactPress MDX",
   "keywords": [
+    "mdx",
     "playground",
+    "plugin",
     "preact",
     "preactpress",
-    "mdx",
-    "sandbox",
-    "plugin"
+    "sandbox"
   ],
   "license": "MIT",
+  "files": [
+    "dist",
+    "src/style.css",
+    "README.md"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -27,20 +32,14 @@
     },
     "./style.css": "./src/style.css"
   },
-  "files": [
-    "dist",
-    "src/style.css",
-    "README.md"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepare": "pnpm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
-  },
-  "peerDependencies": {
-    "@kamod-ch/preactpress": ">=2.2.0",
-    "preact": ">=10.0.0"
   },
   "devDependencies": {
     "@kamod-ch/preactpress": "workspace:*",
@@ -49,10 +48,11 @@
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   },
+  "peerDependencies": {
+    "@kamod-ch/preactpress": ">=2.2.0",
+    "preact": ">=10.0.0"
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

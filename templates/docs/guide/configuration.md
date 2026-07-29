@@ -141,11 +141,11 @@ At build time PreactPress validates your config and resolves defaults into an in
 
 ### Core types
 
-| Type | Import | Purpose |
-| ---- | ------ | ------- |
-| `UserConfig` | `@kamod-ch/preactpress/config` | Authoring shape in `.preactpress/config.ts` |
-| `ResolvedConfig` | `@kamod-ch/preactpress` | Fully resolved internal configuration |
-| `defineConfig` | `@kamod-ch/preactpress/config` | Preserve literal types and async factories |
+| Type             | Import                         | Purpose                                     |
+| ---------------- | ------------------------------ | ------------------------------------------- |
+| `UserConfig`     | `@kamod-ch/preactpress/config` | Authoring shape in `.preactpress/config.ts` |
+| `ResolvedConfig` | `@kamod-ch/preactpress`        | Fully resolved internal configuration       |
+| `defineConfig`   | `@kamod-ch/preactpress/config` | Preserve literal types and async factories  |
 
 `SiteConfig` remains available as a backward-compatible alias for `ResolvedConfig`.
 
@@ -155,15 +155,15 @@ Invalid or unknown options throw `ConfigError` with the option path, for example
 
 Most extension options are typed and validated today. Some are reserved for upcoming releases. **`versions`**, **`redirects`**, and **`check`** are active today.
 
-| Option | Purpose | Build output |
-| ------ | ------- | ------------ |
-| `versions` | Multi-version docs with version switcher, archived banners, and search/sitemap partitioning | Active |
-| `plugins` | Typed plugin runtime with deterministic hook ordering | Active |
-| `apiDocs` | TypeDoc integration settings; set `false` to disable | Reserved |
-| `openapi` | OpenAPI integration settings; set `false` to disable | Reserved |
-| `ai` | AI export settings (`llmsTxt`, `llmsFullTxt`, `copyMarkdown`, `contextIndex`) | Active |
-| `redirects` | HTTP redirects with validation, static HTML fallbacks, and `_redirects` export | Active |
-| `check` | `preactpress check` behavior (`failOnWarnings`, `plugins`) | Active |
+| Option      | Purpose                                                                                     | Build output |
+| ----------- | ------------------------------------------------------------------------------------------- | ------------ |
+| `versions`  | Multi-version docs with version switcher, archived banners, and search/sitemap partitioning | Active       |
+| `plugins`   | Typed plugin runtime with deterministic hook ordering                                       | Active       |
+| `apiDocs`   | TypeDoc integration settings; set `false` to disable                                        | Reserved     |
+| `openapi`   | OpenAPI integration settings; set `false` to disable                                        | Reserved     |
+| `ai`        | AI export settings (`llmsTxt`, `llmsFullTxt`, `copyMarkdown`, `contextIndex`)               | Active       |
+| `redirects` | HTTP redirects with validation, static HTML fallbacks, and `_redirects` export              | Active       |
+| `check`     | `preactpress check` behavior (`failOnWarnings`, `plugins`)                                  | Active       |
 
 Use `rewrites` for in-site route aliases that share one page. Use `redirects` for HTTP redirects emitted at build time.
 
@@ -183,7 +183,7 @@ Array syntax supports explicit status codes:
 redirects: [
   { from: "/old-guide", to: "/guide/new-guide", status: 301 },
   { from: "/temporary", to: "/guide/new-guide", status: 302 },
-]
+];
 ```
 
 Advanced options control build outputs:

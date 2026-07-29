@@ -15,7 +15,11 @@ import {
 import { resolveConfigForBuild } from "../src/node/config.js";
 import type { PageView } from "../src/client/types.js";
 
-function markdownPage(title: string, markdown: string, meta: Record<string, unknown> = {}): PageView {
+function markdownPage(
+  title: string,
+  markdown: string,
+  meta: Record<string, unknown> = {},
+): PageView {
   return {
     kind: "markdown",
     title,
@@ -87,7 +91,13 @@ describe("aiExports", () => {
 
   it("generates consolidated llms-full documentation without HTML", () => {
     const config = {
-      site: { title: "Demo", description: "Demo", base: "/", lang: "en", url: "https://example.com" },
+      site: {
+        title: "Demo",
+        description: "Demo",
+        base: "/",
+        lang: "en",
+        url: "https://example.com",
+      },
       themeConfig: {},
       ai: {
         llmsTxt: true,
@@ -164,13 +174,25 @@ describe("aiExports", () => {
 
   it("produces a structured context index with pages and locales", () => {
     const config = {
-      site: { title: "Demo", description: "Demo docs", base: "/", lang: "en", url: "https://example.com" },
+      site: {
+        title: "Demo",
+        description: "Demo docs",
+        base: "/",
+        lang: "en",
+        url: "https://example.com",
+      },
       themeConfig: {},
       i18n: {
         defaultLocale: "en",
         locales: [{ key: "en", label: "English", lang: "en", link: "/" }],
       },
-      versions: { enabled: false, versions: [], defaultVersionKey: "latest", currentDir: ".", labels: { switcher: "Version" } },
+      versions: {
+        enabled: false,
+        versions: [],
+        defaultVersionKey: "latest",
+        currentDir: ".",
+        labels: { switcher: "Version" },
+      },
       ai: {
         llmsTxt: true,
         llmsFullTxt: true,

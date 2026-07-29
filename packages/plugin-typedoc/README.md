@@ -35,11 +35,11 @@ export default defineConfig({
 
 The plugin separates three layers so other API sources can reuse the same UI later:
 
-| Layer | Responsibility |
-| ----- | -------------- |
-| **Extraction** | TypeDoc conversion, caching, validation |
-| **Data model** | `ApiManifest` with structured symbols (`@preactpress/plugin-typedoc/types`) |
-| **Presentation** | Markdown pages, sidebar, cross-links |
+| Layer            | Responsibility                                                              |
+| ---------------- | --------------------------------------------------------------------------- |
+| **Extraction**   | TypeDoc conversion, caching, validation                                     |
+| **Data model**   | `ApiManifest` with structured symbols (`@preactpress/plugin-typedoc/types`) |
+| **Presentation** | Markdown pages, sidebar, cross-links                                        |
 
 Generated markdown is written under `{srcDir}/{output}/` before PreactPress scans content, so pages appear in navigation and local search automatically.
 
@@ -50,17 +50,17 @@ Structured manifests are also written to:
 
 ## Options
 
-| Option | Type | Default | Description |
-| ------ | ---- | ------- | ----------- |
-| `entries` | `string[]` | required | TypeScript entry points (supports monorepo paths) |
-| `output` | `string` | `reference/api` | Output directory relative to `srcDir` |
-| `tsconfig` | `string` | — | Path to tsconfig |
-| `includePrivate` | `boolean` | `false` | Include private symbols |
-| `sourceLinks` | `boolean` | `false` | Link symbols to git source URLs |
-| `gitRemote` | `string` | — | Repository URL for source links |
-| `gitBranch` | `string` | `main` | Branch name for source links |
-| `groupBy` | `"module" \| "kind"` | `module` | Sidebar grouping strategy |
-| `cache` | `boolean` | `true` | Incremental cache in `{cacheDir}/typedoc` |
+| Option           | Type                 | Default         | Description                                       |
+| ---------------- | -------------------- | --------------- | ------------------------------------------------- |
+| `entries`        | `string[]`           | required        | TypeScript entry points (supports monorepo paths) |
+| `output`         | `string`             | `reference/api` | Output directory relative to `srcDir`             |
+| `tsconfig`       | `string`             | —               | Path to tsconfig                                  |
+| `includePrivate` | `boolean`            | `false`         | Include private symbols                           |
+| `sourceLinks`    | `boolean`            | `false`         | Link symbols to git source URLs                   |
+| `gitRemote`      | `string`             | —               | Repository URL for source links                   |
+| `gitBranch`      | `string`             | `main`          | Branch name for source links                      |
+| `groupBy`        | `"module" \| "kind"` | `module`        | Sidebar grouping strategy                         |
+| `cache`          | `boolean`            | `true`          | Incremental cache in `{cacheDir}/typedoc`         |
 
 ## Documented symbols
 

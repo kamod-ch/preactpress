@@ -4,7 +4,12 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { createLogger } from "vite";
 import { afterEach, describe, expect, it } from "vitest";
-import { applySiteBaseOverride, normalizeBase, resolveConfig, resolveSiteConfig } from "../src/node/config.js";
+import {
+  applySiteBaseOverride,
+  normalizeBase,
+  resolveConfig,
+  resolveSiteConfig,
+} from "../src/node/config.js";
 import { ConfigError } from "../src/node/configError.js";
 import {
   DEFAULT_BUILD,
@@ -244,7 +249,9 @@ export default defineConfig(async () => ({
     const config = await resolveConfig(root);
     expect(config.versions.defaultVersionKey).toBe("latest");
     expect(config.versions.versions.filter((entry) => !entry.isAlias)).toHaveLength(2);
-    expect(config.plugins.map((plugin) => ({ name: plugin.name, enforce: plugin.enforce }))).toEqual([
+    expect(
+      config.plugins.map((plugin) => ({ name: plugin.name, enforce: plugin.enforce })),
+    ).toEqual([
       { name: "demo", enforce: "pre" },
       { name: "preactpress:ai-exports", enforce: "post" },
     ]);

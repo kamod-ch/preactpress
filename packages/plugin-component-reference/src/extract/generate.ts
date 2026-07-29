@@ -54,7 +54,9 @@ export async function buildComponentManifest(
     components[item.component ?? item.exportName] = entry;
   }
 
-  const sourceHash = hashPayload(JSON.stringify({ catalog: options.catalog, keys: Object.keys(components).sort() }));
+  const sourceHash = hashPayload(
+    JSON.stringify({ catalog: options.catalog, keys: Object.keys(components).sort() }),
+  );
 
   return {
     version: COMPONENT_MANIFEST_VERSION,

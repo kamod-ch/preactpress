@@ -53,11 +53,7 @@ function isScheduledEntry(data: Record<string, unknown>, now = Date.now()): bool
   const raw = data.date ?? data.publishedAt ?? data.publishDate;
   if (!raw) return false;
   const time =
-    raw instanceof Date
-      ? raw.getTime()
-      : typeof raw === "string"
-        ? Date.parse(raw)
-        : Number.NaN;
+    raw instanceof Date ? raw.getTime() : typeof raw === "string" ? Date.parse(raw) : Number.NaN;
   return !Number.isNaN(time) && time > now;
 }
 
@@ -87,10 +83,7 @@ function mergedReferences(def: CollectionDefinition): Record<string, string> {
   };
 }
 
-async function globCollectionFiles(
-  def: CollectionDefinition,
-  site: SiteConfig,
-): Promise<string[]> {
+async function globCollectionFiles(def: CollectionDefinition, site: SiteConfig): Promise<string[]> {
   const matched = new Set<string>();
   for (const pattern of collectionGlobPatterns(def)) {
     if (pattern.startsWith("!")) continue;
@@ -230,18 +223,10 @@ export async function runCollectionLoader(
       );
     }
     const entries = await loadCollectionEntries(referenced, site, {}, registryEntries);
-    registryEntries.set(
-      collectionName,
-      new Map(entries.map((entry) => [entry.id, entry])),
-    );
+    registryEntries.set(collectionName, new Map(entries.map((entry) => [entry.id, entry])));
   }
 
-  const entries = await loadCollectionEntries(
-    def,
-    site,
-    loader.options ?? {},
-    registryEntries,
-  );
+  const entries = await loadCollectionEntries(def, site, loader.options ?? {}, registryEntries);
 
   const transform = loader.options?.transform;
   if (transform) return transform(entries);

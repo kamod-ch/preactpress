@@ -108,15 +108,15 @@ Node version: **20 or higher**.
 
 ### Platform guides
 
-| Host | Guide |
-| ---- | ----- |
-| GitHub Actions (CI + Pages) | [GitHub Actions](/examples/github-actions) |
-| GitHub Pages | [GitHub Pages](#github-pages) (below) |
-| Cloudflare Pages | [Cloudflare Pages](/examples/cloudflare-pages) |
-| Netlify | [Netlify](/examples/netlify) |
-| Vercel | [Vercel](/examples/vercel) |
-| S3-compatible storage | [S3-compatible hosts](/examples/s3-deploy) |
-| VPS / shared hosting | [Own server](/examples/own-server) |
+| Host                        | Guide                                          |
+| --------------------------- | ---------------------------------------------- |
+| GitHub Actions (CI + Pages) | [GitHub Actions](/examples/github-actions)     |
+| GitHub Pages                | [GitHub Pages](#github-pages) (below)          |
+| Cloudflare Pages            | [Cloudflare Pages](/examples/cloudflare-pages) |
+| Netlify                     | [Netlify](/examples/netlify)                   |
+| Vercel                      | [Vercel](/examples/vercel)                     |
+| S3-compatible storage       | [S3-compatible hosts](/examples/s3-deploy)     |
+| VPS / shared hosting        | [Own server](/examples/own-server)             |
 
 ## GitHub Pages
 

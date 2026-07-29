@@ -1,6 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { MigrationAdapter, MigrationOptions, MigrationPlan, MigrationReport } from "./types.js";
+import type {
+  MigrationAdapter,
+  MigrationOptions,
+  MigrationPlan,
+  MigrationReport,
+} from "./types.js";
 import { createEmptyReport } from "./report.js";
 import { isAssetFile, transformAssetContent } from "./adapters/vitepress/analyze.js";
 

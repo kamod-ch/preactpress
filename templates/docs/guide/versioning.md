@@ -55,12 +55,12 @@ export default defineConfig({
 });
 ```
 
-| Option | Purpose |
-| ------ | ------- |
+| Option    | Purpose                                                  |
+| --------- | -------------------------------------------------------- |
 | `current` | Value of the active version (matches `current/` content) |
-| `items` | List shown in the version switcher |
-| `aliases` | Extra labels mapped to a version value (e.g. `latest`) |
-| `labels` | UI strings for switcher and archived banner |
+| `items`   | List shown in the version switcher                       |
+| `aliases` | Extra labels mapped to a version value (e.g. `latest`)   |
+| `labels`  | UI strings for switcher and archived banner              |
 
 ## Snapshot a version
 
@@ -86,10 +86,10 @@ versions: ["2.0"]
 
 ## URLs and locales
 
-| Pattern | Example |
-| ------- | ------- |
-| Current version | `/guide/page` |
-| Archived version | `/versions/1.0/guide/page` |
+| Pattern          | Example                       |
+| ---------------- | ----------------------------- |
+| Current version  | `/guide/page`                 |
+| Archived version | `/versions/1.0/guide/page`    |
 | Locale + version | `/de/versions/1.0/guide/page` |
 
 Canonical URLs for archived pages point to the equivalent current-version route when it exists.
@@ -108,8 +108,8 @@ Search index and sitemap entries are partitioned by version. The version switche
 
 ## Next steps
 
-| Page | Why |
-| ---- | --- |
-| [Configuration](/guide/configuration) | Full `versions` option reference |
-| [Routing and i18n](/guide/routing) | Locale + version URL patterns |
+| Page                                  | Why                                     |
+| ------------------------------------- | --------------------------------------- |
+| [Configuration](/guide/configuration) | Full `versions` option reference        |
+| [Routing and i18n](/guide/routing)    | Locale + version URL patterns           |
 | [Starter templates](/guide/templates) | Compare `versions` and `docs` templates |

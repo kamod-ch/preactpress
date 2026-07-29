@@ -64,7 +64,9 @@ export async function runWorkspacesCommand(options: WorkspacesCommandOptions): P
   const monorepoRoots = findMonorepoRoots(start);
   const sites = [...new Set(monorepoRoots.flatMap((root) => docSitesInRoot(root)))];
   if (!sites.length) {
-    console.error(c.red("preactpress workspaces: no documentation sites with .preactpress/config.ts found."));
+    console.error(
+      c.red("preactpress workspaces: no documentation sites with .preactpress/config.ts found."),
+    );
     return 1;
   }
 

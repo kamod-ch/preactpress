@@ -9,6 +9,10 @@ export class ConfigError extends Error {
   }
 }
 
-export function assertConfig(condition: unknown, message: string, path?: string): asserts condition {
+export function assertConfig(
+  condition: unknown,
+  message: string,
+  path?: string,
+): asserts condition {
   if (!condition) throw new ConfigError(message, path);
 }

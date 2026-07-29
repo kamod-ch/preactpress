@@ -71,22 +71,32 @@ function commentText(reflection: Reflection, tag?: string): string | undefined {
   if (!comment) return undefined;
   if (tag) {
     const bare = tag.replace(/^@/, "");
-    const block = comment.blockTags?.find(
-      (entry) => entry.tag.replace(/^@/, "") === bare,
-    );
-    const text = block?.content?.map((part) => part.text).join("").trim();
+    const block = comment.blockTags?.find((entry) => entry.tag.replace(/^@/, "") === bare);
+    const text = block?.content
+      ?.map((part) => part.text)
+      .join("")
+      .trim();
     return text || undefined;
   }
-  const text = comment.summary?.map((part) => part.text).join("").trim();
+  const text = comment.summary
+    ?.map((part) => part.text)
+    .join("")
+    .trim();
   return text || undefined;
 }
 
 function examplesFrom(reflection: Reflection): string[] | undefined {
   const tags =
-    reflection.comment?.blockTags?.filter((entry) => entry.tag.replace(/^@/, "") === "example") ?? [];
+    reflection.comment?.blockTags?.filter((entry) => entry.tag.replace(/^@/, "") === "example") ??
+    [];
   if (!tags.length) return undefined;
   return tags
-    .map((tag) => tag.content?.map((part) => part.text).join("").trim())
+    .map((tag) =>
+      tag.content
+        ?.map((part) => part.text)
+        .join("")
+        .trim(),
+    )
     .filter((value): value is string => Boolean(value));
 }
 
@@ -103,7 +113,10 @@ function sourceFrom(reflection: Reflection, ctx: TransformContext): ApiSourceLin
   return link;
 }
 
-function typeRef(type: import("typedoc").Type | undefined, ctx: TransformContext): ApiTypeRef | undefined {
+function typeRef(
+  type: import("typedoc").Type | undefined,
+  ctx: TransformContext,
+): ApiTypeRef | undefined {
   if (!type) return undefined;
   return { text: ctx.typeToString(type) };
 }
@@ -134,7 +147,10 @@ function parametersFrom(
   }));
 }
 
-function signaturesFrom(reflection: DeclarationReflection, ctx: TransformContext): ApiSignature[] | undefined {
+function signaturesFrom(
+  reflection: DeclarationReflection,
+  ctx: TransformContext,
+): ApiSignature[] | undefined {
   const signatures = reflection.signatures ?? [];
   if (!signatures.length) return undefined;
   return signatures.map((signature: SignatureReflection) => ({
@@ -176,7 +192,9 @@ function createSymbolRecord(
   const moduleSegments = moduleRoutePrefix(reflection);
   const pageKind = PAGE_KINDS.has(kind);
   const slugParts = pageKind ? [...moduleSegments, reflection.name] : [];
-  const route = pageKind ? joinRoute(ctx.baseRoute, ...slugParts) : (parent?.route ?? joinRoute(ctx.baseRoute));
+  const route = pageKind
+    ? joinRoute(ctx.baseRoute, ...slugParts)
+    : (parent?.route ?? joinRoute(ctx.baseRoute));
   const qualifiedName = reflection.getFriendlyFullName();
 
   const symbol: ApiSymbol = {
@@ -205,7 +223,7 @@ function createSymbolRecord(
       isReadonly: reflection.flags.isReadonly || undefined,
       isOptional: reflection.flags.isOptional || undefined,
     },
-    group: ctx.groupBy === "kind" ? kind : moduleSegments[0] ?? "root",
+    group: ctx.groupBy === "kind" ? kind : (moduleSegments[0] ?? "root"),
     tags: ["api", kind],
   };
 
@@ -346,7 +364,9 @@ export async function convertTypeDocProject(options: {
 
   const project = await app.convert();
   if (!project) {
-    throw new Error("typedocPlugin: TypeDoc failed to convert the project. Check entry points and tsconfig.");
+    throw new Error(
+      "typedocPlugin: TypeDoc failed to convert the project. Check entry points and tsconfig.",
+    );
   }
 
   const ctx: TransformContext = {

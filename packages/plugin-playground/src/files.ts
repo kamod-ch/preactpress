@@ -1,10 +1,17 @@
-import type { PlaygroundDependencies, PlaygroundFiles, PlaygroundProps, ResolvedPlaygroundState } from "./types.js";
+import type {
+  PlaygroundDependencies,
+  PlaygroundFiles,
+  PlaygroundProps,
+  ResolvedPlaygroundState,
+} from "./types.js";
 
 const DEFAULT_ENTRY = "/App.tsx";
 const DEFAULT_SINGLE_FILE = "/App.tsx";
 
 /** Normalize `code` / `files` props into a consistent virtual file tree. */
-export function resolvePlaygroundFiles(props: Pick<PlaygroundProps, "code" | "files" | "entry">): ResolvedPlaygroundState {
+export function resolvePlaygroundFiles(
+  props: Pick<PlaygroundProps, "code" | "files" | "entry">,
+): ResolvedPlaygroundState {
   const files: PlaygroundFiles = props.files
     ? normalizeFileKeys(props.files)
     : { [DEFAULT_SINGLE_FILE]: props.code ?? defaultCounterExample() };
@@ -81,7 +88,5 @@ export function serializeFilesForDisplay(files: PlaygroundFiles, entry: string):
 
   if (paths.length === 1) return files[paths[0] ?? ""] ?? "";
 
-  return paths
-    .map((path) => `// ${path}\n${files[path] ?? ""}`.trim())
-    .join("\n\n");
+  return paths.map((path) => `// ${path}\n${files[path] ?? ""}`.trim()).join("\n\n");
 }

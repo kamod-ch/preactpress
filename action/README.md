@@ -58,20 +58,20 @@ For `https://user.github.io/my-repo/`:
 
 ## Inputs
 
-| Input | Default | Description |
-| ----- | ------- | ----------- |
-| `command` | `all` | `install`, `check`, `build`, or `all` |
-| `node-version` | `22` | Node.js version |
-| `working-directory` | `.` | Site root directory |
-| `package-manager` | `pnpm` | `pnpm`, `npm`, or `yarn` |
-| `install-args` | `--frozen-lockfile` | Extra install arguments |
-| `check-args` | — | Extra `preactpress check` arguments |
-| `build-args` | — | Extra `preactpress build` arguments |
-| `base` | — | Shortcut for `--base` on build |
-| `strict` | `false` | Pass `--strict` to check |
-| `upload-artifact` | `false` | Upload `artifact-path` after build |
-| `artifact-name` | `preactpress-dist` | Artifact name |
-| `artifact-path` | `dist` | Output directory relative to site root |
+| Input               | Default             | Description                            |
+| ------------------- | ------------------- | -------------------------------------- |
+| `command`           | `all`               | `install`, `check`, `build`, or `all`  |
+| `node-version`      | `22`                | Node.js version                        |
+| `working-directory` | `.`                 | Site root directory                    |
+| `package-manager`   | `pnpm`              | `pnpm`, `npm`, or `yarn`               |
+| `install-args`      | `--frozen-lockfile` | Extra install arguments                |
+| `check-args`        | —                   | Extra `preactpress check` arguments    |
+| `build-args`        | —                   | Extra `preactpress build` arguments    |
+| `base`              | —                   | Shortcut for `--base` on build         |
+| `strict`            | `false`             | Pass `--strict` to check               |
+| `upload-artifact`   | `false`             | Upload `artifact-path` after build     |
+| `artifact-name`     | `preactpress-dist`  | Artifact name                          |
+| `artifact-path`     | `dist`              | Output directory relative to site root |
 
 ## Workflow templates
 

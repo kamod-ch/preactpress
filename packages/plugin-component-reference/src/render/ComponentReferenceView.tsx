@@ -68,11 +68,7 @@ export function ComponentReferenceView({ entry }: { entry: ComponentEntry }) {
       {entry.description ? <p class="pp-component-description">{entry.description}</p> : null}
       {entry.source ? (
         <p class="pp-component-source">
-          {entry.source.url ? (
-            <a href={entry.source.url}>View source</a>
-          ) : (
-            "Source:"
-          )}{" "}
+          {entry.source.url ? <a href={entry.source.url}>View source</a> : "Source:"}{" "}
           <code>
             {entry.source.file}:{entry.source.line}
           </code>

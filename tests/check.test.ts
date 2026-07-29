@@ -4,10 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { check } from "../src/node/check.js";
 import { resolveConfig } from "../src/node/config.js";
-import {
-  buildCheckStats,
-  computeCheckScore,
-} from "../src/node/checkTypes.js";
+import { buildCheckStats, computeCheckScore } from "../src/node/checkTypes.js";
 import { formatCheckJson, resolveCheckExitCode } from "../src/node/checkOutput.js";
 
 const PAGE = `---
@@ -272,7 +269,17 @@ description: Hidden page
 
   it("uses strict mode exit code semantics", async () => {
     const warnings = [{ level: "warning" as const, code: "missing-title" as const, message: "x" }];
-    expect(resolveCheckExitCode({ errors: [], warnings, score: 90, stats: buildCheckStats([], warnings), routes: [] }, {})).toBe(0);
-    expect(resolveCheckExitCode({ errors: [], warnings, score: 90, stats: buildCheckStats([], warnings), routes: [] }, { strict: true })).toBe(1);
+    expect(
+      resolveCheckExitCode(
+        { errors: [], warnings, score: 90, stats: buildCheckStats([], warnings), routes: [] },
+        {},
+      ),
+    ).toBe(0);
+    expect(
+      resolveCheckExitCode(
+        { errors: [], warnings, score: 90, stats: buildCheckStats([], warnings), routes: [] },
+        { strict: true },
+      ),
+    ).toBe(1);
   });
 });

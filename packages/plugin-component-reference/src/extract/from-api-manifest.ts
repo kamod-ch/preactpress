@@ -22,7 +22,9 @@ function componentFromSymbol(symbol: ApiSymbol, manifest: ApiManifest): Componen
   const propsInterface = Object.values(manifest.symbols).find(
     (entry) =>
       entry.name === `${symbol.name}Props` ||
-      (entry.kind === "interface" && entry.name.endsWith("Props") && entry.name.includes(symbol.name)),
+      (entry.kind === "interface" &&
+        entry.name.endsWith("Props") &&
+        entry.name.includes(symbol.name)),
   );
 
   const signatureParams = symbol.signatures?.[0]?.parameters ?? [];

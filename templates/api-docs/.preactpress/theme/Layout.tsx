@@ -121,7 +121,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   const guideCards = parseCards(meta.guideCards);
   const resourceCards = parseCards(meta.resourceCards);
   const outlineEnabled = themeConfig.outline !== false && !isHome;
-  const outlineItems = outlineEnabled ? (page?.headings ?? []).filter((h) => h.level >= 2 && h.level <= 3) : [];
+  const outlineItems = outlineEnabled
+    ? (page?.headings ?? []).filter((h) => h.level >= 2 && h.level <= 3)
+    : [];
   const showOutline = outlineItems.length > 0;
 
   const mdxComponents = useMemo(
@@ -202,7 +204,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       </div>
     ) : null;
 
-  const sidebarContent = <SidebarNav groups={activeSidebar} routePath={routePath} base={site.base} />;
+  const sidebarContent = (
+    <SidebarNav groups={activeSidebar} routePath={routePath} base={site.base} />
+  );
 
   return (
     <div class={`protocol-site${isHome ? " is-home" : ""}`}>
@@ -212,7 +216,11 @@ const Layout: FunctionalComponent<LayoutProps> = ({
 
       <header class="protocol-header">
         <div class="protocol-header-inner">
-          <a class="protocol-brand" href={withBase(site.base, locale?.prefix || "/")} aria-label={site.title}>
+          <a
+            class="protocol-brand"
+            href={withBase(site.base, locale?.prefix || "/")}
+            aria-label={site.title}
+          >
             <Logo label={site.title} />
           </a>
 
@@ -264,14 +272,27 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       >
         <div class="protocol-drawer-header">
           <Logo label={site.title} />
-          <button type="button" class="protocol-drawer-close" aria-label="Close menu" onClick={() => closeMobile()}>
+          <button
+            type="button"
+            class="protocol-drawer-close"
+            aria-label="Close menu"
+            onClick={() => closeMobile()}
+          >
             ✕
           </button>
         </div>
-        <nav class="protocol-nav" aria-label="Main navigation" style={{ display: "flex", flexDirection: "column", marginBottom: "1rem" }}>
+        <nav
+          class="protocol-nav"
+          aria-label="Main navigation"
+          style={{ display: "flex", flexDirection: "column", marginBottom: "1rem" }}
+        >
           {(themeConfig.nav ?? []).map((item) =>
             item.link ? (
-              <a key={item.link} href={withBase(site.base, item.link)} onClick={() => closeMobile(false)}>
+              <a
+                key={item.link}
+                href={withBase(site.base, item.link)}
+                onClick={() => closeMobile(false)}
+              >
                 {item.text}
               </a>
             ) : null,
@@ -337,7 +358,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               ) : null}
               {themeConfig.lastUpdated || editHref ? (
                 <footer class="protocol-doc-meta">
-                  {themeConfig.lastUpdated && lastUpdated ? <span>Updated {lastUpdated}</span> : null}
+                  {themeConfig.lastUpdated && lastUpdated ? (
+                    <span>Updated {lastUpdated}</span>
+                  ) : null}
                   {editHref ? (
                     <span>
                       {themeConfig.lastUpdated && lastUpdated ? " · " : null}

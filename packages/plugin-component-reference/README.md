@@ -55,11 +55,11 @@ const mdxComponents = {
 
 ## Architecture
 
-| Layer | Role |
-| ----- | ---- |
-| Extraction | TypeScript compiler API (no runtime execution) |
-| Data model | `ComponentManifest` (`@preactpress/plugin-component-reference/types`) |
-| Presentation | HTML tables + Preact MDX components |
+| Layer        | Role                                                                  |
+| ------------ | --------------------------------------------------------------------- |
+| Extraction   | TypeScript compiler API (no runtime execution)                        |
+| Data model   | `ComponentManifest` (`@preactpress/plugin-component-reference/types`) |
+| Presentation | HTML tables + Preact MDX components                                   |
 
 Reuses `@preactpress/plugin-typedoc` manifest data when `useTypedocManifest: true`.
 

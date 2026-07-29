@@ -28,7 +28,7 @@ Documentation release. All core features below are stable in `@kamod-ch/preactpr
 
 ### Changed
 
-- **Positioning** — PreactPress is now documented as *the documentation framework for Preact libraries, APIs, and AI coding agents*.
+- **Positioning** — PreactPress is now documented as _the documentation framework for Preact libraries, APIs, and AI coding agents_.
 - **README structure** — repositioned with Quick Start, Live Demo, comparison, plugins, deployment, and roadmap sections.
 - **ROADMAP.md** — updated to reflect shipped plugin API, versioning, check command, and eleven init templates.
 

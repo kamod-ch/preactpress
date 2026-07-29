@@ -9,11 +9,7 @@ export { init } from "./init.js";
 export { runMigrateCommand, printMigrateUsage } from "./migrateCommand.js";
 export { runMigration } from "./migrate/runner.js";
 export { getMigrationAdapter, listMigrationAdapters } from "./migrate/adapters/index.js";
-export type {
-  MigrationAdapter,
-  MigrationOptions,
-  MigrationReport,
-} from "./migrate/types.js";
+export type { MigrationAdapter, MigrationOptions, MigrationReport } from "./migrate/types.js";
 export { check } from "./check.js";
 export type {
   CheckIssue,
@@ -42,12 +38,7 @@ export type {
   RouteDefinition,
 } from "./pluginTypes.js";
 export { PluginError } from "./pluginTypes.js";
-export {
-  examplePlugin,
-  aiExportsPlugin,
-  llmsTxtPlugin,
-  redirectsPlugin,
-} from "./plugins/index.js";
+export { examplePlugin, aiExportsPlugin, llmsTxtPlugin, redirectsPlugin } from "./plugins/index.js";
 export type {
   AiExportsConfig,
   ClientAiExportsConfig,

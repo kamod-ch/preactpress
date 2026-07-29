@@ -184,10 +184,12 @@ export function usePageHead(opts: {
     }
 
     const canonicalRoute =
-      routes && versions?.enabled
-        ? canonicalRouteForPage(route, routes, i18n, versions)
-        : route;
-    const canonical = canonicalUrl({ url: activeSite.url, base: activeSite.base, route: canonicalRoute });
+      routes && versions?.enabled ? canonicalRouteForPage(route, routes, i18n, versions) : route;
+    const canonical = canonicalUrl({
+      url: activeSite.url,
+      base: activeSite.base,
+      route: canonicalRoute,
+    });
     if (canonical) {
       upsertMeta("property", "og:url", canonical);
       upsertCanonical(canonical);

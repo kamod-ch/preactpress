@@ -28,7 +28,11 @@ import {
 } from "./buildCache.js";
 import { writeAtomFeed } from "./feed.js";
 import { localeFromRoute, localizedRouteForLocale } from "../shared/locale.js";
-import { localizedRouteForVersion, versionFromRoute, canonicalRouteForPage } from "../shared/version.js";
+import {
+  localizedRouteForVersion,
+  versionFromRoute,
+  canonicalRouteForPage,
+} from "../shared/version.js";
 import { workspaceFromRoute } from "../shared/workspace.js";
 import { serializablePageForClient } from "../shared/aiMarkdown.js";
 import { applyTransformHtml, applyTransformPageData, invokeBuildEnd } from "./hooks.js";
@@ -206,13 +210,13 @@ export async function build(root?: string, opts: { base?: string } = {}): Promis
 
   const routes = await listMarkdownRoutes(site);
   site.routes = routes;
-  const routeToFile = new Map(
-    (await scanAllContentFiles(site)).map((file) => [file.route, file]),
-  );
+  const routeToFile = new Map((await scanAllContentFiles(site)).map((file) => [file.route, file]));
   await invokePluginsBuildStart(site, { command: "build", mode: "production" });
   const requiredRoots = site.i18n ? site.i18n.locales.map((locale) => locale.prefix || "/") : ["/"];
   if (site.versions.enabled) {
-    for (const version of site.versions.versions.filter((entry) => !entry.isAlias && entry.prefix)) {
+    for (const version of site.versions.versions.filter(
+      (entry) => !entry.isAlias && entry.prefix,
+    )) {
       requiredRoots.push(version.prefix);
     }
   }
@@ -378,7 +382,11 @@ async function writeRouteArtifacts(opts: {
     await fs.writeFile(htmlFile, opts.html, "utf8");
     if (contentFile && opts.page.kind === "markdown") {
       await fs.mkdir(path.dirname(contentFile), { recursive: true });
-      await fs.writeFile(contentFile, JSON.stringify(serializablePage(opts.page, opts.site)), "utf8");
+      await fs.writeFile(
+        contentFile,
+        JSON.stringify(serializablePage(opts.page, opts.site)),
+        "utf8",
+      );
     }
   }
 
@@ -404,10 +412,9 @@ async function writeSitemap(
   const urls = pages
     .filter(({ route }) => !excludedRoutes.has(route))
     .map(({ route, page }) => {
-      const canonicalRoute =
-        site.versions.enabled
-          ? canonicalRouteForPage(route, routeSet, site.i18n, site.versions)
-          : route;
+      const canonicalRoute = site.versions.enabled
+        ? canonicalRouteForPage(route, routeSet, site.i18n, site.versions)
+        : route;
       const lastmod = page.lastUpdated
         ? `<lastmod>${escapeHtml(page.lastUpdated.slice(0, 10))}</lastmod>`
         : "";
@@ -417,10 +424,9 @@ async function writeSitemap(
             .filter((target) => routeSet.has(target))
             .map((target) => {
               const locale = localeFromRoute(target, site.i18n);
-              const canonicalTarget =
-                site.versions.enabled
-                  ? canonicalRouteForPage(target, routeSet, site.i18n, site.versions)
-                  : target;
+              const canonicalTarget = site.versions.enabled
+                ? canonicalRouteForPage(target, routeSet, site.i18n, site.versions)
+                : target;
               return locale
                 ? `<xhtml:link rel="alternate" hreflang="${escapeHtml(locale.lang)}" href="${escapeHtml(absoluteUrl(site, canonicalTarget))}" />`
                 : "";

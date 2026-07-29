@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "description": "Official OpenAPI 3.x documentation plugin for PreactPress",
   "keywords": [
-    "openapi",
-    "swagger",
     "api",
+    "openapi",
+    "plugin",
     "preactpress",
-    "plugin"
+    "swagger"
   ],
   "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -25,18 +29,14 @@
       "default": "./dist/explorer/types.js"
     }
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepare": "pnpm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
-  },
-  "peerDependencies": {
-    "@kamod-ch/preactpress": ">=2.2.0"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.1",
@@ -50,10 +50,10 @@
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   },
+  "peerDependencies": {
+    "@kamod-ch/preactpress": ">=2.2.0"
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

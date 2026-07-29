@@ -200,7 +200,9 @@ export async function applyPluginsTransformPageData(
   let current = page;
   for (const plugin of config.plugins ?? []) {
     if (!plugin.transformPageData) continue;
-    const next = await runHook(plugin, "transformPageData", () => plugin.transformPageData!(current, ctx));
+    const next = await runHook(plugin, "transformPageData", () =>
+      plugin.transformPageData!(current, ctx),
+    );
     if (next !== undefined) {
       current = next;
     }
@@ -266,8 +268,7 @@ export function resolveRegisteredPlugins(user: UserConfig): PreactPressPlugin[] 
   if (legacy) plugins.push(legacy);
   const aiEnabled = user.ai !== false && user.ai !== undefined;
   const hasAiPlugin = plugins.some(
-    (plugin) =>
-      plugin.name === "preactpress:ai-exports" || plugin.name === "preactpress:llms-txt",
+    (plugin) => plugin.name === "preactpress:ai-exports" || plugin.name === "preactpress:llms-txt",
   );
   if (aiEnabled && !hasAiPlugin) plugins.push(aiExportsPlugin());
   return normalizePlugins(plugins);

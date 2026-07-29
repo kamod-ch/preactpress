@@ -5,7 +5,10 @@ import { extractComponentEntry } from "../src/extract/typescript.js";
 import { renderComponentReferenceHtml, lookupComponent } from "../src/render/html.js";
 import { buildComponentManifest } from "../src/extract/generate.js";
 
-const fixtureRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../fixtures/ui-kit");
+const fixtureRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../fixtures/ui-kit",
+);
 
 describe("extractComponentEntry", () => {
   it("extracts Button props including union and inherited attributes", () => {
@@ -21,7 +24,9 @@ describe("extractComponentEntry", () => {
     expect(entry.props.some((prop) => prop.name === "children")).toBe(true);
     expect(entry.props.some((prop) => prop.name === "href")).toBe(true);
     expect(entry.props.find((prop) => prop.name === "variant")?.type).toContain("ButtonVariant");
-    expect(entry.props.find((prop) => prop.name === "variant")?.description).toContain("Visual style");
+    expect(entry.props.find((prop) => prop.name === "variant")?.description).toContain(
+      "Visual style",
+    );
   });
 
   it("extracts Input props with defaults and HTML attributes", () => {

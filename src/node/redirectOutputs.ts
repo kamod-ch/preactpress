@@ -67,9 +67,7 @@ export function renderRedirectHtml(site: ResolvedConfig, rule: ResolvedRedirect)
 }
 
 export function renderRedirectsFile(rules: ResolvedRedirect[]): string {
-  return `${rules
-    .map((rule) => `${rule.from}  ${rule.to}  ${rule.status}`)
-    .join("\n")}\n`;
+  return `${rules.map((rule) => `${rule.from}  ${rule.to}  ${rule.status}`).join("\n")}\n`;
 }
 
 export function renderRedirectMetadata(redirects: ResolvedRedirects): RedirectMetadataFile {

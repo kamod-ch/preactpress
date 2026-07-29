@@ -23,7 +23,10 @@ export function isStructuredWorkspacesConfig(value: unknown): value is Workspace
 }
 
 function normalizeWorkspaceId(id: string): string {
-  return id.trim().toLowerCase().replace(/[^a-z0-9-_]+/g, "-");
+  return id
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-_]+/g, "-");
 }
 
 function resolveDocsDir(
@@ -57,19 +60,15 @@ function resolveWorkspaceItem(
 ): ResolvedWorkspace {
   const id = normalizeWorkspaceId(item.id);
   const prefix = workspacePrefixForId(id);
-  const packageRoot = normalizePath(
-    path.resolve(ctx.root, detected?.root ?? item.root ?? `.`),
-  );
+  const packageRoot = normalizePath(path.resolve(ctx.root, detected?.root ?? item.root ?? `.`));
   const docsDir = resolveDocsDir(ctx.root, ctx.configDir, item, packageRoot);
   const pkg = readPackageJsonMeta(packageRoot);
   const repoUrl = item.repository ?? repositoryUrlFromMeta(pkg);
-  const docsRelative = path
-    .relative(ctx.root, docsDir)
-    .split(path.sep)
-    .join("/");
+  const docsRelative = path.relative(ctx.root, docsDir).split(path.sep).join("/");
   const packageVersion = item.version ?? pkg.version;
   const editPattern = item.editLink?.pattern ?? defaultEditPattern(repoUrl, docsRelative);
-  const sourcePattern = item.sourceLink?.pattern ?? defaultSourcePattern(repoUrl, item.sourceDir ?? "src");
+  const sourcePattern =
+    item.sourceLink?.pattern ?? defaultSourcePattern(repoUrl, item.sourceDir ?? "src");
 
   return {
     id,
@@ -91,7 +90,9 @@ function resolveWorkspaceItem(
     editLink: editPattern
       ? { pattern: editPattern, text: item.editLink?.text ?? "Edit this page" }
       : undefined,
-    sourceLink: sourcePattern ? { pattern: sourcePattern, text: item.sourceLink?.text ?? "View source" } : undefined,
+    sourceLink: sourcePattern
+      ? { pattern: sourcePattern, text: item.sourceLink?.text ?? "View source" }
+      : undefined,
     typedoc: item.typedoc,
     themeConfig: {
       ...ctx.themeConfig,

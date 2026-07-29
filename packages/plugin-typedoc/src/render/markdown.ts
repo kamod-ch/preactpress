@@ -1,4 +1,11 @@
-import type { ApiGenerationResult, ApiManifest, ApiPage, ApiSignature, ApiSymbol, ApiTypeParameter } from "../types/index.js";
+import type {
+  ApiGenerationResult,
+  ApiManifest,
+  ApiPage,
+  ApiSignature,
+  ApiSymbol,
+  ApiTypeParameter,
+} from "../types/index.js";
 import { linkifyTypeText, renderTypeRef, symbolAnchor } from "./links.js";
 
 const PAGE_KINDS = new Set([
@@ -18,7 +25,8 @@ function yamlEscape(value: string): string {
 
 function frontmatter(symbol: ApiSymbol): string {
   const lines = [`title: "${yamlEscape(symbol.name)}"`];
-  if (symbol.description) lines.push(`description: "${yamlEscape(symbol.description.slice(0, 160))}"`);
+  if (symbol.description)
+    lines.push(`description: "${yamlEscape(symbol.description.slice(0, 160))}"`);
   lines.push("tags:");
   for (const tag of symbol.tags ?? ["api"]) {
     lines.push(`  - ${tag}`);
@@ -32,12 +40,20 @@ function renderMeta(symbol: ApiSymbol): string {
   if (symbol.since) parts.push(`> **Since:** ${symbol.since}`);
   if (symbol.source) {
     const label = `${symbol.source.file}:${symbol.source.line}`;
-    parts.push(symbol.source.url ? `> **Source:** [${label}](${symbol.source.url})` : `> **Source:** \`${label}\``);
+    parts.push(
+      symbol.source.url
+        ? `> **Source:** [${label}](${symbol.source.url})`
+        : `> **Source:** \`${label}\``,
+    );
   }
   return parts.length ? `${parts.join("\n")}\n\n` : "";
 }
 
-function renderTypeParameters(params: ApiTypeParameter[] | undefined, manifest: ApiManifest, route: string): string {
+function renderTypeParameters(
+  params: ApiTypeParameter[] | undefined,
+  manifest: ApiManifest,
+  route: string,
+): string {
   if (!params?.length) return "";
   const rows = params.map((param) => {
     const constraint = param.constraint ? renderTypeRef(param.constraint, manifest, route) : "";
@@ -92,7 +108,8 @@ function renderMembers(symbol: ApiSymbol, manifest: ApiManifest): string {
     const member = manifest.symbols[memberId];
     if (!member) continue;
     sections.push(`### ${member.name} {#${member.name.toLowerCase()}}`, "");
-    if (member.description) sections.push(linkifyTypeText(member.description, manifest, symbol.route), "");
+    if (member.description)
+      sections.push(linkifyTypeText(member.description, manifest, symbol.route), "");
     if (member.signatures?.length) {
       for (const signature of member.signatures) {
         sections.push(renderSignature(signature, manifest, symbol.route));
@@ -131,7 +148,9 @@ function renderSymbolPage(symbol: ApiSymbol, manifest: ApiManifest): string {
     ? `${linkifyTypeText(symbol.description, manifest, symbol.route)}\n\n`
     : "";
   const signatures = symbol.signatures?.length
-    ? symbol.signatures.map((signature) => renderSignature(signature, manifest, symbol.route)).join("\n")
+    ? symbol.signatures
+        .map((signature) => renderSignature(signature, manifest, symbol.route))
+        .join("\n")
     : "";
   const typeLine =
     symbol.type && !symbol.signatures?.length
@@ -158,7 +177,9 @@ function renderIndexPage(manifest: ApiManifest): string {
   const items = Object.values(manifest.symbols)
     .filter((symbol) => PAGE_KINDS.has(symbol.kind))
     .sort((a, b) => a.qualifiedName.localeCompare(b.qualifiedName))
-    .map((symbol) => `- [${symbol.qualifiedName}](${symbol.route.replace(manifest.baseRoute, ".")})`);
+    .map(
+      (symbol) => `- [${symbol.qualifiedName}](${symbol.route.replace(manifest.baseRoute, ".")})`,
+    );
 
   return [
     "---",

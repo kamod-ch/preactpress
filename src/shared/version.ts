@@ -26,10 +26,7 @@ export function versionPrefixForValue(
   return normalizeRoute(`/${versionsDir}/${value}`);
 }
 
-export function stripVersionPrefix(
-  route: string,
-  version: ResolvedVersion | undefined,
-): string {
+export function stripVersionPrefix(route: string, version: ResolvedVersion | undefined): string {
   const normalized = normalizeRoute(route);
   if (!version?.prefix) return normalized;
   if (normalized === version.prefix) return "/";
@@ -51,8 +48,7 @@ export function versionFromRoute(
     .filter((version) => !version.isAlias && version.prefix)
     .sort((a, b) => b.prefix.length - a.prefix.length);
   const match = prefixed.find(
-    (version) =>
-      normalized === version.prefix || normalized.startsWith(`${version.prefix}/`),
+    (version) => normalized === version.prefix || normalized.startsWith(`${version.prefix}/`),
   );
   if (match) return match;
   return versions.versions.find((version) => version.isCurrent && !version.isAlias);

@@ -13,18 +13,18 @@ preactpress migrate vitepress --output ./preactpress-docs
 
 ## What gets migrated automatically
 
-| Area | Behavior |
-| ---- | -------- |
-| Markdown pages | Copied to the output root with link cleanup (`.md` → clean routes) |
-| Frontmatter | Preserved; VitePress-only keys flagged for review |
-| Navigation / sidebar | Mapped into `.preactpress/config.ts` `themeConfig` |
-| Theme config | Social links, footer, search flags, and outline settings |
-| Code groups | `::: code-group` blocks kept as-is (PreactPress compatible) |
-| Custom containers | `::: tip`, `::: warning`, `::: danger`, `::: info`, `::: details` |
-| Public assets | Copied to `public/` |
-| Head metadata | Mapped to `head` in config |
-| Sitemap hostname | Mapped to `site.url` and `build.sitemap` |
-| i18n | `locales` block mapped when present |
+| Area                 | Behavior                                                           |
+| -------------------- | ------------------------------------------------------------------ |
+| Markdown pages       | Copied to the output root with link cleanup (`.md` → clean routes) |
+| Frontmatter          | Preserved; VitePress-only keys flagged for review                  |
+| Navigation / sidebar | Mapped into `.preactpress/config.ts` `themeConfig`                 |
+| Theme config         | Social links, footer, search flags, and outline settings           |
+| Code groups          | `::: code-group` blocks kept as-is (PreactPress compatible)        |
+| Custom containers    | `::: tip`, `::: warning`, `::: danger`, `::: info`, `::: details`  |
+| Public assets        | Copied to `public/`                                                |
+| Head metadata        | Mapped to `head` in config                                         |
+| Sitemap hostname     | Mapped to `site.url` and `build.sitemap`                           |
+| i18n                 | `locales` block mapped when present                                |
 
 ## Safety guarantees
 

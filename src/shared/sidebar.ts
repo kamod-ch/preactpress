@@ -1,4 +1,11 @@
-import type { NavItem, ResolvedI18n, ResolvedVersions, ResolvedWorkspaces, SidebarGroup, SidebarItem } from "../node/siteConfig.js";
+import type {
+  NavItem,
+  ResolvedI18n,
+  ResolvedVersions,
+  ResolvedWorkspaces,
+  SidebarGroup,
+  SidebarItem,
+} from "../node/siteConfig.js";
 import { routePathKey as localeRoutePathKey } from "./locale.js";
 import { routePathKey as versionRoutePathKey } from "./version.js";
 import { routePathKeyWithWorkspace } from "./workspace.js";
@@ -22,7 +29,9 @@ function resolveRoutePathKey(
     }
     return withoutLocale;
   }
-  return versions?.enabled ? versionRoutePathKey(route, i18n, versions) : localeRoutePathKey(route, i18n);
+  return versions?.enabled
+    ? versionRoutePathKey(route, i18n, versions)
+    : localeRoutePathKey(route, i18n);
 }
 
 /** Path key with workspace prefix stripped — for pagination and cross-workspace links. */

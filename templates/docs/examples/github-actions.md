@@ -19,15 +19,15 @@ Use the maintained action from the PreactPress repository:
     node-version: 22
 ```
 
-| Input | Default | Description |
-| ----- | ------- | ----------- |
-| `command` | `all` | `install`, `check`, `build`, or `all` |
-| `node-version` | `22` | Node.js version |
-| `working-directory` | `.` | Site root (for monorepos: `packages/docs`) |
-| `package-manager` | `pnpm` | `pnpm`, `npm`, or `yarn` |
-| `strict` | `false` | Fail on check warnings |
-| `base` | — | `--base` for GitHub Pages project sites |
-| `upload-artifact` | `false` | Upload `dist/` after build |
+| Input               | Default | Description                                |
+| ------------------- | ------- | ------------------------------------------ |
+| `command`           | `all`   | `install`, `check`, `build`, or `all`      |
+| `node-version`      | `22`    | Node.js version                            |
+| `working-directory` | `.`     | Site root (for monorepos: `packages/docs`) |
+| `package-manager`   | `pnpm`  | `pnpm`, `npm`, or `yarn`                   |
+| `strict`            | `false` | Fail on check warnings                     |
+| `base`              | —       | `--base` for GitHub Pages project sites    |
+| `upload-artifact`   | `false` | Upload `dist/` after build                 |
 
 Pin to a [release tag](https://github.com/kamod-ch/preactpress/releases). See the [action README on GitHub](https://github.com/kamod-ch/preactpress/tree/main/action) for all inputs.
 
@@ -59,11 +59,11 @@ jobs:
 
 Copy these files from the PreactPress repository into your site under `.github/workflows/`:
 
-| Template | Path in repo |
-| -------- | ------------ |
-| PR checks + artifacts | [`examples/github-actions/check.yml`](https://github.com/kamod-ch/preactpress/blob/main/examples/github-actions/check.yml) |
-| GitHub Pages deploy | [`examples/github-actions/pages.yml`](https://github.com/kamod-ch/preactpress/blob/main/examples/github-actions/pages.yml) |
-| Node.js 20/22 matrix | [`examples/github-actions/node-matrix.yml`](https://github.com/kamod-ch/preactpress/blob/main/examples/github-actions/node-matrix.yml) |
+| Template              | Path in repo                                                                                                                           |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| PR checks + artifacts | [`examples/github-actions/check.yml`](https://github.com/kamod-ch/preactpress/blob/main/examples/github-actions/check.yml)             |
+| GitHub Pages deploy   | [`examples/github-actions/pages.yml`](https://github.com/kamod-ch/preactpress/blob/main/examples/github-actions/pages.yml)             |
+| Node.js 20/22 matrix  | [`examples/github-actions/node-matrix.yml`](https://github.com/kamod-ch/preactpress/blob/main/examples/github-actions/node-matrix.yml) |
 
 ### check.yml — pull request checks
 

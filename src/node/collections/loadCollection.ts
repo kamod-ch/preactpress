@@ -15,7 +15,7 @@ export function loadCollection<T = unknown>(
 export function isCollectionLoader(value: unknown): value is CollectionLoader {
   return Boolean(
     value &&
-      typeof value === "object" &&
-      (value as CollectionLoader).__kind === "collection-loader",
+    typeof value === "object" &&
+    (value as CollectionLoader).__kind === "collection-loader",
   );
 }

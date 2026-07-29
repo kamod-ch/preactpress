@@ -25,9 +25,14 @@ function legacyPrefixForKey(key: string): string {
   return key === "latest" ? "" : normalizeRoute(`/${key}`);
 }
 
-function normalizeVersionItems(
-  input: UserVersionsConfig | undefined,
-): { items: VersionItemConfig[]; current?: string; aliases?: Record<string, string>; dir?: string; currentDir?: string; labels?: VersionsConfig["labels"] } | null {
+function normalizeVersionItems(input: UserVersionsConfig | undefined): {
+  items: VersionItemConfig[];
+  current?: string;
+  aliases?: Record<string, string>;
+  dir?: string;
+  currentDir?: string;
+  labels?: VersionsConfig["labels"];
+} | null {
   if (!input) return null;
   if (isStructuredVersionsConfig(input)) {
     return {

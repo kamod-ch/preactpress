@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "description": "Official Mermaid diagram plugin for PreactPress",
   "keywords": [
-    "mermaid",
     "diagrams",
-    "preactpress",
     "markdown",
-    "plugin"
+    "mermaid",
+    "plugin",
+    "preactpress"
   ],
   "license": "MIT",
+  "files": [
+    "dist",
+    "src/style.css",
+    "README.md"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -22,19 +27,14 @@
     },
     "./style.css": "./src/style.css"
   },
-  "files": [
-    "dist",
-    "src/style.css",
-    "README.md"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepare": "pnpm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
-  },
-  "peerDependencies": {
-    "@kamod-ch/preactpress": ">=2.2.0"
   },
   "dependencies": {
     "mermaid": "^11.16.0"
@@ -45,10 +45,10 @@
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   },
+  "peerDependencies": {
+    "@kamod-ch/preactpress": ">=2.2.0"
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

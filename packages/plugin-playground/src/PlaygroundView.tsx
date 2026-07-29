@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 import type { PlaygroundPluginOptions } from "./types.js";
 import type { PlaygroundFiles, PlaygroundProps, PreviewTheme, PreviewWidth } from "./types.js";
-import { createDependencyContext, findDisallowedImports, resolveImportMap } from "./dependencies.js";
+import {
+  createDependencyContext,
+  findDisallowedImports,
+  resolveImportMap,
+} from "./dependencies.js";
 import { mergeDependencies, resolvePlaygroundFiles, serializeFilesForDisplay } from "./files.js";
 import { buildSandboxDocument } from "./static.js";
-import {
-  buildStackBlitzUrl,
-  copyToClipboard,
-  openStackBlitz,
-  previewWidthPx,
-} from "./utils.js";
+import { buildStackBlitzUrl, copyToClipboard, openStackBlitz, previewWidthPx } from "./utils.js";
 
 export interface PlaygroundViewProps extends PlaygroundProps {
   pluginOptions?: PlaygroundPluginOptions;
@@ -51,10 +50,7 @@ export function PlaygroundView(props: PlaygroundViewProps) {
     [props.pluginOptions],
   );
 
-  const dependencies = useMemo(
-    () => mergeDependencies(props.dependencies),
-    [props.dependencies],
-  );
+  const dependencies = useMemo(() => mergeDependencies(props.dependencies), [props.dependencies]);
 
   const filePaths = useMemo(() => Object.keys(files).sort(), [files]);
   const readOnly = Boolean(props.readOnly);

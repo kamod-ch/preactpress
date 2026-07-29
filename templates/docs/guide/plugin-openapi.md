@@ -30,10 +30,10 @@ export default defineConfig({
 
 ## Input sources
 
-| Source | Configuration |
-| ------ | ------------- |
-| Local YAML/JSON | `input: "./openapi.yaml"` |
-| Remote URL | `input: { url: "https://…", headers?: { … } }` |
+| Source          | Configuration                                  |
+| --------------- | ---------------------------------------------- |
+| Local YAML/JSON | `input: "./openapi.yaml"`                      |
+| Remote URL      | `input: { url: "https://…", headers?: { … } }` |
 
 Remote fetching is opt-in — pass a URL object explicitly. Local paths resolve from the project root.
 

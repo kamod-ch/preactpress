@@ -1,10 +1,10 @@
 import type { PlaygroundFiles, PlaygroundDependencies, PreviewTheme } from "./types.js";
 /** Build a StackBlitz project URL for the current playground files. */
 export declare function buildStackBlitzUrl(options: {
-    files: PlaygroundFiles;
-    entry: string;
-    dependencies: PlaygroundDependencies;
-    title?: string;
+  files: PlaygroundFiles;
+  entry: string;
+  dependencies: PlaygroundDependencies;
+  title?: string;
 }): string;
 /** Open StackBlitz in a new tab with the current project. */
 export declare function openStackBlitz(url: string): void;

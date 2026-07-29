@@ -84,9 +84,9 @@ describe("init", () => {
       expect(pkg.devDependencies[PACKAGE_NAME]).toBe(`^${toolPkg.version}`);
       expect(pkg.devDependencies["@preactpress/plugin-mermaid"]).toMatch(/^\^/);
       expect(pkg.devDependencies["@preactpress/plugin-playground"]).toMatch(/^\^/);
-      expect(
-        Object.values(pkg.devDependencies).some((spec) => spec.startsWith("file:")),
-      ).toBe(false);
+      expect(Object.values(pkg.devDependencies).some((spec) => spec.startsWith("file:"))).toBe(
+        false,
+      );
       expect(result.preactpressVersion).toBe(toolPkg.version);
       expect(result.root).toBe(root);
       expect(result.template).toBe("docs");
@@ -187,9 +187,9 @@ describe("init", () => {
         const pkg = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8")) as {
           devDependencies: Record<string, string>;
         };
-        expect(
-          Object.values(pkg.devDependencies).some((spec) => spec.startsWith("file:")),
-        ).toBe(false);
+        expect(Object.values(pkg.devDependencies).some((spec) => spec.startsWith("file:"))).toBe(
+          false,
+        );
       } finally {
         await fs.rm(root, { recursive: true, force: true });
       }

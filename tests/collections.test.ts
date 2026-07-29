@@ -190,7 +190,12 @@ describe("collections", () => {
     const withDrafts = await loadCollectionEntries(guides, tempSite(root, srcDir), {
       includeDrafts: true,
     });
-    expect(withDrafts.map((entry) => entry.id).sort()).toEqual(["draft", "first", "future", "second"]);
+    expect(withDrafts.map((entry) => entry.id).sort()).toEqual([
+      "draft",
+      "first",
+      "future",
+      "second",
+    ]);
   });
 
   it("resolves cross-collection references at build time", async () => {

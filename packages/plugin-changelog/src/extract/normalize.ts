@@ -1,4 +1,9 @@
-import type { ChangelogEntry, ChangelogSection, ChangelogSectionKind, RawChangelogRelease } from "../types/index.js";
+import type {
+  ChangelogEntry,
+  ChangelogSection,
+  ChangelogSectionKind,
+  RawChangelogRelease,
+} from "../types/index.js";
 
 const SECTION_KIND_MAP: Record<string, ChangelogSectionKind> = {
   "breaking changes": "breaking",
@@ -13,7 +18,11 @@ const SECTION_KIND_MAP: Record<string, ChangelogSectionKind> = {
 };
 
 function normalizeHeading(value: string): string {
-  return value.trim().toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, " ");
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, " ");
 }
 
 export function sectionKindFromTitle(title: string): ChangelogSectionKind {

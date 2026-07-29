@@ -24,7 +24,9 @@ function detectFormat(source: string, raw: string): "json" | "yaml" {
   return "yaml";
 }
 
-function isRemoteInput(input: OpenApiInput): input is { url: string; headers?: Record<string, string> } {
+function isRemoteInput(
+  input: OpenApiInput,
+): input is { url: string; headers?: Record<string, string> } {
   return typeof input === "object" && "url" in input;
 }
 
@@ -34,7 +36,9 @@ export async function loadSpec(root: string, input: OpenApiInput): Promise<Loade
       headers: input.headers,
     });
     if (!response.ok) {
-      throw new Error(`openapiPlugin: failed to fetch ${input.url} (${response.status} ${response.statusText})`);
+      throw new Error(
+        `openapiPlugin: failed to fetch ${input.url} (${response.status} ${response.statusText})`,
+      );
     }
     const raw = await response.text();
     return {

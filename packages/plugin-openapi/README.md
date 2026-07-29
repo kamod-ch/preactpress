@@ -40,13 +40,13 @@ openapiPlugin({
 
 ## Generated documentation
 
-| Page | Contents |
-| ---- | -------- |
-| **API overview** | Title, version, servers, tags, endpoint index |
-| **Tag pages** | Grouped endpoints per OpenAPI tag |
+| Page               | Contents                                                                                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **API overview**   | Title, version, servers, tags, endpoint index                                                                                                                                  |
+| **Tag pages**      | Grouped endpoints per OpenAPI tag                                                                                                                                              |
 | **Endpoint pages** | HTTP method, path, description, authentication, path/query/header parameters, request body, responses, error responses, example values, cURL / JavaScript / TypeScript samples |
-| **Schema pages** | Component schemas with property tables and JSON examples |
-| **Schema index** | Browse all `#/components/schemas` entries |
+| **Schema pages**   | Component schemas with property tables and JSON examples                                                                                                                       |
+| **Schema index**   | Browse all `#/components/schemas` entries                                                                                                                                      |
 
 Features included in the MVP:
 
@@ -63,12 +63,12 @@ Interactive API execution is **not** included in the MVP. The plugin exports an 
 
 ## Architecture
 
-| Layer | Responsibility |
-| ----- | -------------- |
-| **Load** | Local files, explicit remote fetch |
-| **Parse** | JSON/YAML parsing, OpenAPI 3.x validation, reference bundling |
-| **Data model** | `OpenApiManifest` (`@preactpress/plugin-openapi/types`) |
-| **Presentation** | Markdown pages, sidebar, code examples |
+| Layer            | Responsibility                                                |
+| ---------------- | ------------------------------------------------------------- |
+| **Load**         | Local files, explicit remote fetch                            |
+| **Parse**        | JSON/YAML parsing, OpenAPI 3.x validation, reference bundling |
+| **Data model**   | `OpenApiManifest` (`@preactpress/plugin-openapi/types`)       |
+| **Presentation** | Markdown pages, sidebar, code examples                        |
 
 Generated markdown is written under `{srcDir}/{output}/` before PreactPress scans content.
 
@@ -79,13 +79,13 @@ Structured manifests are also written to:
 
 ## Options
 
-| Option | Type | Default | Description |
-| ------ | ---- | ------- | ----------- |
-| `input` | `string \| { url, headers? }` | required | Local spec path or explicit remote URL |
-| `route` | `string` | `/api` | Route prefix for generated pages |
-| `output` | `string` | route without leading `/` | Output directory relative to `srcDir` |
-| `cache` | `boolean` | `true` | Incremental cache in `{cacheDir}/openapi` |
-| `explorer` | `OpenApiExplorerAdapter` | disabled | Reserved hook for a future API explorer |
+| Option     | Type                          | Default                   | Description                               |
+| ---------- | ----------------------------- | ------------------------- | ----------------------------------------- |
+| `input`    | `string \| { url, headers? }` | required                  | Local spec path or explicit remote URL    |
+| `route`    | `string`                      | `/api`                    | Route prefix for generated pages          |
+| `output`   | `string`                      | route without leading `/` | Output directory relative to `srcDir`     |
+| `cache`    | `boolean`                     | `true`                    | Incremental cache in `{cacheDir}/openapi` |
+| `explorer` | `OpenApiExplorerAdapter`      | disabled                  | Reserved hook for a future API explorer   |
 
 ## Future API explorer
 

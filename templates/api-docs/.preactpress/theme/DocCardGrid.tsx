@@ -21,7 +21,11 @@ const DocCardGrid: FunctionalComponent<DocCardGridProps> = ({ title, cards, base
       <h2 class="protocol-section-title">{title}</h2>
       <div class="protocol-card-grid">
         {cards.map((card) => (
-          <a class="protocol-card" href={withBase(base, card.link)} key={`${card.title}:${card.link}`}>
+          <a
+            class="protocol-card"
+            href={withBase(base, card.link)}
+            key={`${card.title}:${card.link}`}
+          >
             <h3>{card.title}</h3>
             <p>{card.details}</p>
             <span class="protocol-card-more">{card.linkText ?? "Read more →"}</span>

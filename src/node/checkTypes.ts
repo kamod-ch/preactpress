@@ -75,18 +75,16 @@ export function buildCheckStats(
     warnings: warnings.length,
     brokenLinks: countByCode([...errors, ...warnings], "broken-link"),
     orphanPages: countByCode([...errors, ...warnings], "orphan-page"),
-    missingMetadata: countByCodes([...errors, ...warnings], [
-      "missing-title",
-      "missing-description",
-    ]),
+    missingMetadata: countByCodes(
+      [...errors, ...warnings],
+      ["missing-title", "missing-description"],
+    ),
     unresolvableLinks: countByCode([...errors, ...warnings], "unresolvable-link"),
     unreachablePages: countByCode([...errors, ...warnings], "unreachable-page"),
-    invalidRedirects: countByCodes([...errors, ...warnings], [
-      "invalid-redirect",
-      "redirect-loop",
-      "duplicate-redirect",
-      "redirect-collision",
-    ]),
+    invalidRedirects: countByCodes(
+      [...errors, ...warnings],
+      ["invalid-redirect", "redirect-loop", "duplicate-redirect", "redirect-collision"],
+    ),
     missingTranslations: countByCode([...errors, ...warnings], "missing-translation"),
     canonicalConflicts: countByCode([...errors, ...warnings], "canonical-conflict"),
     externalLinks: countByCode([...errors, ...warnings], "external-link"),

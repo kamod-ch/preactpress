@@ -154,11 +154,15 @@ async function measureDevServer(cwd, sampleRoute, updatePagePath) {
   const port = 4173 + Math.floor(Math.random() * 500);
   const baseUrl = `http://127.0.0.1:${port}${sampleRoute}`;
 
-  const child = spawn(process.execPath, [cliBin, "dev", ".", "--port", String(port), "--host", "127.0.0.1"], {
-    cwd,
-    env: { ...process.env, NODE_ENV: "development" },
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  const child = spawn(
+    process.execPath,
+    [cliBin, "dev", ".", "--port", String(port), "--host", "127.0.0.1"],
+    {
+      cwd,
+      env: { ...process.env, NODE_ENV: "development" },
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  );
 
   let stderr = "";
   child.stderr?.on("data", (c) => {
@@ -226,7 +230,9 @@ async function benchmarkSize(pageCount, opts) {
   let dev = { devServerStartMs: null, pageUpdateMs: null };
   if (!opts.skipDev) {
     dev = await measureDevServer(fixturesRoot, sampleRoute, updatePagePath);
-    console.log(`  dev start: ${Math.round(dev.devServerStartMs)} ms, page update: ${Math.round(dev.pageUpdateMs)} ms`);
+    console.log(
+      `  dev start: ${Math.round(dev.devServerStartMs)} ms, page update: ${Math.round(dev.pageUpdateMs)} ms`,
+    );
   }
 
   return {

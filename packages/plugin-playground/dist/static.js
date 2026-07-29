@@ -1,46 +1,44 @@
 /** Escape text for safe inclusion in HTML text nodes. */
 export function escapeHtml(value) {
-    return value
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;");
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
 }
 /** Static SSR fallback rendered without client JavaScript. */
 export function renderPlaygroundFallbackHtml(options) {
-    const { files, entry, title = "Preact playground", readOnly = false } = options;
-    const display = Object.entries(files)
-        .sort(([a], [b]) => {
-        if (a === entry)
-            return -1;
-        if (b === entry)
-            return 1;
-        return a.localeCompare(b);
+  const { files, entry, title = "Preact playground", readOnly = false } = options;
+  const display = Object.entries(files)
+    .sort(([a], [b]) => {
+      if (a === entry) return -1;
+      if (b === entry) return 1;
+      return a.localeCompare(b);
     })
-        .map(([path, source]) => {
-        const label = path === entry ? `${path} (entry)` : path;
-        return [
-            `<div class="pp-playground-static-file">`,
-            `<div class="pp-playground-static-file-label">${escapeHtml(label)}</div>`,
-            `<pre class="pp-playground-static-code"><code>${escapeHtml(source)}</code></pre>`,
-            `</div>`,
-        ].join("");
-    })
-        .join("");
-    const mode = readOnly ? "read-only" : "editable";
-    return [
-        `<section class="pp-playground pp-playground-static" data-pp-playground="${mode}" aria-label="${escapeHtml(title)}">`,
-        `<div class="pp-playground-static-notice" role="status">`,
-        `Live preview requires JavaScript. Source code is shown below.`,
+    .map(([path, source]) => {
+      const label = path === entry ? `${path} (entry)` : path;
+      return [
+        `<div class="pp-playground-static-file">`,
+        `<div class="pp-playground-static-file-label">${escapeHtml(label)}</div>`,
+        `<pre class="pp-playground-static-code"><code>${escapeHtml(source)}</code></pre>`,
         `</div>`,
-        display,
-        `</section>`,
-    ].join("");
+      ].join("");
+    })
+    .join("");
+  const mode = readOnly ? "read-only" : "editable";
+  return [
+    `<section class="pp-playground pp-playground-static" data-pp-playground="${mode}" aria-label="${escapeHtml(title)}">`,
+    `<div class="pp-playground-static-notice" role="status">`,
+    `Live preview requires JavaScript. Source code is shown below.`,
+    `</div>`,
+    display,
+    `</section>`,
+  ].join("");
 }
 /** Build the sandbox iframe srcdoc document. Kept inline so the host bundle stays small. */
 export function buildSandboxDocument(theme) {
-    const bodyClass = theme === "dark" ? "pp-sandbox-dark" : "pp-sandbox-light";
-    return `<!doctype html>
+  const bodyClass = theme === "dark" ? "pp-sandbox-dark" : "pp-sandbox-light";
+  return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />

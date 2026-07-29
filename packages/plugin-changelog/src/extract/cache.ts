@@ -67,14 +67,18 @@ export async function writeManifestCache(
     generatedAt: manifest.generatedAt,
     manifest,
   };
-  await fs.writeFile(manifestCachePath(options.cacheDir), `${JSON.stringify(record, null, 2)}\n`, "utf8");
+  await fs.writeFile(
+    manifestCachePath(options.cacheDir),
+    `${JSON.stringify(record, null, 2)}\n`,
+    "utf8",
+  );
 }
 
 export async function readRemoteCache<T>(
   cacheDir: string,
   provider: string,
   key: string,
-): Promise<ChangelogRemoteCacheRecord & { payload: T } | undefined> {
+): Promise<(ChangelogRemoteCacheRecord & { payload: T }) | undefined> {
   try {
     const raw = await fs.readFile(remoteCachePath(cacheDir, provider, key), "utf8");
     return JSON.parse(raw) as ChangelogRemoteCacheRecord & { payload: T };

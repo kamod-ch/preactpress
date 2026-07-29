@@ -54,12 +54,12 @@ The check command exits with code `0` when no errors are found and a non-zero co
 Write a stable JSON report for dashboards or PR comments:
 
 ```yaml
-      - run: pnpm exec preactpress check --format json --output reports/docs-check.json
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: docs-check
-          path: reports/docs-check.json
+- run: pnpm exec preactpress check --format json --output reports/docs-check.json
+- uses: actions/upload-artifact@v4
+  if: always()
+  with:
+    name: docs-check
+    path: reports/docs-check.json
 ```
 
 Example JSON shape:
@@ -85,7 +85,7 @@ Example JSON shape:
 Treat warnings as CI failures when you want zero tolerance for missing descriptions, orphan pages, or unknown code languages:
 
 ```yaml
-      - run: pnpm exec preactpress check --strict
+- run: pnpm exec preactpress check --strict
 ```
 
 Combine with site config:
@@ -103,7 +103,7 @@ The CLI `--strict` flag applies the same behavior for one-off runs.
 By default, `preactpress check` does not perform network requests. Enable external verification only when you explicitly want it:
 
 ```yaml
-      - run: pnpm exec preactpress check --external
+- run: pnpm exec preactpress check --external
 ```
 
 Use this sparingly in CI to avoid flaky third-party endpoints and unnecessary network access.
@@ -113,26 +113,26 @@ Use this sparingly in CI to avoid flaky third-party endpoints and unnecessary ne
 Run the check against a package path:
 
 ```yaml
-      - run: pnpm exec preactpress check ./packages/docs --format json --output reports/docs-check.json
+- run: pnpm exec preactpress check ./packages/docs --format json --output reports/docs-check.json
 ```
 
 Or from the site package:
 
 ```yaml
-      - working-directory: packages/docs
-        run: pnpm run check
+- working-directory: packages/docs
+  run: pnpm run check
 ```
 
 ## Recommended release pipeline
 
 ```yaml
-      - run: pnpm exec preactpress check --strict --format json --output reports/docs-check.json
-      - run: pnpm exec preactpress build
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: docs-check
-          path: reports/docs-check.json
+- run: pnpm exec preactpress check --strict --format json --output reports/docs-check.json
+- run: pnpm exec preactpress build
+- uses: actions/upload-artifact@v4
+  if: always()
+  with:
+    name: docs-check
+    path: reports/docs-check.json
 ```
 
 See also [GitHub Actions](/examples/github-actions), [Deploy](/guide/deploy), and [CLI and validation](/guide/commands).

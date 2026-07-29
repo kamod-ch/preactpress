@@ -10,10 +10,10 @@ List endpoints return a page of results plus metadata so you can walk the full c
 
 ## Query parameters
 
-| Parameter | Default | Description                          |
-| --------- | ------- | ------------------------------------ |
-| `page`    | `1`     | 1-based page index                   |
-| `limit`   | `20`    | Page size (maximum `100`)            |
+| Parameter | Default | Description               |
+| --------- | ------- | ------------------------- |
+| `page`    | `1`     | 1-based page index        |
+| `limit`   | `20`    | Page size (maximum `100`) |
 
 ## Response shape
 

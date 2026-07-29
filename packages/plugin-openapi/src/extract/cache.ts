@@ -55,5 +55,9 @@ export async function writeCache(
     generatedAt: manifest.generatedAt,
     manifest,
   };
-  await fs.writeFile(cacheFilePath(options.cacheDir), `${JSON.stringify(record, null, 2)}\n`, "utf8");
+  await fs.writeFile(
+    cacheFilePath(options.cacheDir),
+    `${JSON.stringify(record, null, 2)}\n`,
+    "utf8",
+  );
 }

@@ -2,11 +2,11 @@
 
 Official, copy-ready workflow templates for PreactPress sites.
 
-| File | Purpose |
-| ---- | ------- |
-| [`check.yml`](./check.yml) | Pull request checks: `preactpress check`, build, JSON report artifact |
-| [`pages.yml`](./pages.yml) | Build and deploy to GitHub Pages |
-| [`node-matrix.yml`](./node-matrix.yml) | Node.js 20/22 matrix for check and build |
+| File                                   | Purpose                                                               |
+| -------------------------------------- | --------------------------------------------------------------------- |
+| [`check.yml`](./check.yml)             | Pull request checks: `preactpress check`, build, JSON report artifact |
+| [`pages.yml`](./pages.yml)             | Build and deploy to GitHub Pages                                      |
+| [`node-matrix.yml`](./node-matrix.yml) | Node.js 20/22 matrix for check and build                              |
 
 ## Quick start
 

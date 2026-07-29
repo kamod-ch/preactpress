@@ -53,14 +53,21 @@ function mapGitHubRelease(release: GitHubReleasePayload): RawChangelogRelease {
   };
 }
 
-async function fetchGitHubReleases(context: ProviderContext, repository: string): Promise<GitHubReleasePayload[]> {
+async function fetchGitHubReleases(
+  context: ProviderContext,
+  repository: string,
+): Promise<GitHubReleasePayload[]> {
   const fetchFn = context.fetch ?? fetch;
   const token = resolveToken(context);
   const cacheKey = `releases:${repository}`;
   const remoteCacheDir = `${context.cacheDir}/remote-cache`;
 
   if (context.offline) {
-    const cached = await readRemoteCache<GitHubReleasePayload[]>(remoteCacheDir, "github", cacheKey);
+    const cached = await readRemoteCache<GitHubReleasePayload[]>(
+      remoteCacheDir,
+      "github",
+      cacheKey,
+    );
     if (cached) return cached.payload;
     throw new ChangelogOfflineError(
       "github",
@@ -110,11 +117,10 @@ async function fetchGitHubReleases(context: ProviderContext, repository: string)
   if (!response.ok) {
     if (cached) return cached.payload;
     if (response.status === 403) {
-      throw new ChangelogRateLimitError(
-        "github",
-        formatRateLimitMessage(remainingNum, resetAt),
-        { resetAt, remaining: remainingNum },
-      );
+      throw new ChangelogRateLimitError("github", formatRateLimitMessage(remainingNum, resetAt), {
+        resetAt,
+        remaining: remainingNum,
+      });
     }
     throw new Error(
       `changelogPlugin: GitHub API ${response.status} ${response.statusText} for ${repository}`,
@@ -149,8 +155,6 @@ export const githubChangelogProvider: ChangelogProvider = {
       throw new Error("changelogPlugin: `repository` is required for the github provider.");
     }
     const releases = await fetchGitHubReleases(context, repository);
-    return releases
-      .filter((release) => !release.draft)
-      .map(mapGitHubRelease);
+    return releases.filter((release) => !release.draft).map(mapGitHubRelease);
   },
 };

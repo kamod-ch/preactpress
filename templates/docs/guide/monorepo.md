@@ -35,16 +35,16 @@ Each workspace gets a route prefix (`/ui`, `/icons`, `/hooks`). Markdown files i
 
 ## Features
 
-| Feature | Behavior |
-|---------|----------|
-| Workspace switcher | Header dropdown with package name and version |
-| Shared navigation | `themeConfig.nav` applies site-wide |
-| Sidebar per workspace | Path-prefix sidebars or `workspace.sidebar` |
-| Search | Shared index with `workspace` filter |
-| Package version | Read from each `package.json` |
-| Edit / source links | Per-workspace patterns or GitHub defaults |
-| Changelog | Document in workspace docs or link to `CHANGELOG.md` |
-| Version mode | `project` uses site `versions`; `package` shows package versions |
+| Feature               | Behavior                                                         |
+| --------------------- | ---------------------------------------------------------------- |
+| Workspace switcher    | Header dropdown with package name and version                    |
+| Shared navigation     | `themeConfig.nav` applies site-wide                              |
+| Sidebar per workspace | Path-prefix sidebars or `workspace.sidebar`                      |
+| Search                | Shared index with `workspace` filter                             |
+| Package version       | Read from each `package.json`                                    |
+| Edit / source links   | Per-workspace patterns or GitHub defaults                        |
+| Changelog             | Document in workspace docs or link to `CHANGELOG.md`             |
+| Version mode          | `project` uses site `versions`; `package` shows package versions |
 
 ## Package manager discovery
 

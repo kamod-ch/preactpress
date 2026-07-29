@@ -6,7 +6,10 @@ import { renderOpenApiDocs } from "../src/render/markdown.js";
 import { OpenApiParseError } from "../src/extract/parse.js";
 import { slugifySegment } from "@preactpress/plugin-typedoc";
 
-const fixtureRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../fixtures/kamod-tasks");
+const fixtureRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../fixtures/kamod-tasks",
+);
 
 describe("generateOpenApiDocs", () => {
   it("parses a realistic YAML OpenAPI 3.x spec with refs and security", async () => {
@@ -20,7 +23,9 @@ describe("generateOpenApiDocs", () => {
     expect(Object.keys(result.manifest.operations)).toContain("listProjects");
     expect(Object.keys(result.manifest.schemas)).toContain("Project");
     expect(result.manifest.securitySchemes.bearerAuth?.scheme).toBe("bearer");
-    expect(result.manifest.tags.map((tag) => tag.name)).toEqual(expect.arrayContaining(["Projects", "Tasks", "Users"]));
+    expect(result.manifest.tags.map((tag) => tag.name)).toEqual(
+      expect.arrayContaining(["Projects", "Tasks", "Users"]),
+    );
   });
 
   it("supports JSON input files", async () => {
@@ -48,7 +53,9 @@ describe("generateOpenApiDocs", () => {
     expect(listProjects?.markdown).toContain("### TypeScript");
     expect(listProjects?.markdown).toContain("| `401` |");
 
-    const createTask = result.pages.find((page) => page.title === "POST /projects/{projectId}/tasks");
+    const createTask = result.pages.find(
+      (page) => page.title === "POST /projects/{projectId}/tasks",
+    );
     expect(createTask?.markdown).toContain("## Request body");
     expect(createTask?.markdown).toContain("application/json");
   });
@@ -77,7 +84,9 @@ describe("generateOpenApiDocs", () => {
       opts,
     );
 
-    expect(Object.keys(first.manifest.operations).sort()).toEqual(Object.keys(second.manifest.operations).sort());
+    expect(Object.keys(first.manifest.operations).sort()).toEqual(
+      Object.keys(second.manifest.operations).sort(),
+    );
     expect(slugifySegment("listProjects")).toBe("list-projects");
     expect(first.manifest.operations.listProjects?.route).toBe("/api/operations/list-projects");
   });
@@ -97,7 +106,11 @@ describe("generateOpenApiDocs", () => {
   it("rejects unsupported OpenAPI versions", async () => {
     await expect(
       generateOpenApiDocs(
-        { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache-invalid") },
+        {
+          root: fixtureRoot,
+          srcDir: fixtureRoot,
+          cacheDir: path.join(fixtureRoot, ".cache-invalid"),
+        },
         { input: "openapi-v2.json", route: "/api", cache: false },
       ),
     ).rejects.toBeInstanceOf(OpenApiParseError);
@@ -107,7 +120,11 @@ describe("generateOpenApiDocs", () => {
 describe("renderOpenApiDocs", () => {
   it("re-renders pages from an existing manifest", async () => {
     const generated = await generateOpenApiDocs(
-      { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache-rerender") },
+      {
+        root: fixtureRoot,
+        srcDir: fixtureRoot,
+        cacheDir: path.join(fixtureRoot, ".cache-rerender"),
+      },
       { input: "openapi.yaml", route: "/api", cache: false },
     );
     const rendered = renderOpenApiDocs(generated.manifest);

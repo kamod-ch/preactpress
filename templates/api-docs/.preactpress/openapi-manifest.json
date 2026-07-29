@@ -65,12 +65,8 @@
       "path": "/contacts",
       "summary": "List contacts",
       "description": "Returns a paginated list of contacts visible to the authenticated workspace.",
-      "tags": [
-        "Contacts"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Contacts"],
+      "security": ["bearerAuth"],
       "parameters": [
         {
           "name": "q",
@@ -100,12 +96,8 @@
       "method": "post",
       "path": "/contacts",
       "summary": "Create a contact",
-      "tags": [
-        "Contacts"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Contacts"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "requestBody": {
         "required": true,
@@ -135,12 +127,8 @@
       "method": "get",
       "path": "/contacts/{contactId}",
       "summary": "Get contact by ID",
-      "tags": [
-        "Contacts"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Contacts"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "responses": [
         {
@@ -162,12 +150,8 @@
       "method": "get",
       "path": "/conversations",
       "summary": "List conversations",
-      "tags": [
-        "Conversations"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Conversations"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "responses": [
         {
@@ -189,12 +173,8 @@
       "method": "post",
       "path": "/conversations",
       "summary": "Start a conversation",
-      "tags": [
-        "Conversations"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Conversations"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "requestBody": {
         "required": true,
@@ -218,12 +198,8 @@
       "method": "get",
       "path": "/conversations/{conversationId}",
       "summary": "Get conversation by ID",
-      "tags": [
-        "Conversations"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Conversations"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "responses": [
         {
@@ -245,12 +221,8 @@
       "method": "get",
       "path": "/messages",
       "summary": "List messages",
-      "tags": [
-        "Messages"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Messages"],
+      "security": ["bearerAuth"],
       "parameters": [
         {
           "name": "conversation_id",
@@ -276,12 +248,8 @@
       "method": "post",
       "path": "/messages",
       "summary": "Send a message",
-      "tags": [
-        "Messages"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Messages"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "requestBody": {
         "required": true,
@@ -305,12 +273,8 @@
       "method": "get",
       "path": "/groups",
       "summary": "List groups",
-      "tags": [
-        "Groups"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Groups"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "responses": [
         {
@@ -329,12 +293,8 @@
       "method": "post",
       "path": "/groups",
       "summary": "Create a group",
-      "tags": [
-        "Groups"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Groups"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "requestBody": {
         "required": true,
@@ -358,12 +318,8 @@
       "method": "post",
       "path": "/attachments",
       "summary": "Upload an attachment",
-      "tags": [
-        "Attachments"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Attachments"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "requestBody": {
         "required": true,
@@ -387,12 +343,8 @@
       "method": "get",
       "path": "/attachments/{attachmentId}",
       "summary": "Download an attachment",
-      "tags": [
-        "Attachments"
-      ],
-      "security": [
-        "bearerAuth"
-      ],
+      "tags": ["Attachments"],
+      "security": ["bearerAuth"],
       "parameters": [],
       "responses": [
         {
@@ -439,18 +391,8 @@
           "required": false
         }
       ],
-      "required": [
-        "id",
-        "email",
-        "name"
-      ],
-      "tags": [
-        "schema",
-        "Contact",
-        "id",
-        "email",
-        "name"
-      ]
+      "required": ["id", "email", "name"],
+      "tags": ["schema", "Contact", "id", "email", "name"]
     },
     "CreateContactRequest": {
       "id": "CreateContactRequest",
@@ -471,16 +413,8 @@
           "required": true
         }
       ],
-      "required": [
-        "email",
-        "name"
-      ],
-      "tags": [
-        "schema",
-        "CreateContactRequest",
-        "email",
-        "name"
-      ]
+      "required": ["email", "name"],
+      "tags": ["schema", "CreateContactRequest", "email", "name"]
     },
     "ContactListResponse": {
       "id": "ContactListResponse",
@@ -512,10 +446,7 @@
         }
       ],
       "required": [],
-      "tags": [
-        "schema",
-        "ContactListResponse"
-      ]
+      "tags": ["schema", "ContactListResponse"]
     },
     "Conversation": {
       "id": "Conversation",
@@ -538,11 +469,7 @@
           "name": "status",
           "type": "enum",
           "required": true,
-          "enum": [
-            "open",
-            "closed",
-            "pending"
-          ]
+          "enum": ["open", "closed", "pending"]
         },
         {
           "name": "contact_id",
@@ -550,18 +477,8 @@
           "required": false
         }
       ],
-      "required": [
-        "id",
-        "subject",
-        "status"
-      ],
-      "tags": [
-        "schema",
-        "Conversation",
-        "id",
-        "subject",
-        "status"
-      ]
+      "required": ["id", "subject", "status"],
+      "tags": ["schema", "Conversation", "id", "subject", "status"]
     },
     "CreateConversationRequest": {
       "id": "CreateConversationRequest",
@@ -581,16 +498,8 @@
           "required": true
         }
       ],
-      "required": [
-        "contact_id",
-        "subject"
-      ],
-      "tags": [
-        "schema",
-        "CreateConversationRequest",
-        "contact_id",
-        "subject"
-      ]
+      "required": ["contact_id", "subject"],
+      "tags": ["schema", "CreateConversationRequest", "contact_id", "subject"]
     },
     "ConversationListResponse": {
       "id": "ConversationListResponse",
@@ -622,10 +531,7 @@
         }
       ],
       "required": [],
-      "tags": [
-        "schema",
-        "ConversationListResponse"
-      ]
+      "tags": ["schema", "ConversationListResponse"]
     },
     "Message": {
       "id": "Message",
@@ -653,24 +559,11 @@
           "name": "direction",
           "type": "enum",
           "required": false,
-          "enum": [
-            "inbound",
-            "outbound"
-          ]
+          "enum": ["inbound", "outbound"]
         }
       ],
-      "required": [
-        "id",
-        "conversation_id",
-        "body"
-      ],
-      "tags": [
-        "schema",
-        "Message",
-        "id",
-        "conversation_id",
-        "body"
-      ]
+      "required": ["id", "conversation_id", "body"],
+      "tags": ["schema", "Message", "id", "conversation_id", "body"]
     },
     "CreateMessageRequest": {
       "id": "CreateMessageRequest",
@@ -690,16 +583,8 @@
           "required": true
         }
       ],
-      "required": [
-        "conversation_id",
-        "body"
-      ],
-      "tags": [
-        "schema",
-        "CreateMessageRequest",
-        "conversation_id",
-        "body"
-      ]
+      "required": ["conversation_id", "body"],
+      "tags": ["schema", "CreateMessageRequest", "conversation_id", "body"]
     },
     "MessageListResponse": {
       "id": "MessageListResponse",
@@ -731,10 +616,7 @@
         }
       ],
       "required": [],
-      "tags": [
-        "schema",
-        "MessageListResponse"
-      ]
+      "tags": ["schema", "MessageListResponse"]
     },
     "Group": {
       "id": "Group",
@@ -759,16 +641,8 @@
           "required": false
         }
       ],
-      "required": [
-        "id",
-        "name"
-      ],
-      "tags": [
-        "schema",
-        "Group",
-        "id",
-        "name"
-      ]
+      "required": ["id", "name"],
+      "tags": ["schema", "Group", "id", "name"]
     },
     "CreateGroupRequest": {
       "id": "CreateGroupRequest",
@@ -789,14 +663,8 @@
           "items": "string"
         }
       ],
-      "required": [
-        "name"
-      ],
-      "tags": [
-        "schema",
-        "CreateGroupRequest",
-        "name"
-      ]
+      "required": ["name"],
+      "tags": ["schema", "CreateGroupRequest", "name"]
     },
     "GroupListResponse": {
       "id": "GroupListResponse",
@@ -828,10 +696,7 @@
         }
       ],
       "required": [],
-      "tags": [
-        "schema",
-        "GroupListResponse"
-      ]
+      "tags": ["schema", "GroupListResponse"]
     },
     "Attachment": {
       "id": "Attachment",
@@ -861,20 +726,8 @@
           "required": true
         }
       ],
-      "required": [
-        "id",
-        "filename",
-        "content_type",
-        "size"
-      ],
-      "tags": [
-        "schema",
-        "Attachment",
-        "id",
-        "filename",
-        "content_type",
-        "size"
-      ]
+      "required": ["id", "filename", "content_type", "size"],
+      "tags": ["schema", "Attachment", "id", "filename", "content_type", "size"]
     }
   },
   "tree": [

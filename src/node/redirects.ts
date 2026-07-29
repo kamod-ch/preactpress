@@ -24,7 +24,9 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 function isRouteMap(value: Record<string, unknown>): boolean {
   const keys = Object.keys(value);
   if (keys.length === 0) return true;
-  return keys.every((key) => key.startsWith("/")) && keys.every((key) => typeof value[key] === "string");
+  return (
+    keys.every((key) => key.startsWith("/")) && keys.every((key) => typeof value[key] === "string")
+  );
 }
 
 export function isRedirectsOptions(value: unknown): value is {
@@ -230,10 +232,7 @@ export function redirectFromRoutes(redirects: ResolvedRedirects): Set<string> {
   return redirects.fromRoutes;
 }
 
-export function filterRoutesForDiscovery(
-  routes: string[],
-  redirects: ResolvedRedirects,
-): string[] {
+export function filterRoutesForDiscovery(routes: string[], redirects: ResolvedRedirects): string[] {
   const excluded = redirectFromRoutes(redirects);
   return routes.filter((route) => !excluded.has(route));
 }

@@ -1,8 +1,5 @@
 import type { MigrationAdapter, MigrationOptions, MigrationPlan } from "../../types.js";
-import {
-  detectVitePressProject,
-  planVitePressMigration,
-} from "./analyze.js";
+import { detectVitePressProject, planVitePressMigration } from "./analyze.js";
 
 export const vitepressAdapter: MigrationAdapter = {
   id: "vitepress",

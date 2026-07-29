@@ -3,11 +3,7 @@ import path from "node:path";
 import type { PageView } from "../client/types.js";
 import type { Logger } from "vite";
 import { shouldIgnoreDeadLink } from "../shared/deadLinks.js";
-import {
-  flattenNavLeafItems,
-  flattenSidebarItems,
-  type SidebarConfig,
-} from "../shared/sidebar.js";
+import { flattenNavLeafItems, flattenSidebarItems, type SidebarConfig } from "../shared/sidebar.js";
 import { localeFromRoute } from "../shared/locale.js";
 import { versionFromRoute } from "../shared/version.js";
 import { isDraftPage } from "../shared/pageMeta.js";
@@ -55,10 +51,7 @@ export function markdownOutPath(route: string): string {
   return `${trimmed}.md`;
 }
 
-export function isRouteExcluded(
-  route: string,
-  exclude: string[],
-): boolean {
+export function isRouteExcluded(route: string, exclude: string[]): boolean {
   return shouldIgnoreDeadLink(route, exclude, { from: route, route });
 }
 
@@ -141,11 +134,7 @@ function apiReferenceRoutes(entries: AiPageEntry[]): string[] {
     .map((entry) => entry.route);
 }
 
-function formatPageMarkdownBlock(
-  config: ResolvedConfig,
-  route: string,
-  page: PageView,
-): string {
+function formatPageMarkdownBlock(config: ResolvedConfig, route: string, page: PageView): string {
   const url = config.site.url ? absoluteUrl(config, route) : route;
   const title = page.title ?? route;
   const description = page.description ?? "";
@@ -162,7 +151,7 @@ function formatPageMarkdownBlock(
   const body =
     page.kind === "markdown" && page.markdown
       ? page.markdown.trim()
-      : page.description?.trim() ?? "";
+      : (page.description?.trim() ?? "");
 
   const heading = title && !body.startsWith("# ") ? `# ${title}\n\n` : "";
   return `---\n${metaLines.join("\n")}\n---\n\n${heading}${body}`.trim();
@@ -174,12 +163,7 @@ export function generateLlmsTxt(
   bundleNames: string[] = [],
 ): string {
   const { site, themeConfig, i18n, versions } = config;
-  const lines: string[] = [
-    `# ${site.title}`,
-    "",
-    `> ${site.description}`,
-    "",
-  ];
+  const lines: string[] = [`# ${site.title}`, "", `> ${site.description}`, ""];
 
   if (site.url) {
     lines.push(`Site: ${site.url}`, "");
@@ -262,7 +246,7 @@ export function generateLlmsTxt(
     lines.push("## Locales", "");
     for (const locale of i18n.locales) {
       const url =
-        site.url && locale.link ? absoluteUrl(config, locale.link) : locale.link ?? locale.key;
+        site.url && locale.link ? absoluteUrl(config, locale.link) : (locale.link ?? locale.key);
       lines.push(`- ${locale.label} (${locale.lang}): ${url}`);
     }
     lines.push("");
@@ -288,10 +272,7 @@ function appendLlmsPageLink(
   }
 }
 
-export function generateLlmsFullTxt(
-  config: ResolvedConfig,
-  entries: AiPageEntry[],
-): string {
+export function generateLlmsFullTxt(config: ResolvedConfig, entries: AiPageEntry[]): string {
   const ordered = orderedRoutes(entries, config.themeConfig, config.i18n, config.versions);
   const entryByRoute = new Map(entries.map((entry) => [entry.route, entry]));
   const blocks: string[] = [];
@@ -410,10 +391,7 @@ export function pageMarkdownForCopy(page: PageView): string | undefined {
   return body;
 }
 
-export function serializablePageForClient(
-  page: PageView,
-  includeMarkdown: boolean,
-): unknown {
+export function serializablePageForClient(page: PageView, includeMarkdown: boolean): unknown {
   if (page.kind === "markdown") {
     if (!includeMarkdown && page.markdown !== undefined) {
       const { markdown: _markdown, ...rest } = page;
@@ -443,9 +421,12 @@ export async function writeAiExports(
       await fs.mkdir(path.dirname(outPath), { recursive: true });
       await fs.writeFile(outPath, formatPageMarkdownBlock(config, route, page) + "\n", "utf8");
     }
-    logger.info(`wrote ${entries.filter((e) => e.page.kind === "markdown" && e.page.markdown).length} page markdown file(s)`, {
-      timestamp: true,
-    });
+    logger.info(
+      `wrote ${entries.filter((e) => e.page.kind === "markdown" && e.page.markdown).length} page markdown file(s)`,
+      {
+        timestamp: true,
+      },
+    );
   }
 
   if (ai.llmsFullTxt) {

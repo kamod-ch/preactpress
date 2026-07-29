@@ -49,13 +49,20 @@ export function renderCurlExample(manifest: OpenApiManifest, operation: OpenApiO
         ? `\n  -H "Content-Type: ${operation.requestBody.contentType}"`
         : "";
 
-  return [`curl -X ${operation.method.toUpperCase()} "${url}" \\`, ...headers.map((line) => `  ${line} \\`), body]
+  return [
+    `curl -X ${operation.method.toUpperCase()} "${url}" \\`,
+    ...headers.map((line) => `  ${line} \\`),
+    body,
+  ]
     .filter(Boolean)
     .join("\n")
     .replace(/ \\$/, "");
 }
 
-export function renderJavaScriptExample(manifest: OpenApiManifest, operation: OpenApiOperation): string {
+export function renderJavaScriptExample(
+  manifest: OpenApiManifest,
+  operation: OpenApiOperation,
+): string {
   const url = `${serverUrl(manifest)}${samplePath(operation.path, operation)}${sampleQuery(operation)}`;
   const headers: Record<string, string> = {};
   for (const param of operation.parameters.filter((entry) => entry.in === "header")) {
@@ -95,7 +102,10 @@ export function renderJavaScriptExample(manifest: OpenApiManifest, operation: Op
     .join("\n");
 }
 
-export function renderTypeScriptExample(manifest: OpenApiManifest, operation: OpenApiOperation): string {
+export function renderTypeScriptExample(
+  manifest: OpenApiManifest,
+  operation: OpenApiOperation,
+): string {
   const js = renderJavaScriptExample(manifest, operation);
   return `${js}\n\n// Tip: import generated types from your OpenAPI client SDK.`;
 }

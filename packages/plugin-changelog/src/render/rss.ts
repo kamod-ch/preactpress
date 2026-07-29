@@ -38,7 +38,10 @@ export function renderChangelogAtomFeed(
 ): string {
   const baseUrl = options.siteUrl.replace(/\/+$/, "");
   const entries = manifest.releases
-    .filter((release) => release.route.startsWith(`${manifest.baseRoute}/`) && release.date && !release.draft)
+    .filter(
+      (release) =>
+        release.route.startsWith(`${manifest.baseRoute}/`) && release.date && !release.draft,
+    )
     .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))
     .slice(0, options.limit ?? manifest.releases.length)
     .map((release) => {

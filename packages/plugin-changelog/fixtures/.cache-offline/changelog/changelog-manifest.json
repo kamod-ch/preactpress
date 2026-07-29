@@ -40,10 +40,7 @@
             ]
           }
         ],
-        "contributors": [
-          "devuser",
-          "maintainer"
-        ],
+        "contributors": ["devuser", "maintainer"],
         "sourceUrl": "https://github.com/kamod-ch/preactpress/releases/tag/v2.2.1",
         "prerelease": false,
         "draft": false
@@ -84,9 +81,7 @@
             ]
           }
         ],
-        "contributors": [
-          "maintainer"
-        ],
+        "contributors": ["maintainer"],
         "sourceUrl": "https://github.com/kamod-ch/preactpress/releases/tag/v2.2.0",
         "migrationGuideUrl": "https://example.com/docs/migrate-2.2",
         "prerelease": false,
@@ -110,9 +105,7 @@
             ]
           }
         ],
-        "contributors": [
-          "beta-tester"
-        ],
+        "contributors": ["beta-tester"],
         "sourceUrl": "https://github.com/kamod-ch/preactpress/releases/tag/v2.3.0-beta.1",
         "prerelease": true,
         "draft": false

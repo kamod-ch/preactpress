@@ -20,7 +20,10 @@ export function componentManifestVirtualPlugin(manifest: ComponentManifest): Plu
   };
 }
 
-export async function writeComponentManifest(configDir: string, manifest: ComponentManifest): Promise<string> {
+export async function writeComponentManifest(
+  configDir: string,
+  manifest: ComponentManifest,
+): Promise<string> {
   await fs.mkdir(configDir, { recursive: true });
   const target = path.join(configDir, "component-manifest.json");
   await fs.writeFile(target, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");

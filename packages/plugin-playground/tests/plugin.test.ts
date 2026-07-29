@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { resolvePlaygroundFiles, serializeFilesForDisplay } from "../src/files.js";
-import { createDependencyContext, resolveImportMap, findDisallowedImports } from "../src/dependencies.js";
+import {
+  createDependencyContext,
+  resolveImportMap,
+  findDisallowedImports,
+} from "../src/dependencies.js";
 import { renderPlaygroundFallbackHtml, escapeHtml } from "../src/static.js";
 import { playgroundPlugin } from "../src/index.js";
 
@@ -42,7 +46,15 @@ describe("resolveImportMap", () => {
   it("maps workspace packages when configured", () => {
     const ctx = createDependencyContext({
       workspacePackages: { "@kamod/ui": "https://esm.sh/example" },
-      dependencyAllowlist: ["@kamod/ui", "preact", "preact/hooks", "preact/jsx-runtime", "preact/compat", "@preact/signals", "@preact/signals-core"],
+      dependencyAllowlist: [
+        "@kamod/ui",
+        "preact",
+        "preact/hooks",
+        "preact/jsx-runtime",
+        "preact/compat",
+        "@preact/signals",
+        "@preact/signals-core",
+      ],
     });
     const { imports, errors } = resolveImportMap({ "@kamod/ui": "workspace" }, ctx);
     expect(errors).toEqual([]);
@@ -82,10 +94,7 @@ describe("escapeHtml", () => {
 
 describe("serializeFilesForDisplay", () => {
   it("joins multi-file sources with path comments", () => {
-    const text = serializeFilesForDisplay(
-      { "/App.tsx": "a", "/components.tsx": "b" },
-      "/App.tsx",
-    );
+    const text = serializeFilesForDisplay({ "/App.tsx": "a", "/components.tsx": "b" }, "/App.tsx");
     expect(text).toContain("// /App.tsx");
     expect(text).toContain("// /components.tsx");
   });

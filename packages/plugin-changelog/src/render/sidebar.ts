@@ -17,7 +17,10 @@ export function sidebarFromChangelogManifest(manifest: ChangelogManifest): Sideb
   return [{ text: "Changelog", items }];
 }
 
-export function navFromChangelogManifest(manifest: ChangelogManifest): { text: string; link: string } {
+export function navFromChangelogManifest(manifest: ChangelogManifest): {
+  text: string;
+  link: string;
+} {
   return { text: "Changelog", link: manifest.baseRoute };
 }
 
@@ -29,7 +32,9 @@ export function versionSidebarsFromManifest(
 
   for (const prefix of versionPrefixes) {
     const baseRoute = `${prefix.replace(/\/+$/, "")}${manifest.baseRoute}`;
-    const releases = manifest.releases.filter((release) => release.route.startsWith(`${baseRoute}/`));
+    const releases = manifest.releases.filter((release) =>
+      release.route.startsWith(`${baseRoute}/`),
+    );
     if (!releases.length) continue;
     result[`${baseRoute}/`] = [
       {

@@ -15,4 +15,9 @@ export function resolveProvider(id: ChangelogProviderId): ChangelogProvider {
 }
 
 export { changesetsChangelogProvider, githubChangelogProvider, localChangelogProvider };
-export type { ChangelogProvider, ProviderContext, GitHubReleasePayload, GitLabReleasePayload } from "./types.js";
+export type {
+  ChangelogProvider,
+  ProviderContext,
+  GitHubReleasePayload,
+  GitLabReleasePayload,
+} from "./types.js";

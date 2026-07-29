@@ -27,8 +27,8 @@ export default function MarketingHero() {
           The documentation framework for Preact libraries, APIs, and AI coding agents
         </h1>
         <p class="pp-mkt-hero-lead">
-          Ship library docs with MDX, TypeDoc, live playgrounds, validation, and AI-ready exports
-          — all static, all Preact.
+          Ship library docs with MDX, TypeDoc, live playgrounds, validation, and AI-ready exports —
+          all static, all Preact.
         </p>
         <div class="pp-mkt-actions">
           {actions.map((action) => (

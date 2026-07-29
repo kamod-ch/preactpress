@@ -4,12 +4,16 @@
   "description": "Official changelog integration plugin for PreactPress (local, GitHub Releases, Changesets)",
   "keywords": [
     "changelog",
-    "github-releases",
     "changesets",
-    "preactpress",
-    "plugin"
+    "github-releases",
+    "plugin",
+    "preactpress"
   ],
   "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -25,18 +29,14 @@
       "default": "./dist/providers/types.js"
     }
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepare": "pnpm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
-  },
-  "peerDependencies": {
-    "@kamod-ch/preactpress": ">=2.2.0"
   },
   "dependencies": {
     "@preactpress/plugin-typedoc": "workspace:*"
@@ -47,10 +47,10 @@
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   },
+  "peerDependencies": {
+    "@kamod-ch/preactpress": ">=2.2.0"
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

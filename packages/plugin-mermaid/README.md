@@ -51,8 +51,8 @@ import "@preactpress/plugin-mermaid/style.css";
 
 ### `mermaidPlugin(options?)`
 
-| Option | Type | Default | Description |
-| ------ | ---- | ------- | ----------- |
+| Option      | Type       | Default       | Description                              |
+| ----------- | ---------- | ------------- | ---------------------------------------- |
 | `languages` | `string[]` | `["mermaid"]` | Fence language ids handled by the plugin |
 
 ### `renderMermaidFenceHtml(source: string)`
@@ -75,11 +75,11 @@ pnpm --filter @preactpress/plugin-mermaid test
 
 ## Plugin hooks used
 
-| Hook | Purpose |
-| ---- | ------- |
-| `transformMarkdown` | Normalizes ` ```MERMAID ` fences |
-| `transformFence` | Emits accessible static HTML for Mermaid blocks |
-| `client` | Registers client-side SVG rendering |
+| Hook                | Purpose                                         |
+| ------------------- | ----------------------------------------------- |
+| `transformMarkdown` | Normalizes ` ```MERMAID ` fences                |
+| `transformFence`    | Emits accessible static HTML for Mermaid blocks |
+| `client`            | Registers client-side SVG rendering             |
 
 ## License
 

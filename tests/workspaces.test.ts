@@ -30,7 +30,9 @@ function monorepoSite() {
       },
       themeConfig: {
         sidebar: {
-          "/ui/": [{ text: "UI", items: [{ text: "Getting started", link: "/ui/getting-started" }] }],
+          "/ui/": [
+            { text: "UI", items: [{ text: "Getting started", link: "/ui/getting-started" }] },
+          ],
         },
       },
     },
@@ -85,11 +87,11 @@ describe("workspaces", () => {
         routeSet,
       ),
     ).toBe("/icons");
-    expect(routePathKeyWithWorkspace("/ui/getting-started", site.i18n, site.versions, site.workspaces)).toBe(
-      "/getting-started",
-    );
-    expect(workspaceFromRoute("/hooks/use-counter", site.workspaces, site.i18n, site.versions)?.id).toBe(
-      "hooks",
-    );
+    expect(
+      routePathKeyWithWorkspace("/ui/getting-started", site.i18n, site.versions, site.workspaces),
+    ).toBe("/getting-started");
+    expect(
+      workspaceFromRoute("/hooks/use-counter", site.workspaces, site.i18n, site.versions)?.id,
+    ).toBe("hooks");
   });
 });

@@ -42,12 +42,12 @@ export default defineConfig({
 1. Open [Vercel](https://vercel.com/new) and import your Git repository.
 2. Vercel usually detects a static project. Confirm:
 
-| Setting | Value |
-| ------- | ----- |
-| Framework Preset | Other |
-| Build Command | `pnpm run build` |
-| Output Directory | `dist` |
-| Install Command | `pnpm install` |
+| Setting          | Value            |
+| ---------------- | ---------------- |
+| Framework Preset | Other            |
+| Build Command    | `pnpm run build` |
+| Output Directory | `dist`           |
+| Install Command  | `pnpm install`   |
 
 For stricter deployments:
 
@@ -74,9 +74,9 @@ For a site in a subdirectory, set **Root Directory** in the Vercel project setti
 
 Under **Project → Settings → Environment Variables**:
 
-| Variable | Value |
-| -------- | ----- |
-| `NODE_VERSION` | `22` |
+| Variable       | Value |
+| -------------- | ----- |
+| `NODE_VERSION` | `22`  |
 
 ## Custom domains
 

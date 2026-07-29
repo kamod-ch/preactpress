@@ -10,10 +10,7 @@ import {
   parseReleaseBody,
   releaseMatchesDocVersion,
 } from "../src/extract/normalize.js";
-import {
-  ChangelogOfflineError,
-  ChangelogRateLimitError,
-} from "../src/types/index.js";
+import { ChangelogOfflineError, ChangelogRateLimitError } from "../src/types/index.js";
 import githubReleases from "../fixtures/github-releases.json";
 
 const fixtureRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../fixtures");
@@ -33,7 +30,12 @@ describe("parseKeepAChangelog", () => {
   it("parses Keep a Changelog sections with dates and categories", async () => {
     const content = await fs.readFile(path.join(fixtureRoot, "CHANGELOG.md"), "utf8");
     const releases = parseKeepAChangelog(content);
-    expect(releases.map((release) => release.version)).toEqual(["2.2.1", "2.2.0", "2.1.0", "Unreleased"]);
+    expect(releases.map((release) => release.version)).toEqual([
+      "2.2.1",
+      "2.2.0",
+      "2.1.0",
+      "Unreleased",
+    ]);
     expect(releases[0].date).toBe("2026-07-20");
     const sections = parseReleaseBody(releases[0].body);
     expect(sections.some((section) => section.kind === "fix")).toBe(true);
@@ -63,7 +65,11 @@ describe("generateChangelogDocs (local provider)", () => {
 
   it("merges pending changesets when enabled", async () => {
     const result = await generateChangelogDocs(
-      { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache-changesets") },
+      {
+        root: fixtureRoot,
+        srcDir: fixtureRoot,
+        cacheDir: path.join(fixtureRoot, ".cache-changesets"),
+      },
       {
         provider: "local",
         local: "CHANGELOG.md",
@@ -79,7 +85,12 @@ describe("generateChangelogDocs (local provider)", () => {
   });
 
   it("produces stable slugs across runs", async () => {
-    const opts = { provider: "local" as const, local: "CHANGELOG.md", route: "/changelog", cache: false };
+    const opts = {
+      provider: "local" as const,
+      local: "CHANGELOG.md",
+      route: "/changelog",
+      cache: false,
+    };
     const first = await generateChangelogDocs(
       { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache-a") },
       opts,
@@ -88,7 +99,9 @@ describe("generateChangelogDocs (local provider)", () => {
       { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache-b") },
       opts,
     );
-    expect(first.pages.map((page) => page.route).sort()).toEqual(second.pages.map((page) => page.route).sort());
+    expect(first.pages.map((page) => page.route).sort()).toEqual(
+      second.pages.map((page) => page.route).sort(),
+    );
   });
 });
 
@@ -110,28 +123,25 @@ describe("generateChangelogDocs (github provider)", () => {
     expect(fetch).toHaveBeenCalledOnce();
     expect(result.manifest.repository).toBe("kamod-ch/preactpress");
     expect(result.manifest.releases.some((release) => release.version === "2.2.1")).toBe(true);
-    expect(result.manifest.releases.find((release) => release.version === "2.2.0")?.migrationGuideUrl).toContain(
-      "migrate-2.2",
-    );
-    expect(result.manifest.releases.find((release) => release.version === "2.2.1")?.contributors).toContain(
-      "maintainer",
-    );
+    expect(
+      result.manifest.releases.find((release) => release.version === "2.2.0")?.migrationGuideUrl,
+    ).toContain("migrate-2.2");
+    expect(
+      result.manifest.releases.find((release) => release.version === "2.2.1")?.contributors,
+    ).toContain("maintainer");
   });
 
   it("uses cached payload when offline", async () => {
     const cacheDir = path.join(fixtureRoot, ".cache-offline");
     const fetch = mockGitHubFetch();
-    await generateChangelogDocs(
-      { root: fixtureRoot, srcDir: fixtureRoot, cacheDir },
-      {
-        provider: "github",
-        repository: "kamod-ch/preactpress",
-        route: "/changelog",
-        cache: true,
-        token: "test-token",
-        fetch,
-      } as Parameters<typeof generateChangelogDocs>[1] & { fetch: typeof fetch },
-    );
+    await generateChangelogDocs({ root: fixtureRoot, srcDir: fixtureRoot, cacheDir }, {
+      provider: "github",
+      repository: "kamod-ch/preactpress",
+      route: "/changelog",
+      cache: true,
+      token: "test-token",
+      fetch,
+    } as Parameters<typeof generateChangelogDocs>[1] & { fetch: typeof fetch });
 
     const offline = await generateChangelogDocs(
       { root: fixtureRoot, srcDir: fixtureRoot, cacheDir },
@@ -148,19 +158,24 @@ describe("generateChangelogDocs (github provider)", () => {
   });
 
   it("throws a readable rate-limit error", async () => {
-    const fetch = vi.fn(async () =>
-      new Response("rate limited", {
-        status: 403,
-        headers: {
-          "X-RateLimit-Remaining": "0",
-          "X-RateLimit-Reset": String(Math.floor(Date.now() / 1000) + 3600),
-        },
-      }),
+    const fetch = vi.fn(
+      async () =>
+        new Response("rate limited", {
+          status: 403,
+          headers: {
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(Math.floor(Date.now() / 1000) + 3600),
+          },
+        }),
     );
 
     await expect(
       generateChangelogDocs(
-        { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache-rate-limit") },
+        {
+          root: fixtureRoot,
+          srcDir: fixtureRoot,
+          cacheDir: path.join(fixtureRoot, ".cache-rate-limit"),
+        },
         {
           provider: "github",
           repository: "kamod-ch/preactpress",
@@ -175,7 +190,11 @@ describe("generateChangelogDocs (github provider)", () => {
   it("throws offline error without cache", async () => {
     await expect(
       generateChangelogDocs(
-        { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache-no-remote") },
+        {
+          root: fixtureRoot,
+          srcDir: fixtureRoot,
+          cacheDir: path.join(fixtureRoot, ".cache-no-remote"),
+        },
         {
           provider: "github",
           repository: "kamod-ch/preactpress",
@@ -222,14 +241,20 @@ describe("version integration", () => {
       },
     );
 
-    expect(result.pages.some((page) => page.route.startsWith("/versions/2.0/changelog/"))).toBe(true);
+    expect(result.pages.some((page) => page.route.startsWith("/versions/2.0/changelog/"))).toBe(
+      true,
+    );
   });
 });
 
 describe("renderChangelogDocs", () => {
   it("re-renders pages from an existing manifest", async () => {
     const generated = await generateChangelogDocs(
-      { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache-rerender") },
+      {
+        root: fixtureRoot,
+        srcDir: fixtureRoot,
+        cacheDir: path.join(fixtureRoot, ".cache-rerender"),
+      },
       { provider: "local", local: "CHANGELOG.md", route: "/changelog", cache: false },
     );
     const rendered = renderChangelogDocs(generated.manifest);

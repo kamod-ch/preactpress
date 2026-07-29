@@ -19,7 +19,11 @@ const VersionSwitcher: FunctionalComponent<{
         {versions.map((item) => {
           const active = item.key === current?.key || item.value === current?.value;
           const statusLabel =
-            item.status === "current" ? "current" : item.status === "archived" ? "archived" : item.status;
+            item.status === "current"
+              ? "current"
+              : item.status === "archived"
+                ? "archived"
+                : item.status;
           return (
             <a
               key={item.key}

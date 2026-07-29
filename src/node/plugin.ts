@@ -361,7 +361,10 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       if (id === VIRTUAL_CLIENT) {
         const modules = collectPluginClientModules(site.plugins ?? []);
         const imports = modules
-          .map((entry, index) => `import * as clientPlugin${index} from ${JSON.stringify(entry.client)};`)
+          .map(
+            (entry, index) =>
+              `import * as clientPlugin${index} from ${JSON.stringify(entry.client)};`,
+          )
           .join("\n");
         const entries = modules
           .map(

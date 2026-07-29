@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-defineProps({ text: String })
+defineProps({ text: String });
 </script>

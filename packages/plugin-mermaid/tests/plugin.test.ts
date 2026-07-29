@@ -16,11 +16,10 @@ describe("renderMermaidFenceHtml", () => {
 describe("mermaidPlugin", () => {
   it("normalizes MERMAID fence language ids", async () => {
     const source = "```MERMAID\ngraph TD\n```";
-    const next = await runTransformMarkdown(
-      [mermaidPlugin()],
-      source,
-      { route: "/docs", file: "/docs/page.md" },
-    );
+    const next = await runTransformMarkdown([mermaidPlugin()], source, {
+      route: "/docs",
+      file: "/docs/page.md",
+    });
     expect(next).toContain("```mermaid");
     expect(source).toContain("```MERMAID");
   });
@@ -30,26 +29,20 @@ describe("mermaidPlugin", () => {
   });
 
   it("renders mermaid fences through transformFence", async () => {
-    const html = await runTransformFence(
-      [mermaidPlugin()],
-      "mermaid",
-      "graph TD\n  A --> B",
-      "",
-      { route: "/", file: "/index.md" },
-    );
+    const html = await runTransformFence([mermaidPlugin()], "mermaid", "graph TD\n  A --> B", "", {
+      route: "/",
+      file: "/index.md",
+    });
     expect(html).toContain('class="pp-mermaid"');
     expect(html).toContain("graph TD");
     expect(html).toContain("A --&gt; B");
   });
 
   it("ignores non-mermaid languages", async () => {
-    const html = await runTransformFence(
-      [mermaidPlugin()],
-      "typescript",
-      "const x = 1",
-      "",
-      { route: "/", file: "/index.md" },
-    );
+    const html = await runTransformFence([mermaidPlugin()], "typescript", "const x = 1", "", {
+      route: "/",
+      file: "/index.md",
+    });
     expect(html).toBeUndefined();
   });
 });

@@ -48,11 +48,11 @@ Use `base: "/"` unless you intentionally serve the site from a subpath.
 2. Connect your Git provider and select the PreactPress repository.
 3. Use these build settings:
 
-| Setting | Value |
-| ------- | ----- |
-| Build command | `pnpm run build` |
-| Publish directory | `dist` |
-| Base directory | project root (or monorepo site folder) |
+| Setting           | Value                                  |
+| ----------------- | -------------------------------------- |
+| Build command     | `pnpm run build`                       |
+| Publish directory | `dist`                                 |
+| Base directory    | project root (or monorepo site folder) |
 
 For stricter builds, use:
 
@@ -64,9 +64,9 @@ pnpm run check && pnpm run build
 
 Set these under **Site configuration → Environment variables**:
 
-| Variable | Value |
-| -------- | ----- |
-| `NODE_VERSION` | `22` |
+| Variable       | Value |
+| -------------- | ----- |
+| `NODE_VERSION` | `22`  |
 
 Netlify detects pnpm from `pnpm-lock.yaml`. If needed, add a `netlify.toml`:
 

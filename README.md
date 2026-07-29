@@ -22,18 +22,18 @@
 
 ## Key features
 
-| Feature | What you get |
-| ------- | ------------ |
-| **Preact + MDX** | VitePress-style docs with Preact components, not Vue |
-| **Plugin system** | Typed hooks for build, config, MDX, and validation |
-| **`preactpress check`** | CI-ready validation for links, routes, nav, redirects, and i18n |
-| **Documentation versioning** | Version switcher, archived snapshots, scoped search |
-| **Redirect system** | HTTP redirects with HTML fallbacks and `_redirects` export |
-| **TypeDoc integration** | `@preactpress/plugin-typedoc` for API reference pages |
-| **Component props reference** | `@preactpress/plugin-component-reference` for MDX prop tables |
-| **Live Preact playground** | `@preactpress/plugin-playground` with sandboxed MDX demos |
-| **AI-ready exports** | `llms.txt`, `llms-full.txt`, per-page Markdown, and `api/context.json` |
-| **Static output** | Deploy `dist/` to any static host — no runtime server |
+| Feature                       | What you get                                                           |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| **Preact + MDX**              | VitePress-style docs with Preact components, not Vue                   |
+| **Plugin system**             | Typed hooks for build, config, MDX, and validation                     |
+| **`preactpress check`**       | CI-ready validation for links, routes, nav, redirects, and i18n        |
+| **Documentation versioning**  | Version switcher, archived snapshots, scoped search                    |
+| **Redirect system**           | HTTP redirects with HTML fallbacks and `_redirects` export             |
+| **TypeDoc integration**       | `@preactpress/plugin-typedoc` for API reference pages                  |
+| **Component props reference** | `@preactpress/plugin-component-reference` for MDX prop tables          |
+| **Live Preact playground**    | `@preactpress/plugin-playground` with sandboxed MDX demos              |
+| **AI-ready exports**          | `llms.txt`, `llms-full.txt`, per-page Markdown, and `api/context.json` |
+| **Static output**             | Deploy `dist/` to any static host — no runtime server                  |
 
 ## Quick start
 
@@ -119,16 +119,16 @@ Pair with **[Kamod UI](https://ui.kamod.ch/)** for Preact + Tailwind components 
 
 ## Comparison
 
-| | PreactPress | VitePress | Docusaurus | Starlight |
-| --- | --- | --- | --- | --- |
-| UI stack | Preact + MDX | Vue | React | Astro |
-| Docs theme | Built-in | Built-in | Built-in | Built-in |
-| Runtime size | Small Preact bundle | Vue hydration | React + router | Varies |
-| TypeScript API docs | `@preactpress/plugin-typedoc` | Manual / plugins | TypeDoc plugin | Manual |
-| Live code playground | `@preactpress/plugin-playground` | Custom | `@docusaurus/theme-live-codeblock` | Custom |
-| AI exports (`llms.txt`) | Built-in | Community plugins | Community plugins | Community plugins |
-| Doc validation CLI | `preactpress check` | `vitepress build` only | `docusaurus build` only | Astro build only |
-| Best for | Preact libraries, APIs, AI-indexed docs | Vue documentation | Large React doc portals | Multi-framework content |
+|                         | PreactPress                             | VitePress              | Docusaurus                         | Starlight               |
+| ----------------------- | --------------------------------------- | ---------------------- | ---------------------------------- | ----------------------- |
+| UI stack                | Preact + MDX                            | Vue                    | React                              | Astro                   |
+| Docs theme              | Built-in                                | Built-in               | Built-in                           | Built-in                |
+| Runtime size            | Small Preact bundle                     | Vue hydration          | React + router                     | Varies                  |
+| TypeScript API docs     | `@preactpress/plugin-typedoc`           | Manual / plugins       | TypeDoc plugin                     | Manual                  |
+| Live code playground    | `@preactpress/plugin-playground`        | Custom                 | `@docusaurus/theme-live-codeblock` | Custom                  |
+| AI exports (`llms.txt`) | Built-in                                | Community plugins      | Community plugins                  | Community plugins       |
+| Doc validation CLI      | `preactpress check`                     | `vitepress build` only | `docusaurus build` only            | Astro build only        |
+| Best for                | Preact libraries, APIs, AI-indexed docs | Vue documentation      | Large React doc portals            | Multi-framework content |
 
 **Choose PreactPress** when you document Preact libraries or APIs and want VitePress-style workflows with MDX, plugins, validation, and AI-ready exports.
 
@@ -138,19 +138,19 @@ See the full [comparison guide](https://kamod-ch.github.io/preactpress/guide/com
 
 ## Templates
 
-| Template | Use case | Scaffold |
-| -------- | -------- | -------- |
-| `default` | Minimal quick start | `pnpm dlx @kamod-ch/preactpress init my-site` |
-| `docs` | Full documentation (canonical reference) | `pnpm dlx @kamod-ch/preactpress init my-docs --template docs` |
-| `blog` | Technical blog with RSS, tags, authors | `pnpm dlx @kamod-ch/preactpress init my-blog --template blog` |
-| `product-docs` | Product or library documentation | `pnpm dlx @kamod-ch/preactpress init my-product --template product-docs` |
-| `api-docs` | JavaScript/TypeScript API reference | `pnpm dlx @kamod-ch/preactpress init my-api --template api-docs` |
-| `saas-docs` | SaaS onboarding and admin docs | `pnpm dlx @kamod-ch/preactpress init my-saas --template saas-docs` |
-| `knowledge-base` | Help center and support articles | `pnpm dlx @kamod-ch/preactpress init my-help --template knowledge-base` |
-| `versions` | Multi-version documentation | `pnpm dlx @kamod-ch/preactpress init my-versions --template versions` |
-| `monorepo` | Docs inside a pnpm workspace | `pnpm dlx @kamod-ch/preactpress init my-monorepo --template monorepo` |
-| `magazine` | Custom editorial theme (demo) | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine` |
-| `hono` | Product landing + docs (demo) | `pnpm dlx @kamod-ch/preactpress init my-site --template hono` |
+| Template         | Use case                                 | Scaffold                                                                 |
+| ---------------- | ---------------------------------------- | ------------------------------------------------------------------------ |
+| `default`        | Minimal quick start                      | `pnpm dlx @kamod-ch/preactpress init my-site`                            |
+| `docs`           | Full documentation (canonical reference) | `pnpm dlx @kamod-ch/preactpress init my-docs --template docs`            |
+| `blog`           | Technical blog with RSS, tags, authors   | `pnpm dlx @kamod-ch/preactpress init my-blog --template blog`            |
+| `product-docs`   | Product or library documentation         | `pnpm dlx @kamod-ch/preactpress init my-product --template product-docs` |
+| `api-docs`       | JavaScript/TypeScript API reference      | `pnpm dlx @kamod-ch/preactpress init my-api --template api-docs`         |
+| `saas-docs`      | SaaS onboarding and admin docs           | `pnpm dlx @kamod-ch/preactpress init my-saas --template saas-docs`       |
+| `knowledge-base` | Help center and support articles         | `pnpm dlx @kamod-ch/preactpress init my-help --template knowledge-base`  |
+| `versions`       | Multi-version documentation              | `pnpm dlx @kamod-ch/preactpress init my-versions --template versions`    |
+| `monorepo`       | Docs inside a pnpm workspace             | `pnpm dlx @kamod-ch/preactpress init my-monorepo --template monorepo`    |
+| `magazine`       | Custom editorial theme (demo)            | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine`         |
+| `hono`           | Product landing + docs (demo)            | `pnpm dlx @kamod-ch/preactpress init my-site --template hono`            |
 
 Browse the [template gallery](https://kamod-ch.github.io/preactpress/guide/templates/) or run `pnpm run dev:docs` from the package root while contributing.
 
@@ -158,14 +158,14 @@ Browse the [template gallery](https://kamod-ch.github.io/preactpress/guide/templ
 
 Official plugins live under [`packages/`](./packages/) and are documented on the site:
 
-| Plugin | Purpose |
-| ------ | ------- |
-| `@preactpress/plugin-mermaid` | Mermaid diagrams in Markdown |
-| `@preactpress/plugin-playground` | Live Preact sandboxes in MDX |
-| `@preactpress/plugin-typedoc` | TypeScript API reference from TypeDoc |
-| `@preactpress/plugin-component-reference` | Component prop tables in MDX |
-| `@preactpress/plugin-openapi` | REST API docs from OpenAPI 3.x |
-| `@preactpress/plugin-changelog` | Changelog pages from GitHub Releases or local files |
+| Plugin                                    | Purpose                                             |
+| ----------------------------------------- | --------------------------------------------------- |
+| `@preactpress/plugin-mermaid`             | Mermaid diagrams in Markdown                        |
+| `@preactpress/plugin-playground`          | Live Preact sandboxes in MDX                        |
+| `@preactpress/plugin-typedoc`             | TypeScript API reference from TypeDoc               |
+| `@preactpress/plugin-component-reference` | Component prop tables in MDX                        |
+| `@preactpress/plugin-openapi`             | REST API docs from OpenAPI 3.x                      |
+| `@preactpress/plugin-changelog`           | Changelog pages from GitHub Releases or local files |
 
 Register plugins in `.preactpress/config.ts`:
 
@@ -175,10 +175,7 @@ import { mermaidPlugin } from "@preactpress/plugin-mermaid";
 import { typedocPlugin } from "@preactpress/plugin-typedoc";
 
 export default defineConfig({
-  plugins: [
-    mermaidPlugin(),
-    typedocPlugin({ tsconfig: "tsconfig.json", outDir: "api" }),
-  ],
+  plugins: [mermaidPlugin(), typedocPlugin({ tsconfig: "tsconfig.json", outDir: "api" })],
 });
 ```
 

@@ -31,12 +31,12 @@ When `ai` is set, PreactPress registers the AI export plugin automatically. You 
 
 ## Build outputs
 
-| Output | Path | Purpose |
-| ------ | ---- | ------- |
-| LLM index | `/llms.txt` | Project summary, documentation areas, entry points, markdown links |
-| Full docs | `/llms-full.txt` | Consolidated markdown for all pages (split into bundles when large) |
-| Context index | `/api/context.json` | Structured page, symbol, and locale metadata for tooling |
-| Page markdown | `/{route}.md` | Plain markdown per page, linked from `llms.txt` |
+| Output        | Path                | Purpose                                                             |
+| ------------- | ------------------- | ------------------------------------------------------------------- |
+| LLM index     | `/llms.txt`         | Project summary, documentation areas, entry points, markdown links  |
+| Full docs     | `/llms-full.txt`    | Consolidated markdown for all pages (split into bundles when large) |
+| Context index | `/api/context.json` | Structured page, symbol, and locale metadata for tooling            |
+| Page markdown | `/{route}.md`       | Plain markdown per page, linked from `llms.txt`                     |
 
 All exports require `site.url` so canonical links resolve correctly.
 
@@ -93,16 +93,16 @@ Custom themes can reuse `pageMarkdownForCopy()` from `@kamod-ch/preactpress/shar
 
 ## Configuration reference
 
-| Option | Default when `ai` is set | Description |
-| ------ | ------------------------ | ----------- |
-| `llmsTxt` | `true` | Write `/llms.txt` |
-| `llmsFullTxt` | `true` | Write consolidated markdown |
-| `copyMarkdown` | `true` | Enable the copy button and include markdown in content chunks |
-| `contextIndex` | `true` | Write `/api/context.json` |
-| `pageMarkdown` | `true` | Write per-page `*.md` files |
-| `exclude` | `["/404", "/tags/**"]` | Route globs omitted from exports |
-| `maxBundleBytes` | `1500000` | Split threshold for `llms-full` |
-| `chunks` | `false` | Reserved for JSONL chunk exports |
+| Option           | Default when `ai` is set | Description                                                   |
+| ---------------- | ------------------------ | ------------------------------------------------------------- |
+| `llmsTxt`        | `true`                   | Write `/llms.txt`                                             |
+| `llmsFullTxt`    | `true`                   | Write consolidated markdown                                   |
+| `copyMarkdown`   | `true`                   | Enable the copy button and include markdown in content chunks |
+| `contextIndex`   | `true`                   | Write `/api/context.json`                                     |
+| `pageMarkdown`   | `true`                   | Write per-page `*.md` files                                   |
+| `exclude`        | `["/404", "/tags/**"]`   | Route globs omitted from exports                              |
+| `maxBundleBytes` | `1500000`                | Split threshold for `llms-full`                               |
+| `chunks`         | `false`                  | Reserved for JSONL chunk exports                              |
 
 Set `ai: false` to disable all AI exports.
 

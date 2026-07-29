@@ -3,11 +3,7 @@ import { h } from "preact";
 import { useMemo, useState } from "preact/hooks";
 import CopyableCommand from "./CopyableCommand.tsx";
 import "./ecosystem-gallery.css";
-import {
-  allTags,
-  ecosystemRegistry,
-  installCommand,
-} from "../data/ecosystem-registry.ts";
+import { allTags, ecosystemRegistry, installCommand } from "../data/ecosystem-registry.ts";
 import type { EcosystemTypeFilter } from "../data/ecosystem.types.ts";
 
 const typeLabels: Record<EcosystemTypeFilter, string> = {
@@ -19,18 +15,9 @@ const typeLabels: Record<EcosystemTypeFilter, string> = {
 
 const typeFilters: EcosystemTypeFilter[] = ["all", "plugin", "theme", "starter"];
 
-function matchesSearch(
-  query: string,
-  item: (typeof ecosystemRegistry)[number],
-): boolean {
+function matchesSearch(query: string, item: (typeof ecosystemRegistry)[number]): boolean {
   if (!query) return true;
-  const haystack = [
-    item.name,
-    item.package,
-    item.description,
-    item.author,
-    item.tags.join(" "),
-  ]
+  const haystack = [item.name, item.package, item.description, item.author, item.tags.join(" ")]
     .join(" ")
     .toLowerCase();
   return haystack.includes(query);
@@ -73,9 +60,7 @@ export default function EcosystemGallery() {
             <button
               key={filter}
               type="button"
-              class={`pp-eco-filter-btn${
-                typeFilter === filter ? " pp-eco-filter-btn-active" : ""
-              }`}
+              class={`pp-eco-filter-btn${typeFilter === filter ? " pp-eco-filter-btn-active" : ""}`}
               aria-pressed={typeFilter === filter}
               onClick={() => setTypeFilter(filter)}
             >
@@ -155,9 +140,7 @@ export default function EcosystemGallery() {
                 <a href={item.repository} target="_blank" rel="noreferrer">
                   Repository ↗
                 </a>
-                {item.documentation ? (
-                  <a href={item.documentation}>Documentation</a>
-                ) : null}
+                {item.documentation ? <a href={item.documentation}>Documentation</a> : null}
               </div>
 
               <CopyableCommand command={installCommand(item)} />
@@ -178,17 +161,16 @@ export default function EcosystemGallery() {
             <a href="https://github.com/kamod-ch/preactpress" target="_blank" rel="noreferrer">
               kamod-ch/preactpress
             </a>{" "}
-            and add your entry to{" "}
-            <code>templates/docs/data/ecosystem-registry.ts</code>.
+            and add your entry to <code>templates/docs/data/ecosystem-registry.ts</code>.
           </li>
           <li>
             Include a public repository URL, a short description, tags, the compatible PreactPress
             version range, and an author name or organization.
           </li>
           <li>
-            Plugins should publish to npm under your scope or{" "}
-            <code>@preactpress/*</code> for official packages. Themes and starters should be
-            reproducible with <code>preactpress init</code> or documented theme setup.
+            Plugins should publish to npm under your scope or <code>@preactpress/*</code> for
+            official packages. Themes and starters should be reproducible with{" "}
+            <code>preactpress init</code> or documented theme setup.
           </li>
           <li>
             Set <code>official: true</code> only for packages maintained in the PreactPress

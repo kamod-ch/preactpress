@@ -54,7 +54,9 @@ export function renderComponentReferenceHtml(entry: ComponentEntry): string {
   return [
     `<section class="pp-component-reference" aria-labelledby="component-${escapeHtml(entry.name)}">`,
     `<h3 id="component-${escapeHtml(entry.name)}">${escapeHtml(entry.name)}</h3>`,
-    entry.description ? `<p class="pp-component-description">${escapeHtml(entry.description)}</p>` : "",
+    entry.description
+      ? `<p class="pp-component-description">${escapeHtml(entry.description)}</p>`
+      : "",
     source,
     `<div class="pp-table-wrap"><table class="pp-component-props">`,
     `<thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Required</th><th>Description</th></tr></thead>`,

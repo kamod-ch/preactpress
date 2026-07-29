@@ -4,17 +4,17 @@ Reproducible benchmark suite for measuring PreactPress scaling across project si
 
 ## What is measured
 
-| Metric | Description |
-| --- | --- |
-| Cold build | Full production build after clearing `dist/` and `.preactpress/cache` |
-| Warm build | Second build reusing cache from cold build |
-| Dev server start | Time until first successful HTTP response |
-| Page update | Time until a touched Markdown page reflects in dev SSR |
-| Peak memory | Peak RSS during in-process production build |
-| Search index size | `dist/preactpress-search.json` bytes |
-| HTML output size | Sample page (`/docs/section-001/page-0001`) HTML bytes |
-| JavaScript per page | Sum of script `src` assets referenced by sample HTML |
-| Lighthouse baseline | Static HTML/JS/CSS sizes and asset counts (not Chrome Lighthouse) |
+| Metric              | Description                                                           |
+| ------------------- | --------------------------------------------------------------------- |
+| Cold build          | Full production build after clearing `dist/` and `.preactpress/cache` |
+| Warm build          | Second build reusing cache from cold build                            |
+| Dev server start    | Time until first successful HTTP response                             |
+| Page update         | Time until a touched Markdown page reflects in dev SSR                |
+| Peak memory         | Peak RSS during in-process production build                           |
+| Search index size   | `dist/preactpress-search.json` bytes                                  |
+| HTML output size    | Sample page (`/docs/section-001/page-0001`) HTML bytes                |
+| JavaScript per page | Sum of script `src` assets referenced by sample HTML                  |
+| Lighthouse baseline | Static HTML/JS/CSS sizes and asset counts (not Chrome Lighthouse)     |
 
 ## Project sizes
 

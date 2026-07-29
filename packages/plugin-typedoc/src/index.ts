@@ -25,7 +25,9 @@ function hasNavLink(nav: NavItemLike[] | undefined, link: string): boolean {
 /** Official PreactPress plugin for TypeDoc API reference pages. */
 export function typedocPlugin(options: TypedocPluginOptions): PreactPressPlugin {
   if (!options.entries?.length) {
-    throw new Error("typedocPlugin(options): `entries` must include at least one TypeScript entry point.");
+    throw new Error(
+      "typedocPlugin(options): `entries` must include at least one TypeScript entry point.",
+    );
   }
 
   let generation: Promise<ApiGenerationResult> | undefined;
@@ -64,7 +66,11 @@ export function typedocPlugin(options: TypedocPluginOptions): PreactPressPlugin 
         },
         themeConfig: {
           ...config.themeConfig,
-          sidebar: mergePathSidebar(config.themeConfig?.sidebar, result.manifest.baseRoute, sidebar),
+          sidebar: mergePathSidebar(
+            config.themeConfig?.sidebar,
+            result.manifest.baseRoute,
+            sidebar,
+          ),
           nav: hasNavLink(config.themeConfig?.nav, navLink.link)
             ? config.themeConfig?.nav
             : [...(config.themeConfig?.nav ?? []), navLink],
@@ -87,5 +93,11 @@ export { renderApiDocs } from "./render/markdown.js";
 export { mergePathSidebar, navItemFromManifest, sidebarFromManifest } from "./render/sidebar.js";
 export { joinRoute, slugifySegment, symbolId } from "./render/slugs.js";
 export { relativeHref } from "./render/links.js";
-export type { ApiManifest, ApiSymbol, ApiGenerationResult, ApiPage, ApiTreeNode } from "./types/index.js";
+export type {
+  ApiManifest,
+  ApiSymbol,
+  ApiGenerationResult,
+  ApiPage,
+  ApiTreeNode,
+} from "./types/index.js";
 export type { SidebarGroup, SidebarItem } from "./render/sidebar-types.js";

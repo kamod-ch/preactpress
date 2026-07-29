@@ -44,6 +44,12 @@ export interface ResolvedPlaygroundState {
 }
 
 export type SandboxMessage =
-  | { type: "pp-playground-run"; files: PlaygroundFiles; entry: string; importMap: Record<string, string>; theme: PreviewTheme }
+  | {
+      type: "pp-playground-run";
+      files: PlaygroundFiles;
+      entry: string;
+      importMap: Record<string, string>;
+      theme: PreviewTheme;
+    }
   | { type: "pp-playground-result"; ok: true }
   | { type: "pp-playground-result"; ok: false; message: string };

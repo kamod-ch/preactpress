@@ -480,7 +480,11 @@ function scanVueUsage(
     vueComponents.add(name);
   }
 
-  if (SCRIPT_SETUP_RE.test(content) || IMPORT_VUE_RE.test(content) || VUE_DIRECTIVE_RE.test(content)) {
+  if (
+    SCRIPT_SETUP_RE.test(content) ||
+    IMPORT_VUE_RE.test(content) ||
+    VUE_DIRECTIVE_RE.test(content)
+  ) {
     warnings.push({
       source: relPath,
       message: "Vue-specific markdown syntax detected",
@@ -608,7 +612,8 @@ function serializeConfig(value: unknown, indent = 0): string {
     );
     if (entries.length === 0) return "{}";
     const lines = entries.map(
-      ([key, v]) => `${padIn}${/^[\w$]+$/.test(key) ? key : JSON.stringify(key)}: ${serializeConfig(v, indent + 1)}`,
+      ([key, v]) =>
+        `${padIn}${/^[\w$]+$/.test(key) ? key : JSON.stringify(key)}: ${serializeConfig(v, indent + 1)}`,
     );
     return `{\n${lines.join(",\n")},\n${pad}}`;
   }

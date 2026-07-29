@@ -52,9 +52,7 @@ const DEFAULT_SITE: ResolvedConfig["site"] = {
   lang: "en",
 };
 
-export function createTestResolvedConfig(
-  overrides: Partial<ResolvedConfig> = {},
-): ResolvedConfig {
+export function createTestResolvedConfig(overrides: Partial<ResolvedConfig> = {}): ResolvedConfig {
   const logger = overrides.logger ?? createLogger("warn", { prefix: "[preactpress]" });
   return {
     root: overrides.root ?? "/tmp/preactpress-test",
@@ -143,7 +141,10 @@ export async function runTransformMarkdown(
   source: string,
   context: { route: string; file: string; config?: Partial<ResolvedConfig> },
 ): Promise<string> {
-  const config = createTestResolvedConfig({ plugins: normalizePlugins(plugins), ...context.config });
+  const config = createTestResolvedConfig({
+    plugins: normalizePlugins(plugins),
+    ...context.config,
+  });
   return applyPluginsTransformMarkdown(config, source, {
     route: context.route,
     file: context.file,
@@ -176,7 +177,10 @@ export async function runTransformFence(
   meta: string,
   context: { route: string; file: string; config?: Partial<ResolvedConfig> },
 ): Promise<string | undefined> {
-  const config = createTestResolvedConfig({ plugins: normalizePlugins(plugins), ...context.config });
+  const config = createTestResolvedConfig({
+    plugins: normalizePlugins(plugins),
+    ...context.config,
+  });
   return applyPluginsTransformFence(config, lang, code, meta, {
     route: context.route,
     file: context.file,

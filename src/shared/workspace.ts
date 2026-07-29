@@ -9,7 +9,11 @@ import type {
 } from "../node/siteConfig.js";
 import { localeFromRoute, localizeRoute, stripLocalePrefix } from "./locale.js";
 import { normalizeRoute } from "./route.js";
-import { routePathKey as versionRoutePathKey, stripVersionPrefix, versionFromRoute } from "./version.js";
+import {
+  routePathKey as versionRoutePathKey,
+  stripVersionPrefix,
+  versionFromRoute,
+} from "./version.js";
 
 export const DEFAULT_WORKSPACE_LABELS = {
   switcher: "Package",
@@ -61,10 +65,7 @@ export function routePathKeyWithWorkspace(
   workspaces?: ResolvedWorkspaces,
 ): string {
   const versionKey = versionRoutePathKey(route, i18n, versions);
-  return stripWorkspacePrefix(
-    versionKey,
-    workspaceFromRoute(route, workspaces, i18n, versions),
-  );
+  return stripWorkspacePrefix(versionKey, workspaceFromRoute(route, workspaces, i18n, versions));
 }
 
 export function composeWorkspaceRoute(

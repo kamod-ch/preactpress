@@ -20,7 +20,8 @@ function frontmatter(
   },
 ): string {
   const lines = [`title: "${yamlEscape(title)}"`];
-  if (options.description) lines.push(`description: "${yamlEscape(options.description.slice(0, 160))}"`);
+  if (options.description)
+    lines.push(`description: "${yamlEscape(options.description.slice(0, 160))}"`);
   if (options.date) lines.push(`date: "${yamlEscape(options.date.slice(0, 10))}"`);
   if (options.version) lines.push(`version: "${yamlEscape(options.version)}"`);
   const tags = options.tags ?? ["changelog"];
@@ -80,7 +81,8 @@ function renderMeta(release: ChangelogRelease): string {
   if (release.contributors.length) {
     lines.push(`**Contributors:** ${release.contributors.map((name) => `@${name}`).join(", ")}`);
   }
-  if (release.sourceUrl) lines.push(`**Source:** [${release.version} release notes](${release.sourceUrl})`);
+  if (release.sourceUrl)
+    lines.push(`**Source:** [${release.version} release notes](${release.sourceUrl})`);
   if (release.migrationGuideUrl) {
     lines.push(`**Migration guide:** [View migration guide](${release.migrationGuideUrl})`);
   }
@@ -95,7 +97,12 @@ function renderReleasePage(release: ChangelogRelease): string {
       description: release.description,
       date: release.date,
       version: release.version,
-      tags: ["changelog", "release", release.version, ...(release.prerelease ? ["prerelease"] : [])],
+      tags: [
+        "changelog",
+        "release",
+        release.version,
+        ...(release.prerelease ? ["prerelease"] : []),
+      ],
     }),
     `# ${title}`,
     "",
@@ -105,12 +112,16 @@ function renderReleasePage(release: ChangelogRelease): string {
 }
 
 function renderOverviewPage(manifest: ChangelogManifest): string {
-  const topLevel = manifest.releases.filter((release) => release.route.startsWith(manifest.baseRoute + "/"));
+  const topLevel = manifest.releases.filter((release) =>
+    release.route.startsWith(manifest.baseRoute + "/"),
+  );
   const rows = topLevel
     .filter((release) => !release.draft)
     .map((release) => {
       const date = release.date?.slice(0, 10) ?? "—";
-      const breaking = release.sections.some((section) => section.kind === "breaking") ? "Yes" : "—";
+      const breaking = release.sections.some((section) => section.kind === "breaking")
+        ? "Yes"
+        : "—";
       const link = `[${release.version}](${release.route.replace(manifest.baseRoute, ".")})`;
       return `| ${link} | ${date} | ${breaking} |`;
     });
@@ -122,21 +133,29 @@ function renderOverviewPage(manifest: ChangelogManifest): string {
     }),
     "# Changelog",
     "",
-    manifest.repository ? `_Source: [${manifest.repository}](https://github.com/${manifest.repository})_\n` : "",
+    manifest.repository
+      ? `_Source: [${manifest.repository}](https://github.com/${manifest.repository})_\n`
+      : "",
     "| Version | Date | Breaking |",
     "| ------- | ---- | -------- |",
     ...rows,
     "",
     "## Recent releases",
     "",
-    ...topLevel.slice(0, 5).flatMap((release) => [
-      `### [${release.version}](${release.route.replace(manifest.baseRoute, ".")})`,
-      "",
-      release.date ? `_${release.date.slice(0, 10)}_${release.prerelease ? " · pre-release" : ""}` : "",
-      "",
-      release.description ? `${release.description.slice(0, 280)}${release.description.length > 280 ? "…" : ""}` : "",
-      "",
-    ]),
+    ...topLevel
+      .slice(0, 5)
+      .flatMap((release) => [
+        `### [${release.version}](${release.route.replace(manifest.baseRoute, ".")})`,
+        "",
+        release.date
+          ? `_${release.date.slice(0, 10)}_${release.prerelease ? " · pre-release" : ""}`
+          : "",
+        "",
+        release.description
+          ? `${release.description.slice(0, 280)}${release.description.length > 280 ? "…" : ""}`
+          : "",
+        "",
+      ]),
   ].join("\n");
 }
 

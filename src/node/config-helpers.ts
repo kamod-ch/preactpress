@@ -37,12 +37,7 @@ export type {
   RouteDefinition,
 } from "./pluginTypes.js";
 export { PluginError } from "./pluginTypes.js";
-export {
-  examplePlugin,
-  aiExportsPlugin,
-  llmsTxtPlugin,
-  redirectsPlugin,
-} from "./plugins/index.js";
+export { examplePlugin, aiExportsPlugin, llmsTxtPlugin, redirectsPlugin } from "./plugins/index.js";
 
 export type UserConfigExport = UserConfig | (() => UserConfig | Promise<UserConfig>);
 

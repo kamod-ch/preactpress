@@ -80,7 +80,11 @@ export async function runVersionCommand(
 
   const value = options.value.trim();
   if (!isValidVersionValue(value)) {
-    console.error(c.red(`preactpress version: invalid version value "${value}". Use semver-like values such as 1.2.0.`));
+    console.error(
+      c.red(
+        `preactpress version: invalid version value "${value}". Use semver-like values such as 1.2.0.`,
+      ),
+    );
     return 1;
   }
 
@@ -98,14 +102,21 @@ export async function runVersionCommand(
 
   try {
     await fs.access(targetDir);
-    console.error(c.red(`preactpress version: refusing to overwrite existing snapshot at ${targetDir}`));
+    console.error(
+      c.red(`preactpress version: refusing to overwrite existing snapshot at ${targetDir}`),
+    );
     return 1;
   } catch {
     // target is free
   }
 
   const fileCount = await copyDirectory(sourceDir, targetDir, Boolean(options.dryRun));
-  const registration = await registerVersionInConfig(configPath, value, label, Boolean(options.dryRun));
+  const registration = await registerVersionInConfig(
+    configPath,
+    value,
+    label,
+    Boolean(options.dryRun),
+  );
 
   console.log("");
   console.log(c.bold(options.dryRun ? "Version snapshot (dry run)" : "Version snapshot created"));
@@ -115,7 +126,9 @@ export async function runVersionCommand(
   console.log(`  To:      ${path.relative(root, targetDir)}/`);
   console.log(`  Files:   ${fileCount}`);
   if (registration === "updated") {
-    console.log(c.green(`  Config:  added versions.items entry in ${path.relative(root, configPath)}`));
+    console.log(
+      c.green(`  Config:  added versions.items entry in ${path.relative(root, configPath)}`),
+    );
   } else if (registration === "exists") {
     console.log(c.yellow("  Config:  version entry already present; left config unchanged"));
   } else {

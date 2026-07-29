@@ -20,7 +20,11 @@ export function linkifyTypeText(text: string, manifest: ApiManifest, currentRout
   return output;
 }
 
-export function renderTypeRef(type: ApiTypeRef | undefined, manifest: ApiManifest, route: string): string {
+export function renderTypeRef(
+  type: ApiTypeRef | undefined,
+  manifest: ApiManifest,
+  route: string,
+): string {
   if (!type) return "";
   if (type.slug) {
     const target = manifest.symbols[type.slug];
@@ -36,7 +40,11 @@ export function relativeHref(fromRoute: string, toRoute: string): string {
   const fromParts = fromRoute.replace(/^\//, "").split("/");
   const toParts = toRoute.replace(/^\//, "").split("/");
   let common = 0;
-  while (common < fromParts.length && common < toParts.length && fromParts[common] === toParts[common]) {
+  while (
+    common < fromParts.length &&
+    common < toParts.length &&
+    fromParts[common] === toParts[common]
+  ) {
     common += 1;
   }
   const ups = fromParts.length - common - 1;

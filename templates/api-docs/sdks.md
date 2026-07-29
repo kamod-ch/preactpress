@@ -27,10 +27,10 @@ See [`createClient`](/functions/create-client) for options, return types, and ex
 
 ## Other languages
 
-| Language   | Package        | Status   |
-| ---------- | -------------- | -------- |
-| TypeScript | `@acme/client` | Official |
-| Python     | `acme-client`  | Beta     |
+| Language   | Package        | Status    |
+| ---------- | -------------- | --------- |
+| TypeScript | `@acme/client` | Official  |
+| Python     | `acme-client`  | Beta      |
 | Go         | `acme-go`      | Community |
 
 Prefer raw HTTP? Start with the [REST resources](/resources) generated from the OpenAPI specification.

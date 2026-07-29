@@ -39,7 +39,12 @@ function jsDocText(symbol: ts.Symbol, tagName?: string): string | undefined {
   if (tagName) {
     const tag = comments.find((entry) => entry.name === tagName);
     if (!tag?.text) return undefined;
-    return tag.text.map((part) => part.text).join("").trim() || undefined;
+    return (
+      tag.text
+        .map((part) => part.text)
+        .join("")
+        .trim() || undefined
+    );
   }
   const docs = symbol.getDocumentationComment(undefined);
   const text = ts.displayPartsToString(docs).trim();
@@ -93,7 +98,9 @@ function collectProps(
     props.push({
       name: prop.name,
       type: typeText(checker, propType),
-      required: !(prop.flags & ts.SymbolFlags.Optional) && !("questionToken" in declaration && declaration.questionToken),
+      required:
+        !(prop.flags & ts.SymbolFlags.Optional) &&
+        !("questionToken" in declaration && declaration.questionToken),
       defaultValue: propDefault(prop),
       description: jsDocText(prop),
       deprecated: jsDocText(prop, "deprecated"),
@@ -206,9 +213,7 @@ export function extractComponentEntry(options: ExtractComponentOptions): Compone
   const symbol = checker.getSymbolAtLocation(exportNode);
   const propsType = propsTypeFromExport(checker, exportNode);
   if (!propsType) {
-    throw new Error(
-      `componentReference: could not resolve props type for "${options.exportName}"`,
-    );
+    throw new Error(`componentReference: could not resolve props type for "${options.exportName}"`);
   }
 
   const props = collectProps(checker, propsType);

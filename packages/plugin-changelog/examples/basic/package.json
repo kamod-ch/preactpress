@@ -1,6 +1,6 @@
 {
-  "private": true,
   "name": "preactpress-plugin-changelog-example",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "preactpress dev",

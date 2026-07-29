@@ -15,12 +15,12 @@ You write pages in Markdown or MDX, configure navigation in `.preactpress/config
 
 Document Preact component libraries, npm packages, and REST APIs with official plugins:
 
-| Need | Plugin |
-| ---- | ------ |
-| TypeScript API reference | `@preactpress/plugin-typedoc` |
-| OpenAPI / REST docs | `@preactpress/plugin-openapi` |
-| Component prop tables | `@preactpress/plugin-component-reference` |
-| Release notes | `@preactpress/plugin-changelog` |
+| Need                     | Plugin                                    |
+| ------------------------ | ----------------------------------------- |
+| TypeScript API reference | `@preactpress/plugin-typedoc`             |
+| OpenAPI / REST docs      | `@preactpress/plugin-openapi`             |
+| Component prop tables    | `@preactpress/plugin-component-reference` |
+| Release notes            | `@preactpress/plugin-changelog`           |
 
 ### Interactive guides
 
@@ -36,14 +36,14 @@ Maintain current and archived documentation with the version switcher. See [Docu
 
 ## Developer experience
 
-| Feature | What it gives you |
-| ------- | ----------------- |
-| Vite dev server | Fast startup and hot updates while editing content |
-| Markdown frontmatter | Titles, descriptions, tags, drafts, and social metadata |
-| MDX | Preact components inside content pages |
-| Default theme | Nav, sidebar, outline, search, footer, locale switcher |
-| `preactpress check` | Config, route, link, redirect, and nav validation before release |
-| Plugin system | Typed hooks for build, config, MDX, and validation |
+| Feature              | What it gives you                                                |
+| -------------------- | ---------------------------------------------------------------- |
+| Vite dev server      | Fast startup and hot updates while editing content               |
+| Markdown frontmatter | Titles, descriptions, tags, drafts, and social metadata          |
+| MDX                  | Preact components inside content pages                           |
+| Default theme        | Nav, sidebar, outline, search, footer, locale switcher           |
+| `preactpress check`  | Config, route, link, redirect, and nav validation before release |
+| Plugin system        | Typed hooks for build, config, MDX, and validation               |
 
 ```mdx
 import Counter from "./components/Counter.tsx";
@@ -57,13 +57,13 @@ import Counter from "./components/Counter.tsx";
 
 PreactPress produces static HTML for every route during the production build. After hydration, client-side navigation loads Markdown bodies as small JSON payloads from `preactpress-content/*.json`.
 
-| Output | Purpose |
-| ------ | ------- |
-| `index.html`, `*/index.html` | One HTML file per route |
-| `assets/*` | Hashed JavaScript and CSS from Vite |
-| `preactpress-search.json` | Search data for the default theme |
-| `llms.txt` / `llms-full.txt` | AI agent exports (when enabled) |
-| `_redirects` | HTTP redirects for static hosts |
+| Output                       | Purpose                             |
+| ---------------------------- | ----------------------------------- |
+| `index.html`, `*/index.html` | One HTML file per route             |
+| `assets/*`                   | Hashed JavaScript and CSS from Vite |
+| `preactpress-search.json`    | Search data for the default theme   |
+| `llms.txt` / `llms-full.txt` | AI agent exports (when enabled)     |
+| `_redirects`                 | HTTP redirects for static hosts     |
 
 ## How does PreactPress compare?
 
@@ -75,9 +75,9 @@ See the full [Comparison](/guide/comparison) against VitePress, Docusaurus, and 
 
 ## Next steps
 
-| Page | Why |
-| ---- | --- |
-| [Getting Started](/guide/getting-started) | Install PreactPress and understand the starter structure |
-| [Plugins](/guide/plugins) | Extend with official plugins |
-| [Showcase](https://github.com/kamod-ch/preactpress/tree/main/examples/showcase) | Runnable feature demo |
-| [Deploy](/guide/deploy) | Build and publish a static site |
+| Page                                                                            | Why                                                      |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| [Getting Started](/guide/getting-started)                                       | Install PreactPress and understand the starter structure |
+| [Plugins](/guide/plugins)                                                       | Extend with official plugins                             |
+| [Showcase](https://github.com/kamod-ch/preactpress/tree/main/examples/showcase) | Runnable feature demo                                    |
+| [Deploy](/guide/deploy)                                                         | Build and publish a static site                          |

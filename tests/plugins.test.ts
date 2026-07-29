@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PluginError } from "../src/node/pluginTypes.js";
-import {
-  applyPluginsConfig,
-  normalizePlugins,
-  sortPlugins,
-} from "../src/node/pluginRuntime.js";
+import { applyPluginsConfig, normalizePlugins, sortPlugins } from "../src/node/pluginRuntime.js";
 import {
   createTestPluginContext,
   createTestResolvedConfig,
@@ -24,21 +20,11 @@ describe("plugins", () => {
       { name: "a-pre", enforce: "pre" },
       { name: "b-pre", enforce: "pre" },
     ]);
-    expect(sorted.map((plugin) => plugin.name)).toEqual([
-      "a-pre",
-      "b-pre",
-      "m-default",
-      "z-post",
-    ]);
+    expect(sorted.map((plugin) => plugin.name)).toEqual(["a-pre", "b-pre", "m-default", "z-post"]);
   });
 
   it("rejects duplicate plugin names", () => {
-    expect(() =>
-      normalizePlugins([
-        { name: "dup" },
-        { name: "dup" },
-      ]),
-    ).toThrow(PluginError);
+    expect(() => normalizePlugins([{ name: "dup" }, { name: "dup" }])).toThrow(PluginError);
   });
 
   it("wraps hook failures with the plugin name", async () => {
@@ -72,7 +58,10 @@ describe("plugins", () => {
         },
       },
     ]);
-    const result = await applyPluginsConfig({ site: { title: "Original", description: "x" } }, plugins);
+    const result = await applyPluginsConfig(
+      { site: { title: "Original", description: "x" } },
+      plugins,
+    );
     expect(calls).toEqual(["first", "second"]);
     expect(result.site?.title).toBe("Second");
   });
@@ -85,11 +74,10 @@ describe("plugins", () => {
         return markdown.replace(/^([ \t]*```)[ \t]*mermaid[ \t]*$/gim, "$1mermaid");
       },
     };
-    const next = await runTransformMarkdown(
-      [plugin],
-      source,
-      { route: "/docs", file: "/docs/page.md" },
-    );
+    const next = await runTransformMarkdown([plugin], source, {
+      route: "/docs",
+      file: "/docs/page.md",
+    });
     expect(next).toContain("```mermaid");
     expect(source).toContain("```MERMAID");
   });
@@ -100,10 +88,7 @@ describe("plugins", () => {
         {
           name: "virtual-route",
           extendRoutes(existing) {
-            return [
-              ...existing,
-              { route: "/virtual", file: "virtual.md", kind: "markdown" },
-            ];
+            return [...existing, { route: "/virtual", file: "virtual.md", kind: "markdown" }];
           },
         },
       ],
@@ -139,7 +124,9 @@ describe("plugins", () => {
   it("registers built-in redirects and ai export plugins", () => {
     expect(redirectsPlugin().name).toBe("preactpress:redirects");
     expect(llmsTxtPlugin().name).toBe("preactpress:ai-exports");
-    expect(createTestResolvedConfig({ plugins: [redirectsPlugin(), llmsTxtPlugin()] }).plugins).toHaveLength(2);
+    expect(
+      createTestResolvedConfig({ plugins: [redirectsPlugin(), llmsTxtPlugin()] }).plugins,
+    ).toHaveLength(2);
   });
 
   it("runs transformFence hooks until one returns HTML", async () => {

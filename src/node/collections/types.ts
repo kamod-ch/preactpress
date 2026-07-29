@@ -63,8 +63,7 @@ export interface CollectionLoader<T = unknown> {
   readonly options?: LoadCollectionOptions<T>;
 }
 
-export type InferCollectionData<T> =
-  T extends CollectionDefinition<infer S> ? output<S> : never;
+export type InferCollectionData<T> = T extends CollectionDefinition<infer S> ? output<S> : never;
 
 export type InferCollectionEntry<T> = CollectionEntry<InferCollectionData<T>>;
 

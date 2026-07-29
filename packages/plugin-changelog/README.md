@@ -57,13 +57,13 @@ changelogPlugin({
 
 ## Generated documentation
 
-| Page | Contents |
-| ---- | -------- |
-| **Changelog overview** | Release table, recent highlights |
-| **Release pages** | Version, date, breaking changes, features, fixes |
-| **Contributors** | Parsed from `@mentions` and GitHub release authors |
-| **Source link** | GitHub release URL or local file reference |
-| **Migration guides** | Detected `[Migration guide](url)` links in release bodies |
+| Page                   | Contents                                                  |
+| ---------------------- | --------------------------------------------------------- |
+| **Changelog overview** | Release table, recent highlights                          |
+| **Release pages**      | Version, date, breaking changes, features, fixes          |
+| **Contributors**       | Parsed from `@mentions` and GitHub release authors        |
+| **Source link**        | GitHub release URL or local file reference                |
+| **Migration guides**   | Detected `[Migration guide](url)` links in release bodies |
 
 ## Features
 
@@ -79,28 +79,28 @@ changelogPlugin({
 
 ## Options
 
-| Option | Default | Description |
-| ------ | ------- | ----------- |
-| `provider` | — | `local`, `github`, or `changesets` |
-| `repository` | — | GitHub `owner/name` (required for `github`) |
-| `local` | `CHANGELOG.md` | Path to Keep a Changelog file |
-| `route` | `/changelog` | URL prefix for generated pages |
-| `output` | route without `/` | Output directory relative to `srcDir` |
-| `cache` | `true` | Cache manifests and remote payloads |
-| `offline` | `false` | Use cache only, no network |
-| `token` | env | GitHub token for authenticated API calls |
-| `changesets` | `false` | Merge pending Changesets |
-| `versionIntegration` | `false` | Duplicate routes under `/versions/{value}/changelog` |
-| `feed` | `true` | Emit Atom RSS feed at `{route}/feed.xml` |
+| Option               | Default           | Description                                          |
+| -------------------- | ----------------- | ---------------------------------------------------- |
+| `provider`           | —                 | `local`, `github`, or `changesets`                   |
+| `repository`         | —                 | GitHub `owner/name` (required for `github`)          |
+| `local`              | `CHANGELOG.md`    | Path to Keep a Changelog file                        |
+| `route`              | `/changelog`      | URL prefix for generated pages                       |
+| `output`             | route without `/` | Output directory relative to `srcDir`                |
+| `cache`              | `true`            | Cache manifests and remote payloads                  |
+| `offline`            | `false`           | Use cache only, no network                           |
+| `token`              | env               | GitHub token for authenticated API calls             |
+| `changesets`         | `false`           | Merge pending Changesets                             |
+| `versionIntegration` | `false`           | Duplicate routes under `/versions/{value}/changelog` |
+| `feed`               | `true`            | Emit Atom RSS feed at `{route}/feed.xml`             |
 
 ## Provider architecture
 
-| Layer | Responsibility |
-| ----- | -------------- |
-| **Providers** | Fetch raw releases (`local`, `github`, `changesets`) |
-| **Normalize** | Parse Keep a Changelog / GitHub bodies into sections |
-| **Manifest** | `ChangelogManifest` (`@preactpress/plugin-changelog/types`) |
-| **Presentation** | Markdown pages, sidebar, RSS |
+| Layer            | Responsibility                                              |
+| ---------------- | ----------------------------------------------------------- |
+| **Providers**    | Fetch raw releases (`local`, `github`, `changesets`)        |
+| **Normalize**    | Parse Keep a Changelog / GitHub bodies into sections        |
+| **Manifest**     | `ChangelogManifest` (`@preactpress/plugin-changelog/types`) |
+| **Presentation** | Markdown pages, sidebar, RSS                                |
 
 Future providers (GitLab, Gitea, Forgejo) implement `ChangelogProvider`:
 
@@ -109,8 +109,12 @@ import type { ChangelogProvider } from "@preactpress/plugin-changelog/providers"
 
 export const gitlabChangelogProvider: ChangelogProvider = {
   id: "gitlab",
-  async computeSourceHash(context) { /* … */ },
-  async fetchRawReleases(context) { /* … */ },
+  async computeSourceHash(context) {
+    /* … */
+  },
+  async fetchRawReleases(context) {
+    /* … */
+  },
 };
 ```
 

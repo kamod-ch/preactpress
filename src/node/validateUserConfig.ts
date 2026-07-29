@@ -16,7 +16,11 @@ import type {
 } from "./siteConfig.js";
 import type { PreactPressPlugin } from "./pluginTypes.js";
 import { assertUniquePluginNames } from "./pluginRuntime.js";
-import { parseRedirectsInput, isExternalRedirectTarget, resolveRedirectsConfig } from "./redirects.js";
+import {
+  parseRedirectsInput,
+  isExternalRedirectTarget,
+  resolveRedirectsConfig,
+} from "./redirects.js";
 import { isStructuredVersionsConfig } from "./resolveVersions.js";
 import { isStructuredWorkspacesConfig } from "./resolveWorkspaces.js";
 
@@ -61,7 +65,11 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 function validateString(value: unknown, path: string): asserts value is string {
-  assertConfig(typeof value === "string" && value.trim().length > 0, "expected a non-empty string", path);
+  assertConfig(
+    typeof value === "string" && value.trim().length > 0,
+    "expected a non-empty string",
+    path,
+  );
 }
 
 function validateBoolean(value: unknown, path: string): asserts value is boolean {
@@ -87,7 +95,11 @@ function validateSite(user: UserConfig): void {
   validateRecord(user.site, "site");
   if (user.site.title !== undefined) validateString(user.site.title, "site.title");
   if (user.site.description !== undefined) {
-    assertConfig(typeof user.site.description === "string", "expected a string", "site.description");
+    assertConfig(
+      typeof user.site.description === "string",
+      "expected a string",
+      "site.description",
+    );
   }
   if (user.site.base !== undefined) validateString(user.site.base, "site.base");
   if (user.site.lang !== undefined) validateString(user.site.lang, "site.lang");
@@ -144,7 +156,11 @@ function validateLocaleEntry(key: string, locale: LocaleConfig): void {
   if (locale.link !== undefined) validateString(locale.link, `${base}.link`);
   if (locale.title !== undefined) validateString(locale.title, `${base}.title`);
   if (locale.description !== undefined) {
-    assertConfig(typeof locale.description === "string", "expected a string", `${base}.description`);
+    assertConfig(
+      typeof locale.description === "string",
+      "expected a string",
+      `${base}.description`,
+    );
   }
 }
 
@@ -243,7 +259,8 @@ function validateStructuredWorkspaces(workspaces: WorkspacesConfig): void {
       "workspaces.versionMode",
     );
   }
-  if (workspaces.autoDiscover !== undefined) validateBoolean(workspaces.autoDiscover, "workspaces.autoDiscover");
+  if (workspaces.autoDiscover !== undefined)
+    validateBoolean(workspaces.autoDiscover, "workspaces.autoDiscover");
   workspaces.items.forEach((item, index) => validateWorkspaceItem(item, index));
 }
 
@@ -311,7 +328,9 @@ function validateAi(value: AiExportsConfig | false | undefined): void {
   if (value.exclude !== undefined) validateStringArray(value.exclude, "ai.exclude");
   if (value.maxBundleBytes !== undefined) {
     assertConfig(
-      typeof value.maxBundleBytes === "number" && Number.isFinite(value.maxBundleBytes) && value.maxBundleBytes > 0,
+      typeof value.maxBundleBytes === "number" &&
+        Number.isFinite(value.maxBundleBytes) &&
+        value.maxBundleBytes > 0,
       "expected a positive number",
       "ai.maxBundleBytes",
     );
@@ -346,7 +365,8 @@ function validateRedirectsConfig(value: RedirectsConfig | undefined): void {
 function validateCheck(value: CheckConfig | undefined): void {
   if (value === undefined) return;
   validateRecord(value, "check");
-  if (value.failOnWarnings !== undefined) validateBoolean(value.failOnWarnings, "check.failOnWarnings");
+  if (value.failOnWarnings !== undefined)
+    validateBoolean(value.failOnWarnings, "check.failOnWarnings");
   if (value.plugins !== undefined) validateBoolean(value.plugins, "check.plugins");
 }
 

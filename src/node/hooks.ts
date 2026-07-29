@@ -1,9 +1,6 @@
 import type { PageView } from "../client/types.js";
 import type { SiteConfig } from "./siteConfig.js";
-import {
-  applyPluginsTransformPageData,
-  invokePluginsBuildEnd,
-} from "./pluginRuntime.js";
+import { applyPluginsTransformPageData, invokePluginsBuildEnd } from "./pluginRuntime.js";
 import type { BuildResult } from "./pluginTypes.js";
 
 export async function applyTransformPageData(

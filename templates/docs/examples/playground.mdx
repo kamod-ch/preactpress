@@ -18,11 +18,12 @@ import { useState } from 'preact/hooks'
 export default function Demo() {
   const [count, setCount] = useState(0)
 
-  return (
-    <button onClick={() => setCount(count + 1)}>
-      Count: {count}
-    </button>
-  )
+return (
+
+<button onClick={() => setCount(count + 1)}>
+Count: {count}
+</button>
+)
 }
 `}
 />
@@ -99,7 +100,9 @@ For custom themes, register the component globally:
 import { createPlaygroundComponents } from "@preactpress/plugin-playground/mdx";
 
 const mdxComponents = {
-  ...createMdxHeadingComponents({ /* ... */ }),
+  ...createMdxHeadingComponents({
+    /* ... */
+  }),
   ...createPlaygroundComponents(),
 };
 ```

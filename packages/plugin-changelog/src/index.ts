@@ -79,10 +79,7 @@ export function changelogPlugin(options: ChangelogPluginOptions): PreactPressPlu
     if (force) generation = undefined;
     if (!generation) {
       generation = (async () => {
-        const result = await generateChangelogDocs(
-          { root, srcDir, cacheDir, versions },
-          options,
-        );
+        const result = await generateChangelogDocs({ root, srcDir, cacheDir, versions }, options);
         await writeGeneratedPages(srcDir, result);
         await writeStructuredManifest(configDir, result.manifest);
         lastResult = result;

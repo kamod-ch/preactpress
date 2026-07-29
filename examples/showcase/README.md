@@ -4,15 +4,15 @@ A runnable documentation site that demonstrates core PreactPress 2.3 features in
 
 ## Features demonstrated
 
-| Feature | Where |
-| ------- | ----- |
-| Plugin system | Mermaid + Playground plugins in config |
-| `preactpress check` | `pnpm check` script |
-| Redirect system | `/legacy` → `/guide/features` in config |
-| AI exports | `llms.txt`, `llms-full.txt` enabled |
+| Feature                | Where                                     |
+| ---------------------- | ----------------------------------------- |
+| Plugin system          | Mermaid + Playground plugins in config    |
+| `preactpress check`    | `pnpm check` script                       |
+| Redirect system        | `/legacy` → `/guide/features` in config   |
+| AI exports             | `llms.txt`, `llms-full.txt` enabled       |
 | Live Preact playground | [Playground page](./guide/playground.mdx) |
-| Mermaid diagrams | [Diagrams page](./guide/diagrams.md) |
-| Component in MDX | [Features page](./guide/features.mdx) |
+| Mermaid diagrams       | [Diagrams page](./guide/diagrams.md)      |
+| Component in MDX       | [Features page](./guide/features.mdx)     |
 
 ## Quick start
 

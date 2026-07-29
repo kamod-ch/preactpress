@@ -6,7 +6,10 @@ import { renderApiDocs } from "../src/render/markdown.js";
 import { TypedocEntryError } from "../src/extract/validate.js";
 import { slugifySegment } from "../src/render/slugs.js";
 
-const fixtureRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../fixtures/sample-lib");
+const fixtureRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../fixtures/sample-lib",
+);
 
 describe("generateApiReference", () => {
   it("extracts public symbols from a sample library", async () => {
@@ -47,7 +50,9 @@ describe("generateApiReference", () => {
     expect(addPage?.markdown).toContain("Adds two numbers");
     expect(addPage?.markdown).toContain("Parameters");
 
-    const calculator = Object.values(result.manifest.symbols).find((symbol) => symbol.name === "Calculator");
+    const calculator = Object.values(result.manifest.symbols).find(
+      (symbol) => symbol.name === "Calculator",
+    );
     expect(calculator?.deprecated).toContain("plain functions");
   });
 
@@ -67,7 +72,9 @@ describe("generateApiReference", () => {
       opts,
     );
 
-    expect(Object.keys(first.manifest.symbols).sort()).toEqual(Object.keys(second.manifest.symbols).sort());
+    expect(Object.keys(first.manifest.symbols).sort()).toEqual(
+      Object.keys(second.manifest.symbols).sort(),
+    );
     expect(slugifySegment("Calculator")).toBe("calculator");
   });
 
@@ -84,7 +91,12 @@ describe("generateApiReference", () => {
     const manifest = (
       await generateApiReference(
         { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache") },
-        { entries: ["src/index.ts"], output: "reference/api", tsconfig: "tsconfig.json", cache: false },
+        {
+          entries: ["src/index.ts"],
+          output: "reference/api",
+          tsconfig: "tsconfig.json",
+          cache: false,
+        },
       )
     ).manifest;
 
@@ -98,7 +110,12 @@ describe("renderApiDocs", () => {
   it("creates an overview page and symbol routes", async () => {
     const result = await generateApiReference(
       { root: fixtureRoot, srcDir: fixtureRoot, cacheDir: path.join(fixtureRoot, ".cache") },
-      { entries: ["src/index.ts"], output: "reference/api", tsconfig: "tsconfig.json", cache: false },
+      {
+        entries: ["src/index.ts"],
+        output: "reference/api",
+        tsconfig: "tsconfig.json",
+        cache: false,
+      },
     );
     const rendered = renderApiDocs(result.manifest);
     expect(rendered.pages.some((page) => page.route === "/reference/api")).toBe(true);

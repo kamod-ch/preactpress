@@ -30,7 +30,9 @@ function hasNavLink(nav: NavItemLike[] | undefined, link: string): boolean {
 /** Official PreactPress plugin for OpenAPI 3.x documentation pages. */
 export function openapiPlugin(options: OpenApiPluginOptions): PreactPressPlugin {
   if (!options.input) {
-    throw new Error("openapiPlugin(options): `input` must point to a local OpenAPI file or an explicit remote URL.");
+    throw new Error(
+      "openapiPlugin(options): `input` must point to a local OpenAPI file or an explicit remote URL.",
+    );
   }
 
   const explorer = options.explorer ?? disabledExplorerAdapter;
@@ -102,5 +104,9 @@ export type {
   OpenApiSchema,
   OpenApiGenerationResult,
 } from "./types/index.js";
-export type { OpenApiExplorerAdapter, ExplorerRequest, ExplorerResponse } from "./explorer/types.js";
+export type {
+  OpenApiExplorerAdapter,
+  ExplorerRequest,
+  ExplorerResponse,
+} from "./explorer/types.js";
 export { disabledExplorerAdapter } from "./explorer/types.js";

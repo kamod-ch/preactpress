@@ -60,14 +60,14 @@ export default loadCollection("guides", {
 
 ## Sorting and filtering
 
-| Sort preset   | Behavior                          |
-| ------------- | --------------------------------- |
-| `route:asc`   | Route path A→Z (default)          |
-| `route:desc`  | Route path Z→A                    |
-| `date:asc`    | Oldest `date` / `publishedAt` first |
-| `date:desc`   | Newest first                      |
-| `order:asc`   | Lowest numeric `order` first      |
-| `order:desc`  | Highest `order` first             |
+| Sort preset  | Behavior                            |
+| ------------ | ----------------------------------- |
+| `route:asc`  | Route path A→Z (default)            |
+| `route:desc` | Route path Z→A                      |
+| `date:asc`   | Oldest `date` / `publishedAt` first |
+| `date:desc`  | Newest first                        |
+| `order:asc`  | Lowest numeric `order` first        |
+| `order:desc` | Highest `order` first               |
 
 Pass `filter: { category: "news" }` to keep entries whose validated `data` matches every key.
 
@@ -103,13 +103,13 @@ Frontmatter stores the referenced entry id (`author: alex`). At build time the f
 
 Import ready-made schemas for common starters:
 
-| Preset                           | Use case                          |
-| -------------------------------- | --------------------------------- |
-| `blogPostsCollection`            | Blog posts under `posts/`         |
-| `knowledgeBaseArticlesCollection`| KB articles in topic folders      |
-| `changelogEntriesCollection`     | Changelog pages under `changelog/`|
-| `magazineArticlesCollection`     | Root-level `article-*.md(x)` files|
-| `authorsCollection`              | Author profiles for references    |
+| Preset                            | Use case                           |
+| --------------------------------- | ---------------------------------- |
+| `blogPostsCollection`             | Blog posts under `posts/`          |
+| `knowledgeBaseArticlesCollection` | KB articles in topic folders       |
+| `changelogEntriesCollection`      | Changelog pages under `changelog/` |
+| `magazineArticlesCollection`      | Root-level `article-*.md(x)` files |
+| `authorsCollection`               | Author profiles for references     |
 
 ```ts
 import { blogPostsCollection } from "@kamod-ch/preactpress/content";

@@ -37,7 +37,9 @@ export async function parseOpenApiDocument(spec: LoadedSpec): Promise<OpenApiDoc
 
   const openapi = (parsed as { openapi?: string }).openapi;
   if (!openapi?.startsWith("3.")) {
-    throw new OpenApiParseError(`Unsupported OpenAPI version "${openapi ?? "unknown"}". Only OpenAPI 3.x is supported.`);
+    throw new OpenApiParseError(
+      `Unsupported OpenAPI version "${openapi ?? "unknown"}". Only OpenAPI 3.x is supported.`,
+    );
   }
 
   try {

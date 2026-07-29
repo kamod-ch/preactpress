@@ -18,10 +18,11 @@
   --protocol-nav-height: 4rem;
   --protocol-sidebar-width: 16.5rem;
   --protocol-outline-width: 14rem;
-  --protocol-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
-  --protocol-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+  --protocol-font:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --protocol-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
 }
 
 html.light,
@@ -141,7 +142,7 @@ pre {
   text-decoration: none;
   font-weight: 600;
   font-size: 0.9375rem;
-  white-space:nowrap;
+  white-space: nowrap;
 }
 
 .protocol-brand:hover {
@@ -832,7 +833,9 @@ pre {
   }
 
   .protocol-shell.has-outline {
-    grid-template-columns: var(--protocol-sidebar-width) minmax(0, 1fr) var(--protocol-outline-width);
+    grid-template-columns: var(--protocol-sidebar-width) minmax(0, 1fr) var(
+        --protocol-outline-width
+      );
   }
 
   .protocol-sidebar {

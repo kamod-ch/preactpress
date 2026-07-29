@@ -1,6 +1,6 @@
 {
-  "private": true,
   "name": "preactpress-plugin-openapi-example",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "preactpress dev",

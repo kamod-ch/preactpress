@@ -6,7 +6,9 @@ import type { ChangelogProvider, ProviderContext } from "./types.js";
 async function listChangesetFiles(dir: string): Promise<string[]> {
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
-    return entries.filter((entry) => entry.isFile() && entry.name.endsWith(".md")).map((entry) => entry.name);
+    return entries
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
+      .map((entry) => entry.name);
   } catch {
     return [];
   }

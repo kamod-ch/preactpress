@@ -15,7 +15,7 @@ graph TD
 
 ## Sequence diagram
 
-```mermaid
+````mermaid
 sequenceDiagram
   participant Author
   participant Build
@@ -23,7 +23,7 @@ sequenceDiagram
   Author->>Build: Write ```mermaid fence
   Build->>Browser: Static fallback HTML
   Browser->>Browser: Enhance with SVG
-```
+````
 
 ## Invalid diagram
 

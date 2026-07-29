@@ -51,7 +51,12 @@ function buildProviderContext(
 async function fetchAllRawReleases(
   options: ChangelogGenerateOptions,
   context: ProviderContext,
-): Promise<{ raw: RawChangelogRelease[]; provider: ChangelogProviderId; source: string; sourceHash: string }> {
+): Promise<{
+  raw: RawChangelogRelease[];
+  provider: ChangelogProviderId;
+  source: string;
+  sourceHash: string;
+}> {
   const provider = resolveProvider(options.provider);
   const sourceHash = computeSourceHash(await provider.computeSourceHash(context));
 
@@ -67,8 +72,8 @@ async function fetchAllRawReleases(
         provider.id === "github"
           ? `github:${options.repository}`
           : provider.id === "local"
-            ? context.localPath ?? "CHANGELOG.md"
-            : context.changesetsDir ?? ".changeset",
+            ? (context.localPath ?? "CHANGELOG.md")
+            : (context.changesetsDir ?? ".changeset"),
       sourceHash: computeSourceHash(`${sourceHash}:${await changesets.computeSourceHash(context)}`),
     };
   }
@@ -80,8 +85,8 @@ async function fetchAllRawReleases(
       provider.id === "github"
         ? `github:${options.repository}`
         : provider.id === "local"
-          ? context.localPath ?? "CHANGELOG.md"
-          : context.changesetsDir ?? ".changeset",
+          ? (context.localPath ?? "CHANGELOG.md")
+          : (context.changesetsDir ?? ".changeset"),
     sourceHash,
   };
 }
@@ -125,7 +130,10 @@ export async function generateChangelogDocs(
 
   const { raw, provider, source, sourceHash } = await fetchAllRawReleases(options, context);
 
-  const cached = await readManifestCache({ cacheDir, enabled: options.cache !== false }, sourceHash);
+  const cached = await readManifestCache(
+    { cacheDir, enabled: options.cache !== false },
+    sourceHash,
+  );
   if (cached) {
     return renderChangelogDocs(cached);
   }
@@ -134,7 +142,9 @@ export async function generateChangelogDocs(
   const releases = [...primaryReleases];
 
   if (options.versionIntegration && config.versions?.enabled) {
-    for (const version of config.versions.versions.filter((entry) => !entry.isAlias && entry.prefix)) {
+    for (const version of config.versions.versions.filter(
+      (entry) => !entry.isAlias && entry.prefix,
+    )) {
       const prefix = version.prefix!.replace(/\/+$/, "");
       const versionBaseRoute = joinRoute(prefix, baseRoute.replace(/^\//, ""));
       const scoped = versionScopedReleases(primaryReleases, version.value, versionBaseRoute);

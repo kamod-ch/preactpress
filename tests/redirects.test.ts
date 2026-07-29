@@ -72,14 +72,20 @@ describe("redirects", () => {
 
   it("detects duplicate redirect sources", () => {
     expect(() =>
-      resolveRedirectsConfig([{ from: "/dup", to: "/a" }, { from: "/dup/", to: "/b" }], ["/a", "/b"]),
+      resolveRedirectsConfig(
+        [
+          { from: "/dup", to: "/a" },
+          { from: "/dup/", to: "/b" },
+        ],
+        ["/a", "/b"],
+      ),
     ).toThrow(/duplicate redirect source/);
   });
 
   it("rejects redirect sources that collide with content routes", () => {
-    expect(() =>
-      resolveRedirectsConfig({ "/guide": "/new-guide" }, ["/guide"]),
-    ).toThrow(/conflicts with an existing content route/);
+    expect(() => resolveRedirectsConfig({ "/guide": "/new-guide" }, ["/guide"])).toThrow(
+      /conflicts with an existing content route/,
+    );
   });
 
   it("renders platform redirect files and html fallbacks", () => {

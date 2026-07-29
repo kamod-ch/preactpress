@@ -24,7 +24,11 @@ export async function computeSourceHash(
   tsconfig: string | undefined,
   includePrivate: boolean,
 ): Promise<string> {
-  const parts = [`includePrivate:${includePrivate}`, `entries:${entries.join("|")}`, `tsconfig:${tsconfig ?? ""}`];
+  const parts = [
+    `includePrivate:${includePrivate}`,
+    `entries:${entries.join("|")}`,
+    `tsconfig:${tsconfig ?? ""}`,
+  ];
   for (const entry of entries) {
     const abs = path.resolve(root, entry);
     const stat = await fs.stat(abs);
@@ -71,5 +75,9 @@ export async function writeCache(
     generatedAt: manifest.generatedAt,
     manifest,
   };
-  await fs.writeFile(cacheFilePath(options.cacheDir), `${JSON.stringify(record, null, 2)}\n`, "utf8");
+  await fs.writeFile(
+    cacheFilePath(options.cacheDir),
+    `${JSON.stringify(record, null, 2)}\n`,
+    "utf8",
+  );
 }

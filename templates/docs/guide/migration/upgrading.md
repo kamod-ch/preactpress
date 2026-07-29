@@ -17,11 +17,11 @@ pnpm check
 pnpm build
 ```
 
-| Deprecated | Use instead |
-| ---------- | ----------- |
-| `llmsTxtPlugin()` | `aiExportsPlugin()` |
+| Deprecated           | Use instead                       |
+| -------------------- | --------------------------------- |
+| `llmsTxtPlugin()`    | `aiExportsPlugin()`               |
 | `printCheckResult()` | `printDocumentationCheckResult()` |
-| `SiteConfig` | `ResolvedConfig` |
+| `SiteConfig`         | `ResolvedConfig`                  |
 
 ## Upgrade from 1.x to 2.x
 
@@ -89,12 +89,12 @@ Node.js **20+** is required. Tested on 20, 22, and 24.
 
 ## Other migration paths
 
-| From | Guide |
-| ---- | ----- |
-| VitePress | [Migrate from VitePress](/guide/migration/vitepress) |
-| All paths index | [MIGRATION.md](https://github.com/kamod-ch/preactpress/blob/main/MIGRATION.md) |
-| Breaking changes | [CHANGELOG](https://github.com/kamod-ch/preactpress/blob/main/CHANGELOG.md) |
-| Known constraints | [Limitations](/guide/limitations) |
+| From              | Guide                                                                          |
+| ----------------- | ------------------------------------------------------------------------------ |
+| VitePress         | [Migrate from VitePress](/guide/migration/vitepress)                           |
+| All paths index   | [MIGRATION.md](https://github.com/kamod-ch/preactpress/blob/main/MIGRATION.md) |
+| Breaking changes  | [CHANGELOG](https://github.com/kamod-ch/preactpress/blob/main/CHANGELOG.md)    |
+| Known constraints | [Limitations](/guide/limitations)                                              |
 
 ## Getting help
 

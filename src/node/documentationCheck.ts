@@ -179,12 +179,10 @@ async function checkContentLink(
     if (options.external && /^https?:\/\//i.test(href)) {
       const ok = await verifyExternalHref(href);
       if (!ok) {
-        pushWarning(
-          warnings,
-          "external-link",
-          `${rel} links to unreachable external URL ${href}`,
-          { file: rel, route: fromRoute },
-        );
+        pushWarning(warnings, "external-link", `${rel} links to unreachable external URL ${href}`, {
+          file: rel,
+          route: fromRoute,
+        });
       }
     }
     return;
@@ -210,12 +208,10 @@ async function checkContentLink(
 
   if (!routeSet.has(targetRoute)) {
     if (shouldIgnoreDeadLink(href, ignoreDeadLinks, { from: rel, route: targetRoute })) return;
-    pushError(
-      errors,
-      "broken-link",
-      `${rel} links to missing page ${href} (${targetRoute})`,
-      { file: rel, route: fromRoute },
-    );
+    pushError(errors, "broken-link", `${rel} links to missing page ${href} (${targetRoute})`, {
+      file: rel,
+      route: fromRoute,
+    });
   }
 }
 
@@ -289,12 +285,10 @@ function checkHeadingIds(raw: string, rel: string, route: string, warnings: Chec
   const seenCustom = new Set<string>();
   for (const id of customIds) {
     if (seenCustom.has(id)) {
-      pushWarning(
-        warnings,
-        "duplicate-heading-id",
-        `${rel} repeats custom heading id "${id}"`,
-        { file: rel, route },
-      );
+      pushWarning(warnings, "duplicate-heading-id", `${rel} repeats custom heading id "${id}"`, {
+        file: rel,
+        route,
+      });
     }
     seenCustom.add(id);
   }
@@ -303,12 +297,10 @@ function checkHeadingIds(raw: string, rel: string, route: string, warnings: Chec
   const seenGenerated = new Set<string>();
   for (const heading of headings) {
     if (seenGenerated.has(heading.id)) {
-      pushWarning(
-        warnings,
-        "duplicate-heading-id",
-        `${rel} repeats heading id "${heading.id}"`,
-        { file: rel, route },
-      );
+      pushWarning(warnings, "duplicate-heading-id", `${rel} repeats heading id "${heading.id}"`, {
+        file: rel,
+        route,
+      });
     }
     seenGenerated.add(heading.id);
   }
@@ -345,12 +337,10 @@ async function checkImages(
     try {
       await fs.access(assetPath);
     } catch {
-      pushWarning(
-        warnings,
-        "missing-image",
-        `${rel} references missing image file ${image.src}`,
-        { file: rel, route: file.route },
-      );
+      pushWarning(warnings, "missing-image", `${rel} references missing image file ${image.src}`, {
+        file: rel,
+        route: file.route,
+      });
     }
   }
 }
@@ -372,7 +362,9 @@ function checkOrphanAndUnreachablePages(
     const hasInbound = [...inbound].some((source) => source !== route);
     const isRoot = route === "/" || site.i18n?.locales.some((locale) => route === locale.prefix);
     if (!hasInbound && !isRoot && !seeds.has(route)) {
-      pushWarning(warnings, "orphan-page", `orphan page with no inbound links: ${route}`, { route });
+      pushWarning(warnings, "orphan-page", `orphan page with no inbound links: ${route}`, {
+        route,
+      });
     }
     if (!reachable.has(route) && !seeds.has(route)) {
       pushWarning(
@@ -723,11 +715,8 @@ function checkRouteLink(
   const normalized = normalizeRoute(link);
   if (!routes.has(normalized)) {
     if (shouldIgnoreDeadLink(link, ignoreDeadLinks, { from, route: normalized })) return;
-    pushError(
-      errors,
-      "broken-link",
-      `${label} points to missing route ${link} (${normalized})`,
-      { route: normalized },
-    );
+    pushError(errors, "broken-link", `${label} points to missing route ${link} (${normalized})`, {
+      route: normalized,
+    });
   }
 }

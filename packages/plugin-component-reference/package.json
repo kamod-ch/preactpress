@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "description": "Preact component props reference for PreactPress",
   "license": "MIT",
+  "files": [
+    "dist",
+    "src/style.css",
+    "README.md"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -19,15 +24,13 @@
     },
     "./style.css": "./src/style.css"
   },
-  "files": ["dist", "src/style.css", "README.md"],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepare": "pnpm run build",
     "test": "vitest run"
-  },
-  "peerDependencies": {
-    "@kamod-ch/preactpress": ">=2.2.0",
-    "preact": ">=10.0.0"
   },
   "dependencies": {
     "typescript": "^6.0.3"
@@ -39,8 +42,11 @@
     "preact": "^10.29.2",
     "vitest": "^4.1.9"
   },
-  "engines": { "node": ">=20" },
-  "publishConfig": {
-    "access": "public"
+  "peerDependencies": {
+    "@kamod-ch/preactpress": ">=2.2.0",
+    "preact": ">=10.0.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

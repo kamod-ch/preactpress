@@ -23,11 +23,11 @@ See the full [Release report](https://github.com/kamod-ch/preactpress/blob/main/
 
 ## Upgrade paths
 
-| From | Guide |
-| ---- | ----- |
-| PreactPress 2.2.x | [Upgrade PreactPress](/guide/migration/upgrading) — no breaking changes |
-| PreactPress 1.x | [UPGRADE.md](https://github.com/kamod-ch/preactpress/blob/main/UPGRADE.md) |
-| VitePress | [Migrate from VitePress](/guide/migration/vitepress) |
+| From              | Guide                                                                      |
+| ----------------- | -------------------------------------------------------------------------- |
+| PreactPress 2.2.x | [Upgrade PreactPress](/guide/migration/upgrading) — no breaking changes    |
+| PreactPress 1.x   | [UPGRADE.md](https://github.com/kamod-ch/preactpress/blob/main/UPGRADE.md) |
+| VitePress         | [Migrate from VitePress](/guide/migration/vitepress)                       |
 
 ## Breaking changes policy
 
@@ -37,11 +37,11 @@ See the full [Release report](https://github.com/kamod-ch/preactpress/blob/main/
 
 Current deprecations (removal planned in 3.0.0):
 
-| Deprecated | Replacement |
-| ---------- | ----------- |
-| `llmsTxtPlugin()` | `aiExportsPlugin()` |
+| Deprecated           | Replacement                       |
+| -------------------- | --------------------------------- |
+| `llmsTxtPlugin()`    | `aiExportsPlugin()`               |
 | `printCheckResult()` | `printDocumentationCheckResult()` |
-| `SiteConfig` | `ResolvedConfig` |
+| `SiteConfig`         | `ResolvedConfig`                  |
 
 ## Subscribe to releases
 

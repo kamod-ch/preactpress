@@ -16,11 +16,7 @@ import {
 import { getCachedPage, loadPage, prefetchPage, seedPage } from "./loadPage.js";
 import { runClientPlugins } from "./clientPlugins.js";
 import { setupViewportPrefetch } from "./prefetchLinks.js";
-import {
-  localeFromRoute,
-  localizedRouteForLocale,
-  siteForRoute,
-} from "../shared/locale.js";
+import { localeFromRoute, localizedRouteForLocale, siteForRoute } from "../shared/locale.js";
 import {
   localizedRouteForVersion,
   themeConfigForRouteWithVersions,

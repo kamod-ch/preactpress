@@ -106,10 +106,7 @@ function addContentFile(
   routeToFile.set(route, { route, file, kind });
 }
 
-async function globContentFiles(
-  cwd: string,
-  site: SiteConfig,
-): Promise<string[]> {
+async function globContentFiles(cwd: string, site: SiteConfig): Promise<string[]> {
   return glob([...CONTENT_GLOBS], {
     cwd,
     absolute: true,
@@ -117,7 +114,10 @@ async function globContentFiles(
   });
 }
 
-async function scanWorkspaceContent(site: SiteConfig, routeToFile: Map<string, ContentFile>): Promise<void> {
+async function scanWorkspaceContent(
+  site: SiteConfig,
+  routeToFile: Map<string, ContentFile>,
+): Promise<void> {
   for (const workspace of workspaceContentRoots(site)) {
     let files: string[] = [];
     try {
@@ -131,7 +131,10 @@ async function scanWorkspaceContent(site: SiteConfig, routeToFile: Map<string, C
   }
 }
 
-async function scanVersionedContent(site: SiteConfig, routeToFile: Map<string, ContentFile>): Promise<void> {
+async function scanVersionedContent(
+  site: SiteConfig,
+  routeToFile: Map<string, ContentFile>,
+): Promise<void> {
   for (const version of versionContentRoots(site)) {
     let files: string[] = [];
     try {

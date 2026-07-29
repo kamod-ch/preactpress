@@ -12,7 +12,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "Mermaid",
     package: "@preactpress/plugin-mermaid",
     type: "plugin",
-    description: "Render Mermaid diagram fences in Markdown and MDX with lazy-loaded client hydration.",
+    description:
+      "Render Mermaid diagram fences in Markdown and MDX with lazy-loaded client hydration.",
     repository: `${repo}/tree/main/packages/plugin-mermaid`,
     documentation: docs("plugin-mermaid"),
     author: "PreactPress",
@@ -24,7 +25,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "Playground",
     package: "@preactpress/plugin-playground",
     type: "plugin",
-    description: "Live, editable Preact code playgrounds in MDX with a CSP-friendly sandbox iframe.",
+    description:
+      "Live, editable Preact code playgrounds in MDX with a CSP-friendly sandbox iframe.",
     repository: `${repo}/tree/main/packages/plugin-playground`,
     documentation: docs("plugin-playground"),
     author: "PreactPress",
@@ -36,7 +38,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "TypeDoc",
     package: "@preactpress/plugin-typedoc",
     type: "plugin",
-    description: "Generate TypeScript API reference pages from TypeDoc and merge them into site navigation.",
+    description:
+      "Generate TypeScript API reference pages from TypeDoc and merge them into site navigation.",
     repository: `${repo}/tree/main/packages/plugin-typedoc`,
     documentation: docs("plugin-typedoc"),
     author: "PreactPress",
@@ -48,7 +51,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "OpenAPI",
     package: "@preactpress/plugin-openapi",
     type: "plugin",
-    description: "Document REST APIs from OpenAPI 3.x specs with shared sidebar and search integration.",
+    description:
+      "Document REST APIs from OpenAPI 3.x specs with shared sidebar and search integration.",
     repository: `${repo}/tree/main/packages/plugin-openapi`,
     documentation: docs("plugin-openapi"),
     author: "PreactPress",
@@ -72,7 +76,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "Changelog",
     package: "@preactpress/plugin-changelog",
     type: "plugin",
-    description: "Pull release notes from local files, GitHub Releases, or Changesets into docs pages.",
+    description:
+      "Pull release notes from local files, GitHub Releases, or Changesets into docs pages.",
     repository: `${repo}/tree/main/packages/plugin-changelog`,
     documentation: docs("plugin-changelog"),
     author: "PreactPress",
@@ -96,7 +101,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "Hono",
     package: "template:hono",
     type: "theme",
-    description: "Marketing landing page paired with a focused documentation area and product-style chrome.",
+    description:
+      "Marketing landing page paired with a focused documentation area and product-style chrome.",
     repository: `${repo}/tree/main/templates/hono`,
     documentation: docs("templates"),
     author: "PreactPress",
@@ -108,7 +114,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "Blog",
     package: "template:blog",
     type: "theme",
-    description: "Technical blog shell with RSS, tags, authors, reading time, and masthead navigation.",
+    description:
+      "Technical blog shell with RSS, tags, authors, reading time, and masthead navigation.",
     repository: `${repo}/tree/main/templates/blog`,
     documentation: docs("templates"),
     author: "PreactPress",
@@ -120,7 +127,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "SaaS docs",
     package: "template:saas-docs",
     type: "theme",
-    description: "Product documentation theme with onboarding flows, admin hints, and support CTAs.",
+    description:
+      "Product documentation theme with onboarding flows, admin hints, and support CTAs.",
     repository: `${repo}/tree/main/templates/saas-docs`,
     documentation: docs("templates"),
     author: "PreactPress",
@@ -132,7 +140,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "Documentation",
     package: "template:docs",
     type: "starter",
-    description: "Full reference starter with guides, examples, search, i18n, and the default docs theme.",
+    description:
+      "Full reference starter with guides, examples, search, i18n, and the default docs theme.",
     repository: `${repo}/tree/main/templates/docs`,
     documentation: docs("templates"),
     author: "PreactPress",
@@ -144,7 +153,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "Product docs",
     package: "template:product-docs",
     type: "starter",
-    description: "Library and SDK documentation with guides, concepts, FAQ, and changelog sections.",
+    description:
+      "Library and SDK documentation with guides, concepts, FAQ, and changelog sections.",
     repository: `${repo}/tree/main/templates/product-docs`,
     documentation: docs("templates"),
     author: "PreactPress",
@@ -169,7 +179,8 @@ export const ecosystemRegistry: EcosystemRegistryItem[] = [
     name: "Knowledge base",
     package: "template:knowledge-base",
     type: "starter",
-    description: "Support-focused help center with search-first home, categories, and contact CTAs.",
+    description:
+      "Support-focused help center with search-first home, categories, and contact CTAs.",
     repository: `${repo}/tree/main/templates/knowledge-base`,
     documentation: docs("templates"),
     author: "PreactPress",

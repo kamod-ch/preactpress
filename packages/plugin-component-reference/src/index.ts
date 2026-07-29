@@ -2,8 +2,16 @@ import path from "node:path";
 import type { Plugin } from "vite";
 import type { PreactPressPlugin } from "@kamod-ch/preactpress/config";
 import type { ComponentManifest } from "./types/index.js";
-import { buildComponentManifest, defaultApiManifestPath, type ComponentCatalogItem } from "./extract/generate.js";
-import { componentSearchTags, lookupComponent, renderComponentReferenceHtml } from "./render/html.js";
+import {
+  buildComponentManifest,
+  defaultApiManifestPath,
+  type ComponentCatalogItem,
+} from "./extract/generate.js";
+import {
+  componentSearchTags,
+  lookupComponent,
+  renderComponentReferenceHtml,
+} from "./render/html.js";
 import { componentManifestVirtualPlugin, writeComponentManifest } from "./vite-manifest-plugin.js";
 
 export interface ComponentReferencePluginOptions {
@@ -17,8 +25,7 @@ export interface ComponentReferencePluginOptions {
   typedocManifestPath?: string;
 }
 
-const COMPONENT_REFERENCE_RE =
-  /<ComponentReference\b([^>]*)\/>/g;
+const COMPONENT_REFERENCE_RE = /<ComponentReference\b([^>]*)\/>/g;
 
 function parseAttributes(source: string): Record<string, string> {
   const attrs: Record<string, string> = {};
@@ -39,7 +46,7 @@ export function componentReferencePlugin(
     if (!manifestPromise) {
       manifestPromise = (async () => {
         const apiPath = options.useTypedocManifest
-          ? options.typedocManifestPath ?? (await defaultApiManifestPath(configDir))
+          ? (options.typedocManifestPath ?? (await defaultApiManifestPath(configDir)))
           : options.typedocManifestPath;
         const manifest = await buildComponentManifest({
           root,

@@ -64,7 +64,12 @@ export interface PreactPressPlugin {
   buildStart?(context: PluginContext): void | Promise<void>;
   extendRoutes?(routes: RouteDefinition[], context: PluginContext): RouteDefinition[] | void;
   transformMarkdown?(source: string, context: MarkdownTransformContext): string | void;
-  transformFence?(lang: string, code: string, meta: string, context: FenceTransformContext): string | void;
+  transformFence?(
+    lang: string,
+    code: string,
+    meta: string,
+    context: FenceTransformContext,
+  ): string | void;
   client?: string;
   transformPageData?(page: PageData, context: PluginContext & { route: string }): PageData | void;
   extendHead?(page: PageData, context: PluginContext & { route: string }): HeadEntry[] | void;
@@ -89,15 +94,15 @@ Treat hook inputs as read-only unless the hook returns a replacement value.
 
 ## Built-in plugins
 
-| Plugin | Purpose |
-| ------ | ------- |
-| `redirectsPlugin()` | Validates redirect rules during `buildStart` |
-| `@preactpress/plugin-mermaid` | Renders Mermaid diagram fences (official reference plugin) |
-| `@preactpress/plugin-typedoc` | Generates TypeScript API reference pages from TypeDoc |
-| `@preactpress/plugin-component-reference` | Documents Preact component props with static extraction |
-| `aiExportsPlugin()` | Writes `llms.txt`, `llms-full.txt`, page markdown, and `api/context.json` when `ai` is enabled (auto-registered) |
-| `llmsTxtPlugin()` | Alias for `aiExportsPlugin()` |
-| `examplePlugin()` | Minimal reference plugin for authors and tests |
+| Plugin                                    | Purpose                                                                                                          |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `redirectsPlugin()`                       | Validates redirect rules during `buildStart`                                                                     |
+| `@preactpress/plugin-mermaid`             | Renders Mermaid diagram fences (official reference plugin)                                                       |
+| `@preactpress/plugin-typedoc`             | Generates TypeScript API reference pages from TypeDoc                                                            |
+| `@preactpress/plugin-component-reference` | Documents Preact component props with static extraction                                                          |
+| `aiExportsPlugin()`                       | Writes `llms.txt`, `llms-full.txt`, page markdown, and `api/context.json` when `ai` is enabled (auto-registered) |
+| `llmsTxtPlugin()`                         | Alias for `aiExportsPlugin()`                                                                                    |
+| `examplePlugin()`                         | Minimal reference plugin for authors and tests                                                                   |
 
 ## Authoring plugins
 

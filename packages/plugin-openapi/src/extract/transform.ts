@@ -28,7 +28,16 @@ import type {
   SecuritySchemeObject,
 } from "./openapi-types.js";
 
-const HTTP_METHODS: HttpMethod[] = ["get", "post", "put", "patch", "delete", "head", "options", "trace"];
+const HTTP_METHODS: HttpMethod[] = [
+  "get",
+  "post",
+  "put",
+  "patch",
+  "delete",
+  "head",
+  "options",
+  "trace",
+];
 
 export interface TransformContext {
   baseRoute: string;
@@ -73,11 +82,18 @@ function examplesFromMap(examples: ExamplesMap | undefined): OpenApiExample[] | 
   const entries = Object.entries(examples);
   if (!entries.length) return undefined;
   return entries.map(([name, example]) => {
-    const value = typeof example === "object" && example && "value" in example ? example.value : example;
+    const value =
+      typeof example === "object" && example && "value" in example ? example.value : example;
     return {
       name,
-      summary: typeof example === "object" && example && "summary" in example ? example.summary : undefined,
-      description: typeof example === "object" && example && "description" in example ? example.description : undefined,
+      summary:
+        typeof example === "object" && example && "summary" in example
+          ? example.summary
+          : undefined,
+      description:
+        typeof example === "object" && example && "description" in example
+          ? example.description
+          : undefined,
       value,
     };
   });
@@ -94,7 +110,8 @@ function schemaProperties(schema: SchemaObject | undefined): OpenApiSchemaProper
       format: prop.format,
       description: prop.description,
       required: required.has(name),
-      nullable: "nullable" in prop && typeof prop.nullable === "boolean" ? prop.nullable : undefined,
+      nullable:
+        "nullable" in prop && typeof prop.nullable === "boolean" ? prop.nullable : undefined,
       enum: prop.enum?.map(String),
       default: prop.default,
       example: prop.example,
@@ -119,7 +136,10 @@ function schemaSlug(name: string): string {
   return slugifySegment(name);
 }
 
-function parametersFromOperation(operation: OperationObject, pathItem: PathItemObject): OpenApiParameter[] {
+function parametersFromOperation(
+  operation: OperationObject,
+  pathItem: PathItemObject,
+): OpenApiParameter[] {
   const merged = [...(pathItem.parameters ?? []), ...(operation.parameters ?? [])];
   const params: OpenApiParameter[] = [];
   for (const entry of merged) {
@@ -183,7 +203,9 @@ function securityFromOperation(operation: OperationObject, document: OpenApiDocu
   return [...names];
 }
 
-function securitySchemesFromDocument(document: OpenApiDocument): Record<string, OpenApiSecurityScheme> {
+function securitySchemesFromDocument(
+  document: OpenApiDocument,
+): Record<string, OpenApiSecurityScheme> {
   const schemes = document.components?.securitySchemes ?? {};
   const output: Record<string, OpenApiSecurityScheme> = {};
   for (const [id, scheme] of Object.entries(schemes)) {
@@ -217,7 +239,10 @@ function tagsFromDocument(document: OpenApiDocument): OpenApiTag[] {
   return output.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function schemasFromDocument(document: OpenApiDocument, baseRoute: string): Record<string, OpenApiSchema> {
+function schemasFromDocument(
+  document: OpenApiDocument,
+  baseRoute: string,
+): Record<string, OpenApiSchema> {
   const schemas = document.components?.schemas ?? {};
   const output: Record<string, OpenApiSchema> = {};
   for (const [name, schemaValue] of Object.entries(schemas)) {
@@ -246,7 +271,10 @@ function schemasFromDocument(document: OpenApiDocument, baseRoute: string): Reco
   return output;
 }
 
-function operationsFromDocument(document: OpenApiDocument, baseRoute: string): Record<string, OpenApiOperation> {
+function operationsFromDocument(
+  document: OpenApiDocument,
+  baseRoute: string,
+): Record<string, OpenApiOperation> {
   const output: Record<string, OpenApiOperation> = {};
   const paths = document.paths ?? {};
 
@@ -256,7 +284,9 @@ function operationsFromDocument(document: OpenApiDocument, baseRoute: string): R
       const operation = pathItem[method] as OperationObject | undefined;
       if (!operation) continue;
 
-      const slug = operation.operationId ? slugifySegment(operation.operationId) : operationSlug(method, pathTemplate);
+      const slug = operation.operationId
+        ? slugifySegment(operation.operationId)
+        : operationSlug(method, pathTemplate);
       const route = joinRoute(baseRoute, "operations", slug);
       const id = operation.operationId ?? slug;
 
@@ -302,7 +332,9 @@ function treeFromManifest(
       })),
   }));
 
-  const untagged = Object.values(operations).filter((operation) => operation.tags.includes("default"));
+  const untagged = Object.values(operations).filter((operation) =>
+    operation.tags.includes("default"),
+  );
   if (untagged.length) {
     tagNodes.push({
       id: "tag-default",
@@ -335,7 +367,10 @@ function treeFromManifest(
   ];
 }
 
-export function transformOpenApiDocument(document: OpenApiDocument, ctx: TransformContext): OpenApiManifest {
+export function transformOpenApiDocument(
+  document: OpenApiDocument,
+  ctx: TransformContext,
+): OpenApiManifest {
   const info = document.info ?? { title: "API", version: "0.0.0" };
   const servers: OpenApiServer[] = (document.servers ?? []).map((server) => ({
     url: server.url,

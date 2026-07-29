@@ -5,17 +5,17 @@ description: Commands for scaffolding, development, validation, builds, and prev
 
 Run commands from the site root or pass a root path as the final argument.
 
-| Command                                      | Purpose                                             |
-| -------------------------------------------- | --------------------------------------------------- |
-| `preactpress init [dir]`                     | Scaffold the minimal starter                        |
-| `preactpress init [dir] --template docs`     | Scaffold the full documentation starter             |
-| `preactpress init [dir] --template magazine` | Scaffold a custom editorial theme                   |
-| `preactpress init [dir] --template hono`     | Scaffold a product/docs custom theme                |
-| `preactpress dev [root]`                     | Start Vite SSR and hot reload                       |
-| `preactpress check [root]`                   | Documentation quality gate (links, metadata, i18n)  |
-| `preactpress build [root]`                   | Emit static production files                        |
-| `preactpress preview [root]`                 | Serve `outDir` locally                              |
-| `preactpress migrate vitepress [options]`    | Migrate a VitePress site to PreactPress output      |
+| Command                                      | Purpose                                            |
+| -------------------------------------------- | -------------------------------------------------- |
+| `preactpress init [dir]`                     | Scaffold the minimal starter                       |
+| `preactpress init [dir] --template docs`     | Scaffold the full documentation starter            |
+| `preactpress init [dir] --template magazine` | Scaffold a custom editorial theme                  |
+| `preactpress init [dir] --template hono`     | Scaffold a product/docs custom theme               |
+| `preactpress dev [root]`                     | Start Vite SSR and hot reload                      |
+| `preactpress check [root]`                   | Documentation quality gate (links, metadata, i18n) |
+| `preactpress build [root]`                   | Emit static production files                       |
+| `preactpress preview [root]`                 | Serve `outDir` locally                             |
+| `preactpress migrate vitepress [options]`    | Migrate a VitePress site to PreactPress output     |
 
 See [Starter templates](/guide/templates) for a comparison of the four official init starters.
 
@@ -58,9 +58,9 @@ Missing metadata: 4
 
 Exit codes:
 
-| Code | Meaning                                      |
-| ---- | -------------------------------------------- |
-| `0`  | No errors (warnings allowed unless `--strict`) |
+| Code | Meaning                                         |
+| ---- | ----------------------------------------------- |
+| `0`  | No errors (warnings allowed unless `--strict`)  |
 | `1`  | One or more errors, or warnings with `--strict` |
 
 JSON output is stable and CI-friendly. When `--output` is set, the JSON report is written to that path regardless of stdout format.

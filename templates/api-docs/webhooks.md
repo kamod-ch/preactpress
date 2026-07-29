@@ -30,11 +30,11 @@ Register an HTTPS endpoint to receive real-time events from Acme.
 
 ## Event types
 
-| Type                     | Description                          |
-| ------------------------ | ------------------------------------ |
-| `contact.created`        | A contact was created                |
-| `conversation.opened`    | A conversation became open           |
-| `message.created`        | A message was sent or received       |
-| `attachment.uploaded`    | A file attachment finished uploading |
+| Type                  | Description                          |
+| --------------------- | ------------------------------------ |
+| `contact.created`     | A contact was created                |
+| `conversation.opened` | A conversation became open           |
+| `message.created`     | A message was sent or received       |
+| `attachment.uploaded` | A file attachment finished uploading |
 
 Respond with `2xx` within 5 seconds. Failed deliveries are retried with exponential backoff.

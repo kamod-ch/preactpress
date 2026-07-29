@@ -30,7 +30,8 @@ export default defineConfig({
       const [count, setCount] = useState(0)
       return <button onClick={() => setCount(count + 1)}>Count: {count}</button>
     }
-  `}
+
+`}
 />
 ```
 
@@ -39,12 +40,12 @@ Multi-file API:
 ```mdx
 <Playground
   files={{
-    '/App.tsx': appCode,
-    '/components.tsx': componentCode,
+    "/App.tsx": appCode,
+    "/components.tsx": componentCode,
   }}
   entry="/App.tsx"
   dependencies={{
-    '@preact/signals': '2.3.2',
+    "@preact/signals": "2.3.2",
   }}
 />
 ```
@@ -63,7 +64,9 @@ Multi-file API:
 import { createPlaygroundComponents } from "@preactpress/plugin-playground/mdx";
 
 const mdxComponents = {
-  ...createMdxHeadingComponents({ /* ... */ }),
+  ...createMdxHeadingComponents({
+    /* ... */
+  }),
   ...createPlaygroundComponents({
     workspacePackages: {
       "@kamod/ui": "https://esm.sh/...",
