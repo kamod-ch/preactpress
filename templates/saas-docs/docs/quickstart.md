@@ -1,5 +1,6 @@
 ---
 title: Quickstart
+description: Create a workspace, generate an API key, and verify your first API request.
 layout: doc
 ---
 

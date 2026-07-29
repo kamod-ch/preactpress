@@ -2,7 +2,7 @@ import path from "node:path";
 import { fileHrefToRoute } from "./content.js";
 import { normalizeRoute } from "../shared/route.js";
 
-const MARKDOWN_LINK_RE = /!?\[([^\]]*)]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+const MARKDOWN_LINK_RE = /(?<!!)\[([^\]]*)]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 const HTML_HREF_RE = /\bhref=["']([^"']+)["']/g;
 const MARKDOWN_IMAGE_RE = /!\[([^\]]*)]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 const HTML_IMG_RE = /<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi;
@@ -233,6 +233,11 @@ export function resolveInternalRoute(href: string, fromRoute: string): string | 
   return normalizeRoute(joined);
 }
 
+export function isStaticAssetHref(href: string): boolean {
+  const pathPart = href.split(/[?#]/)[0] ?? href;
+  return /\.(?:svg|png|jpe?g|gif|webp|ico|avif|woff2?|ttf|eot|mp4|webm|pdf)$/i.test(pathPart);
+}
+
 export function resolveLocalAssetPath(
   src: string,
   contentFile: string,
@@ -245,7 +250,7 @@ export function resolveLocalAssetPath(
     assetPath = assetPath.slice(siteBase.length);
   }
   if (assetPath.startsWith("/")) {
-    return path.join(srcDir, assetPath.replace(/^\//, ""));
+    return path.join(srcDir, "public", assetPath.replace(/^\//, ""));
   }
   return path.resolve(path.dirname(contentFile), assetPath);
 }

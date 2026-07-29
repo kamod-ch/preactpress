@@ -1,5 +1,6 @@
 ---
 title: Troubleshooting
+description: Common fixes for API errors, invites, and disconnected integrations.
 layout: doc
 ---
 

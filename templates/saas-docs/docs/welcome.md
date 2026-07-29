@@ -1,5 +1,6 @@
 ---
 title: Welcome
+description: Overview of Acme workspace documentation for setup, administration, and developers.
 layout: doc
 ---
 

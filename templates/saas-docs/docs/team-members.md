@@ -1,5 +1,6 @@
 ---
 title: Team members
+description: Invite colleagues and assign roles to your Acme workspace.
 layout: doc
 ---
 

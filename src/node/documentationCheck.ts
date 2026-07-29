@@ -36,6 +36,7 @@ import {
   extractMarkdownLinks,
   isExternalHref,
   isKnownCodeLanguage,
+  isStaticAssetHref,
   resolveInternalRoute,
   resolveLocalAssetPath,
   verifyExternalHref,
@@ -174,6 +175,7 @@ async function checkContentLink(
   options: CheckOptions,
 ): Promise<void> {
   if (href.startsWith("#")) return;
+  if (isStaticAssetHref(href)) return;
 
   if (isExternalHref(href)) {
     if (options.external && /^https?:\/\//i.test(href)) {

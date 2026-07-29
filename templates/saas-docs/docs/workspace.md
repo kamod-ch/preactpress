@@ -1,5 +1,6 @@
 ---
 title: Workspace
+description: How workspaces isolate data, billing, and integrations for your organization.
 layout: doc
 ---
 

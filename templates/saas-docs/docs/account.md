@@ -1,5 +1,6 @@
 ---
 title: Account
+description: Manage profile, password, and notification preferences.
 layout: doc
 ---
 
