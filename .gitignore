@@ -21,6 +21,7 @@ benchmarks/fixtures/.benchmark-manifest.json
 benchmarks/results/*
 !benchmarks/results/.gitkeep
 !benchmarks/results/baseline.json
+!benchmarks/results/baseline.ci.json
 TODO.md
 
 /docs

@@ -83,7 +83,11 @@ Configured in `thresholds.json`. Default relative allowance is **+15–25%** vs 
 Update baseline after intentional improvements:
 
 ```bash
+# Local machine (same hardware as previous baseline)
 cp results/benchmark-<timestamp>.json results/baseline.json
+
+# GitHub Actions CI (after a green benchmark run on main)
+cp results/ci-latest.json results/baseline.ci.json
 ```
 
 ## Benchmark environment
@@ -105,7 +109,9 @@ GitHub Actions job `benchmark` runs on Node 22:
 1. Build PreactPress
 2. Generate 100-page fixture
 3. Run cold + warm build benchmarks
-4. Compare against committed `results/baseline.json`
+4. Compare against committed `results/baseline.ci.json` (GitHub Actions hardware)
+
+Local developers comparing on their own machine should use `results/baseline.json` instead — absolute timings are not comparable across machines.
 
 Dev-server and 1k+ page sizes are intended for local/scheduled runs due to CI time limits.
 

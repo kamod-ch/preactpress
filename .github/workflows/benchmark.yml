@@ -54,7 +54,7 @@ jobs:
         run: node benchmarks/scripts/run-benchmark.mjs --ci --skip-dev --output benchmarks/results/ci-latest.json
 
       - name: Compare against baseline
-        run: node benchmarks/scripts/compare-results.mjs benchmarks/results/ci-latest.json benchmarks/results/baseline.json
+        run: node benchmarks/scripts/compare-results.mjs benchmarks/results/ci-latest.json benchmarks/results/baseline.ci.json
 
       - name: Upload benchmark artifacts
         if: always()

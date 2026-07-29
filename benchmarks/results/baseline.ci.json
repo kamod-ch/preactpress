@@ -1,0 +1,43 @@
+{
+  "schema": "preactpress-benchmark/v1",
+  "environment": {
+    "nodeVersion": "v22.x",
+    "platform": "linux-x64",
+    "cpuModel": "GitHub Actions ubuntu-latest",
+    "cpuCount": null,
+    "totalMemoryMb": null,
+    "gitCommit": "ci-baseline",
+    "gitBranch": "main",
+    "timestamp": "2026-07-29T08:48:00.000Z"
+  },
+  "results": [
+    {
+      "pageCount": 100,
+      "coldBuildMs": 842,
+      "warmBuildMs": 513,
+      "devServerStartMs": null,
+      "pageUpdateMs": null,
+      "peakMemoryMb": 491.39,
+      "searchIndexBytes": 34225,
+      "sampleHtmlBytes": 28286,
+      "mainJsBytes": 126079,
+      "mainCssBytes": 58005,
+      "totalStaticBytes": 4096728,
+      "lighthouse": {
+        "sampleHtmlBytes": 28286,
+        "mainJsBytes": 126079,
+        "mainCssBytes": 58005,
+        "scriptTags": 2,
+        "stylesheetTags": 1,
+        "totalBlockingEstimate": 126079,
+        "note": "Static analysis only — not a full Lighthouse run. Compare same fixture size only."
+      }
+    }
+  ],
+  "notes": [
+    "CI baseline for GitHub Actions ubuntu-latest (Node 22). Do not use for local regression checks.",
+    "Absolute build timings vary by hardware — local developers should compare against baseline.json on the same machine.",
+    "Captured from CI run on 2026-07-29 after major-updates merge.",
+    "Output-size metrics match baseline.json; only cold/warm build timings are CI-specific."
+  ]
+}
