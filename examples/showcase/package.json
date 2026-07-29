@@ -9,9 +9,9 @@
     "preview": "node ../../bin/preactpress.mjs preview"
   },
   "devDependencies": {
-    "@kamod-ch/preactpress": "file:../..",
-    "@preactpress/plugin-mermaid": "file:../../packages/plugin-mermaid",
-    "@preactpress/plugin-playground": "file:../../packages/plugin-playground",
+    "@kamod-ch/preactpress": "workspace:*",
+    "@preactpress/plugin-mermaid": "workspace:*",
+    "@preactpress/plugin-playground": "workspace:*",
     "typescript": "^6.0.3"
   }
 }
