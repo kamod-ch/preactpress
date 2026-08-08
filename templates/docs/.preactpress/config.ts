@@ -22,6 +22,9 @@ export default defineConfig({
     copyMarkdown: true,
     contextIndex: true,
   },
+  pageReady: {
+    fallbackMs: 15000,
+  },
   markdown: {
     html: false,
     emoji: true,

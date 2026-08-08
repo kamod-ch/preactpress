@@ -76,6 +76,7 @@ describe("injectPageReadyShell", () => {
     expect(out).toContain('id="pp-page-ready"');
     expect(out).toContain('id="pp-preloader"');
     expect(out).toContain("themeCssApplied");
+    expect(out).toContain("initialStylesheetsReady");
     expect(out).toContain("DOMContentLoaded");
     expect(out.indexOf('id="pp-preloader"')).toBeLessThan(out.indexOf('<div id="app">'));
     expect(out.indexOf("themeCssApplied")).toBeLessThan(out.indexOf("</body>"));
@@ -85,6 +86,17 @@ describe("injectPageReadyShell", () => {
   it("skips injection when disabled", () => {
     const html = `<!DOCTYPE html><html><head></head><body><div id="app"></div></body></html>`;
     expect(injectPageReadyShell(html, false)).toBe(html);
+  });
+
+  it("does not reveal the app from a blind fallback timer", () => {
+    const html = `<!DOCTYPE html><html><head></head><body><div id="app"></div></body></html>`;
+    const out = injectPageReadyShell(html);
+
+    expect(out).not.toContain("setTimeout(markReady");
+    expect(out).toContain("if (!initialStylesheetsReady()) return;");
+    expect(out).toContain("if (frames < MAX_FRAMES) requestAnimationFrame(poll);");
+    expect(out).toContain("else setTimeout(poll, 100);");
+    expect(out).toContain("if (initialStylesheetsReady()) readyPromise.then(markReady);");
   });
 
   it("uses custom preloader markup", () => {

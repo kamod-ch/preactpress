@@ -96,6 +96,10 @@ function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
     var FALLBACK_MS = ${config.fallbackMs};
     var MAX_FRAMES = ${config.maxFrames};
     var STABLE_FRAMES = ${config.stableFrames};
+    var initialStylesheets = Array.prototype.slice.call(
+      document.head.querySelectorAll('link[rel="stylesheet"][href]')
+    );
+    var loadedStylesheets = typeof WeakSet === "function" ? new WeakSet() : null;
 
     function markReady() {
       if (document.documentElement.classList.contains(READY_CLASS)) return;
@@ -103,18 +107,33 @@ function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
       document.documentElement.removeAttribute("aria-busy");
     }
 
+    function markStylesheetLoaded(link) {
+      if (loadedStylesheets) loadedStylesheets.add(link);
+    }
+
+    function stylesheetIsReady(link) {
+      if (loadedStylesheets && loadedStylesheets.has(link)) return true;
+      if (!link.parentNode) return true;
+      if (link.media === "print") return false;
+      try {
+        if (link.sheet) return true;
+      } catch (e) {
+        return false;
+      }
+      return false;
+    }
+
+    function initialStylesheetsReady() {
+      for (var i = 0; i < initialStylesheets.length; i++) {
+        if (!stylesheetIsReady(initialStylesheets[i])) return false;
+      }
+      return true;
+    }
+
     function themeCssApplied() {
       ${themeProbe}var links = document.querySelectorAll('link[rel="stylesheet"][href]');
-      if (!links.length) return true;
-
       for (var i = 0; i < links.length; i++) {
-        var link = links[i];
-        if (link.media === "print") return false;
-        try {
-          if (!link.sheet) return false;
-        } catch (e) {
-          return false;
-        }
+        if (!stylesheetIsReady(links[i])) return false;
       }
       return true;
     }
@@ -134,6 +153,7 @@ function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
 
         function settle() {
           if (settled) return;
+          if (!initialStylesheetsReady()) return;
           if (!themeCssApplied()) return;
           var count = resourceCount();
           if (count !== lastResourceCount) {
@@ -159,8 +179,14 @@ function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
 
         var links = document.querySelectorAll('link[rel="stylesheet"][href]');
         for (var i = 0; i < links.length; i++) {
-          links[i].addEventListener("load", settle);
-          links[i].addEventListener("error", settle);
+          links[i].addEventListener("load", function (event) {
+            markStylesheetLoaded(event.currentTarget);
+            settle();
+          });
+          links[i].addEventListener("error", function (event) {
+            markStylesheetLoaded(event.currentTarget);
+            settle();
+          });
         }
 
         var frames = 0;
@@ -168,21 +194,19 @@ function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
           settle();
           if (settled) return;
           frames += 1;
-          if (frames >= MAX_FRAMES) {
-            settled = true;
-            observer.disconnect();
-            resolve();
-            return;
-          }
-          requestAnimationFrame(poll);
+          if (frames < MAX_FRAMES) requestAnimationFrame(poll);
+          else setTimeout(poll, 100);
         }
         poll();
       });
     }
 
     function start() {
-      whenStylesReady().then(markReady);
-      setTimeout(markReady, FALLBACK_MS);
+      var readyPromise = whenStylesReady();
+      readyPromise.then(markReady);
+      setTimeout(function () {
+        if (initialStylesheetsReady()) readyPromise.then(markReady);
+      }, FALLBACK_MS);
     }
 
     if (document.readyState === "loading") {
