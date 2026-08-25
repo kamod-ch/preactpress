@@ -72,6 +72,14 @@ const PAGE_READY_HEAD = `<style id="pp-page-ready">
   </style>
 </noscript>`;
 
+function compactInlineMarkup(value: string): string {
+  return value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join("\n");
+}
+
 function escapeJsString(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
@@ -92,7 +100,7 @@ function buildThemeCssProbe(probe: string | false): string {
 
 function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
   const themeProbe = buildThemeCssProbe(config.probe);
-  return `<script>
+  return compactInlineMarkup(`<script>
   (function () {
     var READY_CLASS = "pp-ready";
     var FALLBACK_MS = ${config.fallbackMs};
@@ -243,7 +251,7 @@ function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
       start();
     }
   })();
-</script>`;
+</script>`);
 }
 
 export function resolvePageReadyConfig(
@@ -299,7 +307,7 @@ export function injectPageReadyShell(
 
   const bootScript = buildPageReadyBootScript(pageReady);
 
-  let out = html.replace(/<head>/i, `<head>\n    ${PAGE_READY_HEAD}\n`);
+  let out = html.replace(/<head>/i, `<head>\n    ${compactInlineMarkup(PAGE_READY_HEAD)}\n`);
 
   out = out.replace(/<body([^>]*)>/i, `<body$1>\n    ${pageReady.preloader}\n`);
 
