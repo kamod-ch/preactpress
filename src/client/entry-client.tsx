@@ -21,5 +21,7 @@ if (el) {
       : await loadPage(initial, import.meta.env.BASE_URL || "/");
     seedPage(initial, initialPage);
     hydrate(<App routePath={initial} initialPage={initialPage} />, el);
+    document.documentElement.setAttribute("data-preactpress-app-ready", "");
+    document.dispatchEvent(new Event("preactpress:app-ready"));
   })();
 }

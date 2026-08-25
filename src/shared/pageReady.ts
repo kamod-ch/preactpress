@@ -6,8 +6,9 @@ const DEFAULT_PRELOADER = `<div id="pp-preloader" role="status" aria-live="polit
 </div>`;
 
 const PAGE_READY_HEAD = `<style id="pp-page-ready">
-  html:not(.pp-ready) #app {
-    visibility: hidden;
+  html:not(.pp-ready) body > :not(#pp-preloader),
+  html:not(.pp-ready) body > :not(#pp-preloader) * {
+    visibility: hidden !important;
   }
   html.pp-ready #pp-preloader {
     display: none !important;
@@ -64,7 +65,8 @@ const PAGE_READY_HEAD = `<style id="pp-page-ready">
     #pp-preloader {
       display: none !important;
     }
-    #app {
+    html:not(.pp-ready) body > :not(#pp-preloader),
+    html:not(.pp-ready) body > :not(#pp-preloader) * {
       visibility: visible !important;
     }
   </style>
@@ -100,6 +102,13 @@ function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
       document.head.querySelectorAll('link[rel="stylesheet"][href]')
     );
     var loadedStylesheets = typeof WeakSet === "function" ? new WeakSet() : null;
+    var pageLoaded = document.readyState === "complete";
+    var appReady = false;
+    var fontsReady = !document.fonts;
+    var expectsClient =
+      document.documentElement.getAttribute("data-preactpress-mpa") !== "markdown" &&
+      !!document.getElementById("app") &&
+      !!document.querySelector('script[type="module"]');
 
     function markReady() {
       if (document.documentElement.classList.contains(READY_CLASS)) return;
@@ -153,6 +162,9 @@ function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
 
         function settle() {
           if (settled) return;
+          if (!pageLoaded) return;
+          if (expectsClient && !appReady) return;
+          if (!fontsReady) return;
           if (!initialStylesheetsReady()) return;
           if (!themeCssApplied()) return;
           var count = resourceCount();
@@ -176,6 +188,22 @@ function buildPageReadyBootScript(config: ResolvedPageReadyConfig): string {
 
         var observer = new MutationObserver(settle);
         observer.observe(document.head, { childList: true, subtree: true });
+
+        window.addEventListener("load", function () {
+          pageLoaded = true;
+          settle();
+        });
+        document.addEventListener("preactpress:app-ready", function () {
+          appReady = true;
+          settle();
+        });
+        if (document.documentElement.hasAttribute("data-preactpress-app-ready")) appReady = true;
+        if (document.fonts) {
+          document.fonts.ready.then(function () {
+            fontsReady = true;
+            settle();
+          });
+        }
 
         var links = document.querySelectorAll('link[rel="stylesheet"][href]');
         for (var i = 0; i < links.length; i++) {
@@ -261,7 +289,7 @@ export function renderNonBlockingStylesheetLinks(
   return renderStylesheetLinks(hrefs, opts);
 }
 
-/** Inject inline preloader shell so first paint shows a spinner until stylesheets are ready. */
+/** Inject a blocking preloader until initial resources, fonts, and client hydration are ready. */
 export function injectPageReadyShell(
   html: string,
   pageReady: ResolvedPageReadyConfig | false = resolvePageReadyConfig(undefined),

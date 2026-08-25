@@ -78,6 +78,10 @@ describe("injectPageReadyShell", () => {
     expect(out).toContain("themeCssApplied");
     expect(out).toContain("initialStylesheetsReady");
     expect(out).toContain("DOMContentLoaded");
+    expect(out).toContain('window.addEventListener("load"');
+    expect(out).toContain('document.addEventListener("preactpress:app-ready"');
+    expect(out).toContain("document.fonts.ready");
+    expect(out).toContain("body > :not(#pp-preloader)");
     expect(out.indexOf('id="pp-preloader"')).toBeLessThan(out.indexOf('<div id="app">'));
     expect(out.indexOf("themeCssApplied")).toBeLessThan(out.indexOf("</body>"));
     expect(injectPageReadyShell(out)).toBe(out);
@@ -93,6 +97,9 @@ describe("injectPageReadyShell", () => {
     const out = injectPageReadyShell(html);
 
     expect(out).not.toContain("setTimeout(markReady");
+    expect(out).toContain("if (!pageLoaded) return;");
+    expect(out).toContain("if (expectsClient && !appReady) return;");
+    expect(out).toContain("if (!fontsReady) return;");
     expect(out).toContain("if (!initialStylesheetsReady()) return;");
     expect(out).toContain("if (frames < MAX_FRAMES) requestAnimationFrame(poll);");
     expect(out).toContain("else setTimeout(poll, 100);");
