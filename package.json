@@ -85,7 +85,8 @@
     "release:dry": "node ./scripts/release.mjs patch --dry",
     "release:plugins": "node ./scripts/release-plugins.mjs",
     "release:plugins:dry": "node ./scripts/release-plugins.mjs --dry",
-    "release:check": "npm pack && tar -tf kamod-ch-preactpress-*.tgz",
+    "release:check": "pnpm verify",
+    "release:publish": "node ./scripts/publish-all.mjs",
     "verify": "pnpm run fmt:check && pnpm run lint && pnpm run build && pnpm run test:coverage && pnpm run check:templates && pnpm run test:browser && pnpm run pack:dry-run",
     "preactpress": "node ./bin/preactpress.mjs",
     "dev": "node ./bin/preactpress.mjs dev templates/default",
@@ -133,41 +134,45 @@
     "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
   },
   "dependencies": {
-    "@docsearch/css": "^4.6.3",
-    "@docsearch/js": "^4.6.3",
+    "@docsearch/css": "^5.1.1",
+    "@docsearch/js": "^5.1.1",
     "@mdx-js/rollup": "^3.1.1",
-    "@preact/preset-vite": "^2.10.5",
-    "@shikijs/transformers": "^4.2.0",
+    "@preact/preset-vite": "^2.10.6",
+    "@shikijs/transformers": "^4.5.0",
     "gray-matter": "^4.0.3",
-    "markdown-it": "^14.2.0",
-    "markdown-it-emoji": "^3.0.0",
+    "markdown-it": "^15.0.2",
+    "markdown-it-emoji": "^3.1.0",
     "markdown-it-mathjax3": "^5.2.0",
     "minimist": "^1.2.8",
-    "node-html-parser": "^7.1.0",
+    "node-html-parser": "^9.0.4",
     "picocolors": "^1.1.1",
-    "preact": "^10.29.2",
-    "preact-render-to-string": "^6.7.0",
+    "preact": "^11.0.0",
+    "preact-render-to-string": "^6.8.0",
     "remark-frontmatter": "^5.0.0",
-    "shiki": "^4.2.0",
+    "shiki": "^4.5.0",
     "sirv": "^3.0.2",
     "tinyglobby": "^0.2.17",
-    "vite": "^8.0.16",
-    "zod": "^3.25.76"
+    "vite": "^8.3.2",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.0",
-    "@types/markdown-it": "^14.1.2",
+    "@playwright/test": "^1.63.0",
     "@types/minimist": "^1.2.5",
-    "@types/node": "^25.9.2",
-    "@vitest/coverage-v8": "^4.1.9",
-    "oxfmt": "^0.54.0",
-    "oxlint": "^1.69.0",
-    "sharp": "^0.34.5",
+    "@types/node": "^26.6.3",
+    "@vitest/coverage-v8": "^5.0.3",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
+    "sharp": "^0.35.5",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.9"
+    "vitest": "^5.0.3"
   },
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@10.12.4"
+  "packageManager": "pnpm@10.12.4",
+  "pnpm": {
+    "overrides": {
+      "lodash-es": "^4.18.1"
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import type { ComponentChildren, FunctionalComponent, JSX } from "preact";
+import type { ComponentChildren, FunctionalComponent, HeadingHTMLAttributes } from "preact";
 import { useEffect } from "preact/hooks";
 import {
   PREACTPRESS_THEME_STORAGE_KEY,
@@ -66,7 +66,7 @@ export function createMdxHeadingComponents({
   const used = new Map<string, number>();
   const heading =
     (Tag: "h2" | "h3") =>
-    ({ children, ...props }: JSX.HTMLAttributes<HTMLHeadingElement>) => {
+    ({ children, ...props }: HeadingHTMLAttributes<HTMLHeadingElement>) => {
       const base = slugifyHeading(childText(children));
       const count = used.get(base) ?? 0;
       used.set(base, count + 1);

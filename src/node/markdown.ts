@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import matter from "gray-matter";
-import MarkdownIt from "markdown-it";
+import MarkdownIt, { type Env, type MarkdownIt as MarkdownItInstance } from "markdown-it";
 import { full as markdownItEmoji } from "markdown-it-emoji";
 import mathjax from "markdown-it-mathjax3";
 import {
@@ -202,7 +202,7 @@ const DEFAULT_MARKDOWN_CONFIG: Required<MarkdownConfig> = {
   math: false,
 };
 
-interface MarkdownRenderEnv {
+interface MarkdownRenderEnv extends Env {
   highlighter: Highlighter;
   headings: OutlineItem[];
   allHeadings: OutlineItem[];
@@ -214,7 +214,7 @@ interface MarkdownRenderEnv {
   fenceCounter?: number;
 }
 
-const markdownRenderers = new Map<string, MarkdownIt>();
+const markdownRenderers = new Map<string, MarkdownItInstance>();
 
 function rendererCacheKey(config: Required<MarkdownConfig>): string {
   return JSON.stringify({
@@ -226,7 +226,7 @@ function rendererCacheKey(config: Required<MarkdownConfig>): string {
   });
 }
 
-function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownIt {
+function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownItInstance {
   const key = rendererCacheKey(config);
   const cached = markdownRenderers.get(key);
   if (cached) return cached;
@@ -251,7 +251,7 @@ function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownIt {
     ((tokens, idx, rendererOptions, _env, self) => self.renderToken(tokens, idx, rendererOptions));
 
   md.renderer.rules.fence = (tokens, idx, _rendererOptions, env): string => {
-    const renderEnv = env as MarkdownRenderEnv;
+    const renderEnv = env! as MarkdownRenderEnv;
     const token = tokens[idx];
     const info = (token.info || "").trim();
     const { lang: langRaw, metaRaw } = parseFenceInfo(info);
@@ -263,7 +263,7 @@ function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownIt {
   };
 
   md.renderer.rules.heading_open = (tokens, idx, rendererOptions, env, self) => {
-    const renderEnv = env as MarkdownRenderEnv;
+    const renderEnv = env! as MarkdownRenderEnv;
     const token = tokens[idx];
     const level = Number(token.tag.slice(1));
     const inline = tokens[idx + 1];
@@ -284,7 +284,8 @@ function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownIt {
       .slice(0, idx)
       .reverse()
       .find((token) => token.type === "heading_open" && token.tag === tokens[idx].tag);
-    const id = open?.attrGet("id");
+    const idValue = open?.attrGet("id");
+    const id = idValue == null ? null : String(idValue);
     const anchor = id
       ? `<a class="pp-heading-anchor" href="#${escapeHtml(id)}" aria-label="Link to this section">#</a>`
       : "";
@@ -297,9 +298,9 @@ function getMarkdownRenderer(config: Required<MarkdownConfig>): MarkdownIt {
   registerContainerRule(md);
 
   md.renderer.rules.link_open = (tokens, idx, rendererOptions, env, self) => {
-    const renderEnv = env as MarkdownRenderEnv;
+    const renderEnv = env! as MarkdownRenderEnv;
     const token = tokens[idx];
-    const href = token.attrGet("href") ?? "";
+    const href = String(token.attrGet("href") ?? "");
     if (renderEnv.route) {
       let targetRoute = fileHrefToRoute(href, renderEnv.route);
       if (
@@ -434,14 +435,27 @@ async function resolvePluginFenceOverrides(
   return overrides;
 }
 
+function readFileUtf8OrNull(absPath: string): string | null {
+  try {
+    return fs.readFileSync(absPath, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 export function readMarkdownMetadata(absPath: string): MarkdownMetadata {
-  const raw = fs.readFileSync(absPath, "utf8");
+  const raw = readFileUtf8OrNull(absPath);
+  if (raw === null) {
+    return { meta: {}, title: undefined, description: undefined, headings: [] };
+  }
   return extractMarkdownMetadata(raw);
 }
 
 /** Frontmatter only — skips heading extraction for draft scans at scale. */
 export function readMarkdownDraftMeta(absPath: string): Record<string, unknown> {
-  const raw = fs.readFileSync(absPath, "utf8");
+  const raw = readFileUtf8OrNull(absPath);
+  if (raw === null) return {};
   const { data } = matter(raw);
   return normalizeMatterData(data);
 }
@@ -458,7 +472,7 @@ export function extractMarkdownMetadata(raw: string): MarkdownMetadata {
   return { meta, title, description, headings };
 }
 
-function registerHeadingIdRule(md: MarkdownIt): void {
+function registerHeadingIdRule(md: MarkdownItInstance): void {
   md.core.ruler.after("inline", "pp_heading_custom_ids", (state) => {
     const tokens = state.tokens;
     for (let i = 0; i < tokens.length; i++) {
@@ -480,7 +494,7 @@ function registerHeadingIdRule(md: MarkdownIt): void {
   });
 }
 
-function registerCodeGroupRule(md: MarkdownIt): void {
+function registerCodeGroupRule(md: MarkdownItInstance): void {
   md.block.ruler.before("fence", "pp_code_group", (state, startLine, endLine, silent) => {
     const start = state.bMarks[startLine] + state.tShift[startLine];
     const max = state.eMarks[startLine];
@@ -533,7 +547,7 @@ function registerCodeGroupRule(md: MarkdownIt): void {
   });
 
   md.renderer.rules.pp_code_group = (tokens, idx, _rendererOptions, env): string => {
-    const renderEnv = env as MarkdownRenderEnv;
+    const renderEnv = env! as MarkdownRenderEnv;
     const fences = (tokens[idx].meta?.fences ?? []) as { info: string; content: string }[];
     const groupId = `pp-cg-${++renderEnv.codeGroupCounter}`;
 
@@ -561,7 +575,7 @@ function registerCodeGroupRule(md: MarkdownIt): void {
   };
 }
 
-function registerTocRule(md: MarkdownIt): void {
+function registerTocRule(md: MarkdownItInstance): void {
   md.block.ruler.before("paragraph", "pp_toc", (state, startLine, _endLine, silent) => {
     const start = state.bMarks[startLine] + state.tShift[startLine];
     const max = state.eMarks[startLine];
@@ -575,12 +589,12 @@ function registerTocRule(md: MarkdownIt): void {
   });
 
   md.renderer.rules.pp_toc = (_tokens, _idx, _rendererOptions, env): string => {
-    const renderEnv = env as MarkdownRenderEnv;
+    const renderEnv = env! as MarkdownRenderEnv;
     return renderInlineToc(renderEnv.allHeadings);
   };
 }
 
-function registerContainerRule(md: MarkdownIt): void {
+function registerContainerRule(md: MarkdownItInstance): void {
   md.block.ruler.before("fence", "pp_container", (state, startLine, endLine, silent) => {
     const start = state.bMarks[startLine] + state.tShift[startLine];
     const max = state.eMarks[startLine];

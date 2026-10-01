@@ -37,13 +37,13 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "mermaid": "^11.16.0"
+    "mermaid": "^12.0.0"
   },
   "devDependencies": {
     "@kamod-ch/preactpress": "workspace:*",
-    "@vitest/coverage-v8": "^4.1.9",
+    "@vitest/coverage-v8": "^5.0.3",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.9"
+    "vitest": "^5.0.3"
   },
   "peerDependencies": {
     "@kamod-ch/preactpress": ">=2.2.0"
