@@ -19,6 +19,6 @@ jobs:
     steps:
       - uses: kamod-ch/.github/.github/actions/npm-publish-on-tag@main
         with:
-          pre-publish: pnpm release:check
+          pre-publish: pnpm exec playwright install --with-deps chromium && pnpm release:check
           publish: pnpm release:publish
           npm-token: ${{ secrets.NPM_TOKEN }}
