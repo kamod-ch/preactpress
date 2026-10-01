@@ -10,6 +10,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@kamod-ch/preactpress"><img src="https://img.shields.io/npm/v/@kamod-ch/preactpress" alt="npm version" /></a>
+  <a href="https://preactjs.com/"><img src="https://img.shields.io/badge/Preact-11-673ab8?logo=preact" alt="Preact 11" /></a>
   <a href="https://github.com/kamod-ch/preactpress/actions/workflows/ci.yml"><img src="https://img.shields.io/npm/v/@kamod-ch/preactpress?label=node%2020%2C22%2C24" alt="Node support" /></a>
   <a href="https://github.com/kamod-ch/preactpress/actions/workflows/ci.yml"><img src="https://github.com/kamod-ch/preactpress/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://github.com/kamod-ch/preactpress/stargazers"><img src="https://img.shields.io/github/stars/kamod-ch/preactpress?style=social" alt="GitHub stars" /></a>
@@ -18,13 +19,15 @@
 
 **[Live demo](https://kamod-ch.github.io/preactpress/)** · **[Docs starter](./templates/docs)** · **[Showcase](./examples/showcase/)** · **[npm](https://www.npmjs.com/package/@kamod-ch/preactpress)** · **[GitHub](https://github.com/kamod-ch/preactpress)**
 
+> **Now powered by Preact 11**, including the latest Preact runtime and APIs out of the box.
+
 > If PreactPress saves you time, **[star the repo](https://github.com/kamod-ch/preactpress)** — it helps others discover the project.
 
 ## Key features
 
 | Feature                       | What you get                                                           |
 | ----------------------------- | ---------------------------------------------------------------------- |
-| **Preact + MDX**              | VitePress-style docs with Preact components, not Vue                   |
+| **Preact 11 + MDX**           | VitePress-style docs with Preact 11 components, not Vue                |
 | **Plugin system**             | Typed hooks for build, config, MDX, and validation                     |
 | **`preactpress check`**       | CI-ready validation for links, routes, nav, redirects, and i18n        |
 | **Documentation versioning**  | Version switcher, archived snapshots, scoped search                    |
@@ -109,7 +112,7 @@ import Counter from "./components/Counter.tsx";
 
 Many documentation tools assume Vue or React. PreactPress targets teams who already ship Preact libraries and want a smaller runtime with familiar JSX patterns.
 
-- **Preact-first** — tiny bundle, React-like APIs, MDX components are Preact components.
+- **Preact 11-first** — the latest Preact runtime is included; MDX components use its tiny, React-like API.
 - **VitePress-like DX** — file-based Markdown routes, sidebar, outline, search, and dark mode out of the box.
 - **Library docs, not just guides** — TypeDoc, OpenAPI, component prop tables, and changelog plugins ship as first-class extensions.
 - **AI agent ready** — static `llms.txt` / `llms-full.txt` exports help Cursor, Claude Code, and similar tools index your docs.
@@ -121,7 +124,7 @@ Pair with **[Kamod UI](https://ui.kamod.ch/)** for Preact + Tailwind components 
 
 |                         | PreactPress                             | VitePress              | Docusaurus                         | Starlight               |
 | ----------------------- | --------------------------------------- | ---------------------- | ---------------------------------- | ----------------------- |
-| UI stack                | Preact + MDX                            | Vue                    | React                              | Astro                   |
+| UI stack                | Preact 11 + MDX                         | Vue                    | React                              | Astro                   |
 | Docs theme              | Built-in                                | Built-in               | Built-in                           | Built-in                |
 | Runtime size            | Small Preact bundle                     | Vue hydration          | React + router                     | Varies                  |
 | TypeScript API docs     | `@preactpress/plugin-typedoc`           | Manual / plugins       | TypeDoc plugin                     | Manual                  |
