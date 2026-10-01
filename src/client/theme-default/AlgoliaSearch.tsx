@@ -1,4 +1,4 @@
-import type { DocSearchInstance, DocSearchProps } from "@docsearch/js";
+import type { DocSearchInstance, DocSearchProps } from "@docsearch/js/docsearch";
 import type { FunctionalComponent } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 import type { AlgoliaSearchOptions } from "../../shared/search.js";
@@ -7,7 +7,6 @@ import {
   navigateDocSearchResult,
   validateAlgoliaCredentials,
 } from "../../shared/search.js";
-import "@docsearch/css";
 
 export interface AlgoliaSearchProps {
   options: AlgoliaSearchOptions;
@@ -28,18 +27,26 @@ const AlgoliaSearch: FunctionalComponent<AlgoliaSearchProps> = ({
     const credentials = validateAlgoliaCredentials(options);
     if (!credentials.valid) return;
 
+    // Keep DocSearch's sizeable stylesheet out of sites that do not enable Algolia search.
+    void import("@docsearch/css");
+
     const currentInit = ++initKey.current;
     let destroy: (() => void) | undefined;
     let cancelled = false;
 
-    void import("@docsearch/js").then((mod) => {
+    void import("@docsearch/js/docsearch").then((mod) => {
       if (cancelled || currentInit !== initKey.current) return;
       const docsearch = mod.default as unknown as (props: DocSearchProps) => DocSearchInstance;
       const instance = docsearch({
         container: `#${containerId}`,
         appId: credentials.appId!,
         apiKey: credentials.apiKey!,
-        indexName: credentials.indexName!,
+        indices: [
+          {
+            name: credentials.indexName!,
+            searchParameters: options.searchParameters,
+          },
+        ] as DocSearchProps["indices"],
         placeholder: options.placeholder,
         maxResultsPerGroup: options.maxResultsPerGroup,
         disableUserPersonalization: options.disableUserPersonalization,
@@ -47,7 +54,6 @@ const AlgoliaSearch: FunctionalComponent<AlgoliaSearchProps> = ({
         recentSearchesLimit: options.recentSearchesLimit,
         recentSearchesWithFavoritesLimit: options.recentSearchesWithFavoritesLimit,
         insights: options.insights,
-        searchParameters: options.searchParameters,
         navigator: {
           navigate({ itemUrl }: { itemUrl: string }) {
             navigateDocSearchResult(itemUrl, base);

@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { glob } from "tinyglobby";
 import type { SiteConfig } from "./siteConfig.js";
@@ -143,6 +144,7 @@ async function scanVersionedContent(
       continue;
     }
     for (const file of files.sort()) {
+      if (!fs.existsSync(file)) continue;
       const meta = readMarkdownMetadata(file).meta;
       if (!pageMatchesVersion(meta, version.value)) continue;
       addContentFile(routeToFile, site, routeForVersionedFile(site, version, file), file);

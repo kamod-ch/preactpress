@@ -1,4 +1,5 @@
 import { resolveFileLastUpdated } from "./lastUpdated.js";
+import fs from "node:fs";
 import path from "node:path";
 import type { Plugin, ViteDevServer } from "vite";
 import type { SiteConfig } from "./siteConfig.js";
@@ -32,7 +33,7 @@ export { mdFileToRoute };
 
 export async function listMarkdownRoutes(site: SiteConfig): Promise<string[]> {
   const published = (await scanAllContentFiles(site)).filter(
-    (file) => !isDraftPage(readMarkdownDraftMeta(file.file)),
+    (file) => fs.existsSync(file.file) && !isDraftPage(readMarkdownDraftMeta(file.file)),
   );
   const routeToFile = new Map<string, ContentFile>(published.map((file) => [file.route, file]));
   for (const entry of await resolveDynamicRoutes(site)) {
@@ -79,6 +80,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
     routeToFile.clear();
     dynamicRoutes.clear();
     for (const file of await scanAllContentFiles(site)) {
+      if (!fs.existsSync(file.file)) continue;
       if (isDraftPage(readMarkdownDraftMeta(file.file))) continue;
       routeToFile.set(file.route, file);
     }
@@ -315,15 +317,32 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         res.end(PREACTPRESS_THEME_BOOT_SCRIPT);
       });
       server.watcher.add(site.srcDir);
-      server.watcher.on("all", async (_evt, file) => {
+      let contentScanTimer: ReturnType<typeof setTimeout> | undefined;
+      server.watcher.on("all", (_evt, file) => {
         if (typeof file !== "string") return;
         if (
           CONTENT_EXTENSIONS.some((ext) => file.endsWith(ext)) ||
           file.endsWith(".data.ts") ||
           file.endsWith(".paths.ts")
         ) {
-          await scan();
-          invalidateVirtuals(server);
+          clearTimeout(contentScanTimer);
+          contentScanTimer = setTimeout(() => {
+            void (async () => {
+              try {
+                await scan();
+                invalidateVirtuals(server);
+              } catch (error) {
+                const err = error as NodeJS.ErrnoException;
+                if (err.code === "ENOENT") {
+                  server.config.logger.warn(
+                    `preactpress: content scan skipped (file missing): ${err.path ?? file}`,
+                  );
+                  return;
+                }
+                throw error;
+              }
+            })();
+          }, 150);
         }
       });
     },
