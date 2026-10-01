@@ -64,9 +64,7 @@ Multi-file API:
 import { createPlaygroundComponents } from "@preactpress/plugin-playground/mdx";
 
 const mdxComponents = {
-  ...createMdxHeadingComponents({
-    /* ... */
-  }),
+  ...createMdxHeadingComponents({/* ... */}),
   ...createPlaygroundComponents({
     workspacePackages: {
       "@kamod/ui": "https://esm.sh/...",

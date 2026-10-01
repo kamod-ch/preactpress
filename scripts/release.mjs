@@ -115,8 +115,7 @@ const config = await loadConfig();
 const packageDirs = resolvePackageDirs(config);
 const tagPackage = config.tagPackage ?? packageDirs[0];
 const qaCommand = config.qaCommand ?? "pnpm release:check";
-const commitMessage =
-  config.commitMessage ?? ((version) => `chore: release v${version}`);
+const commitMessage = config.commitMessage ?? ((version) => `chore: release v${version}`);
 const syncLockfile = config.syncLockfile === true;
 const syncLockfileCommands = config.syncLockfileCommands ?? [
   "pnpm syncpack:fix",
@@ -140,9 +139,7 @@ if (status) {
 const tagPkg = readPackageJson(tagPackage);
 const packageName = tagPkg.name;
 const currentVersion = tagPkg.version;
-console.log(
-  `[release] Preparing ${packageName}@${currentVersion}${dryRun ? " (dry run)" : ""}`,
-);
+console.log(`[release] Preparing ${packageName}@${currentVersion}${dryRun ? " (dry run)" : ""}`);
 
 run("pnpm install --frozen-lockfile");
 run(qaCommand);
