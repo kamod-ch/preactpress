@@ -7,7 +7,6 @@ import {
   navigateDocSearchResult,
   validateAlgoliaCredentials,
 } from "../../shared/search.js";
-import "@docsearch/css";
 
 export interface AlgoliaSearchProps {
   options: AlgoliaSearchOptions;
@@ -27,6 +26,9 @@ const AlgoliaSearch: FunctionalComponent<AlgoliaSearchProps> = ({
   useEffect(() => {
     const credentials = validateAlgoliaCredentials(options);
     if (!credentials.valid) return;
+
+    // Keep DocSearch's sizeable stylesheet out of sites that do not enable Algolia search.
+    void import("@docsearch/css");
 
     const currentInit = ++initKey.current;
     let destroy: (() => void) | undefined;
