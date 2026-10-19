@@ -69,16 +69,31 @@ export async function listMarkdownRoutes(site: SiteConfig): Promise<string[]> {
   return [...new Set([...routeToFile.keys(), ...tagRoutes])].sort();
 }
 
+type PluginCatalog = {
+  routeToFile: Map<string, ContentFile>;
+  dynamicRoutes: Map<string, DynamicRouteEntry>;
+  pageDataByRoute: Map<string, unknown>;
+};
+
 export function preactPressPlugin(site: SiteConfig): Plugin {
-  const routeToFile = new Map<string, ContentFile>();
-  const dynamicRoutes = new Map<string, DynamicRouteEntry>();
-  let pageDataByRoute = new Map<string, unknown>();
+  let catalog: PluginCatalog = {
+    routeToFile: new Map(),
+    dynamicRoutes: new Map(),
+    pageDataByRoute: new Map(),
+  };
+  let scanQueue: Promise<void> = Promise.resolve();
   let ssrPagesModule = "";
   let clientPagesModule = "";
 
-  async function scan(): Promise<void> {
-    routeToFile.clear();
-    dynamicRoutes.clear();
+  function scan(): Promise<void> {
+    const request = scanQueue.then(scanNext);
+    scanQueue = request.catch(() => {});
+    return request;
+  }
+
+  async function scanNext(): Promise<void> {
+    const routeToFile = new Map<string, ContentFile>();
+    const dynamicRoutes = new Map<string, DynamicRouteEntry>();
     for (const file of await scanAllContentFiles(site)) {
       if (!fs.existsSync(file.file)) continue;
       if (isDraftPage(readMarkdownDraftMeta(file.file))) continue;
@@ -92,19 +107,22 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
       }
       dynamicRoutes.set(entry.route, entry);
     }
-    pageDataByRoute = await resolvePageDataMap(site);
+    const pageDataByRoute = await resolvePageDataMap(site);
     if (Object.keys(site.rewrites).length > 0) {
       applyRouteRewrites(routeToFile, site.rewrites);
     }
+    catalog = { routeToFile, dynamicRoutes, pageDataByRoute };
   }
 
-  function attachPageData(route: string, meta: Record<string, unknown>): Record<string, unknown> {
-    const data = pageDataByRoute.get(route);
-    if (data === undefined) return meta;
-    return { ...meta, contentData: data };
-  }
+  async function buildPagesModule(ssr: boolean, snap: PluginCatalog): Promise<string> {
+    const { routeToFile, dynamicRoutes, pageDataByRoute } = snap;
 
-  async function buildPagesModule(ssr: boolean): Promise<string> {
+    function attachPageData(route: string, meta: Record<string, unknown>): Record<string, unknown> {
+      const data = pageDataByRoute.get(route);
+      if (data === undefined) return meta;
+      return { ...meta, contentData: data };
+    }
+
     const filesList = [...routeToFile.values()];
     const tagPages = collectTagIndexPages(filesList, site);
     const fileRouteSet = new Set([...routeToFile.keys(), ...dynamicRoutes.keys()]);
@@ -301,8 +319,8 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         createDevSsrMiddleware(
           site,
           server,
-          (route) => routeToFile.get(route),
-          () => [...routeToFile.keys()].sort(),
+          (route) => catalog.routeToFile.get(route),
+          () => [...catalog.routeToFile.keys()].sort(),
         ),
       );
       server.middlewares.use(
@@ -333,13 +351,13 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
                 invalidateVirtuals(server);
               } catch (error) {
                 const err = error as NodeJS.ErrnoException;
-                if (err.code === "ENOENT") {
-                  server.config.logger.warn(
-                    `preactpress: content scan skipped (file missing): ${err.path ?? file}`,
-                  );
-                  return;
-                }
-                throw error;
+                const detail =
+                  err.code === "ENOENT"
+                    ? `content scan skipped (file missing): ${err.path ?? file}`
+                    : error instanceof Error
+                      ? error.message
+                      : String(error);
+                server.config.logger.warn(`preactpress catalog refresh failed: ${detail}`);
               }
             })();
           }, 150);
@@ -370,12 +388,16 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         return `export const site = ${JSON.stringify(data.site)};\nexport const themeConfig = ${JSON.stringify(data.themeConfig)};\nexport const i18n = ${JSON.stringify(data.i18n)};\nexport const versions = ${JSON.stringify(data.versions)};\nexport const workspaces = ${JSON.stringify(data.workspaces)};\nexport const mpa = ${JSON.stringify(Boolean(data.mpa))};\nexport const ai = ${JSON.stringify(data.ai ?? false)};\n`;
       }
       if (id === VIRTUAL_PAGES) {
-        if (options?.ssr) {
-          if (!ssrPagesModule) ssrPagesModule = await buildPagesModule(true);
-          return ssrPagesModule;
+        const ssr = Boolean(options?.ssr);
+        const cached = ssr ? ssrPagesModule : clientPagesModule;
+        if (cached) return cached;
+        const snapshot = catalog;
+        const rendered = await buildPagesModule(ssr, snapshot);
+        if (snapshot === catalog) {
+          if (ssr) ssrPagesModule = rendered;
+          else clientPagesModule = rendered;
         }
-        if (!clientPagesModule) clientPagesModule = await buildPagesModule(false);
-        return clientPagesModule;
+        return rendered;
       }
       if (id === VIRTUAL_CLIENT) {
         const modules = collectPluginClientModules(site.plugins ?? []);
