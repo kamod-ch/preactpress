@@ -1,16 +1,8 @@
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { publicUrl } from "../shared/url.js";
+import { scoreSearchEntry, type SearchEntry } from "./searchScore.js";
 
-export interface SearchEntry {
-  route: string;
-  locale?: string;
-  version?: string;
-  workspace?: string;
-  title?: string;
-  description?: string;
-  excerpt?: string;
-  tags?: string[];
-}
+export type { SearchEntry } from "./searchScore.js";
 
 export function useSiteSearch(
   base: string,
@@ -43,25 +35,10 @@ export function useSiteSearch(
       .filter((entry) => !locale || entry.locale === locale)
       .filter((entry) => !version || entry.version === version)
       .filter((entry) => !workspace || entry.workspace === workspace)
-      .map((entry) => ({ entry, score: scoreEntry(entry, needle) }))
+      .map((entry) => ({ entry, score: scoreSearchEntry(entry, needle) }))
       .filter(({ score }) => score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 8)
       .map(({ entry }) => entry);
   }, [entries, locale, version, workspace, query]);
-}
-
-function scoreEntry(entry: SearchEntry, query: string): number {
-  const title = entry.title?.toLowerCase() ?? "";
-  const tags = entry.tags?.join(" ").toLowerCase() ?? "";
-  const description = entry.description?.toLowerCase() ?? "";
-  const excerpt = entry.excerpt?.toLowerCase() ?? "";
-  let score = 0;
-  if (title === query) score += 20;
-  if (title.includes(query)) score += 10;
-  if (tags.includes(query)) score += 6;
-  if (description.includes(query)) score += 4;
-  if (excerpt.includes(query)) score += 2;
-  if (entry.route.toLowerCase().includes(query)) score += 1;
-  return score;
 }

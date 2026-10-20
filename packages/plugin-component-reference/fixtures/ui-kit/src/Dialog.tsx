@@ -1,7 +1,7 @@
-import type { ComponentChildren, JSX } from "preact";
+import type { ComponentChildren, HTMLAttributes } from "preact";
 
 /** Root dialog container. */
-export type DialogProps = JSX.HTMLAttributes<HTMLDivElement> & {
+export type DialogProps = HTMLAttributes<HTMLDivElement> & {
   /** Whether the dialog is open */
   open?: boolean;
   children?: ComponentChildren;
@@ -17,7 +17,7 @@ export const Dialog = ({ open = false, children, ...rest }: DialogProps) => {
   );
 };
 
-export type DialogContentProps = JSX.HTMLAttributes<HTMLDivElement> & {
+export type DialogContentProps = HTMLAttributes<HTMLDivElement> & {
   /** Presentation style */
   presentation?: "default" | "sheet";
   children?: ComponentChildren;
@@ -36,7 +36,7 @@ export const DialogContent = ({
   );
 };
 
-export type DialogTriggerProps = JSX.HTMLAttributes<HTMLButtonElement> & {
+export type DialogTriggerProps = HTMLAttributes<HTMLButtonElement> & {
   asChild?: boolean;
   children?: ComponentChildren;
 };

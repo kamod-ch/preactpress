@@ -49,6 +49,13 @@ jobs:
       - name: Format check
         run: pnpm run fmt:check
 
+      - name: Verify workspace packages
+        run: pnpm run build:workspace && pnpm run test:workspace
+
+      - name: Verify workspace package tarballs
+        if: matrix.node-version == 22
+        run: pnpm run pack:workspace
+
       - name: Run tests with coverage
         run: pnpm run test:coverage
 
@@ -57,7 +64,7 @@ jobs:
 
       - name: Install Playwright browsers
         if: matrix.node-version == 22
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium webkit
 
       - name: Run browser tests
         if: matrix.node-version == 22

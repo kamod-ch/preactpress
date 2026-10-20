@@ -1,7 +1,7 @@
-import type { JSX } from "preact";
+import type { HTMLAttributes } from "preact";
 
 /** Text field props extending native input attributes. */
-export type InputProps = JSX.HTMLAttributes<HTMLInputElement> & {
+export type InputProps = HTMLAttributes<HTMLInputElement> & {
   /** Input label used for accessibility */
   label?: string;
   /** Placeholder text */

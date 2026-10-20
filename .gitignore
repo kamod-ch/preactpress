@@ -24,6 +24,8 @@ benchmarks/results/*
 !benchmarks/results/.gitkeep
 !benchmarks/results/baseline.json
 !benchmarks/results/baseline.ci.json
+!benchmarks/results/baseline.ci.1000.json
 TODO.md
 
 /docs
+plans/

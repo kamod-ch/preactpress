@@ -149,27 +149,73 @@ function findExport(sourceFile: ts.SourceFile, exportName: string): ts.Node | un
   return undefined;
 }
 
-function propsTypeFromExport(checker: ts.TypeChecker, node: ts.Node): ts.Type | undefined {
-  if (ts.isFunctionDeclaration(node) && node.parameters[0]) {
-    return checker.getTypeAtLocation(node.parameters[0]);
+function propsTypeFromParameter(
+  checker: ts.TypeChecker,
+  param: ts.ParameterDeclaration,
+): ts.Type | undefined {
+  if (param.type) {
+    return checker.getTypeFromTypeNode(param.type);
   }
-  if (ts.isVariableDeclaration(node) && node.initializer) {
-    if (ts.isArrowFunction(node.initializer) || ts.isFunctionExpression(node.initializer)) {
-      const param = node.initializer.parameters[0];
-      if (param) return checker.getTypeAtLocation(param);
+
+  const paramSymbol = checker.getSymbolAtLocation(param.name);
+  if (paramSymbol) {
+    const symbolType = checker.getTypeOfSymbolAtLocation(paramSymbol, param);
+    if (symbolType.getCallSignatures().length === 0 && symbolType.getProperties().length > 0) {
+      return symbolType;
     }
   }
+
+  const locationType = checker.getTypeAtLocation(param);
+  if (locationType.getProperties().length > 0) {
+    return locationType;
+  }
+
+  return undefined;
+}
+
+function propsTypeFromCallSignature(checker: ts.TypeChecker, node: ts.Node): ts.Type | undefined {
   const symbol = checker.getSymbolAtLocation(node);
   if (!symbol) return undefined;
   const type = checker.getTypeOfSymbolAtLocation(symbol, node);
   const callSignatures = type.getCallSignatures();
-  if (callSignatures[0]?.parameters[0]) {
-    const param = callSignatures[0].parameters[0];
-    if (param.valueDeclaration) {
-      return checker.getTypeOfSymbolAtLocation(param, param.valueDeclaration);
-    }
+  if (!callSignatures[0]) return undefined;
+
+  const paramDecl = callSignatures[0].declaration?.parameters[0];
+  if (paramDecl && ts.isParameter(paramDecl)) {
+    const fromParam = propsTypeFromParameter(checker, paramDecl);
+    if (fromParam) return fromParam;
   }
+
+  const paramSymbol = callSignatures[0].parameters[0];
+  if (paramSymbol?.valueDeclaration && ts.isParameter(paramSymbol.valueDeclaration)) {
+    return propsTypeFromParameter(checker, paramSymbol.valueDeclaration);
+  }
+  if (paramSymbol?.valueDeclaration) {
+    return checker.getTypeOfSymbolAtLocation(paramSymbol, paramSymbol.valueDeclaration);
+  }
+
   return undefined;
+}
+
+function propsTypeFromExport(checker: ts.TypeChecker, node: ts.Node): ts.Type | undefined {
+  if (ts.isFunctionDeclaration(node) && node.parameters[0]) {
+    const fromParam = propsTypeFromParameter(checker, node.parameters[0]);
+    if (fromParam) return fromParam;
+    return propsTypeFromCallSignature(checker, node);
+  }
+
+  if (ts.isVariableDeclaration(node) && node.initializer) {
+    if (ts.isArrowFunction(node.initializer) || ts.isFunctionExpression(node.initializer)) {
+      const param = node.initializer.parameters[0];
+      if (param) {
+        const fromParam = propsTypeFromParameter(checker, param);
+        if (fromParam) return fromParam;
+      }
+    }
+    return propsTypeFromCallSignature(checker, node);
+  }
+
+  return propsTypeFromCallSignature(checker, node);
 }
 
 function sourceLinkForNode(

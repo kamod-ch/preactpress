@@ -1,6 +1,8 @@
 # PreactPress Feature Roadmap — Architecture Audit
 
-> **Status:** Architecture audit (Prompt 1)  
+> **SUPERSEDED (historical):** This audit describes **v2.2.1**, **Preact 10**, and a **single-package** layout without the current official plugin system. For current status use [ROADMAP.md](../../ROADMAP.md) at the repository root and `templates/docs/`.
+
+> **Status:** Architecture audit (Prompt 1) — retained for historical context only  
 > **Package:** `@kamod-ch/preactpress` v2.2.1  
 > **Date:** 2026-07-27  
 > **Scope:** Read-only analysis; no production code changes in this phase.

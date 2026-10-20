@@ -22,5 +22,22 @@ export default defineConfig({
         ...devices["Pixel 7"],
       },
     },
+    {
+      name: "desktop-chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+    },
+    {
+      name: "webkit-smoke",
+      use: {
+        ...devices["Desktop Safari"],
+      },
+      testMatch: [
+        "**/page-ready.spec.ts",
+        "**/default-theme-mobile.spec.ts",
+        "**/default-theme-a11y.spec.ts",
+      ],
+    },
   ],
 });

@@ -7,7 +7,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
-      include: ["src/node/**/*.ts", "src/shared/**/*.ts"],
+      include: ["src/node/**/*.ts", "src/shared/**/*.ts", "src/client/searchScore.ts"],
       exclude: [
         "src/node/cli.ts",
         "src/node/index.ts",

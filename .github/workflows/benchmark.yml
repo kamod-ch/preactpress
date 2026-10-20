@@ -20,6 +20,9 @@ on:
       - "pnpm-lock.yaml"
       - ".github/workflows/benchmark.yml"
   workflow_dispatch:
+  schedule:
+    # Weekly large-site warm-build profiling (1k pages); PR gate stays at 100 pages.
+    - cron: "0 6 * * 1"
 
 concurrency:
   group: benchmark-${{ github.ref }}
@@ -65,3 +68,44 @@ jobs:
             benchmarks/results/ci-latest.json
             benchmarks/results/ci-latest.md
             benchmarks/results/ci-latest.compare.json
+
+  benchmark-1k:
+    name: Performance benchmark (1000 pages, scheduled)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build package
+        run: pnpm run build
+
+      - name: Run 1k benchmark
+        run: node benchmarks/scripts/run-benchmark.mjs --sizes 1000 --skip-dev --output benchmarks/results/ci-1k-latest.json
+
+      - name: Compare against 1k baseline
+        run: node benchmarks/scripts/compare-results.mjs benchmarks/results/ci-1k-latest.json benchmarks/results/baseline.ci.1000.json
+
+      - name: Upload 1k benchmark artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-1k
+          path: |
+            benchmarks/results/ci-1k-latest.json
+            benchmarks/results/ci-1k-latest.md
+            benchmarks/results/ci-1k-latest.compare.json

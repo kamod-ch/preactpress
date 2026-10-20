@@ -222,7 +222,7 @@ pnpm test
 pnpm run dev:docs
 pnpm run check:docs
 pnpm run build:docs
-pnpm run verify    # fmt, lint, build, coverage, templates, browser, pack
+pnpm run verify    # fmt, lint, build, coverage, workspace plugins, templates, browser, pack
 ```
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for package development. Upgrade from a previous release with [UPGRADE.md](./UPGRADE.md).

@@ -41,6 +41,39 @@ describe("extractComponentEntry", () => {
     expect(entry.props.find((prop) => prop.name === "placeholder")).toBeTruthy();
   });
 
+  it("extracts props from a destructured arrow with an explicit props type", () => {
+    const entry = extractComponentEntry({
+      root: fixtureRoot,
+      source: "src/Button.tsx",
+      exportName: "Button",
+      tsconfig: "tsconfig.json",
+    });
+    expect(entry.props.length).toBeGreaterThan(0);
+    expect(entry.props.some((prop) => prop.name === "variant")).toBe(true);
+  });
+
+  it("extracts props from a named function component declaration", () => {
+    const entry = extractComponentEntry({
+      root: fixtureRoot,
+      source: "src/Badge.tsx",
+      exportName: "Badge",
+      tsconfig: "tsconfig.json",
+    });
+    expect(entry.props.some((prop) => prop.name === "tone")).toBe(true);
+    expect(entry.props.some((prop) => prop.name === "children")).toBe(true);
+  });
+
+  it("extracts props from a component typed through a callable variable annotation", () => {
+    const entry = extractComponentEntry({
+      root: fixtureRoot,
+      source: "src/Card.tsx",
+      exportName: "Card",
+      tsconfig: "tsconfig.json",
+    });
+    expect(entry.props.some((prop) => prop.name === "title")).toBe(true);
+    expect(entry.props.some((prop) => prop.name === "children")).toBe(true);
+  });
+
   it("extracts Dialog compound exports", () => {
     const dialog = extractComponentEntry({
       root: fixtureRoot,

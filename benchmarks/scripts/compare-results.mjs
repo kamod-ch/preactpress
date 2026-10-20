@@ -97,7 +97,20 @@ export async function compareResults(currentPath, baselinePath, { writeReport = 
   for (const row of current.results) {
     const baseRow = baseline.results.find((r) => r.pageCount === row.pageCount);
     if (!baseRow) {
-      checks.push({ pageCount: row.pageCount, status: "skipped", reason: "no baseline for size" });
+      failures.push({
+        pageCount: row.pageCount,
+        metric: "pageCount",
+        actual: row.pageCount,
+        baseline: null,
+        limit: null,
+        deltaPercent: null,
+        reason: "baseline fixture size mismatch",
+      });
+      checks.push({
+        pageCount: row.pageCount,
+        status: "failed",
+        reason: "no baseline row for this page count",
+      });
       continue;
     }
 

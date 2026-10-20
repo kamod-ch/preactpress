@@ -1,0 +1,42 @@
+{
+  "schema": "preactpress-benchmark/v1",
+  "environment": {
+    "nodeVersion": "v22.x",
+    "platform": "linux-x64",
+    "cpuModel": "GitHub Actions ubuntu-latest",
+    "cpuCount": null,
+    "totalMemoryMb": null,
+    "gitCommit": "ci-baseline-1k",
+    "gitBranch": "main",
+    "timestamp": "2026-10-20T00:00:00.000Z"
+  },
+  "results": [
+    {
+      "pageCount": 1000,
+      "coldBuildMs": 12000,
+      "warmBuildMs": 7500,
+      "devServerStartMs": null,
+      "pageUpdateMs": null,
+      "peakMemoryMb": 900,
+      "searchIndexBytes": 320000,
+      "sampleHtmlBytes": 28286,
+      "mainJsBytes": 126079,
+      "mainCssBytes": 58005,
+      "totalStaticBytes": 38000000,
+      "lighthouse": {
+        "sampleHtmlBytes": 28286,
+        "mainJsBytes": 126079,
+        "mainCssBytes": 58005,
+        "scriptTags": 2,
+        "stylesheetTags": 1,
+        "totalBlockingEstimate": 126079,
+        "note": "Static analysis only — not a full Lighthouse run. Compare same fixture size only."
+      }
+    }
+  ],
+  "notes": [
+    "CI baseline for 1000-page fixtures on GitHub Actions ubuntu-latest (Node 22).",
+    "Initial seed values — refresh via reviewed commit after a green scheduled 1k run.",
+    "Never compare this file against 100-page benchmark output."
+  ]
+}

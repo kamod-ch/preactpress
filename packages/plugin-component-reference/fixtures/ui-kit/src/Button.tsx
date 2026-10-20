@@ -1,4 +1,4 @@
-import type { ComponentChildren, JSX } from "preact";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ComponentChildren } from "preact";
 
 export type ButtonVariant = "default" | "outline" | "destructive" | "ghost" | "link";
 export type ButtonSize = "default" | "sm" | "lg" | "icon";
@@ -16,12 +16,12 @@ type CommonProps = {
 };
 
 type ButtonAsButton = CommonProps &
-  JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
+  ButtonHTMLAttributes<HTMLButtonElement> & {
     href?: undefined;
   };
 
 type ButtonAsAnchor = CommonProps &
-  JSX.AnchorHTMLAttributes<HTMLAnchorElement> & {
+  AnchorHTMLAttributes<HTMLAnchorElement> & {
     /** When set, renders an anchor element */
     href: string;
   };
@@ -47,7 +47,7 @@ export const Button = ({
       </a>
     );
   }
-  const buttonRest = rest as JSX.ButtonHTMLAttributes<HTMLButtonElement>;
+  const buttonRest = rest as ButtonHTMLAttributes<HTMLButtonElement>;
   return (
     <button type="button" class={classes} {...buttonRest}>
       {children}
