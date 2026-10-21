@@ -236,15 +236,15 @@ node ./bin/preactpress.mjs dev templates/docs
 
 Convenience scripts wrap the same CLI:
 
-| Script | Purpose |
-| --- | --- |
-| `pnpm run dev:docs` | Dev server for the canonical docs site |
-| `pnpm run check:docs` | `preactpress check` on `templates/docs` |
-| `pnpm run build:docs` | Production build of `templates/docs` |
-| `pnpm run build:template-demos` | Build gallery starters into `templates/docs/dist/demos/` (GitHub Pages live demos) |
-| `pnpm run capture:template-previews` | Refresh gallery WebP screenshots under `templates/docs/public/templates/` |
-| `pnpm run link:templates/docs` | Symlink the monorepo package into `templates/docs` (see below) |
-| `pnpm run verify` | Full release gate: fmt, lint, build, coverage, workspace plugins, template checks, browser, pack |
+| Script                               | Purpose                                                                                          |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `pnpm run dev:docs`                  | Dev server for the canonical docs site                                                           |
+| `pnpm run check:docs`                | `preactpress check` on `templates/docs`                                                          |
+| `pnpm run build:docs`                | Production build of `templates/docs`                                                             |
+| `pnpm run build:template-demos`      | Build gallery starters into `templates/docs/dist/demos/` (GitHub Pages live demos)               |
+| `pnpm run capture:template-previews` | Refresh gallery WebP screenshots under `templates/docs/public/templates/`                        |
+| `pnpm run link:templates/docs`       | Symlink the monorepo package into `templates/docs` (see below)                                   |
+| `pnpm run verify`                    | Full release gate: fmt, lint, build, coverage, workspace plugins, template checks, browser, pack |
 
 Inside a **scaffolded site** (including `templates/docs` after `pnpm install` there), `pnpm exec preactpress` and the `package.json` scripts (`pnpm run dev`, `pnpm run build`, `pnpm run preview`) work because `@kamod-ch/preactpress` is listed as a dependency.
 

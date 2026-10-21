@@ -100,7 +100,9 @@ async function main() {
   const outArg = readArg("--out");
   const pagesBaseArg = readArg("--pages-base") ?? "/";
   if (!outArg) {
-    console.error("Usage: node ./scripts/build-template-demos.mjs --out <dir> [--pages-base /repo/]");
+    console.error(
+      "Usage: node ./scripts/build-template-demos.mjs --out <dir> [--pages-base /repo/]",
+    );
     process.exit(1);
   }
 
@@ -114,7 +116,9 @@ async function main() {
   }
 
   await writeDemoIndex(outRoot, pagesBase);
-  console.log(`\nDone. Live demos are in ${path.relative(packageRoot, path.join(outRoot, "demos"))}/`);
+  console.log(
+    `\nDone. Live demos are in ${path.relative(packageRoot, path.join(outRoot, "demos"))}/`,
+  );
 }
 
 main().catch((err) => {

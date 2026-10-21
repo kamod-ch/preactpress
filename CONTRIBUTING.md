@@ -44,13 +44,13 @@ User-facing documentation lives in `templates/docs/`. Update guides there when c
 
 ## Documentation site (`templates/docs`)
 
-| Task | Command |
-| --- | --- |
-| Dev server | `pnpm run dev:docs` (from repo root) or `cd templates/docs && pnpm run dev` |
-| Check | `pnpm run check:docs` |
-| Build | `pnpm run build:docs` |
-| Preview static output | `pnpm run build:docs` then `pnpm run preactpress -- preview templates/docs` |
-| Gallery WebP previews | `pnpm run capture:template-previews` |
+| Task                               | Command                                                                                    |
+| ---------------------------------- | ------------------------------------------------------------------------------------------ |
+| Dev server                         | `pnpm run dev:docs` (from repo root) or `cd templates/docs && pnpm run dev`                |
+| Check                              | `pnpm run check:docs`                                                                      |
+| Build                              | `pnpm run build:docs`                                                                      |
+| Preview static output              | `pnpm run build:docs` then `pnpm run preactpress -- preview templates/docs`                |
+| Gallery WebP previews              | `pnpm run capture:template-previews`                                                       |
 | Live demo bundles for GitHub Pages | `pnpm run build:template-demos` (optionally `--pages-base /repo-name/` to match Pages URL) |
 
 ### Local `file:../..` dependency
