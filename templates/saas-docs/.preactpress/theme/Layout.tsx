@@ -10,7 +10,7 @@ import {
 } from "@kamod-ch/preactpress/client";
 import Logo from "./Logo.js";
 import ThemeToggle from "./ThemeToggle.js";
-import "./hono.css";
+import "./product.css";
 
 interface SidebarItem {
   text: string;
@@ -110,8 +110,8 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       ? sidebarItems[activeIndex + 1]
       : undefined;
   const mdxComponents = createMdxHeadingComponents({
-    headingClass: "hn-heading",
-    anchorClass: "hn-heading-anchor",
+    headingClass: "sd-heading",
+    anchorClass: "sd-heading-anchor",
     anchorLabel: "Link to section",
   });
   const MdxComponent = page?.kind === "mdx" ? page.Component : undefined;
@@ -129,7 +129,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
       })
     : undefined;
   const outlineItems = themeConfig.outline === false || isHome ? [] : (page?.headings ?? []);
-  const contentClass = isHome ? "hn-home-content" : "hn-doc-content";
+  const contentClass = isHome ? "sd-home-content" : "sd-doc-content";
   const renderedContent = MdxComponent ? (
     <div class={contentClass}>
       <MdxComponent components={mdxComponents} />
@@ -157,21 +157,21 @@ const Layout: FunctionalComponent<LayoutProps> = ({
   }, []);
 
   return (
-    <div class={`hn-site${isHome ? " is-home" : ""}`}>
-      <a class="hn-skip" href="#content">
+    <div class={`sd-site${isHome ? " is-home" : ""}`}>
+      <a class="sd-skip" href="#content">
         Skip to content
       </a>
-      <header class="hn-header">
-        <div class="hn-header-inner">
+      <header class="sd-header">
+        <div class="sd-header-inner">
           <a
-            class="hn-brand"
+            class="sd-brand"
             href={withBase(site.base, locale?.prefix || "/")}
             aria-label={site.title}
           >
             <Logo label={site.title} />
           </a>
-          <div class="hn-header-actions">
-            <nav class="hn-nav" aria-label="Main navigation">
+          <div class="sd-header-actions">
+            <nav class="sd-nav" aria-label="Main navigation">
               {(themeConfig.nav ?? []).map((item) =>
                 item.link ? (
                   <a
@@ -186,7 +186,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               )}
             </nav>
             {themeConfig.socialLinks?.length ? (
-              <div class="hn-social" aria-label="Social links">
+              <div class="sd-social" aria-label="Social links">
                 {themeConfig.socialLinks.map((link) => {
                   const svg = socialIconSvg(link.icon);
                   return (
@@ -206,9 +206,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               </div>
             ) : null}
             {locales.length > 1 && localizeRoute ? (
-              <details class="hn-locale-switcher">
+              <details class="sd-locale-switcher">
                 <summary>{locale?.label ?? "Language"}</summary>
-                <div class="hn-locale-menu">
+                <div class="sd-locale-menu">
                   {locales.map((item) => {
                     const active = item.key === locale?.key;
                     return (
@@ -230,20 +230,20 @@ const Layout: FunctionalComponent<LayoutProps> = ({
         </div>
       </header>
       {isHome ? (
-        <main id="content" class="hn-home-main">
+        <main id="content" class="sd-home-main">
           {renderedContent}
         </main>
       ) : (
-        <div class="hn-doc-shell">
-          <aside class="hn-sidebar" aria-label="Documentation navigation">
+        <div class="sd-doc-shell">
+          <aside class="sd-sidebar" aria-label="Documentation navigation">
             <details
-              class="hn-sidebar-panel"
+              class="sd-sidebar-panel"
               open={sidebarOpen}
               onToggle={(event) => setSidebarOpen(event.currentTarget.open)}
             >
               <summary>Documentation menu</summary>
               {themeConfig.search ? (
-                <label class="hn-search">
+                <label class="sd-search">
                   <span>Search pages</span>
                   <input
                     type="search"
@@ -254,7 +254,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 </label>
               ) : null}
               {visibleSidebar.map((group, groupIndex) => (
-                <div class="hn-sidebar-group" key={`${group.text ?? "group"}:${groupIndex}`}>
+                <div class="sd-sidebar-group" key={`${group.text ?? "group"}:${groupIndex}`}>
                   {group.text ? <h2>{group.text}</h2> : null}
                   <ul>
                     {group.items.map((item) =>
@@ -275,12 +275,12 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               ))}
             </details>
           </aside>
-          <main id="content" class="hn-doc-main">
-            <article class="hn-doc">
-              <h1 class="hn-doc-title">{page?.title ?? site.title}</h1>
-              {page?.description ? <p class="hn-doc-lead">{page.description}</p> : null}
+          <main id="content" class="sd-doc-main">
+            <article class="sd-doc">
+              <h1 class="sd-doc-title">{page?.title ?? site.title}</h1>
+              {page?.description ? <p class="sd-doc-lead">{page.description}</p> : null}
               {showTags ? (
-                <ul class="hn-tags" aria-label="Tags">
+                <ul class="sd-tags" aria-label="Tags">
                   {pageTags.map((tag) => (
                     <li key={tag}>
                       <a href={withBase(site.base, tagRoute(tag))}>{tag}</a>
@@ -290,7 +290,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
               ) : null}
               {renderedContent}
               {previous || next ? (
-                <nav class="hn-pager" aria-label="Page navigation">
+                <nav class="sd-pager" aria-label="Page navigation">
                   {previous ? (
                     <a class="previous" href={withBase(site.base, previous.link)}>
                       <span>Previous</span>
@@ -308,7 +308,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                 </nav>
               ) : null}
               {themeConfig.lastUpdated || editHref ? (
-                <footer class="hn-doc-meta">
+                <footer class="sd-doc-meta">
                   {themeConfig.lastUpdated && lastUpdated ? (
                     <span>Updated {lastUpdated}</span>
                   ) : null}
@@ -323,8 +323,8 @@ const Layout: FunctionalComponent<LayoutProps> = ({
             </article>
           </main>
           {outlineItems.length > 0 ? (
-            <aside class="hn-outline" aria-label="On this page">
-              <div class="hn-outline-panel">
+            <aside class="sd-outline" aria-label="On this page">
+              <div class="sd-outline-panel">
                 <h2>On this page</h2>
                 <ul>
                   {outlineItems.map((heading) => (
@@ -338,7 +338,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({
           ) : null}
         </div>
       )}
-      {themeConfig.footer ? <footer class="hn-footer">{themeConfig.footer}</footer> : null}
+      {themeConfig.footer ? <footer class="sd-footer">{themeConfig.footer}</footer> : null}
     </div>
   );
 };

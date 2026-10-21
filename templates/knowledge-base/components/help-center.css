@@ -1,0 +1,224 @@
+:root,
+:root[data-theme="light"] {
+  --pp-accent: #0284c7;
+  --pp-accent-strong: #0369a1;
+}
+
+:root[data-theme="dark"] {
+  --pp-accent: #7dd3fc;
+  --pp-accent-strong: #bae6fd;
+}
+
+.pp-doc-home.kb-home {
+  max-width: none;
+}
+
+.kb-home > .pp-doc-title,
+.kb-home > .pp-doc-lead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.kb-hero {
+  padding: 1.25rem 0 2.25rem;
+  text-align: center;
+}
+
+.kb-eyebrow {
+  margin: 0 0 0.65rem;
+  color: var(--pp-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.kb-hero h1 {
+  margin: 0 auto;
+  max-width: 16ch;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.kb-hero p {
+  margin: 0.85rem auto 0;
+  max-width: 36rem;
+  color: var(--pp-muted);
+  font-size: 1.08rem;
+}
+
+.kb-search {
+  position: relative;
+  max-width: 38rem;
+  margin: 1.5rem auto 0;
+}
+
+.kb-search input {
+  width: 100%;
+  min-height: 3.1rem;
+  padding: 0 1.1rem 0 2.8rem;
+  border: 1px solid var(--pp-border-strong);
+  border-radius: 999px;
+  background: var(--pp-bg);
+  color: var(--pp-text);
+  font: inherit;
+  font-size: 1rem;
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--pp-text) 8%, transparent);
+}
+
+.kb-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 1.05rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  transform: translateY(-50%);
+  color: var(--pp-muted);
+  pointer-events: none;
+}
+
+.kb-search-results {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.45rem);
+  z-index: 5;
+  margin: 0;
+  padding: 0.45rem;
+  list-style: none;
+  border: 1px solid var(--pp-border);
+  border-radius: 1rem;
+  background: var(--pp-bg);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--pp-text) 10%, transparent);
+  text-align: left;
+}
+
+.kb-search-results a {
+  display: block;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.75rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.kb-search-results a:hover,
+.kb-search-results a:focus-visible {
+  background: color-mix(in srgb, var(--pp-accent) 10%, transparent);
+}
+
+.kb-search-results small {
+  display: block;
+  color: var(--pp-muted);
+  font-size: 0.82rem;
+}
+
+.kb-section {
+  margin: 0.5rem 0 2rem;
+}
+
+.kb-section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+
+.kb-categories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+@media (min-width: 860px) {
+  .kb-categories {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.kb-category {
+  display: grid;
+  gap: 0.35rem;
+  min-height: 8.5rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid var(--pp-border);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--pp-sidebar-bg) 70%, var(--pp-bg));
+  color: inherit;
+  text-decoration: none;
+}
+
+.kb-category:hover {
+  border-color: var(--pp-accent);
+}
+
+.kb-category strong {
+  font-size: 1.02rem;
+}
+
+.kb-category span {
+  color: var(--pp-muted);
+  font-size: 0.9rem;
+}
+
+.kb-popular {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kb-popular a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--pp-border);
+  border-radius: 0.85rem;
+  background: var(--pp-bg);
+  color: inherit;
+  text-decoration: none;
+}
+
+.kb-popular a:hover {
+  border-color: var(--pp-accent);
+}
+
+.kb-popular small {
+  color: var(--pp-muted);
+}
+
+.pp-feedback {
+  margin-top: 2.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--pp-border);
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--pp-sidebar-bg) 80%, var(--pp-bg));
+}
+
+.pp-feedback-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.65rem 0;
+}
+
+.pp-feedback-actions button {
+  min-height: 2.2rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--pp-border);
+  border-radius: 999px;
+  background: var(--pp-bg);
+  color: var(--pp-text);
+  cursor: pointer;
+}
+
+.pp-feedback-cta,
+.pp-feedback-thanks {
+  color: var(--pp-muted);
+}

@@ -1,0 +1,45 @@
+---
+layout: home
+title: Acme SDK
+description: Build reliable integrations with the Acme SDK.
+hero:
+  name: Acme SDK
+  text: Typed APIs, shipped in an afternoon
+  tagline: Install the client, authenticate, and send your first request without leaving these docs.
+  image: /sdk-mark.svg
+  actions:
+    - theme: brand
+      text: Quickstart
+      link: /getting-started
+    - theme: alt
+      text: API reference
+      link: /features/authentication
+features:
+  - icon: ⚡
+    title: Fast setup
+    details: One install command and a first API call in under five minutes.
+    link: /getting-started
+    linkText: Quickstart
+  - icon: 🔒
+    title: Secure by default
+    details: OAuth 2.0, scoped API keys, and webhook signature verification.
+    link: /features/authentication
+    linkText: Authentication
+  - icon: 📦
+    title: Typed client
+    details: First-class TypeScript types for every endpoint and resource.
+    link: /features/batch-operations
+    linkText: Batch operations
+---
+
+import "./components/product-home.css";
+import InstallPanel from "./components/InstallPanel.tsx";
+
+<InstallPanel />
+
+## Quick links
+
+- [Getting started](/getting-started) — create an account and send your first request
+- [Configuration](/configuration) — environment variables and client options
+- [Deployment](/deployment) — run Acme SDK in production
+- [FAQ](/faq) — common questions from new teams

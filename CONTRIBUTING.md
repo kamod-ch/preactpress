@@ -15,6 +15,8 @@ pnpm run build
 pnpm test
 ```
 
+The root package does not expose `preactpress` via `pnpm exec` (it is not a dependency of itself). Use `pnpm run preactpress -- <command> [root]`, `node ./bin/preactpress.mjs …`, or the `dev:*` / `build:*` / `check:*` scripts in root `package.json`.
+
 ## Quality gates
 
 | Command                                | Purpose                                                                                                             |
@@ -39,6 +41,23 @@ Other Node versions skip browser installation in CI.
 Each plugin is a standalone package with its own `build` and `test` scripts. Add new official plugins as `packages/plugin-*`; workspace verification discovers them automatically.
 
 User-facing documentation lives in `templates/docs/`. Update guides there when changing public CLI or config behavior.
+
+## Documentation site (`templates/docs`)
+
+| Task | Command |
+| --- | --- |
+| Dev server | `pnpm run dev:docs` (from repo root) or `cd templates/docs && pnpm run dev` |
+| Check | `pnpm run check:docs` |
+| Build | `pnpm run build:docs` |
+| Preview static output | `pnpm run build:docs` then `pnpm run preactpress -- preview templates/docs` |
+| Gallery WebP previews | `pnpm run capture:template-previews` |
+| Live demo bundles for GitHub Pages | `pnpm run build:template-demos` (optionally `--pages-base /repo-name/` to match Pages URL) |
+
+### Local `file:../..` dependency
+
+Starters under `templates/*` declare `@kamod-ch/preactpress` as `file:../..`. pnpm copies that snapshot at install time. After you change and rebuild the core package, run **`pnpm run link:templates/docs`** (or `node ./scripts/link-local-preactpress.mjs templates/docs`) so `node_modules/@kamod-ch/preactpress` symlinks to the repo root. Otherwise builds may fail with missing modules under `dist/` (stale copy).
+
+You can also run `pnpm install` again inside `templates/docs`. CI demo and preview scripts call the linker automatically.
 
 ## Releases
 

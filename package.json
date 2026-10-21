@@ -98,6 +98,7 @@
     "dev:default": "node ./bin/preactpress.mjs dev templates/default",
     "check:default": "node ./bin/preactpress.mjs check templates/default",
     "build:default": "node ./bin/preactpress.mjs build templates/default",
+    "link:templates/docs": "node ./scripts/link-local-preactpress.mjs templates/docs",
     "dev:docs": "node ./bin/preactpress.mjs dev templates/docs",
     "check:docs": "node ./bin/preactpress.mjs check templates/docs",
     "check:showcase": "node ./bin/preactpress.mjs check examples/showcase",
@@ -136,6 +137,7 @@
     "benchmark:generate": "node ./benchmarks/scripts/generate-fixture.mjs",
     "dev:templates": "node ./scripts/dev-all-templates.mjs",
     "capture:template-previews": "node ./scripts/capture-template-previews.mjs",
+    "build:template-demos": "node ./scripts/build-template-demos.mjs --out templates/docs/dist --pages-base /",
     "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
   },
   "dependencies": {

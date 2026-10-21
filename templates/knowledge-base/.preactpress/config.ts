@@ -55,4 +55,7 @@ export default defineConfig({
     ],
   },
   build: { sitemap: true, robots: true },
+  transformHead() {
+    return [{ tag: "link", attrs: { rel: "stylesheet", href: "/help-theme.css" } }];
+  },
 });

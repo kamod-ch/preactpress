@@ -1,0 +1,10 @@
+:root,
+:root[data-theme="light"] {
+  --pp-accent: #4f46e5;
+  --pp-accent-strong: #4338ca;
+}
+
+:root[data-theme="dark"] {
+  --pp-accent: #a5b4fc;
+  --pp-accent-strong: #c7d2fe;
+}

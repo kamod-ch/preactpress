@@ -11,10 +11,15 @@ import {
 import type { ArticlePost } from "@kamod-ch/preactpress/shared";
 import ThemeToggle from "./ThemeToggle.js";
 import TeaserGrid, { articlesToTeasers } from "./TeaserGrid.js";
-import "./magazine.css";
+import "./blog.css";
 
 function tagRoute(tag: string): string {
   return `/tags/${slugifyHeading(tag)}`;
+}
+
+function metaString(meta: Record<string, unknown> | undefined, key: string): string | undefined {
+  const value = meta?.[key];
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
 const Layout: FunctionalComponent<LayoutProps> = ({ site, themeConfig, routePath, page }) => {
@@ -39,8 +44,8 @@ const Layout: FunctionalComponent<LayoutProps> = ({ site, themeConfig, routePath
       : undefined;
   const MdxComponent = page?.kind === "mdx" ? page.Component : undefined;
   const mdxComponents = createMdxHeadingComponents({
-    headingClass: "mag-heading",
-    anchorClass: "mag-heading-anchor",
+    headingClass: "blog-heading",
+    anchorClass: "blog-heading-anchor",
     anchorLabel: "Link to section",
   });
   const editHref =
@@ -54,70 +59,77 @@ const Layout: FunctionalComponent<LayoutProps> = ({ site, themeConfig, routePath
         day: "numeric",
       })
     : undefined;
-  const hasRail = (themeConfig.sidebar?.length ?? 0) > 0;
   const isHome = normalizeLink(routePath) === "/";
+  const hasRail = !isHome && (themeConfig.sidebar?.length ?? 0) > 0;
   const homeArticles = isHome ? (page?.meta.contentData as ArticlePost[] | undefined) : undefined;
   const homeTeasers = homeArticles?.length ? articlesToTeasers(homeArticles) : undefined;
   const pageTags = page?.tags ?? [];
   const showTags = themeConfig.tags !== false && pageTags.length > 0 && !page?.meta.tagIndex;
-  const today = new Intl.DateTimeFormat(site.lang || "en", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date());
+  const author = metaString(page?.meta, "author");
+  const readTime = metaString(page?.meta, "readTime");
+  const category =
+    typeof page?.meta.category === "string"
+      ? page.meta.category
+      : page?.meta.category &&
+          typeof page.meta.category === "object" &&
+          "name" in page.meta.category &&
+          typeof page.meta.category.name === "string"
+        ? page.meta.category.name
+        : undefined;
 
   useEffect(() => {
     setQuery("");
   }, [routePath]);
 
   return (
-    <div class="mag-layout">
-      <a class="mag-skip" href="#content">
+    <div class="blog-layout">
+      <a class="blog-skip" href="#content">
         Skip to content
       </a>
-      <div class="mag-topbar">
-        <div class="mag-topbar-inner">
-          <span>{today}</span>
-          <span>{site.description}</span>
-        </div>
-      </div>
-      <header class="mag-masthead">
-        <div class="mag-masthead-inner">
-          <a class="mag-logo" href={withBase(site.base, "/")}>
-            <span class="mag-logo-mark">Wochenausgabe</span>
-            <span class="mag-logo-title">{site.title}</span>
+      <header class="blog-header">
+        <div class="blog-header-inner">
+          <a class="blog-logo" href={withBase(site.base, "/")}>
+            <span class="blog-logo-mark">PP</span>
+            <span>
+              <span class="blog-logo-kicker">Engineering</span>
+              <span class="blog-logo-title">{site.title}</span>
+            </span>
           </a>
-          <div class="mag-masthead-tools">
+          <div class="blog-header-tools">
+            <nav class="blog-nav" aria-label="Main navigation">
+              {(themeConfig.nav ?? []).map((item) => {
+                const active = isActive(routePath, item.link);
+                return (
+                  <a
+                    key={item.link}
+                    class={active ? "active" : ""}
+                    href={withBase(site.base, item.link)}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {item.text}
+                  </a>
+                );
+              })}
+            </nav>
             <ThemeToggle />
           </div>
         </div>
       </header>
-      <div class="mag-nav-wrap">
-        <nav class="mag-nav" aria-label="Hauptnavigation">
-          {(themeConfig.nav ?? []).map((item) => {
-            const active = isActive(routePath, item.link);
-            return (
-              <a
-                key={item.link}
-                class={active ? "active" : ""}
-                href={withBase(site.base, item.link)}
-                aria-current={active ? "page" : undefined}
-              >
-                {item.text}
-              </a>
-            );
-          })}
-        </nav>
-      </div>
-      <div class={`mag-shell${hasRail ? " has-rail" : ""}`}>
-        <main id="content" class="mag-main">
-          <article class={`mag-article${isHome ? " wide" : ""}`}>
-            {isHome ? <p class="mag-eyebrow">Schwerpunkte</p> : null}
-            <h1 class="mag-doc-title">{page?.title ?? title}</h1>
-            {page?.description ? <p class="mag-doc-lead">{page.description}</p> : null}
+      <div class={`blog-shell${hasRail ? " has-rail" : ""}`}>
+        <main id="content" class="blog-main">
+          <article class={`blog-article${isHome ? " wide" : ""}`}>
+            {isHome ? <p class="blog-eyebrow">Latest writing</p> : null}
+            <h1 class="blog-doc-title">{page?.title ?? title}</h1>
+            {page?.description ? <p class="blog-doc-lead">{page.description}</p> : null}
+            {!isHome && (author || readTime || category) ? (
+              <p class="blog-post-meta">
+                {category ? <span>{category}</span> : null}
+                {author ? <span>{author}</span> : null}
+                {readTime ? <span>{readTime}</span> : null}
+              </p>
+            ) : null}
             {showTags ? (
-              <ul class="mag-tags" aria-label="Tags">
+              <ul class="blog-tags" aria-label="Tags">
                 {pageTags.map((tag) => (
                   <li key={tag}>
                     <a href={withBase(site.base, tagRoute(tag))}>{tag}</a>
@@ -127,20 +139,20 @@ const Layout: FunctionalComponent<LayoutProps> = ({ site, themeConfig, routePath
             ) : null}
             {homeTeasers?.length ? <TeaserGrid items={homeTeasers} /> : null}
             {MdxComponent ? (
-              <div class="mag-doc-content">
+              <div class="blog-doc-content">
                 <MdxComponent components={mdxComponents} />
               </div>
             ) : (
               <div
-                class="mag-doc-content"
+                class="blog-doc-content"
                 dangerouslySetInnerHTML={{ __html: page?.kind === "markdown" ? page.html : "" }}
               />
             )}
             {previous || next ? (
-              <nav class="mag-pager" aria-label="Seitennavigation">
+              <nav class="blog-pager" aria-label="Page navigation">
                 {previous ? (
                   <a class="previous" href={withBase(site.base, previous.link)}>
-                    <span>Zurück</span>
+                    <span>Previous</span>
                     {previous.text}
                   </a>
                 ) : (
@@ -148,19 +160,19 @@ const Layout: FunctionalComponent<LayoutProps> = ({ site, themeConfig, routePath
                 )}
                 {next ? (
                   <a class="next" href={withBase(site.base, next.link)}>
-                    <span>Weiter</span>
+                    <span>Next</span>
                     {next.text}
                   </a>
                 ) : null}
               </nav>
             ) : null}
             {themeConfig.lastUpdated || editHref ? (
-              <footer class="mag-doc-meta">
-                {themeConfig.lastUpdated && lastUpdated ? <span>Stand: {lastUpdated}</span> : null}
+              <footer class="blog-doc-meta">
+                {themeConfig.lastUpdated && lastUpdated ? <span>Updated {lastUpdated}</span> : null}
                 {editHref ? (
                   <span>
                     {themeConfig.lastUpdated && lastUpdated ? " · " : null}
-                    <a href={editHref}>{themeConfig.editLink?.text ?? "Seite bearbeiten"}</a>
+                    <a href={editHref}>{themeConfig.editLink?.text ?? "Edit this page"}</a>
                   </span>
                 ) : null}
               </footer>
@@ -168,10 +180,10 @@ const Layout: FunctionalComponent<LayoutProps> = ({ site, themeConfig, routePath
           </article>
         </main>
         {hasRail ? (
-          <aside class="mag-rail" aria-label="Sidebar">
-            <div class="mag-rail-panel">
+          <aside class="blog-rail" aria-label="Sidebar">
+            <div class="blog-rail-panel">
               {themeConfig.search ? (
-                <div class="mag-search">
+                <div class="blog-search">
                   <label>
                     <span>Filter</span>
                     <input
@@ -208,7 +220,7 @@ const Layout: FunctionalComponent<LayoutProps> = ({ site, themeConfig, routePath
           </aside>
         ) : null}
       </div>
-      {themeConfig.footer ? <footer class="mag-footer">{themeConfig.footer}</footer> : null}
+      {themeConfig.footer ? <footer class="blog-footer">{themeConfig.footer}</footer> : null}
     </div>
   );
 };

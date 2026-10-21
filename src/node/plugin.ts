@@ -410,7 +410,7 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         const entries = modules
           .map(
             (entry, index) =>
-              `{ name: ${JSON.stringify(entry.name)}, enhance: clientPlugin${index}.enhanceContent ?? clientPlugin${index}.default }`,
+              `{ name: ${JSON.stringify(entry.name)}, enhance: clientPlugin${index}.enhanceContent }`,
           )
           .join(",\n  ");
         return `${imports}\nexport const clientPlugins = [\n  ${entries}\n];\n`;

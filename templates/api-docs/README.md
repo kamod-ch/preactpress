@@ -30,6 +30,10 @@ pnpm run build
 pnpm run preview
 ```
 
+## PreactPress monorepo
+
+From the repository root: `pnpm run dev:api-docs`, `pnpm run build:api-docs`. After rebuilding the core package, link it with `node ./scripts/link-local-preactpress.mjs templates/api-docs` ([Contributing](https://github.com/kamod-ch/preactpress/blob/main/CONTRIBUTING.md#documentation-site-templatesdocs)).
+
 ## What you get
 
 - **Custom Protocol theme** — dark-first shell with sticky top nav, centered search (Ctrl+K), left sidebar, and mint accent

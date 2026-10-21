@@ -20,6 +20,8 @@ Open [http://localhost:5173](http://localhost:5173).
 | `pnpm build`   | Generate static output       |
 | `pnpm preview` | Preview the static build     |
 
+From the repository root: `pnpm run dev:magazine`, `pnpm run build:magazine`. After rebuilding the core package, link it with `node ./scripts/link-local-preactpress.mjs templates/magazine` ([Contributing](https://github.com/kamod-ch/preactpress/blob/main/CONTRIBUTING.md#documentation-site-templatesdocs)).
+
 ## What to edit
 
 - `.preactpress/config.ts` configures the site title, theme, sidebar, and footer.

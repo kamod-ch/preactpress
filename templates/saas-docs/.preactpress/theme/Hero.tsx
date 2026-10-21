@@ -1,5 +1,5 @@
 import type { FunctionalComponent } from "preact";
-import CodeSnippet from "./CodeSnippet.js";
+import WorkspacePreview from "./WorkspacePreview.js";
 
 interface HeroAction {
   text: string;
@@ -12,21 +12,20 @@ interface HeroProps {
   title: string;
   subtitle: string;
   actions?: HeroAction[];
-  code: string;
 }
 
-const Hero: FunctionalComponent<HeroProps> = ({ eyebrow, title, subtitle, actions = [], code }) => (
-  <section class="hn-hero" aria-labelledby="hero-title">
-    <div class="hn-hero-glow" aria-hidden="true" />
-    <div class="hn-hero-copy">
-      {eyebrow ? <p class="hn-hero-eyebrow">{eyebrow}</p> : null}
+const Hero: FunctionalComponent<HeroProps> = ({ eyebrow, title, subtitle, actions = [] }) => (
+  <section class="sd-hero" aria-labelledby="hero-title">
+    <div class="sd-hero-glow" aria-hidden="true" />
+    <div class="sd-hero-copy">
+      {eyebrow ? <p class="sd-hero-eyebrow">{eyebrow}</p> : null}
       <h1 id="hero-title">{title}</h1>
-      <p class="hn-hero-subtitle">{subtitle}</p>
+      <p class="sd-hero-subtitle">{subtitle}</p>
       {actions.length > 0 ? (
-        <div class="hn-hero-actions">
+        <div class="sd-hero-actions">
           {actions.map((action) => (
             <a
-              class={`hn-button hn-button-${action.theme ?? "alt"}`}
+              class={`sd-button sd-button-${action.theme ?? "alt"}`}
               href={action.link}
               key={`${action.text}:${action.link}`}
             >
@@ -36,8 +35,8 @@ const Hero: FunctionalComponent<HeroProps> = ({ eyebrow, title, subtitle, action
         </div>
       ) : null}
     </div>
-    <div class="hn-hero-code">
-      <CodeSnippet code={code} />
+    <div class="sd-hero-code">
+      <WorkspacePreview />
     </div>
   </section>
 );

@@ -29,7 +29,7 @@ const templates: TemplateCard[] = [
     useCase: "Technical blog",
     description:
       "Editorial starter with RSS, tags, authors, reading time, and a content-loader home page.",
-    highlights: ["RSS + sitemap", "Tag + author pages", "Custom editorial theme"],
+    highlights: ["RSS + sitemap", "Tag + author pages", "Engineering blog theme"],
     command: "pnpm dlx @kamod-ch/preactpress init my-blog --template blog",
     previewSrc: "/templates/blog.webp",
   },
@@ -39,7 +39,7 @@ const templates: TemplateCard[] = [
     useCase: "Library / SDK",
     description:
       "Product and developer-library documentation with guides, concepts, FAQ, and changelog.",
-    highlights: ["Default docs theme", "Edit on GitHub", "Callouts + code samples"],
+    highlights: ["Indigo SDK branding", "Install panel + version badge", "Edit on GitHub"],
     command: "pnpm dlx @kamod-ch/preactpress init my-product --template product-docs",
     previewSrc: "/templates/product-docs.webp",
   },
@@ -49,7 +49,7 @@ const templates: TemplateCard[] = [
     useCase: "JS/TS API",
     description:
       "Scannable API pages with MDX components for signatures, parameters, and type definitions.",
-    highlights: ["ApiSignature components", "Deep-link headings", "Ready for TypeDoc later"],
+    highlights: ["Protocol theme", "OpenAPI + SDK MDX helpers", "Deep-link headings"],
     command: "pnpm dlx @kamod-ch/preactpress init my-api --template api-docs",
     previewSrc: "/templates/api-docs.webp",
   },
@@ -59,7 +59,7 @@ const templates: TemplateCard[] = [
     useCase: "Product + admin",
     description:
       "Landing page plus onboarding, billing, roles, integrations, API, and troubleshooting.",
-    highlights: ["Custom product theme", "Step-by-step guides", "Admin role hints"],
+    highlights: ["Light product theme", "Workspace onboarding", "Admin role hints"],
     command: "pnpm dlx @kamod-ch/preactpress init my-saas --template saas-docs",
     previewSrc: "/templates/saas-docs.webp",
   },
@@ -69,7 +69,7 @@ const templates: TemplateCard[] = [
     useCase: "Help center",
     description:
       "Support-focused help center with search-first home, categories, and contact CTAs.",
-    highlights: ["Search-first UX", "Category hubs", "Separate from dev docs"],
+    highlights: ["Search-first home", "Category hubs", "Support contact CTAs"],
     command: "pnpm dlx @kamod-ch/preactpress init my-help --template knowledge-base",
     previewSrc: "/templates/knowledge-base.webp",
   },
@@ -111,6 +111,11 @@ function assetUrl(path: string): string {
   return `${base}${normalized}`;
 }
 
+function liveDemoHref(templateId: string): string {
+  if (templateId === "docs") return assetUrl("/");
+  return assetUrl(`/demos/${templateId}/`);
+}
+
 export default function TemplateGallery() {
   return (
     <section class="pp-mkt-section" aria-labelledby="templates-title">
@@ -126,14 +131,21 @@ export default function TemplateGallery() {
       <div class="pp-mkt-card-grid pp-mkt-card-grid-starters">
         {templates.map((template) => (
           <article class="pp-mkt-card pp-mkt-template" key={template.id}>
-            <img
-              class="pp-mkt-template-preview"
-              src={assetUrl(template.previewSrc)}
-              alt={`${template.name} starter preview`}
-              loading="lazy"
-              width={640}
-              height={400}
-            />
+            <a
+              class="pp-mkt-template-preview-link"
+              href={liveDemoHref(template.id)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="pp-mkt-template-preview"
+                src={assetUrl(template.previewSrc)}
+                alt={`${template.name} starter preview`}
+                loading="lazy"
+                width={640}
+                height={400}
+              />
+            </a>
             <div class="pp-mkt-template-body">
               <p class="pp-mkt-template-tag">{template.useCase}</p>
               <h3>{template.name}</h3>
@@ -144,7 +156,17 @@ export default function TemplateGallery() {
                 ))}
               </ul>
             </div>
-            <CopyableCommand command={template.command} />
+            <div class="pp-mkt-template-actions">
+              <CopyableCommand command={template.command} />
+              <a
+                class="pp-mkt-template-demo"
+                href={liveDemoHref(template.id)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open live demo →
+              </a>
+            </div>
           </article>
         ))}
       </div>

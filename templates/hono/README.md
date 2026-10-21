@@ -13,6 +13,8 @@ It combines a hono.dev-inspired landing page with a full documentation starter, 
 | `pnpm run build`   | Write static HTML to `dist/`                  |
 | `pnpm run preview` | Serve the production build locally            |
 
+When hacking on PreactPress itself, run `pnpm run dev:hono` from the repository root and `node ./scripts/link-local-preactpress.mjs templates/hono` after rebuilding the core package ([Contributing](https://github.com/kamod-ch/preactpress/blob/main/CONTRIBUTING.md#documentation-site-templatesdocs)).
+
 ## Where to edit
 
 | Path                        | Purpose                                          |

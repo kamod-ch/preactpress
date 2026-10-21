@@ -17,7 +17,7 @@ Run commands from the site root or pass a root path as the final argument.
 | `preactpress preview [root]`                 | Serve `outDir` locally                             |
 | `preactpress migrate vitepress [options]`    | Migrate a VitePress site to PreactPress output     |
 
-See [Starter templates](/guide/templates) for a comparison of the four official init starters.
+See [Starter templates](/guide/templates) for all nine gallery starters and live demo URLs.
 
 ## Recommended workflow
 
@@ -29,6 +29,8 @@ pnpm run preview
 ```
 
 Add `check` and `build` to CI. `preview` is a local smoke-test server, not a production runtime.
+
+In a normal scaffolded project, `pnpm exec preactpress …` works because `@kamod-ch/preactpress` is a direct dependency. When developing the PreactPress repository itself, run the CLI from the repo root via `pnpm run preactpress -- …` or `node ./bin/preactpress.mjs …` (see the main [README](https://github.com/kamod-ch/preactpress#contributing)).
 
 ## Documentation check
 

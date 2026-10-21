@@ -408,15 +408,89 @@ a.pp-mkt-panel-label:focus-visible {
   white-space: nowrap;
 }
 
+.pp-mkt-code-topbar-tabs {
+  gap: 12px;
+  padding-right: 12px;
+}
+
+.pp-mkt-editor-tablist {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  margin-left: 4px;
+}
+
+.pp-mkt-editor-tab-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pp-mkt-demo-editor {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.pp-mkt-demo-editor > .pp-mkt-editor-panel {
+  display: none;
+  flex: 1;
+  margin: 0;
+  min-height: var(--pp-mkt-code-body-min-height);
+  overflow-x: auto;
+}
+
+.pp-mkt-demo-editor > #pp-mkt-demo-mdx:checked ~ .pp-mkt-editor-panel-mdx,
+.pp-mkt-demo-editor > #pp-mkt-demo-counter:checked ~ .pp-mkt-editor-panel-counter {
+  display: block;
+}
+
+.pp-mkt-demo-editor > #pp-mkt-demo-mdx:checked ~ .pp-mkt-code-topbar label[for="pp-mkt-demo-mdx"],
+.pp-mkt-demo-editor
+  > #pp-mkt-demo-counter:checked
+  ~ .pp-mkt-code-topbar
+  label[for="pp-mkt-demo-counter"] {
+  color: var(--pp-mkt-terminal-text);
+  border-color: rgba(124, 196, 255, 0.35);
+  background: rgba(124, 196, 255, 0.1);
+}
+
+.pp-mkt-demo-editor > #pp-mkt-demo-mdx:checked ~ .pp-mkt-code-topbar label[for="pp-mkt-demo-mdx"]::before,
+.pp-mkt-demo-editor
+  > #pp-mkt-demo-counter:checked
+  ~ .pp-mkt-code-topbar
+  label[for="pp-mkt-demo-counter"]::before {
+  background: color-mix(in srgb, var(--pp-mkt-terminal-path) 78%, white);
+  box-shadow: 0 0 0 1px rgba(124, 196, 255, 0.35);
+}
+
 .pp-mkt-editor-tab {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.2rem 0.55rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.28rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
-  color: var(--pp-mkt-terminal-text);
+  color: var(--pp-mkt-terminal-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .pp-mkt-editor-tab::before {
@@ -424,8 +498,24 @@ a.pp-mkt-panel-label:focus-visible {
   width: 7px;
   height: 7px;
   border-radius: 2px;
-  background: color-mix(in srgb, var(--pp-mkt-terminal-path) 78%, white);
-  box-shadow: 0 0 0 1px rgba(124, 196, 255, 0.35);
+  background: color-mix(in srgb, var(--pp-mkt-terminal-path) 45%, transparent);
+  box-shadow: 0 0 0 1px rgba(124, 196, 255, 0.2);
+}
+
+.pp-mkt-editor-tab:hover {
+  color: var(--pp-mkt-terminal-text);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.pp-mkt-editor-tab:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--pp-mkt-terminal-path) 70%, white);
+  outline-offset: 2px;
+}
+
+.pp-mkt-demo-editor > .pp-mkt-editor-panel-counter {
+  font-size: 0.84rem;
+  line-height: 1.55;
 }
 
 .pp-mkt-code-card-terminal pre,
@@ -489,8 +579,46 @@ a.pp-mkt-panel-label:focus-visible {
   color: #ffcb6b;
 }
 
+.pp-mkt-editor-token-attr {
+  color: #82aaff;
+}
+
+.pp-mkt-editor-token-number {
+  color: #f78c6c;
+}
+
+.pp-mkt-editor-token-fn {
+  color: #82aaff;
+}
+
 .pp-mkt-editor-token-plain {
   color: var(--pp-mkt-terminal-text);
+}
+
+.pp-mkt-demo-source-hint {
+  margin: 20px 0 0;
+}
+
+.pp-mkt-demo-source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--pp-accent);
+  font-size: 0.92rem;
+  font-weight: 650;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.pp-mkt-demo-source-link:hover {
+  color: color-mix(in srgb, var(--pp-accent) 82%, var(--pp-text));
+}
+
+.pp-mkt-demo-source-link:focus-visible {
+  outline: 3px solid var(--pp-focus);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .pp-mkt-editor-cursor {
@@ -822,6 +950,16 @@ a.pp-mkt-card:focus-visible {
   overflow: hidden;
 }
 
+.pp-mkt-template-preview-link {
+  display: block;
+  text-decoration: none;
+  border-bottom: 1px solid var(--pp-border);
+}
+
+.pp-mkt-template-preview-link:hover .pp-mkt-template-preview {
+  filter: brightness(1.03);
+}
+
 .pp-mkt-template-preview {
   display: block;
   width: 100%;
@@ -829,7 +967,6 @@ a.pp-mkt-card:focus-visible {
   object-fit: cover;
   object-position: top center;
   background: color-mix(in srgb, var(--pp-code-bg) 70%, var(--pp-bg));
-  border-bottom: 1px solid var(--pp-border);
 }
 
 .pp-mkt-template-body {
@@ -874,8 +1011,33 @@ a.pp-mkt-card:focus-visible {
   background: var(--pp-accent);
 }
 
-.pp-mkt-template .pp-mkt-copyable {
+.pp-mkt-template-actions {
+  display: grid;
+  gap: 10px;
   margin: 16px 22px 22px;
+}
+
+.pp-mkt-template .pp-mkt-copyable {
+  margin: 0;
+}
+
+.pp-mkt-template-demo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0 14px;
+  border: 1px solid var(--pp-border);
+  border-radius: 999px;
+  color: var(--pp-accent);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pp-mkt-template-demo:hover {
+  border-color: var(--pp-accent);
+  background: color-mix(in srgb, var(--pp-accent) 10%, transparent);
 }
 
 .pp-mkt-copyable {

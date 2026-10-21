@@ -6,8 +6,11 @@ on:
       - main
     paths:
       - "src/**"
-      - "templates/docs/**"
+      - "templates/**"
       - "assets/**"
+      - "scripts/gallery-templates.mjs"
+      - "scripts/build-template-demos.mjs"
+      - "scripts/link-local-preactpress.mjs"
       - ".github/workflows/deploy.yml"
       - "package.json"
       - "pnpm-lock.yaml"
@@ -58,6 +61,9 @@ jobs:
         env:
           PREACTPRESS_INCLUDE_MATOMO: "true"
         run: node ../../bin/preactpress.mjs build . --base /${{ github.event.repository.name }}/
+
+      - name: Build live template demos
+        run: node ./scripts/build-template-demos.mjs --out templates/docs/dist --pages-base /${{ github.event.repository.name }}/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

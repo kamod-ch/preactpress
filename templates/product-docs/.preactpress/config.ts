@@ -13,6 +13,7 @@ export default defineConfig({
     search: true,
     lastUpdated: true,
     tags: true,
+    logo: "/sdk-mark.svg",
     footer: "Built with PreactPress.",
     editLink: {
       pattern: "https://github.com/your-org/your-repo/edit/main/:path",
@@ -79,5 +80,8 @@ export default defineConfig({
   build: {
     sitemap: true,
     robots: true,
+  },
+  transformHead() {
+    return [{ tag: "link", attrs: { rel: "stylesheet", href: "/sdk-theme.css" } }];
   },
 });

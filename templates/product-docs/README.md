@@ -30,11 +30,15 @@ pnpm run build
 pnpm run preview
 ```
 
+## PreactPress monorepo
+
+From the repository root: `pnpm run dev:product-docs`, `pnpm run build:product-docs`. After rebuilding the core package, link it with `node ./scripts/link-local-preactpress.mjs templates/product-docs` ([Contributing](https://github.com/kamod-ch/preactpress/blob/main/CONTRIBUTING.md#documentation-site-templatesdocs)).
+
 ## Directory structure
 
 ```text
 .preactpress/config.ts   Site and theme configuration
-index.md                 Home page
+index.mdx                SDK home with install panel
 **/                     Content pages (Markdown / MDX)
 public/                  Static assets
 ```

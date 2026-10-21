@@ -62,7 +62,7 @@ pnpm build
 
 The canonical documentation site is built from [`templates/docs`](./templates/docs) and published at **[kamod-ch.github.io/preactpress](https://kamod-ch.github.io/preactpress/)**.
 
-It demonstrates the default theme, local search, Mermaid diagrams, live playgrounds, AI exports, and a small German i18n demo.
+It demonstrates the default theme, local search, Mermaid diagrams, live playgrounds, AI exports, and a small German i18n demo. The [template gallery](https://kamod-ch.github.io/preactpress/#templates-title) links to **live demos** of each init starter under `/demos/<template>/` (the docs starter is this site).
 
 ## Code example
 
@@ -155,7 +155,9 @@ See the full [comparison guide](https://kamod-ch.github.io/preactpress/guide/com
 | `magazine`       | Custom editorial theme (demo)            | `pnpm dlx @kamod-ch/preactpress init my-mag --template magazine`         |
 | `hono`           | Product landing + docs (demo)            | `pnpm dlx @kamod-ch/preactpress init my-site --template hono`            |
 
-Browse the [template gallery](https://kamod-ch.github.io/preactpress/guide/templates/) or run `pnpm run dev:docs` from the package root while contributing.
+Browse the [template gallery](https://kamod-ch.github.io/preactpress/guide/templates/) for screenshots and **Open live demo** links. Published starters (except `docs`) live under `https://kamod-ch.github.io/preactpress/demos/<template>/`.
+
+While contributing from this repository, use the root scripts (`pnpm run dev:docs`, `pnpm run build:docs`) instead of `cd templates/docs && pnpm run dev` unless you have [linked the local package](#working-on-templatesdocs) (see below).
 
 ## Plugins
 
@@ -213,19 +215,67 @@ See [ROADMAP.md](./ROADMAP.md) and [RELEASE-REPORT.md](./RELEASE-REPORT.md) for 
 
 ## Contributing
 
-Development scripts:
+Clone the repository, install dependencies, and compile the core package before running tests or template sites:
 
 ```bash
 pnpm install
 pnpm run build
 pnpm test
-pnpm run dev:docs
-pnpm run check:docs
-pnpm run build:docs
-pnpm run verify    # fmt, lint, build, coverage, workspace plugins, templates, browser, pack
 ```
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for package development. Upgrade from a previous release with [UPGRADE.md](./UPGRADE.md).
+### CLI from the repository root
+
+The root package **does not** install its own `preactpress` binary into `node_modules/.bin`. From the repo root, use one of:
+
+```bash
+pnpm run preactpress -- dev templates/docs
+pnpm run preactpress -- build templates/docs
+pnpm run preactpress -- preview templates/docs
+node ./bin/preactpress.mjs dev templates/docs
+```
+
+Convenience scripts wrap the same CLI:
+
+| Script | Purpose |
+| --- | --- |
+| `pnpm run dev:docs` | Dev server for the canonical docs site |
+| `pnpm run check:docs` | `preactpress check` on `templates/docs` |
+| `pnpm run build:docs` | Production build of `templates/docs` |
+| `pnpm run build:template-demos` | Build gallery starters into `templates/docs/dist/demos/` (GitHub Pages live demos) |
+| `pnpm run capture:template-previews` | Refresh gallery WebP screenshots under `templates/docs/public/templates/` |
+| `pnpm run link:templates/docs` | Symlink the monorepo package into `templates/docs` (see below) |
+| `pnpm run verify` | Full release gate: fmt, lint, build, coverage, workspace plugins, template checks, browser, pack |
+
+Inside a **scaffolded site** (including `templates/docs` after `pnpm install` there), `pnpm exec preactpress` and the `package.json` scripts (`pnpm run dev`, `pnpm run build`, `pnpm run preview`) work because `@kamod-ch/preactpress` is listed as a dependency.
+
+### Working on `templates/docs`
+
+The docs starter depends on `"@kamod-ch/preactpress": "file:../.."`. On `pnpm install`, pnpm **copies** that package into `node_modules/.pnpm/…`. A copy does **not** pick up new files when you only run `pnpm run build` at the repo root (for example after adding modules under `dist/`).
+
+If `preactpress build` fails with a missing file under `@kamod-ch/preactpress/dist/`, refresh the link:
+
+```bash
+pnpm run build
+pnpm run link:templates/docs
+cd templates/docs
+pnpm run build
+```
+
+Alternatively run `pnpm install` again inside `templates/docs`. Demo and preview automation uses the same linker (`scripts/link-local-preactpress.mjs`).
+
+Typical docs workflow:
+
+```bash
+pnpm run build
+pnpm run link:templates/docs   # once per clone, or after dependency layout changes
+pnpm run dev:docs              # or: cd templates/docs && pnpm run dev
+pnpm run build:docs
+pnpm run preactpress -- preview templates/docs
+```
+
+User-facing guides live in [`templates/docs`](./templates/docs/). Change them when you alter public CLI or config behavior.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for plugins and CI. Upgrade from a previous release with [UPGRADE.md](./UPGRADE.md).
 
 ## License
 

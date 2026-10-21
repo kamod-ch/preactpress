@@ -11,6 +11,8 @@ This folder was scaffolded with `preactpress init`. It is the minimal starter: a
 | `pnpm run build`   | Write static HTML to `dist/`                  |
 | `pnpm run preview` | Serve the production build locally            |
 
+When hacking on PreactPress itself, run `pnpm run dev:default` from the repository root and `node ./scripts/link-local-preactpress.mjs templates/default` after rebuilding the core package ([Contributing](https://github.com/kamod-ch/preactpress/blob/main/CONTRIBUTING.md#documentation-site-templatesdocs)).
+
 ## Where to edit
 
 | Path                     | Purpose                                  |

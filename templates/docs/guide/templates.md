@@ -7,23 +7,23 @@ description: Compare the built-in PreactPress init templates and choose the righ
 
 PreactPress ships **nine** official starters. Use `preactpress init` (or `pnpm dlx @kamod-ch/preactpress init`) and optionally `--template <name>` to scaffold one.
 
-See the [template gallery on the home page](/#templates-title) for screenshots and copyable commands.
+See the [template gallery on the home page](/#templates-title) for screenshots, **Open live demo** links, and copyable commands. Each starter (except the docs site itself) is also published under `/demos/<template>/` on GitHub Pages.
 
 > Start with documentation, a technical blog, an API reference, SaaS docs, or a complete knowledge base—all powered by PreactPress.
 
 ## Which template should I use?
 
-| Template           | CLI name                      | Theme            | Best for                        | Notable extras                                   |
-| ------------------ | ----------------------------- | ---------------- | ------------------------------- | ------------------------------------------------ |
-| Documentation      | `docs`                        | Default          | Full framework docs (this site) | Guides, examples, EN/DE locales                  |
-| **Blog**           | `blog`                        | Custom editorial | Technical blogs and changelogs  | RSS, tags, authors, reading time                 |
-| **Product docs**   | `product-docs`                | Default          | SDK / library documentation     | Concepts, FAQ, changelog, edit link              |
-| **API reference**  | `api-docs`                    | Custom Protocol  | REST + TypeScript SDK hybrid    | Protocol theme, OpenAPI plugin, ApiSignature MDX |
-| **SaaS docs**      | `saas-docs`                   | Custom product   | SaaS onboarding and admin docs  | Landing + docs, role hints, integrations         |
-| **Knowledge base** | `knowledge-base`              | Default          | Help centers and support        | Search-first home, categories, contact CTA       |
-| Product + Docs     | `hono`                        | Custom           | Marketing site + docs area      | Landing layout, i18n demo                        |
-| Magazine           | `magazine`                    | Custom editorial | Editorial / magazine layouts    | Teaser grid, German demo content                 |
-| Minimal            | `default` (omit `--template`) | Default          | Quick trials                    | Smallest file tree                               |
+| Template           | CLI name                      | Theme               | Best for                        | Notable extras                                   |
+| ------------------ | ----------------------------- | ------------------- | ------------------------------- | ------------------------------------------------ |
+| Documentation      | `docs`                        | Default             | Full framework docs (this site) | Guides, examples, EN/DE locales                  |
+| **Blog**           | `blog`                        | Custom engineering  | Technical blogs and changelogs  | RSS, tags, authors, reading time                 |
+| **Product docs**   | `product-docs`                | Default + branding  | SDK / library documentation     | Install panel, version badge, changelog          |
+| **API reference**  | `api-docs`                    | Custom Protocol     | REST + TypeScript SDK hybrid    | Protocol theme, OpenAPI plugin, ApiSignature MDX |
+| **SaaS docs**      | `saas-docs`                   | Custom product      | SaaS onboarding and admin docs  | Workspace landing, role hints, integrations      |
+| **Knowledge base** | `knowledge-base`              | Default + help home | Help centers and support        | Search-first home, categories, contact CTA       |
+| Product + Docs     | `hono`                        | Custom              | Marketing site + docs area      | Landing layout, i18n demo                        |
+| Magazine           | `magazine`                    | Custom editorial    | Editorial / magazine layouts    | Teaser grid, German demo content                 |
+| Minimal            | `default` (omit `--template`) | Default             | Quick trials                    | Smallest file tree                               |
 
 ## Scaffold commands
 
@@ -68,6 +68,18 @@ pnpm run dev
 
 Every starter includes `pnpm run build` and `pnpm run preview`. Set `site.url` in `.preactpress/config.ts` before enabling sitemap, robots, or RSS (`build.feed` on the blog starter).
 
+### Maintainers (PreactPress repository)
+
+Live demos and gallery screenshots are produced from the monorepo:
+
+```bash
+pnpm run build:docs
+pnpm run build:template-demos -- --pages-base /preactpress/   # match your GitHub Pages repo name
+pnpm run capture:template-previews
+```
+
+If `templates/docs` fails to build after core changes, run `pnpm run link:templates/docs` from the repository root (see [Contributing on GitHub](https://github.com/kamod-ch/preactpress/blob/main/CONTRIBUTING.md#documentation-site-templatesdocs)).
+
 ## Customization
 
 | Area                     | Where to edit                                                                   |
@@ -79,11 +91,11 @@ Every starter includes `pnpm run build` and `pnpm run preview`. Set `site.url` i
 
 ## Comparison highlights
 
-- **Blog** — RSS feed, tag index, author listing, content-loader teasers, optional TOC on long posts.
-- **Product docs** — hierarchical sidebar, version label in nav, troubleshooting and migration guides.
+- **Blog** — Dark engineering header, featured post, RSS, tags, authors, and reading time.
+- **Product docs** — SDK-branded default theme, install panel, version badge, changelog.
 - **API docs** — Protocol-style custom theme; OpenAPI-generated REST resources plus SDK MDX helpers (`ApiSignature`, `ParameterTable`, `HttpMethodBadge`, `EndpointLine`).
-- **SaaS docs** — product landing with multiple entry paths; step lists and screenshot placeholders.
-- **Knowledge base** — help-center tone, popular searches, link-out to developer docs.
+- **SaaS docs** — Light product landing with workspace preview, setup paths, and admin role hints.
+- **Knowledge base** — Search-first help-center home, category hubs, and support CTAs.
 
 ## Related
 

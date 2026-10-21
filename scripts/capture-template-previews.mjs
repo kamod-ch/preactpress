@@ -16,10 +16,12 @@ import { chromium } from "@playwright/test";
 import sharp from "sharp";
 import { init } from "../dist/node/init.js";
 import { build } from "../dist/node/build.js";
+import { GALLERY_TEMPLATE_IDS } from "./gallery-templates.mjs";
+import { linkLocalPackage } from "./link-local-preactpress.mjs";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = path.join(packageRoot, "templates", "docs", "public", "templates");
-const templates = ["docs", "hono", "magazine", "default"];
+const templates = GALLERY_TEMPLATE_IDS;
 const checkOnly = process.argv.includes("--check");
 const host = "127.0.0.1";
 const basePort = 4180;
@@ -145,26 +147,6 @@ async function captureTemplate(browser, template, port) {
   } finally {
     await rm(siteRoot, { recursive: true, force: true });
   }
-}
-
-async function linkLocalPackage(siteRoot) {
-  const { mkdir: mkdirFs, symlink, rm: rmFs, readlink } = await import("node:fs/promises");
-  const linkPath = path.join(siteRoot, "node_modules", "@kamod-ch", "preactpress");
-  await mkdirFs(path.dirname(linkPath), { recursive: true });
-  try {
-    const existing = await readlink(linkPath);
-    if (path.resolve(path.dirname(linkPath), existing) === packageRoot) return;
-    await rmFs(linkPath, { recursive: true, force: true });
-  } catch (err) {
-    const code = err?.code;
-    if (code !== "ENOENT" && code !== "EINVAL" && code !== "ELOOP") throw err;
-    try {
-      await rmFs(linkPath, { recursive: true, force: true });
-    } catch {
-      /* ignore */
-    }
-  }
-  await symlink(packageRoot, linkPath, "dir");
 }
 
 async function main() {

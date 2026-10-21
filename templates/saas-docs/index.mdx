@@ -8,45 +8,33 @@ import Hero from "./.preactpress/theme/Hero.tsx";
 
 <Hero
   eyebrow="SaaS documentation starter"
-  title="Ship product docs your customers actually use."
-  subtitle="Onboarding guides, admin workflows, API references, and support paths — built with PreactPress and ready to customize for your product."
+  title="Get your workspace live this afternoon."
+  subtitle="Onboarding, admin workflows, billing, and integrations — written for the people who run your product, not only the people who build it."
   actions={[
-    { text: "Complete setup", link: "/docs/quickstart", theme: "brand" },
+    { text: "Start setup", link: "/docs/quickstart", theme: "brand" },
     { text: "Invite your team", link: "/docs/team-members", theme: "alt" },
-    { text: "Connect an integration", link: "/docs/integrations", theme: "alt" },
   ]}
-  code={`curl -X POST https://api.acme.dev/v1/workspaces \\
-  -H "Authorization: Bearer $ACME_API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{"name":"Engineering","plan":"pro"}'`}
 />
 
 <FeatureGrid
   features={[
     {
-      icon: "1",
+      icon: "01",
       title: "Finish setup",
-      details: "Quickstart walks new admins through workspace creation and first integration.",
+      details: "Create a workspace, connect the first integration, and invite an admin.",
+      href: "/docs/quickstart",
     },
     {
-      icon: "2",
-      title: "Invite teammates",
-      details: "Role-based docs explain what admins vs members can configure.",
+      icon: "02",
+      title: "Run the workspace",
+      details: "Roles, billing, and security guides for the people who keep Acme running.",
+      href: "/docs/workspace",
     },
     {
-      icon: "3",
-      title: "Connect tools",
-      details: "Integration guides with copy-paste credentials and webhook examples.",
-    },
-    {
-      icon: "4",
-      title: "Use the API",
-      details: "Developer section links to REST endpoints and event payloads.",
-    },
-    {
-      icon: "?",
-      title: "Solve problems",
-      details: "Troubleshooting hub with support CTA when docs are not enough.",
+      icon: "03",
+      title: "Build on the API",
+      details: "REST, webhooks, and event payloads when you need to go beyond the UI.",
+      href: "/docs/api",
     },
   ]}
 />

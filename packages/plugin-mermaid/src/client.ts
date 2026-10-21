@@ -112,3 +112,5 @@ export async function enhanceContent(): Promise<void> {
     }),
   );
 }
+
+export default enhanceContent;

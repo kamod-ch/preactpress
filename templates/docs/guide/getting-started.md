@@ -137,6 +137,12 @@ pnpm exec preactpress build
 pnpm exec preactpress preview
 ```
 
+### PreactPress repository contributors
+
+If you clone [github.com/kamod-ch/preactpress](https://github.com/kamod-ch/preactpress) and work on `templates/docs` here, the root package does not expose `pnpm exec preactpress`. Use `pnpm run dev:docs`, `pnpm run build:docs`, and `pnpm run preactpress -- preview templates/docs` from the repository root instead.
+
+This starter depends on the core package via `file:../..`. After `pnpm run build` at the root, run `pnpm run link:templates/docs` (or `pnpm install` in this folder) so installs pick up the latest `dist/` output. Details: [Contributing — Documentation site](https://github.com/kamod-ch/preactpress/blob/main/CONTRIBUTING.md#documentation-site-templatesdocs).
+
 ## What's next?
 
 | Page                                              | Why                                               |

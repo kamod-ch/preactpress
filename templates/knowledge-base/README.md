@@ -30,11 +30,15 @@ pnpm run build
 pnpm run preview
 ```
 
+## PreactPress monorepo
+
+From the repository root: `pnpm run dev:knowledge-base`, `pnpm run build:knowledge-base`. After rebuilding the core package, link it with `node ./scripts/link-local-preactpress.mjs templates/knowledge-base` ([Contributing](https://github.com/kamod-ch/preactpress/blob/main/CONTRIBUTING.md#documentation-site-templatesdocs)).
+
 ## Directory structure
 
 ```text
 .preactpress/config.ts   Site and theme configuration
-index.md                 Home page
+index.mdx                Search-first help center home
 **/                     Content pages (Markdown / MDX)
 public/                  Static assets
 ```

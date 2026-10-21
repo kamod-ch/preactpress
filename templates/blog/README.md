@@ -1,6 +1,6 @@
 # PreactPress Blog starter
 
-Technical blog starter with RSS, tags, authors, content-loader teasers, and a custom editorial theme.
+Technical blog starter with RSS, tags, authors, content-loader teasers, and a custom engineering theme.
 
 ## Prerequisites
 
@@ -29,6 +29,10 @@ pnpm run build
 
 Outputs static HTML, `sitemap.xml`, `robots.txt`, and `feed.xml` (requires `site.url`).
 
+## PreactPress monorepo
+
+From the repository root: `pnpm run dev:blog`, `pnpm run build:blog`. After rebuilding the core package, link it with `node ./scripts/link-local-preactpress.mjs templates/blog` ([Contributing](https://github.com/kamod-ch/preactpress/blob/main/CONTRIBUTING.md#documentation-site-templatesdocs)).
+
 ## Directory structure
 
 ```text
@@ -39,7 +43,7 @@ articles.md              Article index
 authors.md               Author listing
 .preactpress/
   config.ts              Site config, RSS, navigation
-  theme/                 Custom Preact layout
+  theme/                 Custom engineering-blog layout
 public/                  Static assets (OG images)
 ```
 
@@ -57,7 +61,7 @@ Edit `themeConfig.nav` and `themeConfig.sidebar` in `.preactpress/config.ts`.
 
 ## Branding
 
-Update `site.title`, theme CSS in `.preactpress/theme/magazine.css`, and masthead copy in `Layout.tsx`.
+Update `site.title`, theme CSS in `.preactpress/theme/blog.css`, and header copy in `Layout.tsx`.
 
 ## Deployment
 
