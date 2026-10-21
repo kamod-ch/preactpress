@@ -20,6 +20,7 @@ jobs:
       # Pinned to kamod-ch/.github@main (119eacd, 2026-10-20); bump via reviewed PR.
       - uses: kamod-ch/.github/.github/actions/npm-publish-on-tag@119eacd239e82d5d49203c0fc4452c6f675f9334
         with:
-          pre-publish: pnpm exec playwright install --with-deps chromium webkit && pnpm release:check
+          # npm >=11.5.1 is required for npm Trusted Publishing (GitHub OIDC).
+          pre-publish: npm install --global npm@11 && pnpm exec playwright install --with-deps chromium webkit && pnpm release:check
           publish: pnpm release:publish
           npm-token: ${{ secrets.NPM_TOKEN }}

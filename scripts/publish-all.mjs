@@ -65,7 +65,10 @@ async function main() {
   }
 
   for (const entry of toPublish) {
-    run("pnpm publish --access public --provenance --no-git-checks", { cwd: entry.package.dir });
+    // Trusted publishing is implemented by the npm CLI (>=11.5.1). pnpm publish
+    // does not exchange GitHub's OIDC token and therefore fails with ENEEDAUTH
+    // when no long-lived NPM_TOKEN is configured.
+    run("npm publish --access public --provenance", { cwd: entry.package.dir });
     console.log(`[publish] Published ${entry.package.name}@${entry.package.version}`);
   }
 
