@@ -26,9 +26,7 @@ export default function Demo() {
   return <button type="button">{label}</button>;
 }`;
 
-    await editor.click();
-    await page.keyboard.press("ControlOrMeta+A");
-    await page.keyboard.insertText(nextSource);
+    await editor.fill(nextSource);
 
     await expect(
       page.frameLocator(".pp-playground-preview-frame").first().locator("button"),
@@ -40,9 +38,7 @@ export default function Demo() {
     const editor = root.locator(".pp-playground-editor");
     const preview = page.frameLocator(".pp-playground-preview-frame").first();
 
-    await editor.click();
-    await page.keyboard.press("ControlOrMeta+A");
-    await page.keyboard.insertText(`export default function Demo() {
+    await editor.fill(`export default function Demo() {
   return <button type="button">Changed</button>
 }`);
     await expect(preview.locator("button")).toHaveText("Changed", { timeout: 15_000 });
