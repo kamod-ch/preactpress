@@ -92,6 +92,8 @@
     "release:plugins:dry": "node ./scripts/release-plugins.mjs --dry",
     "release:check": "pnpm verify",
     "release:publish": "node ./scripts/publish-all.mjs",
+    "release:publish:dry": "node ./scripts/publish-all.mjs --dry-run",
+    "release:publish:recover": "node ./scripts/publish-all.mjs --recover",
     "verify": "pnpm run fmt:check && pnpm run lint && pnpm run build && pnpm run test:coverage && pnpm run verify:workspace && pnpm run check:templates && pnpm run test:browser && pnpm run pack:dry-run",
     "preactpress": "node ./bin/preactpress.mjs",
     "dev": "node ./bin/preactpress.mjs dev templates/default",

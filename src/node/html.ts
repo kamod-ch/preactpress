@@ -322,9 +322,13 @@ export async function injectDevPageDocument(
     pageType,
     pageData,
   });
+  const devCssHrefs =
+    devStylesheets?.map((href) =>
+      /^https?:\/\//.test(href) ? href : publicUrl(site.site.base, href),
+    ) ?? [];
   const devCssTags =
-    devStylesheets?.length && !devStylesheets.every((href) => html.includes(href))
-      ? renderSharedStylesheetLinks(devStylesheets.filter((href) => !html.includes(href)))
+    devCssHrefs.length && !devCssHrefs.every((href) => html.includes(href))
+      ? renderSharedStylesheetLinks(devCssHrefs.filter((href) => !html.includes(href)))
       : "";
   const activeSite = siteForRoute(site.site, route, site.i18n);
   const lang = escapeAttr(activeSite.lang);

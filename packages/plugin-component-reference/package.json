@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "description": "Preact component props reference for PreactPress",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/preactpress.git",
+    "directory": "packages/plugin-component-reference"
+  },
   "files": [
     "dist",
     "src/style.css",

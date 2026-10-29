@@ -11,6 +11,11 @@
     "sandbox"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/preactpress.git",
+    "directory": "packages/plugin-playground"
+  },
   "files": [
     "dist",
     "src/style.css",

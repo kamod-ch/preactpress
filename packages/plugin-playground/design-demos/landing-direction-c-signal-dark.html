@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Direction C · Signal dark — plugin-playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared-marketing.css" />
+  <style>
+    :root {
+      --bg: #050505;
+      --text: #f5f5f5;
+      --dim: #b8b8b8;
+      --grad-a: #6366f1;
+      --grad-b: #a855f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Sora, system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--dim);
+      background: var(--bg);
+    }
+    .band { padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 5vw, 4rem); }
+    header.band {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+    }
+    .waves {
+      position: absolute;
+      inset: 0;
+      opacity: 0.55;
+      pointer-events: none;
+    }
+    .waves svg { width: 100%; height: 100%; }
+    .wave-line {
+      fill: none;
+      stroke: url(#waveGrad);
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 1; }
+    }
+    .bar {
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    .bar:nth-child(2) { animation-delay: 0.2s; }
+    .bar:nth-child(3) { animation-delay: 0.45s; }
+    .bar:nth-child(4) { animation-delay: 0.7s; }
+    .content { position: relative; z-index: 1; max-width: 920px; }
+    .pkg {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      color: #a5b4fc;
+    }
+    h1 {
+      color: var(--text);
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin: 0.75rem 0 1rem;
+      max-width: 16ch;
+    }
+    .sub { max-width: 32rem; font-size: 1.0625rem; margin-bottom: 1.5rem; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 1.35rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--text);
+    }
+    .cta-solid {
+      border: none;
+      background: #4f46e5;
+      color: #fff;
+    }
+    .signal-stage {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .stage-inner { max-width: 1000px; margin: 0 auto; }
+    .path-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      color: var(--dim);
+      margin-bottom: 0.75rem;
+    }
+    .path-ui {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.75rem;
+      align-items: stretch;
+    }
+    @media (max-width: 800px) {
+      .path-ui { grid-template-columns: 1fr; }
+      .path-arrow { display: none; }
+    }
+    .pane {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: #0c0c0c;
+    }
+    .pane-head {
+      padding: 0.65rem 1rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      color: var(--dim);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    pre {
+      margin: 0;
+      padding: 1rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #d4d4d8;
+      overflow: auto;
+    }
+    .pane-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 140px;
+      padding: 1rem;
+    }
+    .pane-preview button {
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.65rem 1.2rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      min-height: 44px;
+      background: #4f46e5;
+      color: #fff;
+    }
+    .path-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+    }
+    .path-arrow svg { width: 32px; height: 32px; }
+    .specs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      max-width: 920px;
+    }
+    .specs h2 { color: var(--text); font-size: 1rem; margin: 0 0 0.35rem; }
+    .specs p { margin: 0; font-size: 0.9375rem; }
+    footer.band {
+      font-size: 0.875rem;
+      padding-top: 2rem;
+    }
+    footer a { color: var(--text); }
+    .section-block { --line: rgba(255,255,255,0.12); --surface: #111; --muted: #b8b8b8; --accent: #818cf8; border-top: 1px solid rgba(255,255,255,0.08); padding: 3rem clamp(1.25rem, 5vw, 4rem); }
+    .section-title { color: var(--text); }
+    .steps li { background: #111; border-color: rgba(255,255,255,0.12); color: var(--dim); }
+    .faq details { background: #111; border-color: rgba(255,255,255,0.12); color: var(--dim); }
+    .faq summary { color: var(--text); }
+  </style>
+</head>
+<body>
+  <header class="band">
+    <div class="waves" aria-hidden="true">
+      <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#6366f1" />
+            <stop offset="100%" stop-color="#a855f7" />
+          </linearGradient>
+        </defs>
+        <path class="wave-line" d="M0,320 Q150,280 300,320 T600,320 T900,320 T1200,320" />
+        <path class="wave-line bar" d="M0,380 Q200,340 400,380 T800,380 T1200,380" opacity="0.6" />
+        <path class="wave-line bar" d="M0,440 Q180,400 360,440 T720,440 T1200,440" opacity="0.4" />
+      </svg>
+    </div>
+    <div class="content">
+      <p class="pkg">@preactpress/plugin-playground</p>
+      <h1>Code hits preview like a signal.</h1>
+      <p class="sub">
+        MDX authors write Preact once; readers hear the result immediately — sandboxed, lazy-loaded, and isolated from the doc shell.
+      </p>
+      <div class="cta-row">
+        <a class="cta cta-solid" href="#path">Watch the path</a>
+        <a class="cta" href="https://github.com/kamod-ch/preactpress/tree/main/packages/plugin-playground">Read README</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="band signal-stage" id="path" style="padding-top: 3rem; padding-bottom: 3rem;">
+    <div class="stage-inner">
+      <div class="path-label">
+        <span>editor</span>
+        <span>iframe preview</span>
+      </div>
+      <div class="path-ui">
+        <div class="pane">
+          <div class="pane-head">Demo.tsx</div>
+          <pre>const [n, setN] = useState(0)
+return (
+  &lt;button onClick={() =&gt;
+    setN(n + 1)}&gt;
+    Count: {n}
+  &lt;/button&gt;
+)</pre>
+        </div>
+        <div class="path-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 12h12M13 7l5 5-5 5" stroke="url(#waveGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="pane">
+          <div class="pane-head">sandbox</div>
+          <div class="pane-preview">
+            <button type="button" id="count-c">Count: 0</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="specs">
+      <div>
+        <h2>Sandbox</h2>
+        <p>Scripts-only iframe; host page stays stable when examples fail.</p>
+      </div>
+      <div>
+        <h2>Allowlist</h2>
+        <p>CDN dependencies you explicitly permit — default Preact ecosystem.</p>
+      </div>
+      <div>
+        <h2>Lazy bundle</h2>
+        <p>Playground UI loads only where MDX renders the component.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="stage-inner">
+      <h2 class="section-title">Pipeline</h2>
+      <ol class="steps">
+        <li><strong>1</strong>Register <code>playgroundPlugin()</code> in config.</li>
+        <li><strong>2</strong>Author MDX with live examples.</li>
+        <li><strong>3</strong>Sandbox iframe executes with import map + debounced runs.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section-block" id="faq">
+    <div class="stage-inner">
+      <h2 class="section-title">FAQ</h2>
+      <div class="faq">
+        <details>
+          <summary>What runs inside the iframe?</summary>
+          <p>A static sandbox document built by the plugin; your doc page never evals user code directly.</p>
+        </details>
+        <details>
+          <summary>Can I disable StackBlitz?</summary>
+          <p>Pass <code>stackBlitz={false}</code> on the Playground component.</p>
+        </details>
+        <details>
+          <summary>Read-only mode?</summary>
+          <p>Use <code>readOnly</code> to show code without editing.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <footer class="band">
+    Direction C · web style #8 cinematic signal · roulette S=47 ·
+    <a href="thumbs.html">All directions</a>
+  </footer>
+  <script>
+    document.getElementById("count-c").addEventListener("click", function () {
+      var m = this.textContent.match(/(\d+)/);
+      var n = m ? parseInt(m[1], 10) + 1 : 1;
+      this.textContent = "Count: " + n;
+    });
+  </script>
+</body>
+</html>

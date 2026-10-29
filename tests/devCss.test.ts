@@ -58,4 +58,26 @@ describe("injectDevPageDocument dev stylesheets", () => {
     expect(out).toContain('<motion id="app"><p>Hi</p></motion>'.replaceAll("motion", "div"));
     expect(out).toContain("<title>New</title>");
   });
+
+  it("prefixes dev stylesheet hrefs with site.base", async () => {
+    const input =
+      '<!doctype html><html><head><title>Old</title></head><body><div id="app"></div></body></html>';
+    const subpathSite = {
+      ...site,
+      site: { ...site.site, base: "/kamod-charts/" },
+    } as unknown as SiteConfig;
+
+    const out = await injectDevPageDocument(input, {
+      site: subpathSite,
+      body: "<p>Hi</p>",
+      title: "New",
+      description: "Desc",
+      route: "/",
+      devStylesheets: ["/styles/index.css"],
+    });
+
+    expect(out).toContain(
+      renderStylesheetLinks(["/kamod-charts/styles/index.css"]),
+    );
+  });
 });

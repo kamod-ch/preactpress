@@ -61,4 +61,4 @@ You can also run `pnpm install` again inside `templates/docs`. CI demo and previ
 
 ## Releases
 
-Maintainers use `pnpm run release:check` before tagging. Tag pushes run `.github/workflows/publish.yml`, which executes `scripts/publish-all.mjs` after workspace verification. See [RELEASE-REPORT.md](./RELEASE-REPORT.md) and [UPGRADE.md](./UPGRADE.md).
+Maintainers: see **[docs/releasing.md](./docs/releasing.md)** (command flow, CI, npm Trusted Publisher setup, validation, recovery). Short checklist also in [RELEASE-REPORT.md](./RELEASE-REPORT.md).

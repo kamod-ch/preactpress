@@ -17,10 +17,39 @@ jobs:
       contents: read
       id-token: write
     steps:
-      # Pinned to kamod-ch/.github@main (119eacd, 2026-10-20); bump via reviewed PR.
-      - uses: kamod-ch/.github/.github/actions/npm-publish-on-tag@119eacd239e82d5d49203c0fc4452c6f675f9334
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      # Do not set registry-url here — setup-node would inject an empty _authToken and block OIDC.
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          # npm >=11.5.1 is required for npm Trusted Publishing (GitHub OIDC).
-          pre-publish: npm install --global npm@11 && pnpm exec playwright install --with-deps chromium webkit && pnpm release:check
-          publish: pnpm release:publish
-          npm-token: ${{ secrets.NPM_TOKEN }}
+          node-version: "22.14.0"
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare npm for Trusted Publishing
+        run: npm install --global npm@11.5.1
+
+      - name: Log Node.js and npm versions
+        run: |
+          node --version
+          npm --version
+
+      - name: Pre-publish checks
+        run: |
+          pnpm exec playwright install --with-deps chromium webkit
+          pnpm release:check
+
+      - name: Verify OIDC-only npm auth configuration
+        run: |
+          export npm_version="$(npm --version)"
+          node ./scripts/check-npm-publish-auth.mjs
+
+      - name: Publish to npm
+        run: pnpm release:publish

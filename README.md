@@ -277,6 +277,12 @@ User-facing guides live in [`templates/docs`](./templates/docs/). Change them wh
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for plugins and CI. Upgrade from a previous release with [UPGRADE.md](./UPGRADE.md).
 
+## Maintainer releases
+
+Normal releases use **`pnpm run release`** on `main` (commit + `v*` tag + push), then GitHub Actions [`.github/workflows/publish.yml`](./.github/workflows/publish.yml) runs **`pnpm release:publish`** (OIDC, no `NPM_TOKEN`). Before tagging, run **`pnpm run release:check`**.
+
+Full steps, npm Trusted Publisher fields, validation limits, migration, and partial-release recovery: **[docs/releasing.md](./docs/releasing.md)**.
+
 ## License
 
 Built by Klaus Zahiragic | Kamod GmbH
