@@ -1,146 +1,211 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Playground · Design-Richtungen</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "IBM Plex Sans", system-ui, sans-serif;
-      background: #0c0c0c;
-      color: #eee;
-      padding: 1.25rem 1.5rem 2.5rem;
-    }
-    .banner {
-      background: #1a2332;
-      border: 1px solid #334155;
-      border-radius: 0.75rem;
-      padding: 1rem 1.25rem;
-      margin-bottom: 1.5rem;
-      font-size: 0.9375rem;
-      line-height: 1.5;
-    }
-    .banner code { background: #0f172a; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
-    .banner a { color: #93c5fd; font-weight: 600; }
-    h1 { font-size: 1.4rem; margin: 0 0 0.35rem; }
-    .intro { color: #c4c4c4; max-width: 54rem; margin-bottom: 1.25rem; font-size: 0.9375rem; line-height: 1.55; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-    }
-    .card {
-      border: 1px solid #333;
-      border-radius: 0.75rem;
-      background: #161616;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .card-head {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #333;
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      align-items: baseline;
-    }
-    .tag { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.07em; }
-    .swatch {
-      height: 100px;
-      border-bottom: 1px solid #333;
-    }
-    .swatch-a { background: linear-gradient(135deg, #f1f4f8 40%, #4f46e5 40%); }
-    .swatch-b { background: linear-gradient(180deg, #0a192f 70%, #64ffda 70%); }
-    .swatch-c { background: radial-gradient(circle at 30% 40%, #6366f1, #050505 65%); }
-    .swatch-d { background: repeating-linear-gradient(90deg, #fff 0 20px, #000 20px 22px); }
-    .swatch-e { background: #fff; border-bottom: 4px solid #ff433d; }
-    .swatch-f { background: linear-gradient(90deg, #ffe566 50%, #fafafa 50%); }
-    .card p { margin: 0; padding: 0.75rem 1rem; font-size: 0.8125rem; color: #a8a8a8; line-height: 1.45; flex: 1; }
-    .card-foot {
-      padding: 0.75rem 1rem;
-      border-top: 1px solid #333;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-    .card-foot a {
-      color: #93c5fd;
-      font-size: 0.875rem;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      font-weight: 500;
-    }
-    .de { border-color: #64748b; }
-    .de .card-head { background: #1e293b; }
-    ul.links { margin: 1rem 0 0; padding-left: 1.2rem; color: #a8a8a8; font-size: 0.875rem; }
-  </style>
-</head>
-<body>
-  <div class="banner">
-    <strong>So öffnen (nicht per Doppelklick auf die HTML-Datei):</strong><br />
-    Server starten: <code>cd preactpress && python3 -m http.server 8765 --bind 127.0.0.1</code><br />
-    Dann: <a href="http://127.0.0.1:8765/packages/plugin-playground/design-demos/thumbs.html">http://127.0.0.1:8765/packages/plugin-playground/design-demos/thumbs.html</a>
-  </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Playground · Design-Richtungen</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: #0c0c0c;
+        color: #eee;
+        padding: 1.25rem 1.5rem 2.5rem;
+      }
+      .banner {
+        background: #1a2332;
+        border: 1px solid #334155;
+        border-radius: 0.75rem;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.9375rem;
+        line-height: 1.5;
+      }
+      .banner code {
+        background: #0f172a;
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      .banner a {
+        color: #93c5fd;
+        font-weight: 600;
+      }
+      h1 {
+        font-size: 1.4rem;
+        margin: 0 0 0.35rem;
+      }
+      .intro {
+        color: #c4c4c4;
+        max-width: 54rem;
+        margin-bottom: 1.25rem;
+        font-size: 0.9375rem;
+        line-height: 1.55;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+      .card {
+        border: 1px solid #333;
+        border-radius: 0.75rem;
+        background: #161616;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .card-head {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        align-items: baseline;
+      }
+      .tag {
+        font-size: 11px;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+      .swatch {
+        height: 100px;
+        border-bottom: 1px solid #333;
+      }
+      .swatch-a {
+        background: linear-gradient(135deg, #f1f4f8 40%, #4f46e5 40%);
+      }
+      .swatch-b {
+        background: linear-gradient(180deg, #0a192f 70%, #64ffda 70%);
+      }
+      .swatch-c {
+        background: radial-gradient(circle at 30% 40%, #6366f1, #050505 65%);
+      }
+      .swatch-d {
+        background: repeating-linear-gradient(90deg, #fff 0 20px, #000 20px 22px);
+      }
+      .swatch-e {
+        background: #fff;
+        border-bottom: 4px solid #ff433d;
+      }
+      .swatch-f {
+        background: linear-gradient(90deg, #ffe566 50%, #fafafa 50%);
+      }
+      .card p {
+        margin: 0;
+        padding: 0.75rem 1rem;
+        font-size: 0.8125rem;
+        color: #a8a8a8;
+        line-height: 1.45;
+        flex: 1;
+      }
+      .card-foot {
+        padding: 0.75rem 1rem;
+        border-top: 1px solid #333;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .card-foot a {
+        color: #93c5fd;
+        font-size: 0.875rem;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        font-weight: 500;
+      }
+      .de {
+        border-color: #64748b;
+      }
+      .de .card-head {
+        background: #1e293b;
+      }
+      ul.links {
+        margin: 1rem 0 0;
+        padding-left: 1.2rem;
+        color: #a8a8a8;
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      <strong>So öffnen (nicht per Doppelklick auf die HTML-Datei):</strong><br />
+      Server starten: <code>cd preactpress && python3 -m http.server 8765 --bind 127.0.0.1</code
+      ><br />
+      Dann:
+      <a href="http://127.0.0.1:8765/packages/plugin-playground/design-demos/thumbs.html"
+        >http://127.0.0.1:8765/packages/plugin-playground/design-demos/thumbs.html</a
+      >
+    </div>
 
-  <h1>Plugin Playground · 6 Marketing-Richtungen</h1>
-  <p class="intro">
-    A–C sind ausgebaut (Ablauf, MDX, FAQ, Toolbar). D–F sind zusätzliche Stil-Explorationen.
-    Deutsche Kurzversion: <strong>DE</strong>. Wähle eine Richtung (oder Mix) — dann bauen wir die finale Seite.
-  </p>
+    <h1>Plugin Playground · 6 Marketing-Richtungen</h1>
+    <p class="intro">
+      A–C sind ausgebaut (Ablauf, MDX, FAQ, Toolbar). D–F sind zusätzliche Stil-Explorationen.
+      Deutsche Kurzversion: <strong>DE</strong>. Wähle eine Richtung (oder Mix) — dann bauen wir die
+      finale Seite.
+    </p>
 
-  <div class="grid">
-    <article class="card">
-      <div class="card-head"><strong>A · Product launch</strong><span class="tag">hell</span></div>
-      <div class="swatch swatch-a" aria-hidden="true"></div>
-      <p>Collins-artig: Produkt-Mock, Tabs für MDX-Beispiele, FAQ.</p>
-      <div class="card-foot"><a href="landing-direction-a-product.html">Seite öffnen</a></div>
-    </article>
-    <article class="card">
-      <div class="card-head"><strong>B · Docs rail</strong><span class="tag">dark dev</span></div>
-      <div class="swatch swatch-b" aria-hidden="true"></div>
-      <p>Sticky Nav, Mint-Akzent, MDX + FAQ im Doc-Layout.</p>
-      <div class="card-foot"><a href="landing-direction-b-docs-rail.html">Seite öffnen</a></div>
-    </article>
-    <article class="card">
-      <div class="card-head"><strong>C · Signal</strong><span class="tag">cinematic</span></div>
-      <div class="swatch swatch-c" aria-hidden="true"></div>
-      <p>Dunkel, Wellen, Editor→Sandbox als Signalpfad.</p>
-      <div class="card-foot"><a href="landing-direction-c-signal-dark.html">Seite öffnen</a></div>
-    </article>
-    <article class="card">
-      <div class="card-head"><strong>D · Jetset grid</strong><span class="tag">typo</span></div>
-      <div class="swatch swatch-d" aria-hidden="true"></div>
-      <p>12-Spalten-Raster, harte Linien, Signalrot-CTA.</p>
-      <div class="card-foot"><a href="landing-direction-d-jetset.html">Seite öffnen</a></div>
-    </article>
-    <article class="card">
-      <div class="card-head"><strong>E · Brutalist</strong><span class="tag">editorial</span></div>
-      <div class="swatch swatch-e" aria-hidden="true"></div>
-      <p>Riesige Headline, dichter Text, orange Install-CTA.</p>
-      <div class="card-foot"><a href="landing-direction-e-brutalist.html">Seite öffnen</a></div>
-    </article>
-    <article class="card">
-      <div class="card-head"><strong>F · Magazine</strong><span class="tag">east #12</span></div>
-      <div class="swatch swatch-f" aria-hidden="true"></div>
-      <p>Doppelspread, Gelb-Marker, Datenraster.</p>
-      <div class="card-foot"><a href="landing-direction-f-magazine.html">Seite öffnen</a></div>
-    </article>
-    <article class="card de">
-      <div class="card-head"><strong>DE · Deutsch</strong><span class="tag">inhalt</span></div>
-      <div class="swatch swatch-a" aria-hidden="true"></div>
-      <p>Deutsche Copy, gleiche Struktur wie A (Ablauf + FAQ).</p>
-      <div class="card-foot"><a href="landing-de.html">Seite öffnen</a></div>
-    </article>
-  </div>
+    <div class="grid">
+      <article class="card">
+        <div class="card-head">
+          <strong>A · Product launch</strong><span class="tag">hell</span>
+        </div>
+        <div class="swatch swatch-a" aria-hidden="true"></div>
+        <p>Collins-artig: Produkt-Mock, Tabs für MDX-Beispiele, FAQ.</p>
+        <div class="card-foot"><a href="landing-direction-a-product.html">Seite öffnen</a></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><strong>B · Docs rail</strong><span class="tag">dark dev</span></div>
+        <div class="swatch swatch-b" aria-hidden="true"></div>
+        <p>Sticky Nav, Mint-Akzent, MDX + FAQ im Doc-Layout.</p>
+        <div class="card-foot"><a href="landing-direction-b-docs-rail.html">Seite öffnen</a></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><strong>C · Signal</strong><span class="tag">cinematic</span></div>
+        <div class="swatch swatch-c" aria-hidden="true"></div>
+        <p>Dunkel, Wellen, Editor→Sandbox als Signalpfad.</p>
+        <div class="card-foot"><a href="landing-direction-c-signal-dark.html">Seite öffnen</a></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><strong>D · Jetset grid</strong><span class="tag">typo</span></div>
+        <div class="swatch swatch-d" aria-hidden="true"></div>
+        <p>12-Spalten-Raster, harte Linien, Signalrot-CTA.</p>
+        <div class="card-foot"><a href="landing-direction-d-jetset.html">Seite öffnen</a></div>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <strong>E · Brutalist</strong><span class="tag">editorial</span>
+        </div>
+        <div class="swatch swatch-e" aria-hidden="true"></div>
+        <p>Riesige Headline, dichter Text, orange Install-CTA.</p>
+        <div class="card-foot"><a href="landing-direction-e-brutalist.html">Seite öffnen</a></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><strong>F · Magazine</strong><span class="tag">east #12</span></div>
+        <div class="swatch swatch-f" aria-hidden="true"></div>
+        <p>Doppelspread, Gelb-Marker, Datenraster.</p>
+        <div class="card-foot"><a href="landing-direction-f-magazine.html">Seite öffnen</a></div>
+      </article>
+      <article class="card de">
+        <div class="card-head"><strong>DE · Deutsch</strong><span class="tag">inhalt</span></div>
+        <div class="swatch swatch-a" aria-hidden="true"></div>
+        <p>Deutsche Copy, gleiche Struktur wie A (Ablauf + FAQ).</p>
+        <div class="card-foot"><a href="landing-de.html">Seite öffnen</a></div>
+      </article>
+    </div>
 
-  <ul class="links">
-    <li><code>VIEW.md</code> — Server-Anleitung</li>
-    <li><code>product-facts.md</code> — verifizierte Fakten</li>
-  </ul>
-</body>
+    <ul class="links">
+      <li><code>VIEW.md</code> — Server-Anleitung</li>
+      <li><code>product-facts.md</code> — verifizierte Fakten</li>
+    </ul>
+  </body>
 </html>

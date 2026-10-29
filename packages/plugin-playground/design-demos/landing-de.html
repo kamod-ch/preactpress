@@ -1,90 +1,196 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Plugin Playground · Live-Preact-Demos in MDX</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="shared-marketing.css" />
-  <style>
-    :root { --ink:#213547; --muted:#475569; --line:#e2e8f0; --surface:#fff; --wash:#f1f4f8; --accent:#4f46e5; --preact:#673ab8; }
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:"DM Sans",system-ui,sans-serif; font-size:16px; line-height:1.55; color:var(--ink); background:var(--wash); }
-    .wrap { max-width:1120px; margin:0 auto; padding:0 1.25rem; }
-    header { padding:1.25rem 0 2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
-    header img { height:28px; }
-    h1 { font-size:clamp(2rem,4vw,3rem); letter-spacing:-0.03em; max-width:18ch; margin:0 0 1rem; }
-    .lede { max-width:38rem; color:var(--muted); margin-bottom:1.5rem; }
-    .mock { border:1px solid var(--line); border-radius:0.75rem; overflow:hidden; background:var(--surface); display:grid; grid-template-columns:1fr 1fr; min-height:260px; }
-    @media (max-width:720px){ .mock { grid-template-columns:1fr; } }
-    .mock pre { margin:0; padding:1rem; background:#1e293b; color:#e2e8f0; font-family:"JetBrains Mono",monospace; font-size:13px; }
-    .mock .pv { display:flex; align-items:center; justify-content:center; padding:1rem; border-left:1px solid var(--line); }
-    .mock button { font:inherit; padding:0.65rem 1.2rem; border:none; border-radius:0.5rem; background:var(--accent); color:#fff; min-height:44px; cursor:pointer; }
-    .install { background:var(--ink); color:#cbd5e1; border-radius:1rem; padding:1.5rem; margin:2rem 0 3rem; }
-    .install pre { margin:0; font-family:"JetBrains Mono",monospace; font-size:13px; overflow:auto; }
-    a { color:var(--accent); }
-    .back { font-size:0.875rem; margin-bottom:1rem; display:inline-block; }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <a class="back" href="thumbs.html">← Alle Richtungen</a>
-    <header>
-      <img src="../../../assets/logo-light.svg" alt="PreactPress" />
-      <a href="https://www.npmjs.com/package/@preactpress/plugin-playground">npm</a>
-    </header>
-    <p style="color:var(--preact);font-weight:500;margin:0">@preactpress/plugin-playground</p>
-    <h1>Live-Preact-Beispiele direkt in der Doku.</h1>
-    <p class="lede">
-      Sandboxed Editor und Vorschau in MDX — ohne CodeSandbox-Tab. Lazy geladen, CDN-Allowlist, Fehler bleiben im Playground.
-    </p>
-    <div class="mock">
-      <pre>import { useState } from 'preact/hooks'
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plugin Playground · Live-Preact-Demos in MDX</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="shared-marketing.css" />
+    <style>
+      :root {
+        --ink: #213547;
+        --muted: #475569;
+        --line: #e2e8f0;
+        --surface: #fff;
+        --wash: #f1f4f8;
+        --accent: #4f46e5;
+        --preact: #673ab8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+        color: var(--ink);
+        background: var(--wash);
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+      header {
+        padding: 1.25rem 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      header img {
+        height: 28px;
+      }
+      h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: -0.03em;
+        max-width: 18ch;
+        margin: 0 0 1rem;
+      }
+      .lede {
+        max-width: 38rem;
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+      }
+      .mock {
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+        overflow: hidden;
+        background: var(--surface);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 260px;
+      }
+      @media (max-width: 720px) {
+        .mock {
+          grid-template-columns: 1fr;
+        }
+      }
+      .mock pre {
+        margin: 0;
+        padding: 1rem;
+        background: #1e293b;
+        color: #e2e8f0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+      }
+      .mock .pv {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        border-left: 1px solid var(--line);
+      }
+      .mock button {
+        font: inherit;
+        padding: 0.65rem 1.2rem;
+        border: none;
+        border-radius: 0.5rem;
+        background: var(--accent);
+        color: #fff;
+        min-height: 44px;
+        cursor: pointer;
+      }
+      .install {
+        background: var(--ink);
+        color: #cbd5e1;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        margin: 2rem 0 3rem;
+      }
+      .install pre {
+        margin: 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        overflow: auto;
+      }
+      a {
+        color: var(--accent);
+      }
+      .back {
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="thumbs.html">← Alle Richtungen</a>
+      <header>
+        <img src="../../../assets/logo-light.svg" alt="PreactPress" />
+        <a href="https://www.npmjs.com/package/@preactpress/plugin-playground">npm</a>
+      </header>
+      <p style="color: var(--preact); font-weight: 500; margin: 0">
+        @preactpress/plugin-playground
+      </p>
+      <h1>Live-Preact-Beispiele direkt in der Doku.</h1>
+      <p class="lede">
+        Sandboxed Editor und Vorschau in MDX — ohne CodeSandbox-Tab. Lazy geladen, CDN-Allowlist,
+        Fehler bleiben im Playground.
+      </p>
+      <div class="mock">
+        <pre>
+import { useState } from 'preact/hooks'
 export default function Demo() {
   const [n, setN] = useState(0)
   return &lt;button onClick={() =&gt; setN(n+1)}&gt;{n}&lt;/button&gt;
 }</pre>
-      <div class="pv"><button type="button" id="de-count">Zähler: 0</button></div>
-    </div>
-
-    <section class="section-block">
-      <h2 class="section-title">Ablauf</h2>
-      <ol class="steps">
-        <li><strong>1</strong><code>playgroundPlugin()</code> in der PreactPress-Config registrieren.</li>
-        <li><strong>2</strong><code>&lt;Playground /&gt;</code> in MDX einbinden.</li>
-        <li><strong>3</strong>Leser editieren live; Preview läuft im iframe-Sandbox.</li>
-      </ol>
-    </section>
-
-    <section class="section-block">
-      <h2 class="section-title">FAQ</h2>
-      <div class="faq">
-        <details>
-          <summary>Brauche ich einen eigenen Preview-Server?</summary>
-          <p>Nein — statisches Sandbox-Dokument plus <code>postMessage</code>.</p>
-        </details>
-        <details>
-          <summary>Beliebige npm-Pakete?</summary>
-          <p>Nur über die konfigurierte CDN-Allowlist; Workspace-Pakete brauchen explizite URLs.</p>
-        </details>
+        <div class="pv"><button type="button" id="de-count">Zähler: 0</button></div>
       </div>
-    </section>
 
-    <section class="install" id="install">
-      <h2 style="color:#fff;margin:0 0 0.75rem">Installation</h2>
-      <pre>pnpm add -D @preactpress/plugin-playground
+      <section class="section-block">
+        <h2 class="section-title">Ablauf</h2>
+        <ol class="steps">
+          <li>
+            <strong>1</strong><code>playgroundPlugin()</code> in der PreactPress-Config
+            registrieren.
+          </li>
+          <li><strong>2</strong><code>&lt;Playground /&gt;</code> in MDX einbinden.</li>
+          <li><strong>3</strong>Leser editieren live; Preview läuft im iframe-Sandbox.</li>
+        </ol>
+      </section>
+
+      <section class="section-block">
+        <h2 class="section-title">FAQ</h2>
+        <div class="faq">
+          <details>
+            <summary>Brauche ich einen eigenen Preview-Server?</summary>
+            <p>Nein — statisches Sandbox-Dokument plus <code>postMessage</code>.</p>
+          </details>
+          <details>
+            <summary>Beliebige npm-Pakete?</summary>
+            <p>
+              Nur über die konfigurierte CDN-Allowlist; Workspace-Pakete brauchen explizite URLs.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section class="install" id="install">
+        <h2 style="color: #fff; margin: 0 0 0.75rem">Installation</h2>
+        <pre>
+pnpm add -D @preactpress/plugin-playground
 
 import { playgroundPlugin } from "@preactpress/plugin-playground";
 export default defineConfig({ plugins: [playgroundPlugin()] });</pre>
-    </section>
-    <p style="font-size:0.875rem;color:var(--muted)">Deutsche Vollversion · basiert auf Richtung A · <a href="landing-direction-a-product.html">English A</a></p>
-  </div>
-  <script>
-    document.getElementById("de-count").addEventListener("click", function () {
-      var m = this.textContent.match(/(\d+)/);
-      var n = m ? parseInt(m[1], 10) + 1 : 1;
-      this.textContent = "Zähler: " + n;
-    });
-  </script>
-</body>
+      </section>
+      <p style="font-size: 0.875rem; color: var(--muted)">
+        Deutsche Vollversion · basiert auf Richtung A ·
+        <a href="landing-direction-a-product.html">English A</a>
+      </p>
+    </div>
+    <script>
+      document.getElementById("de-count").addEventListener("click", function () {
+        var m = this.textContent.match(/(\d+)/);
+        var n = m ? parseInt(m[1], 10) + 1 : 1;
+        this.textContent = "Zähler: " + n;
+      });
+    </script>
+  </body>
 </html>

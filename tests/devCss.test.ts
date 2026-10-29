@@ -76,8 +76,6 @@ describe("injectDevPageDocument dev stylesheets", () => {
       devStylesheets: ["/styles/index.css"],
     });
 
-    expect(out).toContain(
-      renderStylesheetLinks(["/kamod-charts/styles/index.css"]),
-    );
+    expect(out).toContain(renderStylesheetLinks(["/kamod-charts/styles/index.css"]));
   });
 });

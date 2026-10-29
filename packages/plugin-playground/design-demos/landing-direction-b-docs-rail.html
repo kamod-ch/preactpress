@@ -1,206 +1,289 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Direction B · Docs rail — plugin-playground</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="shared-marketing.css" />
-  <style>
-    :root {
-      --navy: #0a192f;
-      --navy-light: #112240;
-      --slate: #8892b0;
-      --lightest: #ccd6f6;
-      --accent: #64ffda;
-      --line: rgba(100, 255, 218, 0.15);
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--slate);
-      background: var(--navy);
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-      min-height: 100vh;
-    }
-    @media (max-width: 900px) {
-      .layout { grid-template-columns: 1fr; }
-      .side { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
-    }
-    .side {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      padding: 2rem 1.5rem;
-      border-right: 1px solid var(--line);
-      background: var(--navy);
-    }
-    .side img { width: 160px; height: auto; margin-bottom: 2rem; filter: brightness(1.1); }
-    .side nav { display: flex; flex-direction: column; gap: 0.35rem; }
-    .side nav a {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 13px;
-      color: var(--slate);
-      padding: 0.35rem 0;
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-    }
-    .side nav a:hover { color: var(--accent); text-decoration: none; }
-    .side nav a.is-active { color: var(--accent); }
-    main { padding: 3rem clamp(1.25rem, 4vw, 4rem) 4rem; max-width: 820px; }
-    h1 {
-      color: var(--lightest);
-      font-size: clamp(1.75rem, 3vw, 2.5rem);
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      margin: 0 0 1rem;
-    }
-    .mono-tag {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 13px;
-      color: var(--accent);
-    }
-    .lead { font-size: 1.0625rem; margin-bottom: 2rem; max-width: 38rem; }
-    section { margin-bottom: 3.5rem; scroll-margin-top: 1rem; }
-    section h2 {
-      color: var(--lightest);
-      font-size: 1.25rem;
-      margin: 0 0 1rem;
-      display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
-    }
-    section h2 span {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 13px;
-      color: var(--accent);
-      opacity: 0.85;
-    }
-    .playground {
-      border: 1px solid var(--line);
-      border-radius: 0.5rem;
-      overflow: hidden;
-      box-shadow: 0 0 0 1px rgba(100, 255, 218, 0.08), 0 20px 50px rgba(0, 0, 0, 0.45);
-    }
-    .pg-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.6rem 0.85rem;
-      background: var(--navy-light);
-      font-size: 13px;
-      color: var(--lightest);
-    }
-    .pg-bar button {
-      font: inherit;
-      font-size: 12px;
-      font-family: "JetBrains Mono", monospace;
-      background: transparent;
-      border: 1px solid var(--line);
-      color: var(--slate);
-      border-radius: 4px;
-      padding: 0.35rem 0.6rem;
-      cursor: pointer;
-      min-height: 44px;
-    }
-    .pg-bar button:hover { border-color: var(--accent); color: var(--accent); }
-    .pg-split { display: grid; grid-template-columns: 1fr 1fr; min-height: 260px; }
-    @media (max-width: 640px) { .pg-split { grid-template-columns: 1fr; } }
-    .pg-code {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 13px;
-      line-height: 1.55;
-      padding: 1rem;
-      background: #020617;
-      color: #94a3b8;
-      margin: 0;
-      overflow: auto;
-    }
-    .pg-preview {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #0f172a;
-      border-left: 1px solid var(--line);
-      padding: 1rem;
-    }
-    @media (max-width: 640px) {
-      .pg-preview { border-left: none; border-top: 1px solid var(--line); }
-    }
-    .pg-preview button {
-      font: inherit;
-      font-size: 15px;
-      padding: 0.6rem 1.1rem;
-      border-radius: 6px;
-      border: 1px solid var(--accent);
-      background: rgba(100, 255, 218, 0.08);
-      color: var(--accent);
-      cursor: pointer;
-      min-height: 44px;
-    }
-    ul.facts { padding-left: 1.1rem; margin: 0; }
-    ul.facts li { margin-bottom: 0.5rem; }
-    pre.block {
-      background: var(--navy-light);
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 1rem;
-      overflow: auto;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 13px;
-      color: var(--lightest);
-    }
-    .section-block { border-top-color: var(--line); --line: rgba(100,255,218,0.12); --surface: var(--navy-light); --muted: var(--slate); --accent: var(--accent); }
-    .steps li { background: var(--navy-light); border-color: var(--line); color: var(--slate); }
-    .faq details { background: var(--navy-light); border-color: var(--line); color: var(--slate); }
-    .toolbar-list li { border-color: var(--line); color: var(--slate); }
-  </style>
-</head>
-<body>
-  <div class="layout">
-    <aside class="side">
-      <a href="https://github.com/kamod-ch/preactpress">
-        <img src="../../../assets/logo-dark.svg" alt="PreactPress" />
-      </a>
-      <nav aria-label="Page sections">
-        <a class="is-active" href="#overview">overview</a>
-        <a href="#playground">playground</a>
-        <a href="#security">security</a>
-        <a href="#mdx">mdx</a>
-        <a href="#faq">faq</a>
-        <a href="#setup">setup</a>
-      </nav>
-    </aside>
-    <main>
-      <p class="mono-tag">@preactpress/plugin-playground</p>
-      <h1 id="overview">Runnable examples for MDX authors.</h1>
-      <p class="lead">
-        The playground plugin adds a split editor and live preview to PreactPress docs. Configure once, then embed interactive Preact snippets next to your API reference.
-      </p>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Direction B · Docs rail — plugin-playground</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="shared-marketing.css" />
+    <style>
+      :root {
+        --navy: #0a192f;
+        --navy-light: #112240;
+        --slate: #8892b0;
+        --lightest: #ccd6f6;
+        --accent: #64ffda;
+        --line: rgba(100, 255, 218, 0.15);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--slate);
+        background: var(--navy);
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+        min-height: 100vh;
+      }
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .side {
+          position: relative;
+          height: auto;
+          border-right: none;
+          border-bottom: 1px solid var(--line);
+        }
+      }
+      .side {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 2rem 1.5rem;
+        border-right: 1px solid var(--line);
+        background: var(--navy);
+      }
+      .side img {
+        width: 160px;
+        height: auto;
+        margin-bottom: 2rem;
+        filter: brightness(1.1);
+      }
+      .side nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .side nav a {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        color: var(--slate);
+        padding: 0.35rem 0;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
+      .side nav a:hover {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .side nav a.is-active {
+        color: var(--accent);
+      }
+      main {
+        padding: 3rem clamp(1.25rem, 4vw, 4rem) 4rem;
+        max-width: 820px;
+      }
+      h1 {
+        color: var(--lightest);
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin: 0 0 1rem;
+      }
+      .mono-tag {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        color: var(--accent);
+      }
+      .lead {
+        font-size: 1.0625rem;
+        margin-bottom: 2rem;
+        max-width: 38rem;
+      }
+      section {
+        margin-bottom: 3.5rem;
+        scroll-margin-top: 1rem;
+      }
+      section h2 {
+        color: var(--lightest);
+        font-size: 1.25rem;
+        margin: 0 0 1rem;
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+      }
+      section h2 span {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        color: var(--accent);
+        opacity: 0.85;
+      }
+      .playground {
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 1px rgba(100, 255, 218, 0.08),
+          0 20px 50px rgba(0, 0, 0, 0.45);
+      }
+      .pg-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 0.85rem;
+        background: var(--navy-light);
+        font-size: 13px;
+        color: var(--lightest);
+      }
+      .pg-bar button {
+        font: inherit;
+        font-size: 12px;
+        font-family: "JetBrains Mono", monospace;
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--slate);
+        border-radius: 4px;
+        padding: 0.35rem 0.6rem;
+        cursor: pointer;
+        min-height: 44px;
+      }
+      .pg-bar button:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .pg-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 260px;
+      }
+      @media (max-width: 640px) {
+        .pg-split {
+          grid-template-columns: 1fr;
+        }
+      }
+      .pg-code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.55;
+        padding: 1rem;
+        background: #020617;
+        color: #94a3b8;
+        margin: 0;
+        overflow: auto;
+      }
+      .pg-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0f172a;
+        border-left: 1px solid var(--line);
+        padding: 1rem;
+      }
+      @media (max-width: 640px) {
+        .pg-preview {
+          border-left: none;
+          border-top: 1px solid var(--line);
+        }
+      }
+      .pg-preview button {
+        font: inherit;
+        font-size: 15px;
+        padding: 0.6rem 1.1rem;
+        border-radius: 6px;
+        border: 1px solid var(--accent);
+        background: rgba(100, 255, 218, 0.08);
+        color: var(--accent);
+        cursor: pointer;
+        min-height: 44px;
+      }
+      ul.facts {
+        padding-left: 1.1rem;
+        margin: 0;
+      }
+      ul.facts li {
+        margin-bottom: 0.5rem;
+      }
+      pre.block {
+        background: var(--navy-light);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 1rem;
+        overflow: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        color: var(--lightest);
+      }
+      .section-block {
+        border-top-color: var(--line);
+        --line: rgba(100, 255, 218, 0.12);
+        --surface: var(--navy-light);
+        --muted: var(--slate);
+        --accent: var(--accent);
+      }
+      .steps li {
+        background: var(--navy-light);
+        border-color: var(--line);
+        color: var(--slate);
+      }
+      .faq details {
+        background: var(--navy-light);
+        border-color: var(--line);
+        color: var(--slate);
+      }
+      .toolbar-list li {
+        border-color: var(--line);
+        color: var(--slate);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="side">
+        <a href="https://github.com/kamod-ch/preactpress">
+          <img src="../../../assets/logo-dark.svg" alt="PreactPress" />
+        </a>
+        <nav aria-label="Page sections">
+          <a class="is-active" href="#overview">overview</a>
+          <a href="#playground">playground</a>
+          <a href="#security">security</a>
+          <a href="#mdx">mdx</a>
+          <a href="#faq">faq</a>
+          <a href="#setup">setup</a>
+        </nav>
+      </aside>
+      <main>
+        <p class="mono-tag">@preactpress/plugin-playground</p>
+        <h1 id="overview">Runnable examples for MDX authors.</h1>
+        <p class="lead">
+          The playground plugin adds a split editor and live preview to PreactPress docs. Configure
+          once, then embed interactive Preact snippets next to your API reference.
+        </p>
 
-      <section id="playground">
-        <h2><span>//</span> Live surface</h2>
-        <div class="playground">
-          <div class="pg-bar">
-            <span>App.tsx</span>
-            <button type="button" id="run-b">run()</button>
-          </div>
-          <div class="pg-split">
-            <pre class="pg-code">import { useState } from 'preact/hooks'
+        <section id="playground">
+          <h2><span>//</span> Live surface</h2>
+          <div class="playground">
+            <div class="pg-bar">
+              <span>App.tsx</span>
+              <button type="button" id="run-b">run()</button>
+            </div>
+            <div class="pg-split">
+              <pre class="pg-code">
+import { useState } from 'preact/hooks'
 
 export default function Demo() {
   const [n, setN] = useState(0)
@@ -210,78 +293,88 @@ export default function Demo() {
     &lt;/button&gt;
   )
 }</pre>
-            <div class="pg-preview">
-              <button type="button" id="count-b">Count: 0</button>
+              <div class="pg-preview">
+                <button type="button" id="count-b">Count: 0</button>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="security">
-        <h2><span>//</span> Security model</h2>
-        <ul class="facts">
-          <li>Preview runs in a sandboxed iframe (<code>allow-scripts allow-modals</code>).</li>
-          <li>External packages load from a configurable CDN allowlist.</li>
-          <li>Invalid examples surface errors inside the playground, not the host page.</li>
-        </ul>
-      </section>
+        <section id="security">
+          <h2><span>//</span> Security model</h2>
+          <ul class="facts">
+            <li>Preview runs in a sandboxed iframe (<code>allow-scripts allow-modals</code>).</li>
+            <li>External packages load from a configurable CDN allowlist.</li>
+            <li>Invalid examples surface errors inside the playground, not the host page.</li>
+          </ul>
+        </section>
 
-      <section id="mdx" class="section-block">
-        <h2><span>//</span> MDX</h2>
-        <pre class="block">&lt;Playground code={`...`} /&gt;
+        <section id="mdx" class="section-block">
+          <h2><span>//</span> MDX</h2>
+          <pre class="block">
+&lt;Playground code={`...`} /&gt;
 
 &lt;Playground
   files={{ "/App.tsx": code }}
   entry="/App.tsx"
   dependencies={{ "@preact/signals": "2.3.2" }}
 /&gt;</pre>
-      </section>
+        </section>
 
-      <section class="section-block">
-        <h2><span>//</span> Toolbar</h2>
-        <ul class="toolbar-list">
-          <li>previewTheme light | dark</li>
-          <li>previewWidth desktop | mobile</li>
-          <li>reset · copy files · StackBlitz</li>
-        </ul>
-      </section>
+        <section class="section-block">
+          <h2><span>//</span> Toolbar</h2>
+          <ul class="toolbar-list">
+            <li>previewTheme light | dark</li>
+            <li>previewWidth desktop | mobile</li>
+            <li>reset · copy files · StackBlitz</li>
+          </ul>
+        </section>
 
-      <section id="faq" class="section-block">
-        <h2><span>//</span> FAQ</h2>
-        <div class="faq">
-          <details>
-            <summary>Lazy loading?</summary>
-            <p>Playground UI code loads only when MDX renders <code>&lt;Playground /&gt;</code>.</p>
-          </details>
-          <details>
-            <summary>Workspace packages?</summary>
-            <p>Map them explicitly in <code>createPlaygroundComponents({ workspacePackages })</code>.</p>
-          </details>
-        </div>
-      </section>
+        <section id="faq" class="section-block">
+          <h2><span>//</span> FAQ</h2>
+          <div class="faq">
+            <details>
+              <summary>Lazy loading?</summary>
+              <p>
+                Playground UI code loads only when MDX renders <code>&lt;Playground /&gt;</code>.
+              </p>
+            </details>
+            <details>
+              <summary>Workspace packages?</summary>
+              <p>
+                Map them explicitly in
+                <code>createPlaygroundComponents({ workspacePackages })</code>.
+              </p>
+            </details>
+          </div>
+        </section>
 
-      <section id="setup">
-        <h2><span>//</span> Install</h2>
-        <pre class="block">pnpm add -D @preactpress/plugin-playground
+        <section id="setup">
+          <h2><span>//</span> Install</h2>
+          <pre class="block">
+pnpm add -D @preactpress/plugin-playground
 
 import { playgroundPlugin } from "@preactpress/plugin-playground";
 
 export default defineConfig({
   plugins: [playgroundPlugin()],
 });</pre>
-      </section>
+        </section>
 
-      <p class="mono-tag">Direction B · dev-docs rail · form: vertical doc scan + sticky IA</p>
-    </main>
-  </div>
-  <script>
-    (function () {
-      var n = 0;
-      var el = document.getElementById("count-b");
-      function bump() { n += 1; el.textContent = "Count: " + n; }
-      el.addEventListener("click", bump);
-      document.getElementById("run-b").addEventListener("click", bump);
-    })();
-  </script>
-</body>
+        <p class="mono-tag">Direction B · dev-docs rail · form: vertical doc scan + sticky IA</p>
+      </main>
+    </div>
+    <script>
+      (function () {
+        var n = 0;
+        var el = document.getElementById("count-b");
+        function bump() {
+          n += 1;
+          el.textContent = "Count: " + n;
+        }
+        el.addEventListener("click", bump);
+        document.getElementById("run-b").addEventListener("click", bump);
+      })();
+    </script>
+  </body>
 </html>

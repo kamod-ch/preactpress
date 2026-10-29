@@ -1,229 +1,308 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Direction A · Product launch — plugin-playground</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="shared-marketing.css" />
-  <style>
-    :root {
-      --ink: #213547;
-      --muted: #475569;
-      --line: #e2e8f0;
-      --surface: #ffffff;
-      --wash: #f1f4f8;
-      --accent: #4f46e5;
-      --preact: #673ab8;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "DM Sans", system-ui, sans-serif;
-      font-size: 16px;
-      line-height: 1.55;
-      color: var(--ink);
-      background: var(--wash);
-    }
-    a { color: var(--accent); text-decoration-thickness: 1px; }
-    a:hover { text-decoration: none; }
-    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.25rem; }
-    header {
-      padding: 1.25rem 0 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    header img { height: 28px; width: auto; }
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.55rem 1rem;
-      border-radius: 999px;
-      background: var(--ink);
-      color: #fff;
-      font-weight: 500;
-      font-size: 0.9375rem;
-      text-decoration: none;
-    }
-    .nav-cta:hover { background: #152536; }
-    .hero { padding-bottom: 3.5rem; }
-    .eyebrow {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--preact);
-      letter-spacing: 0.02em;
-    }
-    h1 {
-      font-size: clamp(2rem, 4.5vw, 3.25rem);
-      line-height: 1.08;
-      letter-spacing: -0.03em;
-      max-width: 14ch;
-      margin: 0.75rem 0 1rem;
-    }
-    .lede { max-width: 36rem; color: var(--muted); font-size: 1.0625rem; margin: 0 0 1.75rem; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2.5rem; }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 0 1.25rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      font-size: 0.9375rem;
-      border: 1px solid transparent;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { filter: brightness(1.05); }
-    .btn-ghost { background: var(--surface); border-color: var(--line); color: var(--ink); }
-    .product-frame {
-      background: var(--surface);
-      border-radius: 1rem;
-      border: 1px solid var(--line);
-      box-shadow: 0 24px 60px rgba(33, 53, 71, 0.12), 0 4px 12px rgba(33, 53, 71, 0.06);
-      transform: perspective(1200px) rotateX(2deg);
-      overflow: hidden;
-    }
-    .mock-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.65rem 1rem;
-      border-bottom: 1px solid var(--line);
-      background: #fafbfc;
-      font-size: 0.8125rem;
-    }
-    .mock-toolbar button {
-      font: inherit;
-      font-size: 0.8125rem;
-      padding: 0.35rem 0.65rem;
-      border-radius: 0.375rem;
-      border: 1px solid var(--line);
-      background: #fff;
-      cursor: pointer;
-      min-height: 44px;
-    }
-    .mock-toolbar button.active { border-color: var(--accent); color: var(--accent); }
-    .mock-body { display: grid; grid-template-columns: 1fr 1fr; min-height: 280px; }
-    @media (max-width: 720px) { .mock-body { grid-template-columns: 1fr; } }
-    .mock-code {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 13px;
-      line-height: 1.5;
-      padding: 1rem;
-      background: #1e293b;
-      color: #e2e8f0;
-      overflow: auto;
-    }
-    .mock-code .kw { color: #c792ea; }
-    .mock-code .fn { color: #82aaff; }
-    .mock-preview {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      background: #fff;
-      border-left: 1px solid var(--line);
-    }
-    @media (max-width: 720px) {
-      .mock-preview { border-left: none; border-top: 1px solid var(--line); }
-    }
-    .demo-btn {
-      font: inherit;
-      font-size: 1rem;
-      padding: 0.65rem 1.25rem;
-      border-radius: 0.5rem;
-      border: none;
-      background: var(--accent);
-      color: #fff;
-      cursor: pointer;
-      min-height: 44px;
-      min-width: 44px;
-    }
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
-      padding: 3rem 0;
-    }
-    .feature {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 0.75rem;
-      padding: 1.25rem;
-    }
-    .feature h2 { font-size: 1.0625rem; margin: 0 0 0.5rem; }
-    .feature p { margin: 0; color: var(--muted); font-size: 0.9375rem; }
-    .install {
-      background: var(--ink);
-      color: #cbd5e1;
-      border-radius: 1rem;
-      padding: 1.75rem 1.5rem;
-      margin-bottom: 3rem;
-    }
-    .install h2 { color: #fff; margin: 0 0 0.75rem; font-size: 1.25rem; }
-    pre {
-      margin: 0;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      background: #0f172a;
-      overflow: auto;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    footer {
-      padding: 2rem 0 3rem;
-      font-size: 0.875rem;
-      color: var(--muted);
-      border-top: 1px solid var(--line);
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <a href="https://github.com/kamod-ch/preactpress" aria-label="PreactPress">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="../../../assets/logo-dark.svg" />
-          <img src="../../../assets/logo-light.svg" alt="PreactPress" />
-        </picture>
-      </a>
-      <a class="nav-cta" href="https://www.npmjs.com/package/@preactpress/plugin-playground">npm package</a>
-    </header>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Direction A · Product launch — plugin-playground</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="shared-marketing.css" />
+    <style>
+      :root {
+        --ink: #213547;
+        --muted: #475569;
+        --line: #e2e8f0;
+        --surface: #ffffff;
+        --wash: #f1f4f8;
+        --accent: #4f46e5;
+        --preact: #673ab8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+        color: var(--ink);
+        background: var(--wash);
+      }
+      a {
+        color: var(--accent);
+        text-decoration-thickness: 1px;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+      header {
+        padding: 1.25rem 0 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      header img {
+        height: 28px;
+        width: auto;
+      }
+      .nav-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 1rem;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff;
+        font-weight: 500;
+        font-size: 0.9375rem;
+        text-decoration: none;
+      }
+      .nav-cta:hover {
+        background: #152536;
+      }
+      .hero {
+        padding-bottom: 3.5rem;
+      }
+      .eyebrow {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--preact);
+        letter-spacing: 0.02em;
+      }
+      h1 {
+        font-size: clamp(2rem, 4.5vw, 3.25rem);
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        max-width: 14ch;
+        margin: 0.75rem 0 1rem;
+      }
+      .lede {
+        max-width: 36rem;
+        color: var(--muted);
+        font-size: 1.0625rem;
+        margin: 0 0 1.75rem;
+      }
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 2.5rem;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 1.25rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        border: 1px solid transparent;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        filter: brightness(1.05);
+      }
+      .btn-ghost {
+        background: var(--surface);
+        border-color: var(--line);
+        color: var(--ink);
+      }
+      .product-frame {
+        background: var(--surface);
+        border-radius: 1rem;
+        border: 1px solid var(--line);
+        box-shadow:
+          0 24px 60px rgba(33, 53, 71, 0.12),
+          0 4px 12px rgba(33, 53, 71, 0.06);
+        transform: perspective(1200px) rotateX(2deg);
+        overflow: hidden;
+      }
+      .mock-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.65rem 1rem;
+        border-bottom: 1px solid var(--line);
+        background: #fafbfc;
+        font-size: 0.8125rem;
+      }
+      .mock-toolbar button {
+        font: inherit;
+        font-size: 0.8125rem;
+        padding: 0.35rem 0.65rem;
+        border-radius: 0.375rem;
+        border: 1px solid var(--line);
+        background: #fff;
+        cursor: pointer;
+        min-height: 44px;
+      }
+      .mock-toolbar button.active {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .mock-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 280px;
+      }
+      @media (max-width: 720px) {
+        .mock-body {
+          grid-template-columns: 1fr;
+        }
+      }
+      .mock-code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        padding: 1rem;
+        background: #1e293b;
+        color: #e2e8f0;
+        overflow: auto;
+      }
+      .mock-code .kw {
+        color: #c792ea;
+      }
+      .mock-code .fn {
+        color: #82aaff;
+      }
+      .mock-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: #fff;
+        border-left: 1px solid var(--line);
+      }
+      @media (max-width: 720px) {
+        .mock-preview {
+          border-left: none;
+          border-top: 1px solid var(--line);
+        }
+      }
+      .demo-btn {
+        font: inherit;
+        font-size: 1rem;
+        padding: 0.65rem 1.25rem;
+        border-radius: 0.5rem;
+        border: none;
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        min-height: 44px;
+        min-width: 44px;
+      }
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
+        padding: 3rem 0;
+      }
+      .feature {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+      }
+      .feature h2 {
+        font-size: 1.0625rem;
+        margin: 0 0 0.5rem;
+      }
+      .feature p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9375rem;
+      }
+      .install {
+        background: var(--ink);
+        color: #cbd5e1;
+        border-radius: 1rem;
+        padding: 1.75rem 1.5rem;
+        margin-bottom: 3rem;
+      }
+      .install h2 {
+        color: #fff;
+        margin: 0 0 0.75rem;
+        font-size: 1.25rem;
+      }
+      pre {
+        margin: 0;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background: #0f172a;
+        overflow: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      footer {
+        padding: 2rem 0 3rem;
+        font-size: 0.875rem;
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <a href="https://github.com/kamod-ch/preactpress" aria-label="PreactPress">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="../../../assets/logo-dark.svg" />
+            <img src="../../../assets/logo-light.svg" alt="PreactPress" />
+          </picture>
+        </a>
+        <a class="nav-cta" href="https://www.npmjs.com/package/@preactpress/plugin-playground"
+          >npm package</a
+        >
+      </header>
 
-    <section class="hero">
-      <p class="eyebrow">@preactpress/plugin-playground</p>
-      <h1>Live Preact demos inside your docs.</h1>
-      <p class="lede">
-        Drop a sandboxed editor and preview into MDX. Readers tweak hooks and components without leaving the page — lazy-loaded, allowlisted, and isolated in an iframe.
-      </p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#install">Install in two lines</a>
-        <a class="btn btn-ghost" href="https://kamod-ch.github.io/preactpress/">See PreactPress demo</a>
-      </div>
-
-      <div class="product-frame" aria-label="Playground UI preview">
-        <div class="mock-toolbar">
-          <span>Preact playground</span>
-          <div>
-            <button type="button" class="active" aria-pressed="true">Light</button>
-            <button type="button" aria-pressed="false">Desktop</button>
-            <button type="button" id="run-a">Run preview</button>
-          </div>
+      <section class="hero">
+        <p class="eyebrow">@preactpress/plugin-playground</p>
+        <h1>Live Preact demos inside your docs.</h1>
+        <p class="lede">
+          Drop a sandboxed editor and preview into MDX. Readers tweak hooks and components without
+          leaving the page — lazy-loaded, allowlisted, and isolated in an iframe.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#install">Install in two lines</a>
+          <a class="btn btn-ghost" href="https://kamod-ch.github.io/preactpress/"
+            >See PreactPress demo</a
+          >
         </div>
-        <div class="mock-body">
-          <pre class="mock-code" aria-hidden="true"><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="fn">'preact/hooks'</span>
+
+        <div class="product-frame" aria-label="Playground UI preview">
+          <div class="mock-toolbar">
+            <span>Preact playground</span>
+            <div>
+              <button type="button" class="active" aria-pressed="true">Light</button>
+              <button type="button" aria-pressed="false">Desktop</button>
+              <button type="button" id="run-a">Run preview</button>
+            </div>
+          </div>
+          <div class="mock-body">
+            <pre
+              class="mock-code"
+              aria-hidden="true"
+            ><code><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="fn">'preact/hooks'</span>
 
 <span class="kw">export default function</span> Demo() {
   <span class="kw">const</span> [n, setN] = useState(0)
@@ -233,128 +312,161 @@
     &lt;/button&gt;
   )
 }</code></pre>
-          <div class="mock-preview">
-            <button type="button" class="demo-btn" id="preview-a">Count: 0</button>
+            <div class="mock-preview">
+              <button type="button" class="demo-btn" id="preview-a">Count: 0</button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="features" aria-labelledby="feat-title">
-      <h2 id="feat-title" class="visually-hidden" style="position:absolute;clip:rect(0,0,0,0)">Features</h2>
-      <article class="feature">
-        <h2>Sandboxed preview</h2>
-        <p>Iframe with <code>allow-scripts</code> only — errors stay inside the playground.</p>
-      </article>
-      <article class="feature">
-        <h2>Multi-file MDX</h2>
-        <p>Virtual paths, entry file, and versioned dependencies from your allowlist.</p>
-      </article>
-      <article class="feature">
-        <h2>Lazy UI</h2>
-        <p>Editor bundle loads only on pages that render <code>&lt;Playground /&gt;</code>.</p>
-      </article>
-    </section>
+      <section class="features" aria-labelledby="feat-title">
+        <h2
+          id="feat-title"
+          class="visually-hidden"
+          style="position: absolute; clip: rect(0, 0, 0, 0)"
+        >
+          Features
+        </h2>
+        <article class="feature">
+          <h2>Sandboxed preview</h2>
+          <p>Iframe with <code>allow-scripts</code> only — errors stay inside the playground.</p>
+        </article>
+        <article class="feature">
+          <h2>Multi-file MDX</h2>
+          <p>Virtual paths, entry file, and versioned dependencies from your allowlist.</p>
+        </article>
+        <article class="feature">
+          <h2>Lazy UI</h2>
+          <p>Editor bundle loads only on pages that render <code>&lt;Playground /&gt;</code>.</p>
+        </article>
+      </section>
 
-    <section class="section-block wrap">
-      <h2 class="section-title">How it fits into PreactPress</h2>
-      <ol class="steps">
-        <li><strong>1</strong>Add <code>playgroundPlugin()</code> to your PreactPress config.</li>
-        <li><strong>2</strong>Embed <code>&lt;Playground /&gt;</code> in MDX with inline or multi-file code.</li>
-        <li><strong>3</strong>Readers edit in the lazy-loaded UI; preview runs in a sandboxed iframe.</li>
-      </ol>
-    </section>
+      <section class="section-block wrap">
+        <h2 class="section-title">How it fits into PreactPress</h2>
+        <ol class="steps">
+          <li><strong>1</strong>Add <code>playgroundPlugin()</code> to your PreactPress config.</li>
+          <li>
+            <strong>2</strong>Embed <code>&lt;Playground /&gt;</code> in MDX with inline or
+            multi-file code.
+          </li>
+          <li>
+            <strong>3</strong>Readers edit in the lazy-loaded UI; preview runs in a sandboxed
+            iframe.
+          </li>
+        </ol>
+      </section>
 
-    <section class="section-block wrap" id="mdx">
-      <h2 class="section-title">MDX examples</h2>
-      <div class="code-tabs" role="tablist">
-        <button type="button" role="tab" aria-selected="true" data-tab="single">Single file</button>
-        <button type="button" role="tab" aria-selected="false" data-tab="multi">Multi-file</button>
-      </div>
-      <div class="code-panel is-active" id="panel-single" role="tabpanel">
-        <pre style="background:#0f172a;color:#e2e8f0"><code>&lt;Playground
+      <section class="section-block wrap" id="mdx">
+        <h2 class="section-title">MDX examples</h2>
+        <div class="code-tabs" role="tablist">
+          <button type="button" role="tab" aria-selected="true" data-tab="single">
+            Single file
+          </button>
+          <button type="button" role="tab" aria-selected="false" data-tab="multi">
+            Multi-file
+          </button>
+        </div>
+        <div class="code-panel is-active" id="panel-single" role="tabpanel">
+          <pre style="background: #0f172a; color: #e2e8f0"><code>&lt;Playground
   code={`import { useState } from 'preact/hooks'
 export default function Demo() {
   const [n, setN] = useState(0)
   return &lt;button onClick={() =&gt; setN(n + 1)}&gt;{n}&lt;/button&gt;
 }`}
 /&gt;</code></pre>
-      </div>
-      <div class="code-panel" id="panel-multi" role="tabpanel">
-        <pre style="background:#0f172a;color:#e2e8f0"><code>&lt;Playground
+        </div>
+        <div class="code-panel" id="panel-multi" role="tabpanel">
+          <pre style="background: #0f172a; color: #e2e8f0"><code>&lt;Playground
   files={{ "/App.tsx": appCode, "/ui.tsx": uiCode }}
   entry="/App.tsx"
   dependencies={{ "@preact/signals": "2.3.2" }}
 /&gt;</code></pre>
-      </div>
-    </section>
+        </div>
+      </section>
 
-    <section class="section-block wrap">
-      <h2 class="section-title">Built into the toolbar</h2>
-      <ul class="toolbar-list">
-        <li>Light / dark preview theme</li>
-        <li>Desktop / mobile preview width</li>
-        <li>Reset to initial snapshot</li>
-        <li>Copy serialized files</li>
-        <li>Optional StackBlitz export</li>
-        <li>Errors shown inside the playground pane</li>
-      </ul>
-    </section>
+      <section class="section-block wrap">
+        <h2 class="section-title">Built into the toolbar</h2>
+        <ul class="toolbar-list">
+          <li>Light / dark preview theme</li>
+          <li>Desktop / mobile preview width</li>
+          <li>Reset to initial snapshot</li>
+          <li>Copy serialized files</li>
+          <li>Optional StackBlitz export</li>
+          <li>Errors shown inside the playground pane</li>
+        </ul>
+      </section>
 
-    <section class="section-block wrap">
-      <h2 class="section-title">FAQ</h2>
-      <div class="faq">
-        <details>
-          <summary>Does preview run on my docs server?</summary>
-          <p>No separate backend — the iframe loads a static sandbox document and receives code via <code>postMessage</code>.</p>
-        </details>
-        <details>
-          <summary>Can I load arbitrary npm packages?</summary>
-          <p>Only packages from your configured CDN allowlist (Preact ecosystem by default). Workspace packages need explicit URL mapping.</p>
-        </details>
-        <details>
-          <summary>Will a broken example crash my doc page?</summary>
-          <p>Validation errors are shown in the playground UI; the host MDX page keeps rendering.</p>
-        </details>
-      </div>
-    </section>
+      <section class="section-block wrap">
+        <h2 class="section-title">FAQ</h2>
+        <div class="faq">
+          <details>
+            <summary>Does preview run on my docs server?</summary>
+            <p>
+              No separate backend — the iframe loads a static sandbox document and receives code via
+              <code>postMessage</code>.
+            </p>
+          </details>
+          <details>
+            <summary>Can I load arbitrary npm packages?</summary>
+            <p>
+              Only packages from your configured CDN allowlist (Preact ecosystem by default).
+              Workspace packages need explicit URL mapping.
+            </p>
+          </details>
+          <details>
+            <summary>Will a broken example crash my doc page?</summary>
+            <p>
+              Validation errors are shown in the playground UI; the host MDX page keeps rendering.
+            </p>
+          </details>
+        </div>
+      </section>
 
-    <section class="install wrap" id="install">
-      <h2>Setup</h2>
-      <pre><code>pnpm add -D @preactpress/plugin-playground
+      <section class="install wrap" id="install">
+        <h2>Setup</h2>
+        <pre><code>pnpm add -D @preactpress/plugin-playground
 
 // .preactpress/config.ts
 import { playgroundPlugin } from "@preactpress/plugin-playground";
 export default defineConfig({ plugins: [playgroundPlugin()] });</code></pre>
-    </section>
+      </section>
 
-    <footer>
-      <p>Direction A · Collins-style product launch · MIT · Facts: <code>design-demos/product-facts.md</code></p>
-    </footer>
-  </div>
-  <script>
-    (function () {
-      var n = 0;
-      var btn = document.getElementById("preview-a");
-      var run = document.getElementById("run-a");
-      function tick() {
-        n += 1;
-        btn.textContent = "Count: " + n;
-      }
-      btn.addEventListener("click", tick);
-      run.addEventListener("click", tick);
-    })();
-    (function () {
-      var tabs = document.querySelectorAll(".code-tabs button");
-      tabs.forEach(function (tab) {
-        tab.addEventListener("click", function () {
-          tabs.forEach(function (t) { t.setAttribute("aria-selected", "false"); });
-          tab.setAttribute("aria-selected", "true");
-          document.querySelectorAll(".code-panel").forEach(function (p) { p.classList.remove("is-active"); });
-          document.getElementById("panel-" + tab.getAttribute("data-tab")).classList.add("is-active");
+      <footer>
+        <p>
+          Direction A · Collins-style product launch · MIT · Facts:
+          <code>design-demos/product-facts.md</code>
+        </p>
+      </footer>
+    </div>
+    <script>
+      (function () {
+        var n = 0;
+        var btn = document.getElementById("preview-a");
+        var run = document.getElementById("run-a");
+        function tick() {
+          n += 1;
+          btn.textContent = "Count: " + n;
+        }
+        btn.addEventListener("click", tick);
+        run.addEventListener("click", tick);
+      })();
+      (function () {
+        var tabs = document.querySelectorAll(".code-tabs button");
+        tabs.forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            tabs.forEach(function (t) {
+              t.setAttribute("aria-selected", "false");
+            });
+            tab.setAttribute("aria-selected", "true");
+            document.querySelectorAll(".code-panel").forEach(function (p) {
+              p.classList.remove("is-active");
+            });
+            document
+              .getElementById("panel-" + tab.getAttribute("data-tab"))
+              .classList.add("is-active");
+          });
         });
-      });
-    })();
-  </script>
-</body>
+      })();
+    </script>
+  </body>
 </html>

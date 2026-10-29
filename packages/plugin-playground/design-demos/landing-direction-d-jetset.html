@@ -1,68 +1,167 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>D · Jetset grid — plugin-playground</title>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="shared-marketing.css" />
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Archivo, Helvetica, Arial, sans-serif; background: #fff; color: #000; }
-    .grid-page {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 0;
-      min-height: 100vh;
-    }
-    .rule { border-bottom: 2px solid #000; }
-    .nav { grid-column: 1 / 4; border-right: 2px solid #000; padding: 1.5rem; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
-    .hero { grid-column: 4 / 13; padding: 2rem 2rem 1rem; }
-    h1 { font-size: clamp(2.5rem, 6vw, 5rem); line-height: 0.95; margin: 0; font-weight: 900; text-transform: uppercase; }
-    .sub { grid-column: 4 / 9; padding: 0 2rem 2rem; font-size: 1.125rem; line-height: 1.4; }
-    .mock { grid-column: 4 / 13; border-top: 2px solid #000; display: grid; grid-template-columns: 1fr 1fr; min-height: 280px; }
-    .mock pre { margin: 0; padding: 1rem; font-family: "JetBrains Mono", monospace; font-size: 12px; border-right: 2px solid #000; }
-    .mock .pv { display: flex; align-items: center; justify-content: center; }
-    .mock button { border: 2px solid #000; background: #ff433d; color: #fff; font: inherit; font-weight: 700; padding: 0.75rem 1.25rem; cursor: pointer; min-height: 44px; }
-    .facts { grid-column: 1 / 13; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid #000; }
-    .facts div { padding: 1.25rem; border-right: 2px solid #000; font-size: 0.9375rem; }
-    .facts div:last-child { border-right: none; }
-    .foot { grid-column: 1 / 13; padding: 1rem 2rem; border-top: 2px solid #000; font-size: 12px; }
-    a { color: #000; }
-    @media (max-width: 800px) {
-      .nav { grid-column: 1 / 13; border-right: none; border-bottom: 2px solid #000; }
-      .hero, .sub, .mock, .facts { grid-column: 1 / 13; }
-      .mock { grid-template-columns: 1fr; }
-      .facts { grid-template-columns: 1fr; }
-      .facts div { border-right: none; border-bottom: 2px solid #000; }
-    }
-  </style>
-</head>
-<body>
-  <div class="grid-page">
-    <nav class="nav rule">@preactpress<br/>plugin-playground</nav>
-    <header class="hero rule">
-      <h1>Live code in MDX</h1>
-    </header>
-    <p class="sub">Experimental grid — editor and preview as equal columns. Sandboxed iframe, lazy UI, CDN allowlist.</p>
-    <div class="mock">
-      <pre>export default function Demo() {
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>D · Jetset grid — plugin-playground</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;900&family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="shared-marketing.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Archivo, Helvetica, Arial, sans-serif;
+        background: #fff;
+        color: #000;
+      }
+      .grid-page {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 0;
+        min-height: 100vh;
+      }
+      .rule {
+        border-bottom: 2px solid #000;
+      }
+      .nav {
+        grid-column: 1 / 4;
+        border-right: 2px solid #000;
+        padding: 1.5rem;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .hero {
+        grid-column: 4 / 13;
+        padding: 2rem 2rem 1rem;
+      }
+      h1 {
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        line-height: 0.95;
+        margin: 0;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .sub {
+        grid-column: 4 / 9;
+        padding: 0 2rem 2rem;
+        font-size: 1.125rem;
+        line-height: 1.4;
+      }
+      .mock {
+        grid-column: 4 / 13;
+        border-top: 2px solid #000;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 280px;
+      }
+      .mock pre {
+        margin: 0;
+        padding: 1rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        border-right: 2px solid #000;
+      }
+      .mock .pv {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mock button {
+        border: 2px solid #000;
+        background: #ff433d;
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        padding: 0.75rem 1.25rem;
+        cursor: pointer;
+        min-height: 44px;
+      }
+      .facts {
+        grid-column: 1 / 13;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 2px solid #000;
+      }
+      .facts div {
+        padding: 1.25rem;
+        border-right: 2px solid #000;
+        font-size: 0.9375rem;
+      }
+      .facts div:last-child {
+        border-right: none;
+      }
+      .foot {
+        grid-column: 1 / 13;
+        padding: 1rem 2rem;
+        border-top: 2px solid #000;
+        font-size: 12px;
+      }
+      a {
+        color: #000;
+      }
+      @media (max-width: 800px) {
+        .nav {
+          grid-column: 1 / 13;
+          border-right: none;
+          border-bottom: 2px solid #000;
+        }
+        .hero,
+        .sub,
+        .mock,
+        .facts {
+          grid-column: 1 / 13;
+        }
+        .mock {
+          grid-template-columns: 1fr;
+        }
+        .facts {
+          grid-template-columns: 1fr;
+        }
+        .facts div {
+          border-right: none;
+          border-bottom: 2px solid #000;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-page">
+      <nav class="nav rule">@preactpress<br />plugin-playground</nav>
+      <header class="hero rule">
+        <h1>Live code in MDX</h1>
+      </header>
+      <p class="sub">
+        Experimental grid — editor and preview as equal columns. Sandboxed iframe, lazy UI, CDN
+        allowlist.
+      </p>
+      <div class="mock">
+        <pre>
+export default function Demo() {
   const [n, setN] = useState(0)
   return &lt;button&gt;{n}&lt;/button&gt;
 }</pre>
-      <div class="pv"><button type="button" id="d-n">0</button></div>
+        <div class="pv"><button type="button" id="d-n">0</button></div>
+      </div>
+      <div class="facts">
+        <div>Sandbox iframe — errors contained</div>
+        <div>Multi-file virtual paths + dependencies</div>
+        <div>StackBlitz · copy · reset</div>
+      </div>
+      <footer class="foot">
+        Direction D · Jetset grid · <a href="thumbs.html">All directions</a>
+      </footer>
     </div>
-    <div class="facts">
-      <div>Sandbox iframe — errors contained</div>
-      <div>Multi-file virtual paths + dependencies</div>
-      <div>StackBlitz · copy · reset</div>
-    </div>
-    <footer class="foot">Direction D · Jetset grid · <a href="thumbs.html">All directions</a></footer>
-  </div>
-  <script>
-    document.getElementById("d-n").addEventListener("click", function () {
-      this.textContent = String(Number(this.textContent) + 1);
-    });
-  </script>
-</body>
+    <script>
+      document.getElementById("d-n").addEventListener("click", function () {
+        this.textContent = String(Number(this.textContent) + 1);
+      });
+    </script>
+  </body>
 </html>

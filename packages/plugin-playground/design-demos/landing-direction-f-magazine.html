@@ -1,66 +1,170 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>F · Magazine dense — plugin-playground</title>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600&family=Noto+Sans:wght@400;700;900&display=swap" rel="stylesheet" />
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #fafafa; color: #111; font-family: "Noto Sans", sans-serif; font-size: 14px; }
-    .spread { display: grid; grid-template-columns: 1fr 1fr; gap: 0; max-width: 1200px; margin: 0 auto; border: 3px solid #111; }
-    @media (max-width: 900px) { .spread { grid-template-columns: 1fr; } }
-    .page { padding: 1.25rem; border-right: 3px solid #111; min-height: 420px; }
-    .page:last-child { border-right: none; }
-    @media (max-width: 900px) { .page { border-right: none; border-bottom: 3px solid #111; } }
-    .mast { font-family: "Archivo Narrow", sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
-    h1 { font-size: 2rem; font-weight: 900; margin: 0 0 0.5rem; line-height: 1.05; background: linear-gradient(transparent 60%, #ffe566 60%); display: inline; }
-    .route { height: 120px; border: 2px solid #111; margin: 1rem 0; position: relative; background: repeating-linear-gradient(90deg, #eee 0 8px, #fff 8px 16px); }
-    .dot { position: absolute; width: 22px; height: 22px; border: 2px solid #111; border-radius: 50%; background: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-    .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid #111; }
-    .cell { border: 1px solid #111; padding: 0.65rem; min-height: 64px; }
-    .cell.hi { background: #ffe566; }
-    .mock { border: 2px solid #111; margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; }
-    .mock pre { margin: 0; padding: 0.75rem; font-size: 11px; background: #111; color: #eee; overflow: auto; }
-    .mock button { margin: auto; display: block; border: 2px solid #111; background: #fff; padding: 0.5rem 1rem; cursor: pointer; min-height: 44px; font: inherit; }
-    .foot { max-width: 1200px; margin: 1rem auto; font-size: 12px; padding: 0 1rem; }
-    a { color: #111; }
-  </style>
-</head>
-<body>
-  <div class="spread">
-    <article class="page">
-      <p class="mast">PreactPress · plugin · playground</p>
-      <h1>How live MDX demos work</h1>
-      <p>Editor left, sandbox preview right — same pattern as the real PlaygroundView.</p>
-      <div class="route" aria-hidden="true">
-        <span class="dot" style="left:12%;top:40%">1</span>
-        <span class="dot" style="left:45%;top:20%">2</span>
-        <span class="dot" style="left:78%;top:55%">3</span>
-      </div>
-      <p style="font-size:12px;margin:0">1 config · 2 MDX · 3 iframe run</p>
-    </article>
-    <article class="page">
-      <p class="mast">Specs</p>
-      <div class="data-grid">
-        <div class="cell hi">sandbox</div>
-        <div class="cell">lazy UI</div>
-        <div class="cell">allowlist</div>
-        <div class="cell">multi-file</div>
-        <div class="cell hi">MDX</div>
-        <div class="cell">StackBlitz</div>
-      </div>
-      <div class="mock">
-        <pre>useState(0)</pre>
-        <button type="button" id="f-n">0</button>
-      </div>
-    </article>
-  </div>
-  <p class="foot">Direction F · east #12 magazine dense · <a href="thumbs.html">All directions</a></p>
-  <script>
-    document.getElementById("f-n").addEventListener("click", function () {
-      this.textContent = String(Number(this.textContent) + 1);
-    });
-  </script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>F · Magazine dense — plugin-playground</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600&family=Noto+Sans:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #fafafa;
+        color: #111;
+        font-family: "Noto Sans", sans-serif;
+        font-size: 14px;
+      }
+      .spread {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        max-width: 1200px;
+        margin: 0 auto;
+        border: 3px solid #111;
+      }
+      @media (max-width: 900px) {
+        .spread {
+          grid-template-columns: 1fr;
+        }
+      }
+      .page {
+        padding: 1.25rem;
+        border-right: 3px solid #111;
+        min-height: 420px;
+      }
+      .page:last-child {
+        border-right: none;
+      }
+      @media (max-width: 900px) {
+        .page {
+          border-right: none;
+          border-bottom: 3px solid #111;
+        }
+      }
+      .mast {
+        font-family: "Archivo Narrow", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: 900;
+        margin: 0 0 0.5rem;
+        line-height: 1.05;
+        background: linear-gradient(transparent 60%, #ffe566 60%);
+        display: inline;
+      }
+      .route {
+        height: 120px;
+        border: 2px solid #111;
+        margin: 1rem 0;
+        position: relative;
+        background: repeating-linear-gradient(90deg, #eee 0 8px, #fff 8px 16px);
+      }
+      .dot {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        border: 2px solid #111;
+        border-radius: 50%;
+        background: #fff;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+      }
+      .data-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border: 2px solid #111;
+      }
+      .cell {
+        border: 1px solid #111;
+        padding: 0.65rem;
+        min-height: 64px;
+      }
+      .cell.hi {
+        background: #ffe566;
+      }
+      .mock {
+        border: 2px solid #111;
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .mock pre {
+        margin: 0;
+        padding: 0.75rem;
+        font-size: 11px;
+        background: #111;
+        color: #eee;
+        overflow: auto;
+      }
+      .mock button {
+        margin: auto;
+        display: block;
+        border: 2px solid #111;
+        background: #fff;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        min-height: 44px;
+        font: inherit;
+      }
+      .foot {
+        max-width: 1200px;
+        margin: 1rem auto;
+        font-size: 12px;
+        padding: 0 1rem;
+      }
+      a {
+        color: #111;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="spread">
+      <article class="page">
+        <p class="mast">PreactPress · plugin · playground</p>
+        <h1>How live MDX demos work</h1>
+        <p>Editor left, sandbox preview right — same pattern as the real PlaygroundView.</p>
+        <div class="route" aria-hidden="true">
+          <span class="dot" style="left: 12%; top: 40%">1</span>
+          <span class="dot" style="left: 45%; top: 20%">2</span>
+          <span class="dot" style="left: 78%; top: 55%">3</span>
+        </div>
+        <p style="font-size: 12px; margin: 0">1 config · 2 MDX · 3 iframe run</p>
+      </article>
+      <article class="page">
+        <p class="mast">Specs</p>
+        <div class="data-grid">
+          <div class="cell hi">sandbox</div>
+          <div class="cell">lazy UI</div>
+          <div class="cell">allowlist</div>
+          <div class="cell">multi-file</div>
+          <div class="cell hi">MDX</div>
+          <div class="cell">StackBlitz</div>
+        </div>
+        <div class="mock">
+          <pre>useState(0)</pre>
+          <button type="button" id="f-n">0</button>
+        </div>
+      </article>
+    </div>
+    <p class="foot">
+      Direction F · east #12 magazine dense · <a href="thumbs.html">All directions</a>
+    </p>
+    <script>
+      document.getElementById("f-n").addEventListener("click", function () {
+        this.textContent = String(Number(this.textContent) + 1);
+      });
+    </script>
+  </body>
 </html>

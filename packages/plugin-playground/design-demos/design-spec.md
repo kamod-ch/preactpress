@@ -31,10 +31,10 @@ Single scrolling landing, **1440px primary**, responsive to **375px**. Static HT
 
 ## Form (from content)
 
-| Question | Answer |
-|----------|--------|
-| Narrative role | Product plugin page, not full PreactPress homepage |
-| Viewer distance | Practitioner evaluating a docs add-on |
-| Visual temperature | Cool/neutral dev-tool baseline; three directions diverge |
-| Capacity | Hero + 3 capability blocks + setup strip + footer links |
-| Motif | **Split pane: code ↔ preview** (intrinsic to the product) |
+| Question           | Answer                                                    |
+| ------------------ | --------------------------------------------------------- |
+| Narrative role     | Product plugin page, not full PreactPress homepage        |
+| Viewer distance    | Practitioner evaluating a docs add-on                     |
+| Visual temperature | Cool/neutral dev-tool baseline; three directions diverge  |
+| Capacity           | Hero + 3 capability blocks + setup strip + footer links   |
+| Motif              | **Split pane: code ↔ preview** (intrinsic to the product) |

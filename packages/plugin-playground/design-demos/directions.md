@@ -4,19 +4,19 @@ Roulette second: **47** → web style **#8** Cinematic Sound-Viz; east **#12** (
 
 ## Selected for full HTML (A / B / C)
 
-| ID | Logic | One-line |
-|----|-------|----------|
-| **A** | Best designer · Collins product storytelling | Light launch page — product UI as hero, Preact purple discipline |
+| ID    | Logic                                                                         | One-line                                                                 |
+| ----- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| **A** | Best designer · Collins product storytelling                                  | Light launch page — product UI as hero, Preact purple discipline         |
 | **B** | Real reference · dev-docs dark split (Brittany Chiang / modern API doc sites) | Fixed rail + scrolling story; monospace labels; playground mock centered |
-| **C** | Roulette · web #8 Cinematic Sound-Viz | Dark stage; waveform metaphor for “live signal” from editor to preview |
+| **C** | Roulette · web #8 Cinematic Sound-Viz                                         | Dark stage; waveform metaphor for “live signal” from editor to preview   |
 
 ## Alternates (thumbs only)
 
-| ID | Logic | One-line |
-|----|-------|----------|
-| D | Best designer · Experimental Jetset | Typographic grid, no hero photo — words and rules |
-| E | Real reference · Bloomberg editorial brutalism | Black/white/orange; dense module grid |
-| F | Roulette · east #12 | See style library — paired as east counterpoint in thumb grid |
+| ID  | Logic                                          | One-line                                                      |
+| --- | ---------------------------------------------- | ------------------------------------------------------------- |
+| D   | Best designer · Experimental Jetset            | Typographic grid, no hero photo — words and rules             |
+| E   | Real reference · Bloomberg editorial brutalism | Black/white/orange; dense module grid                         |
+| F   | Roulette · east #12                            | See style library — paired as east counterpoint in thumb grid |
 
 ---
 
@@ -26,7 +26,7 @@ Roulette second: **47** → web style **#8** Cinematic Sound-Viz; east **#12** (
 - **Hero material:** CSS-built playground chrome (realistic toolbar + panes).
 - **Skeleton:** Centered column, hero mock → three features → install band.
 - **Bold spend:** Oversized product frame with subtle perspective shadow.
-- **Form from content:** The plugin *is* the UI — show it, don’t describe it with icons.
+- **Form from content:** The plugin _is_ the UI — show it, don’t describe it with icons.
 
 ### B · Dark dev-docs rail
 

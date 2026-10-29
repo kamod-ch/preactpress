@@ -1,53 +1,130 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>E · Editorial brutalism — plugin-playground</title>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono&display=swap" rel="stylesheet" />
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #fff; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.45; }
-    .mod { border-bottom: 1px solid #000; padding: 1rem 1.25rem; }
-    h1 { font-family: "Archivo Black", Impact, sans-serif; font-size: clamp(3rem, 12vw, 7rem); line-height: 0.9; margin: 0; letter-spacing: -0.04em; }
-    .cta { display: inline-block; background: #ff433d; color: #fff; font-weight: 700; padding: 0.75rem 1.5rem; text-decoration: none; min-height: 44px; line-height: 1.2; margin-top: 1rem; }
-    .split { display: grid; grid-template-columns: 1fr 1fr; min-height: 320px; }
-    @media (max-width: 700px) { .split { grid-template-columns: 1fr; } }
-    .split pre { margin: 0; padding: 1rem; background: #000; color: #fff; font-family: "JetBrains Mono", monospace; font-size: 13px; border-right: 1px solid #000; }
-    .split .pv { display: flex; align-items: center; justify-content: center; padding: 1rem; }
-    .split button { font: inherit; font-size: 16px; padding: 0.65rem 1rem; border: 2px solid #000; background: #fff; cursor: pointer; min-height: 44px; }
-    .dense { columns: 2; column-gap: 2rem; max-width: 900px; }
-    @media (max-width: 600px) { .dense { columns: 1; } }
-    a { color: #0000ee; }
-  </style>
-</head>
-<body>
-  <div class="mod">
-    <p style="margin:0;font-weight:700">@preactpress/plugin-playground</p>
-    <h1>RUN PREACT IN DOCS</h1>
-    <a class="cta" href="#install">pnpm add -D</a>
-  </div>
-  <div class="split">
-    <pre>import { useState } from 'preact/hooks'
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>E · Editorial brutalism — plugin-playground</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #fff;
+        color: #000;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        line-height: 1.45;
+      }
+      .mod {
+        border-bottom: 1px solid #000;
+        padding: 1rem 1.25rem;
+      }
+      h1 {
+        font-family: "Archivo Black", Impact, sans-serif;
+        font-size: clamp(3rem, 12vw, 7rem);
+        line-height: 0.9;
+        margin: 0;
+        letter-spacing: -0.04em;
+      }
+      .cta {
+        display: inline-block;
+        background: #ff433d;
+        color: #fff;
+        font-weight: 700;
+        padding: 0.75rem 1.5rem;
+        text-decoration: none;
+        min-height: 44px;
+        line-height: 1.2;
+        margin-top: 1rem;
+      }
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 320px;
+      }
+      @media (max-width: 700px) {
+        .split {
+          grid-template-columns: 1fr;
+        }
+      }
+      .split pre {
+        margin: 0;
+        padding: 1rem;
+        background: #000;
+        color: #fff;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        border-right: 1px solid #000;
+      }
+      .split .pv {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      .split button {
+        font: inherit;
+        font-size: 16px;
+        padding: 0.65rem 1rem;
+        border: 2px solid #000;
+        background: #fff;
+        cursor: pointer;
+        min-height: 44px;
+      }
+      .dense {
+        columns: 2;
+        column-gap: 2rem;
+        max-width: 900px;
+      }
+      @media (max-width: 600px) {
+        .dense {
+          columns: 1;
+        }
+      }
+      a {
+        color: #0000ee;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mod">
+      <p style="margin: 0; font-weight: 700">@preactpress/plugin-playground</p>
+      <h1>RUN PREACT IN DOCS</h1>
+      <a class="cta" href="#install">pnpm add -D</a>
+    </div>
+    <div class="split">
+      <pre>
+import { useState } from 'preact/hooks'
 export default function Demo() {
   const [n, setN] = useState(0)
   return &lt;button onClick={() =&gt; setN(n+1)}&gt;{n}&lt;/button&gt;
 }</pre>
-    <div class="pv"><button type="button" id="e-n">count 0</button></div>
-  </div>
-  <div class="mod dense">
-    <p>Sandboxed iframe preview. Lazy-loaded editor UI. CDN allowlist for dependencies. Multi-file MDX API. Errors stay inside the playground component.</p>
-    <p>No fake metrics — see product-facts.md in design-demos for verified package details.</p>
-  </div>
-  <div class="mod" id="install">
-    <pre style="margin:0;font-family:'JetBrains Mono',monospace;font-size:13px">pnpm add -D @preactpress/plugin-playground</pre>
-  </div>
-  <div class="mod">Direction E · editorial brutalism · <a href="thumbs.html">All directions</a></div>
-  <script>
-    document.getElementById("e-n").addEventListener("click", function () {
-      var m = this.textContent.match(/(\d+)/);
-      this.textContent = "count " + ((m ? +m[1] : 0) + 1);
-    });
-  </script>
-</body>
+      <div class="pv"><button type="button" id="e-n">count 0</button></div>
+    </div>
+    <div class="mod dense">
+      <p>
+        Sandboxed iframe preview. Lazy-loaded editor UI. CDN allowlist for dependencies. Multi-file
+        MDX API. Errors stay inside the playground component.
+      </p>
+      <p>No fake metrics — see product-facts.md in design-demos for verified package details.</p>
+    </div>
+    <div class="mod" id="install">
+      <pre style="margin: 0; font-family: &quot;JetBrains Mono&quot;, monospace; font-size: 13px">
+pnpm add -D @preactpress/plugin-playground</pre>
+    </div>
+    <div class="mod">
+      Direction E · editorial brutalism · <a href="thumbs.html">All directions</a>
+    </div>
+    <script>
+      document.getElementById("e-n").addEventListener("click", function () {
+        var m = this.textContent.match(/(\d+)/);
+        this.textContent = "count " + ((m ? +m[1] : 0) + 1);
+      });
+    </script>
+  </body>
 </html>
