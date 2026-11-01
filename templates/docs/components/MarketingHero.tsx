@@ -1,6 +1,8 @@
 /** @jsx h */
 import { h } from "preact";
 
+const demoVideoSrc = "/preactpress-in-30-seconds.mp4";
+
 const actions = [
   { text: "Get started", href: "/guide/getting-started", theme: "brand" },
   { text: "View demo", href: "#interactive-demo", theme: "alt" },
@@ -10,12 +12,6 @@ const actions = [
     theme: "ghost",
     external: true,
   },
-];
-
-const workflowLabels = [
-  { text: "Markdown", href: "https://www.markdownguide.org/tools/github-pages/" },
-  { text: "MDX", href: "https://mdxjs.com/" },
-  { text: "Preact", href: "https://preactjs.com/" },
 ];
 
 export default function MarketingHero() {
@@ -44,37 +40,21 @@ export default function MarketingHero() {
           ))}
         </div>
       </div>
-      <div class="pp-mkt-hero-panel" aria-label="PreactPress workflow">
-        {workflowLabels.map((label) => (
-          <a
-            class="pp-mkt-panel-label"
-            href={label.href}
-            key={label.text}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {label.text}
-          </a>
-        ))}
-        <span class="pp-mkt-panel-arrow" aria-hidden="true">
-          <svg
-            class="pp-mkt-panel-arrow-icon"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M12 5v10M8 11l4 4 4-4"
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-            />
-          </svg>
-        </span>
-        <strong>Static docs</strong>
-      </div>
+      <figure class="pp-mkt-hero-panel pp-mkt-hero-video-wrap">
+        <video
+          class="pp-mkt-hero-video"
+          src={demoVideoSrc}
+          controls
+          playsInline
+          preload="metadata"
+          width={960}
+          height={540}
+        >
+          Your browser does not support embedded video.{" "}
+          <a href={demoVideoSrc}>Download PreactPress in 30 seconds (MP4)</a>
+        </video>
+        <figcaption class="pp-mkt-hero-video-caption">PreactPress in 30 seconds</figcaption>
+      </figure>
     </section>
   );
 }

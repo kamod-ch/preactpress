@@ -343,7 +343,7 @@ async function copyPublicDir(srcDir: string, outDir: string): Promise<void> {
   } catch {
     return;
   }
-  await fs.cp(publicDir, outDir, { recursive: true });
+  await fs.cp(publicDir, outDir, { recursive: true, dereference: true });
 }
 
 async function writeRuntimeScripts(outDir: string): Promise<void> {

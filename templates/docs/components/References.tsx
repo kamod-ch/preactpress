@@ -3,11 +3,6 @@ import { h } from "preact";
 
 const references = [
   {
-    name: "PreactPress documentation",
-    description: "The public reference site you are reading now.",
-    href: "https://kamod-ch.github.io/preactpress/",
-  },
-  {
     name: "Kamod UI",
     description: "Preact + Tailwind components that can be documented and demonstrated with MDX.",
     href: "https://ui.kamod.ch/",
