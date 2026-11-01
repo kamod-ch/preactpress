@@ -1,7 +1,8 @@
 /** @jsx h */
 import { h } from "preact";
 
-const demoVideoSrc = "/preactpress-in-30-seconds.mp4";
+const siteBase = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+const demoVideoSrc = `${siteBase}/preactpress-in-30-seconds.mp4`;
 
 const actions = [
   { text: "Get started", href: "/guide/getting-started", theme: "brand" },
