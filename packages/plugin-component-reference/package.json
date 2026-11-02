@@ -43,9 +43,9 @@
   "devDependencies": {
     "@kamod-ch/preactpress": "workspace:*",
     "@preactpress/plugin-typedoc": "workspace:*",
-    "@types/node": "^26.6.3",
-    "preact": "^11.0.0",
-    "vitest": "^5.0.3"
+    "@types/node": "^26.6.6",
+    "preact": "^11.1.1",
+    "vitest": "^5.0.5"
   },
   "peerDependencies": {
     "@kamod-ch/preactpress": ">=2.2.0",
