@@ -16,6 +16,8 @@ Reproducible benchmark suite for measuring PreactPress scaling across project si
 | JavaScript per page | Sum of script `src` assets referenced by sample HTML                  |
 | Lighthouse baseline | Static HTML/JS/CSS sizes and asset counts (not Chrome Lighthouse)     |
 
+Build timings exclude Shiki's one-time module and grammar initialization. That startup cost is shared by every build in a process, is independent of the PreactPress build cache, and is too sensitive to shared CI runner load for a stable regression gate.
+
 ## Project sizes
 
 Default matrix: **100**, **1,000**, **5,000**, **10,000** pages.
