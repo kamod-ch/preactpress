@@ -85,7 +85,14 @@ async function runBuild(cwd, { cold = false } = {}) {
   const previousCwd = process.cwd();
   process.chdir(cwd);
   try {
-    const { build } = await import(path.join(packageRoot, "dist/node/index.js"));
+    // Keep the cache benchmark focused on build work. Shiki's one-time module and grammar
+    // initialization is highly sensitive to shared CI runner load and otherwise makes the
+    // first timing much noisier than every subsequent build in the same process.
+    const [{ build }, { getHighlighter }] = await Promise.all([
+      import(path.join(packageRoot, "dist/node/index.js")),
+      import(path.join(packageRoot, "dist/node/markdown.js")),
+    ]);
+    await getHighlighter();
     const measured = await measureAsync(() => build("."));
     return {
       durationMs: measured.durationMs,
@@ -287,6 +294,7 @@ Options:
     notes: [
       "All timings measured on the same machine in one run — do not compare across machines.",
       "Cold build clears .preactpress/cache and dist before building.",
+      "Build timings exclude one-time syntax highlighter initialization to reduce CI runner noise.",
       "Warm build reuses cache from the preceding cold build for the same page count.",
       "Lighthouse fields are static HTML/JS/CSS analysis, not Chrome Lighthouse scores.",
       "Fixture content is seeded (0x707072657373) and generated programmatically.",
