@@ -73,7 +73,7 @@
     "prepare": "pnpm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:browser": "playwright test",
+    "test:browser": "playwright test && playwright test --config tests/browser/local-search.config.ts",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "fmt": "oxfmt .",
