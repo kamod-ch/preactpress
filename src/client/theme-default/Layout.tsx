@@ -439,6 +439,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                     ))}
                   </div>
                 ) : null}
+                {localSearch && normalizedQuery && searchResults.length === 0 ? (
+                  <p role="status">{labels.searchResults}: 0</p>
+                ) : null}
                 <SidebarNav
                   groups={visibleSidebar}
                   routePath={routePath}
@@ -483,6 +486,9 @@ const Layout: FunctionalComponent<LayoutProps> = ({
                     </a>
                   ))}
                 </div>
+              ) : null}
+              {localSearch && normalizedQuery && searchResults.length === 0 ? (
+                <p role="status">{labels.searchResults}: 0</p>
               ) : null}
               <SidebarNav
                 groups={visibleSidebar}

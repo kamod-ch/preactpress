@@ -322,3 +322,14 @@ export default createContentLoader<ArticlePost[]>(["posts/*.md"], {
 ```
 
 Loader output is exposed on `page.meta.contentData` for the matching route.
+
+### Local search typo fallback
+
+Local search keeps exact and substring matches first. Only when there are no regular
+results within the active locale, version and workspace does it compare title words.
+Every query token and compared title word must contain at least five letters or digits.
+Each token must match a title word exactly or with one insertion, deletion or substitution;
+transpositions receive no special treatment. Results retain index order on ties and are
+limited to eight. Query and title words use lowercase normalization (including German
+letters); accents, umlauts and `ß` are not folded or transliterated. Punctuation separates
+words. Short queries still use regular search. The existing static index is reused locally.
