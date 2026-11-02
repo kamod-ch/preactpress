@@ -400,6 +400,10 @@ export function preactPressPlugin(site: SiteConfig): Plugin {
         return rendered;
       }
       if (id === VIRTUAL_CLIENT) {
+        // Client enhancements may import browser-only assets such as CSS. Exclude them from
+        // the SSR bundle, where effects do not run and Node cannot load those assets.
+        if (options?.ssr) return "export const clientPlugins = [];\n";
+
         const modules = collectPluginClientModules(site.plugins ?? []);
         const imports = modules
           .map(

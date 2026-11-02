@@ -146,7 +146,9 @@ async function transpileTsx(source, filename) {
   return result.code;
 }
 
-async function runExample(payload) {
+let latestRun = 0;
+
+async function runExample(payload, run) {
   const blobUrls = [];
   try {
     document.body.className = payload.theme === "dark" ? "pp-sandbox-dark" : "pp-sandbox-light";
@@ -187,9 +189,11 @@ async function runExample(payload) {
     if (typeof Component !== "function") {
       throw new Error("Entry module must default-export a Preact component.");
     }
+    if (run !== latestRun) return;
     render(h(Component, null), root);
     post({ type: "pp-playground-result", ok: true });
   } catch (error) {
+    if (run !== latestRun) return;
     const message = error instanceof Error ? error.message : String(error);
     renderError(message);
   } finally {
@@ -200,7 +204,7 @@ async function runExample(payload) {
 window.addEventListener("message", (event) => {
   const data = event.data;
   if (!data || data.type !== "pp-playground-run") return;
-  runExample(data);
+  runExample(data, ++latestRun);
 });
 
 post({ type: "pp-playground-ready" });
