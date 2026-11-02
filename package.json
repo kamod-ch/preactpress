@@ -143,37 +143,37 @@
     "preview": "node ./bin/preactpress.mjs build templates/default && node ./bin/preactpress.mjs preview templates/default"
   },
   "dependencies": {
-    "@docsearch/css": "^5.1.1",
-    "@docsearch/js": "^5.1.1",
+    "@docsearch/css": "^5.2.0",
+    "@docsearch/js": "^5.2.0",
     "@mdx-js/rollup": "^3.1.1",
     "@preact/preset-vite": "^2.10.6",
     "@shikijs/transformers": "^4.5.0",
     "gray-matter": "^4.0.3",
-    "markdown-it": "^15.0.2",
+    "markdown-it": "^15.0.3",
     "markdown-it-emoji": "^3.1.0",
     "markdown-it-mathjax3": "^5.2.0",
     "minimist": "^1.2.8",
-    "node-html-parser": "^9.0.4",
+    "node-html-parser": "^9.0.6",
     "picocolors": "^1.1.1",
-    "preact": "^11.0.0",
-    "preact-render-to-string": "^6.8.0",
+    "preact": "^11.1.1",
+    "preact-render-to-string": "^6.8.2",
     "remark-frontmatter": "^5.0.0",
     "shiki": "^4.5.0",
     "sirv": "^3.0.2",
     "tinyglobby": "^0.2.17",
-    "vite": "^8.3.2",
-    "zod": "^4.6.5"
+    "vite": "^8.3.5",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.64.1",
     "@types/minimist": "^1.2.5",
-    "@types/node": "^26.6.3",
-    "@vitest/coverage-v8": "^5.0.3",
-    "oxfmt": "^0.71.0",
-    "oxlint": "^1.86.0",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.0.5",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
     "sharp": "^0.35.5",
     "typescript": "^6.0.3",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.5"
   },
   "engines": {
     "node": ">=20"

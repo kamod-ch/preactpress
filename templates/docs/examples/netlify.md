@@ -72,11 +72,11 @@ Netlify detects pnpm from `pnpm-lock.yaml`. If needed, add a `netlify.toml`:
 
 ```toml [netlify.toml]
 [build]
-  command = "pnpm run check && pnpm run build"
-  publish = "dist"
+command = "pnpm run check && pnpm run build"
+publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "22"
+NODE_VERSION = "22"
 ```
 
 ## Monorepos
@@ -93,14 +93,14 @@ In `netlify.toml`, cache hashed assets aggressively and avoid immutable caching 
 
 ```toml
 [[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/assets/*"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.html"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
+for = "/*.html"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
 ```
 
 ## CI without Netlify build
