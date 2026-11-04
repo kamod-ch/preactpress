@@ -17,39 +17,9 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      # Do not set registry-url here — setup-node would inject an empty _authToken and block OIDC.
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - uses: kamod-ch/.github/.github/actions/npm-publish-on-tag@main
         with:
           node-version: "22.14.0"
-          package-manager-cache: false
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Prepare npm for Trusted Publishing
-        run: npm install --global npm@11.5.1
-
-      - name: Log Node.js and npm versions
-        run: |
-          node --version
-          npm --version
-
-      - name: Pre-publish checks
-        run: |
-          pnpm exec playwright install --with-deps chromium webkit
-          pnpm release:check
-
-      - name: Verify OIDC-only npm auth configuration
-        run: |
-          export npm_version="$(npm --version)"
-          node ./scripts/check-npm-publish-auth.mjs
-
-      - name: Publish to npm
-        run: pnpm release:publish
+          pre-publish: pnpm exec playwright install --with-deps chromium webkit && pnpm release:check && node ./scripts/check-npm-publish-auth.mjs
+          publish: pnpm release:publish
+          npm-token: ${{ secrets.NPM_TOKEN }}
