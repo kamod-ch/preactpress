@@ -23,11 +23,11 @@ permissions:
   pages: write
   id-token: write
 
-# GitHub Pages accepts only one active deployment at a time. Keep the newest
-# run and cancel any superseded run before it reaches actions/deploy-pages.
+# GitHub Pages accepts only one active deployment at a time. Queue newer runs
+# instead of cancelling an active deployment, which can remain locked in Pages.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -81,4 +81,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
