@@ -4,7 +4,8 @@ import { h } from "preact";
 const references = [
   {
     name: "Otok",
-    description: "A server-first full-stack framework on Hono and Preact, with documentation built in PreactPress.",
+    description:
+      "A server-first full-stack framework on Hono and Preact, with documentation built in PreactPress.",
     href: "https://kamod-ch.github.io/otok/",
   },
   {
