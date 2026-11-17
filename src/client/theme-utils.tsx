@@ -1,6 +1,7 @@
 import type { ComponentChildren, FunctionalComponent, HeadingHTMLAttributes } from "preact";
 import { useEffect } from "preact/hooks";
 import {
+  KAMOD_COLOR_SCHEME_KEY,
   PREACTPRESS_THEME_STORAGE_KEY,
   applyTheme,
   readStoredTheme,
@@ -87,14 +88,30 @@ export function createMdxHeadingComponents({
   };
 }
 
+function readKamodScheme(): PreactpressStoredTheme | "system" | null {
+  if (typeof localStorage === "undefined") return null;
+  try {
+    const value = localStorage.getItem(KAMOD_COLOR_SCHEME_KEY);
+    return value === "light" || value === "dark" || value === "system" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Kamod's `theme` key wins when both stores exist, so the two toggles cannot disagree. */
+export function readEffectiveScheme(): PreactpressStoredTheme | "system" | null {
+  return readKamodScheme() ?? readStoredTheme();
+}
+
 export function toggleStoredTheme(): void {
-  const stored = readStoredTheme();
+  const stored = readEffectiveScheme();
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const isDark = stored === "dark" || (stored === null && prefersDark);
+  const isDark = stored === "dark" || ((stored === null || stored === "system") && prefersDark);
   const next: PreactpressStoredTheme = isDark ? "light" : "dark";
   applyTheme(next);
   try {
     localStorage.setItem(PREACTPRESS_THEME_STORAGE_KEY, next);
+    localStorage.setItem(KAMOD_COLOR_SCHEME_KEY, next);
   } catch {
     /* ignore quota / private mode */
   }
@@ -103,16 +120,13 @@ export function toggleStoredTheme(): void {
 export function useStoredThemeSync(): void {
   useEffect(() => {
     function syncTheme(event?: StorageEvent): void {
-      if (event && event.key !== PREACTPRESS_THEME_STORAGE_KEY) return;
-      const value =
-        event?.newValue ??
-        (() => {
-          try {
-            return localStorage.getItem(PREACTPRESS_THEME_STORAGE_KEY);
-          } catch {
-            return null;
-          }
-        })();
+      if (
+        event &&
+        event.key !== PREACTPRESS_THEME_STORAGE_KEY &&
+        event.key !== KAMOD_COLOR_SCHEME_KEY
+      )
+        return;
+      const value = readEffectiveScheme();
       applyTheme(value === "light" || value === "dark" ? value : null);
     }
 

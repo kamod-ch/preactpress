@@ -37,7 +37,8 @@
   }
 }
 
-:root[data-theme="dark"] {
+:root[data-theme="dark"],
+:root.dark {
   color-scheme: dark;
   --pp-bg: #1b1b1f;
   --pp-text: rgba(255, 255, 245, 0.86);
@@ -164,11 +165,13 @@ body::selection {
   }
 }
 
-:root[data-theme="dark"] .pp-logo-light {
+:root[data-theme="dark"] .pp-logo-light,
+:root.dark .pp-logo-light {
   display: none;
 }
 
-:root[data-theme="dark"] .pp-logo-dark {
+:root[data-theme="dark"] .pp-logo-dark,
+:root.dark .pp-logo-dark {
   display: block;
 }
 
@@ -364,11 +367,13 @@ body::selection {
   }
 }
 
-:root[data-theme="light"] .pp-theme-toggle .pp-theme-toggle-moon {
+:root[data-theme="light"] .pp-theme-toggle .pp-theme-toggle-moon,
+:root:not(.dark):not([data-theme="dark"])[data-theme] .pp-theme-toggle .pp-theme-toggle-moon {
   display: inline-flex;
 }
 
-:root[data-theme="dark"] .pp-theme-toggle .pp-theme-toggle-sun {
+:root[data-theme="dark"] .pp-theme-toggle .pp-theme-toggle-sun,
+:root.dark .pp-theme-toggle .pp-theme-toggle-sun {
   display: inline-flex;
 }
 
@@ -939,7 +944,9 @@ body::selection {
 }
 
 :root[data-theme="dark"] .pp-doc-content .shiki,
-:root[data-theme="dark"] .pp-doc-content .shiki span {
+:root.dark .pp-doc-content .shiki,
+:root[data-theme="dark"] .pp-doc-content .shiki span,
+:root.dark .pp-doc-content .shiki span {
   color: var(--shiki-dark, var(--pp-code-text)) !important;
   background-color: var(--shiki-dark-bg, var(--pp-code-bg)) !important;
 }
