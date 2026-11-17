@@ -74,6 +74,33 @@ async function fileSize(p) {
   }
 }
 
+async function collectFenceLanguages(root) {
+  const langs = new Set();
+  async function walk(dir) {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const ent of entries) {
+      if (ent.name === "node_modules" || ent.name === "dist" || ent.name === ".preactpress")
+        continue;
+      const full = path.join(dir, ent.name);
+      if (ent.isDirectory()) {
+        await walk(full);
+        continue;
+      }
+      if (!ent.isFile() || !ent.name.endsWith(".md")) continue;
+      const text = await fs.readFile(full, "utf8");
+      for (const line of text.split(/\r?\n/)) {
+        const open = line.match(/^ {0,3}(?:`{3,}|~{3,})(\S*)/);
+        const info = open?.[1];
+        if (!info) continue;
+        const lang = info.match(/^([a-zA-Z0-9#_+.:-]+)/)?.[1]?.toLowerCase();
+        if (lang) langs.add(lang);
+      }
+    }
+  }
+  if (await pathExists(root)) await walk(root);
+  return langs;
+}
+
 async function runBuild(cwd, { cold = false } = {}) {
   const cacheDir = path.join(cwd, ".preactpress/cache");
   const distDir = path.join(cwd, "dist");
@@ -88,11 +115,13 @@ async function runBuild(cwd, { cold = false } = {}) {
     // Keep the cache benchmark focused on build work. Shiki's one-time module and grammar
     // initialization is highly sensitive to shared CI runner load and otherwise makes the
     // first timing much noisier than every subsequent build in the same process.
-    const [{ build }, { getHighlighter }] = await Promise.all([
+    // Shiki 4.6 compiles a grammar on the first codeToHtml call, so createHighlighter alone
+    // no longer covers that cost.
+    const [{ build }, { primeFenceHighlighter }] = await Promise.all([
       import(path.join(packageRoot, "dist/node/index.js")),
       import(path.join(packageRoot, "dist/node/markdown.js")),
     ]);
-    await getHighlighter();
+    await primeFenceHighlighter(await collectFenceLanguages(cwd));
     const measured = await measureAsync(() => build("."));
     return {
       durationMs: measured.durationMs,

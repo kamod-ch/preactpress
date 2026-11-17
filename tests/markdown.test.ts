@@ -14,9 +14,16 @@ vi.mock("shiki", () => ({
   }),
 }));
 
-const { extractMarkdownMetadata, renderMarkdown } = await import("../src/node/markdown.js");
+const { extractMarkdownMetadata, primeFenceHighlighter, renderMarkdown } =
+  await import("../src/node/markdown.js");
 const { createTestResolvedConfig } = await import("../src/node/pluginTestkit.js");
 const fixtureSnippet = path.join(import.meta.dirname, "fixtures/sample-snippet.ts");
+
+describe("primeFenceHighlighter", () => {
+  it("compiles requested fence languages without throwing", async () => {
+    await expect(primeFenceHighlighter(["ts", "bash", "not-a-language"])).resolves.toBeUndefined();
+  });
+});
 
 describe("renderMarkdown", () => {
   it("renders frontmatter, headings, and code fences", async () => {

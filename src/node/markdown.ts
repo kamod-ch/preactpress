@@ -145,6 +145,27 @@ function codeBlockContainer(preHtml: string, langRaw: string): string {
   return `<div class="pp-code-block" data-language="${escapeAttr(lang)}">${langBadge}${codeBlockCopyButton()}${preHtml}</div>`;
 }
 
+/** Compile each grammar once, before timed builds. Shiki 4.6 defers that work to the first highlight. */
+export async function primeFenceHighlighter(langs: Iterable<string>): Promise<void> {
+  const hi = await getHighlighter();
+  const loaded = new Set(hi.getLoadedLanguages());
+  const seen = new Set<string>();
+  for (const raw of langs) {
+    const lang = resolveShikiLang(raw);
+    if (seen.has(lang)) continue;
+    seen.add(lang);
+    try {
+      if (!loaded.has(lang)) {
+        await hi.loadLanguage(lang as BundledLanguage);
+        loaded.add(lang);
+      }
+    } catch {
+      continue;
+    }
+    highlightFenceSync(hi, lang, "const value = 1;\n");
+  }
+}
+
 function highlightFenceSync(
   hi: Highlighter,
   langRaw: string,
